@@ -1,1 +1,1 @@
-import "../../../core/tests/fixtures/extend-expect-any-svg"
+import "bun-match-svg"

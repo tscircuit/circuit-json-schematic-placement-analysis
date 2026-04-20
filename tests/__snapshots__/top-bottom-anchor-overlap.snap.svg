@@ -1,39 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(284.5220030349,0,0,-284.5220030349,600,326.5553869499)"><style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(278.8104089219,0,0,-278.8104089219,600,313.9405204461)"><style>
               .boundary { fill: rgb(245, 241, 237); }
               .schematic-boundary { fill: none; stroke: #fff; }
               .component { fill: none; stroke: rgb(132, 0, 0); }
               .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
               .component-pin { fill: none; stroke: rgb(132, 0, 0); }
-              /* Basic per-trace hover fallback */
               .trace:hover {
                 filter: invert(1);
               }
               .trace:hover .trace-crossing-outline {
                 opacity: 0;
               }
-              .trace:hover .trace-junction {
-                filter: invert(1);
-              }
-              /* Net-hover highlighting: when a trace or its overlays are hovered,
-                 invert color for all traces (base + overlays) sharing the same
-                 subcircuit connectivity key. Also hide crossing outline during hover. */
-              
               .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
               .pin-number { fill: rgb(169, 0, 0); }
               .port-label { fill: rgb(0, 100, 100); }
               .component-name { fill: rgb(0, 100, 100); }
             </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><path class="net-label" d="
-    M 600,326.5553869499
-    L 630.7283763277692,341.9195751137846
-    L 630.7283763277692,457.7389984825246
-    L 569.2716236722308,457.7389984825246
-    L 569.2716236722308,341.9195751137846
+    M 600,313.9405204461
+    L 630.1115241635652,328.99628252788256
+    L 630.1115241635652,442.4907063196906
+    L 569.8884758364348,442.4907063196906
+    L 569.8884758364348,328.99628252788256
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="5.690440060698001px"/><text class="net-label-text" x="600" y="352.16236722304103" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="51.213960546282px" transform="rotate(90 600 352.16236722304103)">VIN</text><path class="net-label" d="
-    M 600,298.10318664641
-    L 569.2716236722308,282.7389984825254
-    L 569.2716236722308,142.26100151742742
-    L 630.7283763277692,142.26100151742742
-    L 630.7283763277692,282.7389984825254
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="5.576208178438px"/><text class="net-label-text" x="600" y="339.033457249071" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="50.18587360594199px" transform="rotate(90 600 339.033457249071)">VIN</text><path class="net-label" d="
+    M 600,286.05947955390997
+    L 569.8884758364348,271.0037174721274
+    L 569.8884758364348,133.34572490708797
+    L 630.1115241635652,133.34572490708797
+    L 630.1115241635652,271.0037174721274
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="5.690440060698001px"/><text class="net-label-text" x="600" y="272.496206373269" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="51.213960546282px" transform="rotate(-90 600 272.496206373269)">GND</text></svg>
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="5.576208178438px"/><text class="net-label-text" x="600" y="260.96654275093897" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="50.18587360594199px" transform="rotate(-90 600 260.96654275093897)">GND</text></svg>

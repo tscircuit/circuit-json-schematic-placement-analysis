@@ -1,39 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(493.4210526316,0,0,-493.4210526316,514.4736842105,300)"><style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(300,0,0,-300,561,300)"><style>
               .boundary { fill: rgb(245, 241, 237); }
               .schematic-boundary { fill: none; stroke: #fff; }
               .component { fill: none; stroke: rgb(132, 0, 0); }
               .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
               .component-pin { fill: none; stroke: rgb(132, 0, 0); }
-              /* Basic per-trace hover fallback */
               .trace:hover {
                 filter: invert(1);
               }
               .trace:hover .trace-crossing-outline {
                 opacity: 0;
               }
-              .trace:hover .trace-junction {
-                filter: invert(1);
-              }
-              /* Net-hover highlighting: when a trace or its overlays are hovered,
-                 invert color for all traces (base + overlays) sharing the same
-                 subcircuit connectivity key. Also hide crossing outline during hover. */
-              
               .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
               .pin-number { fill: rgb(169, 0, 0); }
               .port-label { fill: rgb(0, 100, 100); }
               .component-name { fill: rgb(0, 100, 100); }
             </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><path class="net-label" d="
-    M 598.355263157872,300
-    L 571.7105263157655,353.2894736842128
-    L 370.8552631578623,353.2894736842128
-    L 370.8552631578623,246.71052631578718
-    L 571.7105263157656,246.7105263157872
+    M 612,300
+    L 595.8,332.4
+    L 473.68000000000006,332.4
+    L 473.68000000000006,267.59999999999997
+    L 595.8,267.6
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="9.868421052632px"/><text class="net-label-text" x="553.9473684210279" y="300" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="88.815789473688px" transform="">VIN</text><path class="net-label" d="
-    M 558.881578947344,300
-    L 585.5263157894505,246.7105263157872
-    L 829.1447368420924,246.7105263157872
-    L 829.1447368420924,353.2894736842128
-    L 585.5263157894505,353.2894736842128
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="6px"/><text class="net-label-text" x="585" y="300" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="54px" transform="">VIN</text><path class="net-label" d="
+    M 588,300
+    L 604.2,267.6
+    L 752.3199999999999,267.6
+    L 752.3199999999999,332.4
+    L 604.2,332.4
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="9.868421052632px"/><text class="net-label-text" x="603.289473684188" y="300" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="88.815789473688px" transform="">GND</text></svg>
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="6px"/><text class="net-label-text" x="615" y="300" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="54px" transform="">GND</text></svg>
