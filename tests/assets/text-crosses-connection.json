@@ -1,0 +1,34 @@
+[
+  {
+    "type": "schematic_net_label",
+    "schematic_net_label_id": "trace_cross_label",
+    "text": "CLK",
+    "anchor_position": {
+      "x": 0.17,
+      "y": 0
+    },
+    "center": {
+      "x": 0,
+      "y": 0
+    },
+    "anchor_side": "right"
+  },
+  {
+    "type": "schematic_trace",
+    "schematic_trace_id": "trace_cross_0",
+    "source_trace_id": "U1.CLK-J1.CLK",
+    "edges": [
+      {
+        "from": {
+          "x": -0.5,
+          "y": 0
+        },
+        "to": {
+          "x": 0.5,
+          "y": 0
+        }
+      }
+    ],
+    "junctions": []
+  }
+]

@@ -1,21 +1,29 @@
 import { readFileSync } from "node:fs"
 
 import { expect, test } from "bun:test"
+import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 
 import { analyzeAllSchematicPlacements } from "lib/index"
+import "./fixtures/extend-expect-any-svg"
 
-const circuit04Json = JSON.parse(
-  readFileSync(new URL("./assets/circuit04.json", import.meta.url), "utf8"),
+const topBottomAnchorOverlapJson = JSON.parse(
+  readFileSync(
+    new URL("./assets/top-bottom-anchor-overlap.json", import.meta.url),
+    "utf8",
+  ),
 ) as readonly {
   type: string
   [key: string]: unknown
 }[]
 
-test("circuit04 top-bottom anchor snapshot", () => {
-  const analysis = analyzeAllSchematicPlacements(circuit04Json)
+test("top bottom anchor overlap snapshot", () => {
+  const analysis = analyzeAllSchematicPlacements(topBottomAnchorOverlapJson)
 
   expect(analysis.issueCount).toBe(1)
   expect(analysis.listIssues()[0]?.summary).toBe("VIN overlaps GND")
+  expect(
+    convertCircuitJsonToSchematicSvg(topBottomAnchorOverlapJson as any),
+  ).toMatchSvgSnapshot(import.meta.path)
 
   expect(analysis.toString()).toMatchInlineSnapshot(`
     "<SchematicPlacementAnalysisReport requestedTarget="all" resolvedTarget="all" targetKind="circuit" issueCount="1" highSeverityCount="0" mediumSeverityCount="1" lowSeverityCount="0" labelLabelOverlapCount="1" labelSymbolOverlapCount="0" textCrossesConnectionCount="0">

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(326.0869565217,0,0,-326.0869565217,588.6956521739,300)"><style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) :is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]) { filter: invert(1); }
+svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"] .trace-crossing-outline { opacity: 0; }
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g class="trace" data-layer="base" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_overlap_0"><path d="M 393.0434782608801 300 L 914.7826086956001 300" class="trace-invisible-hover-outline" stroke="rgb(0, 150, 0)" fill="none" stroke-width="52.173913043472005px" stroke-linecap="round" opacity="0" stroke-linejoin="round"/><path d="M 393.0434782608801 300 L 914.7826086956001 300" stroke="rgb(0, 150, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round" stroke-linejoin="round"/></g><g class="trace-overlays" data-layer="overlay" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_overlap_0"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component-overlay" x="409.34782608696503" y="257.608695652179" width="358.69565217387003" height="88.04347826085899" fill="transparent"/><path d="M 409.34782608696503 300 L 500.6521739130411 300" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><path d="M 673.478260869542 300 L 768.0434782608351 300" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><path d="M 588.6956521739 257.608695652179 L 673.478260869542 257.608695652179 L 673.478260869542 345.652173913038 L 500.6521739130411 345.652173913038 L 500.6521739130411 257.608695652179 L 588.6956521739 257.608695652179" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><text x="582.1739130434661" y="241.4819510869637" stroke="rgb(245, 241, 237)" stroke-width="6.521739130434001px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="ideographic" font-size="58.695652173906px">R1</text><text x="582.1739130434661" y="368.3006576086873" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="58.695652173906px">10kΩ</text><circle cx="409.34782608696503" cy="300" r="6.521739130434001px" stroke-width="6.521739130434001px" fill="none" stroke="rgb(132, 0, 0)"/><circle cx="768.0434782608351" cy="300" r="6.521739130434001px" stroke-width="6.521739130434001px" fill="none" stroke="rgb(132, 0, 0)"/></g><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_1"><rect class="component-overlay" x="588.6956521739" y="215.217391304358" width="358.69565217387003" height="172.82608695650106" fill="transparent"/><path d="M 947.3913043477701 300 L 790.8695652173541 300" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><path d="M 738.6956521738821 300 L 588.6956521739 300" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><path d="M 790.8695652173541 215.217391304358 L 790.8695652173541 388.04347826085905" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><path d="M 738.6956521738821 215.217391304358 L 738.6956521738821 388.04347826085905" stroke="rgb(132, 0, 0)" fill="none" stroke-width="6.521739130434001px" stroke-linecap="round"/><text x="764.782608695618" y="169.56521739132" stroke="rgb(245, 241, 237)" stroke-width="6.521739130434001px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="ideographic" font-size="58.695652173906px">C1</text><text x="768.0434782608351" y="443.478260869548" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="58.695652173906px">0.1uF</text><circle cx="588.6956521739" cy="300" r="6.521739130434001px" stroke-width="6.521739130434001px" fill="none" stroke="rgb(132, 0, 0)"/><circle cx="947.3913043477701" cy="300" r="6.521739130434001px" stroke-width="6.521739130434001px" fill="none" stroke="rgb(132, 0, 0)"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="409.34782608696503" cy="300" r="13.043478260868001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="768.0434782608351" cy="300" r="13.043478260868001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_2"><circle cx="588.6956521739" cy="300" r="13.043478260868001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_3"><circle cx="947.3913043477701" cy="300" r="13.043478260868001" fill="red" opacity="0"/></g><path class="net-label" d="
+    M 758.2608695651841,300
+    L 740.6521739130122,335.2173913043436
+    L 220.00000000003126,335.21739130434355
+    L 220.00000000003126,264.78260869565634
+    L 740.6521739130122,264.7826086956564
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="6.521739130434001px"/><text class="net-label-text" x="728.9130434782311" y="300" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="58.695652173906px" transform="">U1_VCP/C10_pin2</text><path class="net-label" d="
+    M 768.0434782608351,286.956521739132
+    L 785.6521739130069,251.73913043478836
+    L 946.6521739129876,251.73913043478836
+    L 946.6521739129876,322.1739130434756
+    L 785.6521739130069,322.1739130434756
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="6.521739130434001px"/><text class="net-label-text" x="797.391304347788" y="286.956521739132" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="58.695652173906px" transform="">GND</text></svg>

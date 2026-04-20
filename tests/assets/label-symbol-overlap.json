@@ -2,7 +2,7 @@
   {
     "type": "source_component",
     "source_component_id": "source_component_0",
-    "name": ""
+    "name": "U1"
   },
   {
     "type": "schematic_component",
@@ -14,16 +14,21 @@
     },
     "size": {
       "width": 1,
-      "height": 1
+      "height": 0.8
     }
   },
   {
     "type": "schematic_net_label",
-    "schematic_net_label_id": "unnamed_component_label",
-    "text": "CLK",
+    "schematic_net_label_id": "symbol_overlap_label",
+    "text": "VREF",
+    "anchor_position": {
+      "x": 0.22,
+      "y": 0
+    },
     "center": {
       "x": 0,
       "y": 0
-    }
+    },
+    "anchor_side": "right"
   }
 ]

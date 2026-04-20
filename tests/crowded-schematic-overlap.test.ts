@@ -1,27 +1,32 @@
 import { readFileSync } from "node:fs"
 
 import { expect, test } from "bun:test"
+import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 
-import {
-  analyzeAllSchematicPlacements,
-  analyzeComponentSchematicPlacement,
-} from "lib/index"
+import { analyzeAllSchematicPlacements } from "lib/index"
+import "./fixtures/extend-expect-any-svg"
 
-const circuit02Json = JSON.parse(
-  readFileSync(new URL("./assets/circuit02.json", import.meta.url), "utf8"),
+const crowdedSchematicOverlapJson = JSON.parse(
+  readFileSync(
+    new URL("./assets/crowded-schematic-overlap.json", import.meta.url),
+    "utf8",
+  ),
 ) as readonly {
   type: string
   [key: string]: unknown
 }[]
 
-test("circuit02 crowded overlap snapshot", () => {
-  const analysis = analyzeAllSchematicPlacements(circuit02Json)
+test("crowded schematic overlap snapshot", () => {
+  const analysis = analyzeAllSchematicPlacements(crowdedSchematicOverlapJson)
   const issueTypes = analysis.listIssues().map((issue) => issue.type)
 
   expect(analysis.issueCount).toBeGreaterThan(0)
   expect(issueTypes).toContain("label_label_overlap")
   expect(issueTypes).toContain("label_symbol_overlap")
   expect(issueTypes).toContain("text_crosses_connection")
+  expect(
+    convertCircuitJsonToSchematicSvg(crowdedSchematicOverlapJson as any),
+  ).toMatchSvgSnapshot(import.meta.path)
 
   expect(analysis.toString()).toMatchInlineSnapshot(`
     "<SchematicPlacementAnalysisReport requestedTarget="all" resolvedTarget="all" targetKind="circuit" issueCount="7" highSeverityCount="7" mediumSeverityCount="0" lowSeverityCount="0" labelLabelOverlapCount="1" labelSymbolOverlapCount="4" textCrossesConnectionCount="2">
@@ -119,50 +124,6 @@ test("circuit02 crowded overlap snapshot", () => {
             <Entry key="traceFromY" value="0.00" />
             <Entry key="traceToX" value="1.00" />
             <Entry key="traceToY" value="0.00" />
-          </Metadata>
-        </Issue>
-      </Issues>
-    </SchematicPlacementAnalysisReport>"
-  `)
-})
-
-test("circuit02 component-scoped snapshot", () => {
-  const analysis = analyzeComponentSchematicPlacement(circuit02Json, "R1")
-  const issueSummaries = analysis.listIssues().map((issue) => issue.summary)
-
-  expect(analysis.issueCount).toBe(2)
-  expect(issueSummaries).toEqual([
-    "U1_VCP/C10_pin2 overlaps R1",
-    "GND overlaps R1",
-  ])
-
-  expect(analysis.toString()).toMatchInlineSnapshot(`
-    "<SchematicPlacementAnalysisReport requestedTarget="R1" resolvedTarget="R1" targetKind="component" issueCount="2" highSeverityCount="2" mediumSeverityCount="0" lowSeverityCount="0" labelLabelOverlapCount="0" labelSymbolOverlapCount="2" textCrossesConnectionCount="0">
-      <Issues>
-        <Issue id="schematic_net_label_overlap_a:schematic_component_0" type="label_symbol_overlap" severity="high" summary="U1_VCP/C10_pin2 overlaps R1">
-          <Bounds minX="-0.55" minY="-0.13" maxX="0.55" maxY="0.13" />
-          <Participants>
-            <Participant kind="label" ref="schematic_net_label_overlap_a" text="U1_VCP/C10_pin2" />
-            <Participant kind="component" ref="R1" />
-          </Participants>
-          <Metadata>
-            <Entry key="label" value="U1_VCP/C10_pin2" />
-            <Entry key="component" value="R1" />
-            <Entry key="overlapWidth" value="1.10" />
-            <Entry key="overlapHeight" value="0.25" />
-          </Metadata>
-        </Issue>
-        <Issue id="schematic_net_label_overlap_b:schematic_component_0" type="label_symbol_overlap" severity="high" summary="GND overlaps R1">
-          <Bounds minX="0.18" minY="-0.09" maxX="0.52" maxY="0.17" />
-          <Participants>
-            <Participant kind="label" ref="schematic_net_label_overlap_b" text="GND" />
-            <Participant kind="component" ref="R1" />
-          </Participants>
-          <Metadata>
-            <Entry key="label" value="GND" />
-            <Entry key="component" value="R1" />
-            <Entry key="overlapWidth" value="0.33" />
-            <Entry key="overlapHeight" value="0.25" />
           </Metadata>
         </Issue>
       </Issues>

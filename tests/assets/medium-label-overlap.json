@@ -3,18 +3,28 @@
     "type": "schematic_net_label",
     "schematic_net_label_id": "medium_overlap_a",
     "text": "VIN",
+    "anchor_position": {
+      "x": 0.17,
+      "y": 0
+    },
     "center": {
       "x": 0,
       "y": 0
-    }
+    },
+    "anchor_side": "right"
   },
   {
     "type": "schematic_net_label",
     "schematic_net_label_id": "medium_overlap_b",
     "text": "GND",
+    "anchor_position": {
+      "x": 0.09,
+      "y": 0
+    },
     "center": {
       "x": 0.26,
       "y": 0
-    }
+    },
+    "anchor_side": "left"
   }
 ]

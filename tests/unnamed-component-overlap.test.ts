@@ -1,23 +1,31 @@
 import { readFileSync } from "node:fs"
 
 import { expect, test } from "bun:test"
+import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 
 import { analyzeAllSchematicPlacements } from "lib/index"
+import "./fixtures/extend-expect-any-svg"
 
-const circuit05Json = JSON.parse(
-  readFileSync(new URL("./assets/circuit05.json", import.meta.url), "utf8"),
+const unnamedComponentOverlapJson = JSON.parse(
+  readFileSync(
+    new URL("./assets/unnamed-component-overlap.json", import.meta.url),
+    "utf8",
+  ),
 ) as readonly {
   type: string
   [key: string]: unknown
 }[]
 
-test("circuit05 unnamed component fallback snapshot", () => {
-  const analysis = analyzeAllSchematicPlacements(circuit05Json)
+test("unnamed component overlap snapshot", () => {
+  const analysis = analyzeAllSchematicPlacements(unnamedComponentOverlapJson)
 
   expect(analysis.issueCount).toBe(1)
   expect(analysis.listIssues()[0]?.participants[1]?.ref).toBe(
     "schematic_component_0",
   )
+  expect(
+    convertCircuitJsonToSchematicSvg(unnamedComponentOverlapJson as any),
+  ).toMatchSvgSnapshot(import.meta.path)
 
   expect(analysis.toString()).toMatchInlineSnapshot(`
     "<SchematicPlacementAnalysisReport requestedTarget="all" resolvedTarget="all" targetKind="circuit" issueCount="1" highSeverityCount="1" mediumSeverityCount="0" lowSeverityCount="0" labelLabelOverlapCount="0" labelSymbolOverlapCount="1" textCrossesConnectionCount="0">

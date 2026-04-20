@@ -7,6 +7,10 @@
       "x": 0,
       "y": 0
     },
+    "center": {
+      "x": 0,
+      "y": 0.126
+    },
     "anchor_side": "top"
   },
   {
@@ -16,6 +20,10 @@
     "anchor_position": {
       "x": 0,
       "y": 0.1
+    },
+    "center": {
+      "x": 0,
+      "y": -0.026
     },
     "anchor_side": "bottom"
   }
