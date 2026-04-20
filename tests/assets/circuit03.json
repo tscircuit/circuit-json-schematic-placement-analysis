@@ -1,0 +1,20 @@
+[
+  {
+    "type": "schematic_net_label",
+    "schematic_net_label_id": "medium_overlap_a",
+    "text": "VIN",
+    "center": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "type": "schematic_net_label",
+    "schematic_net_label_id": "medium_overlap_b",
+    "text": "GND",
+    "center": {
+      "x": 0.26,
+      "y": 0
+    }
+  }
+]
