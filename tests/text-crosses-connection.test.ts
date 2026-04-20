@@ -26,25 +26,5 @@ test("text crosses connection snapshot", () => {
     convertCircuitJsonToSchematicSvg(textCrossesConnectionJson as any),
   ).toMatchSvgSnapshot(import.meta.path)
 
-  expect(analysis.toString()).toMatchInlineSnapshot(`
-    "<SchematicPlacementAnalysisReport requestedTarget="all" resolvedTarget="all" targetKind="circuit" issueCount="1" highSeverityCount="1" mediumSeverityCount="0" lowSeverityCount="0" labelLabelOverlapCount="0" labelSymbolOverlapCount="0" textCrossesConnectionCount="1">
-      <Issues>
-        <Issue id="trace_cross_label:trace_cross_0:0" type="text_crosses_connection" severity="high" summary="CLK crosses U1.CLK-J1.CLK">
-          <Bounds minX="-0.17" minY="-0.13" maxX="0.17" maxY="0.13" />
-          <Participants>
-            <Participant kind="label" ref="trace_cross_label" text="CLK" />
-            <Participant kind="trace" ref="U1.CLK-J1.CLK" />
-          </Participants>
-          <Metadata>
-            <Entry key="label" value="CLK" />
-            <Entry key="trace" value="U1.CLK-J1.CLK" />
-            <Entry key="traceFromX" value="-0.50" />
-            <Entry key="traceFromY" value="0.00" />
-            <Entry key="traceToX" value="0.50" />
-            <Entry key="traceToY" value="0.00" />
-          </Metadata>
-        </Issue>
-      </Issues>
-    </SchematicPlacementAnalysisReport>"
-  `)
+  expect(analysis.toString()).toMatchInlineSnapshot(`"<TextCrossesConnection severity="high" label="CLK" trace="U1.CLK-J1.CLK" traceFromX="-0.50" traceFromY="0.00" traceToX="0.50" traceToY="0.00" left="-0.17" right="0.17" bottom="-0.13" top="0.13" width="0.33" height="0.25" />"`)
 })

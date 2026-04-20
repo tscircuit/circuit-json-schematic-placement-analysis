@@ -6,9 +6,10 @@ It is used to find layout problems that make schematics harder for humans or AI
 agents to interpret, such as overlapping net labels or text placed directly on
 top of connections.
 
-The output is XML-first and AI-friendly. Each report includes summary metadata
-at the top level plus nested issue details with bounds, participants, and
-structured metadata.
+The output is XML-first and AI-friendly. Each issue is rendered as a single
+self-closing element with semantic attributes — bounds, participants, and
+issue-specific data are all flattened onto the issue itself, with no
+wrapper elements. Reports with no issues render to an empty string.
 
 ## Usage
 
@@ -111,53 +112,33 @@ Severity is currently one of:
 
 ## XML Output
 
-The XML output uses:
-
-- PascalCase elements
-- camelCase attributes
-- nested issue metadata intended to be easy for AI tools to parse
+The XML output is intentionally flat — each issue is one self-closing element,
+with bounds and identifiers inlined as attributes. Multiple issues are
+separated by a blank line. Issue-type-specific element names carry the
+semantic, so no `type=...` attribute is needed.
 
 Example:
 
 ```xml
-<SchematicPlacementAnalysisReport
-  requestedTarget="all"
-  resolvedTarget="all"
-  targetKind="circuit"
-  issueCount="1"
-  highSeverityCount="1"
-  mediumSeverityCount="0"
-  lowSeverityCount="0"
-  labelLabelOverlapCount="0"
-  labelSymbolOverlapCount="1"
-  textCrossesConnectionCount="0"
->
-  <Issues>
-    <Issue
-      id="symbol_overlap_label:schematic_component_0"
-      type="label_symbol_overlap"
-      severity="high"
-      summary="VREF overlaps U1"
-    >
-      <Bounds minX="-0.22" minY="-0.13" maxX="0.22" maxY="0.13" />
-      <Participants>
-        <Participant
-          kind="label"
-          ref="symbol_overlap_label"
-          text="VREF"
-        />
-        <Participant kind="component" ref="U1" />
-      </Participants>
-      <Metadata>
-        <Entry key="label" value="VREF" />
-        <Entry key="component" value="U1" />
-        <Entry key="overlapWidth" value="0.45" />
-        <Entry key="overlapHeight" value="0.25" />
-      </Metadata>
-    </Issue>
-  </Issues>
-</SchematicPlacementAnalysisReport>
+<LabelLabelOverlap severity="medium" labelA="VIN" labelB="GND" left="0.09" right="0.17" bottom="-0.13" top="0.13" width="0.07" height="0.25" />
+
+<LabelSymbolOverlap severity="high" label="VREF" component="U1" left="-0.22" right="0.22" bottom="-0.13" top="0.13" width="0.45" height="0.25" />
+
+<TextCrossesConnection severity="high" label="CLK" trace="U1.CLK-J1.CLK" traceFromX="-0.50" traceFromY="0.00" traceToX="0.50" traceToY="0.00" left="-0.17" right="0.17" bottom="-0.13" top="0.13" width="0.33" height="0.25" />
 ```
+
+Issue elements:
+
+- `<LabelLabelOverlap>` — `labelA`, `labelB`
+- `<LabelSymbolOverlap>` — `label`, `component`
+- `<TextCrossesConnection>` — `label`, `trace`, `traceFromX/Y`, `traceToX/Y`
+
+All issues share `severity` plus the bounding box (`left`, `right`, `bottom`,
+`top`, `width`, `height`).
+
+Full structured data (participants, metadata, ids, summary, target/kind, and
+severity counts) remains available via the `SchematicPlacementAnalysisReport`
+class — see [`listIssues()`](#return-value) and the report properties.
 
 ## What It Helps Find
 

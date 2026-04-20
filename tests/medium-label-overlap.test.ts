@@ -26,23 +26,5 @@ test("medium label overlap snapshot", () => {
     convertCircuitJsonToSchematicSvg(mediumLabelOverlapJson as any),
   ).toMatchSvgSnapshot(import.meta.path)
 
-  expect(analysis.toString()).toMatchInlineSnapshot(`
-    "<SchematicPlacementAnalysisReport requestedTarget="all" resolvedTarget="all" targetKind="circuit" issueCount="1" highSeverityCount="0" mediumSeverityCount="1" lowSeverityCount="0" labelLabelOverlapCount="1" labelSymbolOverlapCount="0" textCrossesConnectionCount="0">
-      <Issues>
-        <Issue id="medium_overlap_a:medium_overlap_b" type="label_label_overlap" severity="medium" summary="VIN overlaps GND">
-          <Bounds minX="0.09" minY="-0.13" maxX="0.17" maxY="0.13" />
-          <Participants>
-            <Participant kind="label" ref="medium_overlap_a" text="VIN" />
-            <Participant kind="label" ref="medium_overlap_b" text="GND" />
-          </Participants>
-          <Metadata>
-            <Entry key="labelA" value="VIN" />
-            <Entry key="labelB" value="GND" />
-            <Entry key="overlapWidth" value="0.07" />
-            <Entry key="overlapHeight" value="0.25" />
-          </Metadata>
-        </Issue>
-      </Issues>
-    </SchematicPlacementAnalysisReport>"
-  `)
+  expect(analysis.toString()).toMatchInlineSnapshot(`"<LabelLabelOverlap severity="medium" labelA="VIN" labelB="GND" left="0.09" right="0.17" bottom="-0.13" top="0.13" width="0.07" height="0.25" />"`)
 })

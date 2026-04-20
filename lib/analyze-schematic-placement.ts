@@ -134,15 +134,7 @@ export class SchematicPlacementAnalysisReport {
   }
 
   toString() {
-    const lines = [
-      `<SchematicPlacementAnalysisReport requestedTarget="${escapeXml(this.requestedTarget)}" resolvedTarget="${escapeXml(this.resolvedTarget)}" targetKind="${escapeXml(this.targetKind)}" issueCount="${this.issueCount}" highSeverityCount="${this.highSeverityCount}" mediumSeverityCount="${this.mediumSeverityCount}" lowSeverityCount="${this.lowSeverityCount}" labelLabelOverlapCount="${this.typeCounts.label_label_overlap}" labelSymbolOverlapCount="${this.typeCounts.label_symbol_overlap}" textCrossesConnectionCount="${this.typeCounts.text_crosses_connection}">`,
-      "  <Issues>",
-      ...this.#issues.map((issue) => renderIssue(issue, "    ")),
-      "  </Issues>",
-      "</SchematicPlacementAnalysisReport>",
-    ]
-
-    return lines.join("\n")
+    return this.#issues.map(renderIssue).join("\n\n")
   }
 }
 
@@ -454,26 +446,47 @@ const getSeverityFromBounds = (bounds: Bounds): SchematicPlacementSeverity => {
   return "low"
 }
 
-const renderIssue = (issue: SchematicPlacementIssue, indent: string) => {
-  const lines = [
-    `${indent}<Issue id="${escapeXml(issue.id)}" type="${escapeXml(issue.type)}" severity="${escapeXml(issue.severity)}" summary="${escapeXml(issue.summary)}">`,
-    `${indent}  <Bounds minX="${formatNumber(issue.bounds.minX)}" minY="${formatNumber(issue.bounds.minY)}" maxX="${formatNumber(issue.bounds.maxX)}" maxY="${formatNumber(issue.bounds.maxY)}" />`,
-    `${indent}  <Participants>`,
-    ...issue.participants.map(
-      (participant) =>
-        `${indent}    <Participant kind="${escapeXml(participant.kind)}" ref="${escapeXml(participant.ref)}"${participant.text ? ` text="${escapeXml(participant.text)}"` : ""} />`,
-    ),
-    `${indent}  </Participants>`,
-    `${indent}  <Metadata>`,
-    ...Object.entries(issue.metadata).map(
-      ([key, value]) =>
-        `${indent}    <Entry key="${escapeXml(key)}" value="${escapeXml(String(value))}" />`,
-    ),
-    `${indent}  </Metadata>`,
-    `${indent}</Issue>`,
-  ]
+const issueElementName: Record<SchematicPlacementIssueType, string> = {
+  label_label_overlap: "LabelLabelOverlap",
+  label_symbol_overlap: "LabelSymbolOverlap",
+  text_crosses_connection: "TextCrossesConnection",
+}
 
-  return lines.join("\n")
+const renderIssue = (issue: SchematicPlacementIssue) => {
+  const attrs = [`severity="${escapeXml(issue.severity)}"`]
+
+  if (issue.type === "label_label_overlap") {
+    attrs.push(
+      `labelA="${escapeXml(String(issue.metadata.labelA))}"`,
+      `labelB="${escapeXml(String(issue.metadata.labelB))}"`,
+    )
+  } else if (issue.type === "label_symbol_overlap") {
+    attrs.push(
+      `label="${escapeXml(String(issue.metadata.label))}"`,
+      `component="${escapeXml(String(issue.metadata.component))}"`,
+    )
+  } else {
+    attrs.push(
+      `label="${escapeXml(String(issue.metadata.label))}"`,
+      `trace="${escapeXml(String(issue.metadata.trace))}"`,
+      `traceFromX="${issue.metadata.traceFromX}"`,
+      `traceFromY="${issue.metadata.traceFromY}"`,
+      `traceToX="${issue.metadata.traceToX}"`,
+      `traceToY="${issue.metadata.traceToY}"`,
+    )
+  }
+
+  const { minX, minY, maxX, maxY } = issue.bounds
+  attrs.push(
+    `left="${formatNumber(minX)}"`,
+    `right="${formatNumber(maxX)}"`,
+    `bottom="${formatNumber(minY)}"`,
+    `top="${formatNumber(maxY)}"`,
+    `width="${formatNumber(maxX - minX)}"`,
+    `height="${formatNumber(maxY - minY)}"`,
+  )
+
+  return `<${issueElementName[issue.type]} ${attrs.join(" ")} />`
 }
 
 const escapeXml = (value: string) =>

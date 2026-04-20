@@ -33,35 +33,8 @@ test("component r1 label overlap snapshot", () => {
   ).toMatchSvgSnapshot(import.meta.path)
 
   expect(analysis.toString()).toMatchInlineSnapshot(`
-    "<SchematicPlacementAnalysisReport requestedTarget="R1" resolvedTarget="R1" targetKind="component" issueCount="2" highSeverityCount="2" mediumSeverityCount="0" lowSeverityCount="0" labelLabelOverlapCount="0" labelSymbolOverlapCount="2" textCrossesConnectionCount="0">
-      <Issues>
-        <Issue id="schematic_net_label_overlap_a:schematic_component_0" type="label_symbol_overlap" severity="high" summary="U1_VCP/C10_pin2 overlaps R1">
-          <Bounds minX="-0.55" minY="-0.13" maxX="0.55" maxY="0.13" />
-          <Participants>
-            <Participant kind="label" ref="schematic_net_label_overlap_a" text="U1_VCP/C10_pin2" />
-            <Participant kind="component" ref="R1" />
-          </Participants>
-          <Metadata>
-            <Entry key="label" value="U1_VCP/C10_pin2" />
-            <Entry key="component" value="R1" />
-            <Entry key="overlapWidth" value="1.10" />
-            <Entry key="overlapHeight" value="0.25" />
-          </Metadata>
-        </Issue>
-        <Issue id="schematic_net_label_overlap_b:schematic_component_0" type="label_symbol_overlap" severity="high" summary="GND overlaps R1">
-          <Bounds minX="0.18" minY="-0.09" maxX="0.52" maxY="0.17" />
-          <Participants>
-            <Participant kind="label" ref="schematic_net_label_overlap_b" text="GND" />
-            <Participant kind="component" ref="R1" />
-          </Participants>
-          <Metadata>
-            <Entry key="label" value="GND" />
-            <Entry key="component" value="R1" />
-            <Entry key="overlapWidth" value="0.33" />
-            <Entry key="overlapHeight" value="0.25" />
-          </Metadata>
-        </Issue>
-      </Issues>
-    </SchematicPlacementAnalysisReport>"
+    "<LabelSymbolOverlap severity="high" label="U1_VCP/C10_pin2" component="R1" left="-0.55" right="0.55" bottom="-0.13" top="0.13" width="1.10" height="0.25" />
+
+    <LabelSymbolOverlap severity="high" label="GND" component="R1" left="0.18" right="0.52" bottom="-0.09" top="0.17" width="0.33" height="0.25" />"
   `)
 })
