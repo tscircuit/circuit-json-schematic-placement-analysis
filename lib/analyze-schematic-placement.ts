@@ -7,6 +7,7 @@ import type {
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
   ComponentOverlap,
+  OverlapCorrectionSuggestion,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
 } from "./types"
@@ -18,6 +19,11 @@ const fmtNumber = (value: number): string => {
     .toFixed(3)
     .replace(/\.0+$/, "")
     .replace(/(\.\d*?)0+$/, "$1")
+}
+
+const fmtDelta = (value: number): string => {
+  const formattedValue = fmtNumber(value)
+  return value > 0 ? `+${formattedValue}` : formattedValue
 }
 
 const isSchematicBox = (
@@ -104,10 +110,11 @@ const addAttr = (
   attrs: string[],
   key: string,
   value: string | number | undefined,
+  options?: { formatDelta?: boolean },
 ) => {
   if (value === undefined) return
   attrs.push(
-    `${key}="${typeof value === "number" ? fmtNumber(value) : escapeAttr(value)}"`,
+    `${key}="${typeof value === "number" ? (options?.formatDelta ? fmtDelta(value) : fmtNumber(value)) : escapeAttr(value)}"`,
   )
 }
 
@@ -133,12 +140,28 @@ const overlapIssueToString = (issue: ComponentOverlap): string => {
   addAttr(attrs, "component1SchY", issue.firstComponent.schY)
   addAttr(attrs, "component2SchX", issue.secondComponent.schX)
   addAttr(attrs, "component2SchY", issue.secondComponent.schY)
-  addAttr(attrs, "overlapCenterSchX", issue.overlapCenter.schX)
-  addAttr(attrs, "overlapCenterSchY", issue.overlapCenter.schY)
   addAttr(attrs, "overlapWidth", issue.overlapWidth)
   addAttr(attrs, "overlapHeight", issue.overlapHeight)
 
-  return `<ComponentOverlap ${attrs.join(" ")} />`
+  return [
+    `<ComponentOverlap ${attrs.join(" ")}>`,
+    ...issue.correctionSuggestions.map(correctionSuggestionToString),
+    "</ComponentOverlap>",
+  ].join("\n")
+}
+
+const correctionSuggestionToString = (
+  suggestion: OverlapCorrectionSuggestion,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "target", suggestion.targetComponentName)
+  addAttr(attrs, "newSchX", suggestion.newSchX)
+  addAttr(attrs, "newSchY", suggestion.newSchY)
+  addAttr(attrs, "deltaSchX", suggestion.deltaSchX, { formatDelta: true })
+  addAttr(attrs, "deltaSchY", suggestion.deltaSchY, { formatDelta: true })
+
+  return `<OverlapCorrectionSuggestion ${attrs.join(" ")} />`
 }
 
 const escapeAttr = (value: string): string =>

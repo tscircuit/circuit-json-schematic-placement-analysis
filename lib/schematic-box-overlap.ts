@@ -1,5 +1,6 @@
 import type {
   ComponentOverlap,
+  OverlapCorrectionSuggestion,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "./types"
@@ -44,13 +45,63 @@ const getComponentOverlap = (
     lineItemType: "ComponentOverlap",
     firstComponent,
     secondComponent,
-    overlapCenter: {
-      schX: left + overlapWidth / 2,
-      schY: top + overlapHeight / 2,
-    },
     overlapWidth,
     overlapHeight,
+    correctionSuggestions: getOverlapCorrectionSuggestions({
+      firstComponent,
+      secondComponent,
+      overlapWidth,
+      overlapHeight,
+    }),
   }
+}
+
+const getOverlapCorrectionSuggestions = ({
+  firstComponent,
+  secondComponent,
+  overlapWidth,
+  overlapHeight,
+}: {
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  overlapWidth: number
+  overlapHeight: number
+}): OverlapCorrectionSuggestion[] => {
+  if (overlapWidth <= overlapHeight) {
+    const firstDeltaSchX =
+      firstComponent.schX <= secondComponent.schX ? -overlapWidth : overlapWidth
+    const secondDeltaSchX = -firstDeltaSchX
+
+    return [
+      {
+        targetComponentName: firstComponent.sourceComponentName,
+        deltaSchX: firstDeltaSchX,
+        newSchX: firstComponent.schX + firstDeltaSchX,
+      },
+      {
+        targetComponentName: secondComponent.sourceComponentName,
+        deltaSchX: secondDeltaSchX,
+        newSchX: secondComponent.schX + secondDeltaSchX,
+      },
+    ]
+  }
+
+  const firstDeltaSchY =
+    firstComponent.schY <= secondComponent.schY ? -overlapHeight : overlapHeight
+  const secondDeltaSchY = -firstDeltaSchY
+
+  return [
+    {
+      targetComponentName: firstComponent.sourceComponentName,
+      deltaSchY: firstDeltaSchY,
+      newSchY: firstComponent.schY + firstDeltaSchY,
+    },
+    {
+      targetComponentName: secondComponent.sourceComponentName,
+      deltaSchY: secondDeltaSchY,
+      newSchY: secondComponent.schY + secondDeltaSchY,
+    },
+  ]
 }
 
 export const generateSchematicPlacementIssues = (

@@ -33,7 +33,10 @@ console.log(analysis.toString())
 <SchematicBoxPlacement componentName="U1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
 </SchematicBoxPositions>
 <SchematicPlacementIssues>
-<ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapCenterSchX="0.5" overlapCenterSchY="0.25" overlapWidth="2" overlapHeight="1.5" />
+<ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapWidth="0.25" overlapHeight="0.194">
+<OverlapCorrectionSuggestion target="U1" newSchY="-0.194" deltaSchY="-0.194" />
+<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />
+</ComponentOverlap>
 </SchematicPlacementIssues>
 ```
 

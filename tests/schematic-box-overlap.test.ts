@@ -30,13 +30,29 @@ test("generates a schematic box overlap issue", async () => {
           schY: 0.5,
           sourceComponentName: "R2",
         },
+        correctionSuggestions: [
+          {
+            targetComponentName: "U1",
+            deltaSchY: -0.19445534999999947,
+            newSchY: -0.19445534999999947,
+          },
+          {
+            targetComponentName: "R2",
+            deltaSchY: 0.19445534999999947,
+            newSchY: 0.6944553499999995,
+          },
+        ],
       },
     ],
   })
 
   expect(analysis.toString()).toContain(
-    '<ComponentOverlap component1Name="U1" component2Name="R2"',
+    '<OverlapCorrectionSuggestion target="U1" newSchY="-0.194" deltaSchY="-0.194" />',
   )
+  expect(analysis.toString()).toContain(
+    '<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />',
+  )
+  expect(analysis.toString()).not.toContain("overlapCenterSch")
   expect(analysis.toString()).not.toContain("source_component_")
   expect(analysis.toString()).not.toContain("schematic_component_")
 

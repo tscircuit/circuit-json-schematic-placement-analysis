@@ -19,12 +19,17 @@ export interface ComponentOverlap {
   lineItemType: "ComponentOverlap"
   firstComponent: SchematicBoxPlacement
   secondComponent: SchematicBoxPlacement
-  overlapCenter: {
-    schX: number
-    schY: number
-  }
   overlapWidth: number
   overlapHeight: number
+  correctionSuggestions: OverlapCorrectionSuggestion[]
+}
+
+export interface OverlapCorrectionSuggestion {
+  targetComponentName?: string
+  deltaSchX?: number
+  deltaSchY?: number
+  newSchX?: number
+  newSchY?: number
 }
 
 export interface SchematicBoxHasALotOfSurroundingWhitespace {
