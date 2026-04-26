@@ -1,4 +1,4 @@
-<svg width="1200" height="966" viewBox="0 0 1200 966" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -38,10 +38,8 @@
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;ComponentOverlap component1Name=&quot;U1&quot; component2Name=&quot;R2&quot; component1SchX=&quot;0&quot; component1SchY=&quot;0&quot;</tspan>
     <tspan x="18" dy="22">  component2SchX=&quot;1&quot; component2SchY=&quot;0.5&quot; overlapWidth=&quot;0.25&quot; overlapHeight=&quot;0.194&quot;&gt;</tspan>
-    <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;R2&quot; newSchX=&quot;1.25&quot; newSchY=&quot;0.5&quot; deltaSchX=&quot;+0.25&quot;</tspan>
-    <tspan x="18" dy="22">  deltaSchY=&quot;0&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;R2&quot; newSchX=&quot;1&quot; newSchY=&quot;0.694&quot; deltaSchX=&quot;0&quot;</tspan>
-    <tspan x="18" dy="22">  deltaSchY=&quot;+0.194&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;R2&quot; newSchX=&quot;1.25&quot; deltaSchX=&quot;+0.25&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;R2&quot; newSchY=&quot;0.694&quot; deltaSchY=&quot;+0.194&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/ComponentOverlap&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>

@@ -156,10 +156,14 @@ const correctionSuggestionToString = (
   const attrs: string[] = []
 
   addAttr(attrs, "target", suggestion.targetComponentName)
-  addAttr(attrs, "newSchX", suggestion.newSchX)
-  addAttr(attrs, "newSchY", suggestion.newSchY)
-  addAttr(attrs, "deltaSchX", suggestion.deltaSchX, { formatDelta: true })
-  addAttr(attrs, "deltaSchY", suggestion.deltaSchY, { formatDelta: true })
+  if (suggestion.deltaSchX !== 0) {
+    addAttr(attrs, "newSchX", suggestion.newSchX)
+    addAttr(attrs, "deltaSchX", suggestion.deltaSchX, { formatDelta: true })
+  }
+  if (suggestion.deltaSchY !== 0) {
+    addAttr(attrs, "newSchY", suggestion.newSchY)
+    addAttr(attrs, "deltaSchY", suggestion.deltaSchY, { formatDelta: true })
+  }
 
   return `<OverlapCorrectionSuggestion ${attrs.join(" ")} />`
 }

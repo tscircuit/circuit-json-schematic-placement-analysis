@@ -51,11 +51,13 @@ test("generates a schematic box overlap issue", async () => {
   })
 
   expect(analysis.toString()).toContain(
-    '<OverlapCorrectionSuggestion target="R2" newSchX="1.25" newSchY="0.5" deltaSchX="+0.25" deltaSchY="0" />',
+    '<OverlapCorrectionSuggestion target="R2" newSchX="1.25" deltaSchX="+0.25" />',
   )
   expect(analysis.toString()).toContain(
-    '<OverlapCorrectionSuggestion target="R2" newSchX="1" newSchY="0.694" deltaSchX="0" deltaSchY="+0.194" />',
+    '<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />',
   )
+  expect(analysis.toString()).not.toContain('deltaSchX="0"')
+  expect(analysis.toString()).not.toContain('deltaSchY="0"')
   expect(analysis.toString()).not.toContain(
     '<OverlapCorrectionSuggestion target="U1"',
   )
