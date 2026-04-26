@@ -11,8 +11,7 @@
     "typecheck": "bunx tsc --noEmit"
   },
   "dependencies": {
-    "@tscircuit/circuit-json-util": "^0.0.94",
-    "circuit-json": "^0.0.420"
+    "@tscircuit/circuit-json-util": "^0.0.94"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
@@ -39,6 +38,7 @@
     "bpc-graph": "^0.0.66",
     "bun-match-svg": "^0.0.15",
     "calculate-packing": "^0.0.71",
+    "circuit-json": "^0.0.420",
     "circuit-json-to-bpc": "^0.0.13",
     "circuit-json-to-connectivity-map": "^0.0.23",
     "circuit-json-to-gltf": "^0.0.96",
@@ -60,6 +60,7 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
+    "circuit-json": "*",
     "typescript": "^5"
   }
 }
