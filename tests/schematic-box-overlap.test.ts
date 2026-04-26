@@ -1,33 +1,55 @@
 import { expect, test } from "bun:test"
-import { SchematicPlacementAnalyzer } from "../src"
+import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "./fixtures/create-schematic-analysis-fixture-svg"
 import { overlappingSchematicBoxesCircuitJson } from "./fixtures/overlapping-schematic-boxes"
 
 test("generates a schematic box overlap issue", async () => {
-  const analyzer = new SchematicPlacementAnalyzer(
+  const analysis = analyzeSchematicPlacement(
     overlappingSchematicBoxesCircuitJson,
   )
+  const issuesLineItem = analysis
+    .getLineItems()
+    .find((lineItem) => lineItem.lineItemType === "SchematicPlacementIssues")
 
-  expect(analyzer.issues).toHaveLength(1)
-  expect(analyzer.issues[0]).toMatchObject({
-    type: "schematic_box_overlap",
-    boxA: { label: "schematic_component_a" },
-    boxB: { label: "schematic_component_b" },
-    overlap: {
-      width: 2,
-      height: 1.5,
-      area: 3,
-      center: {
-        x: 0.5,
-        y: 0.25,
+  expect(issuesLineItem).toMatchObject({
+    lineItemType: "SchematicPlacementIssues",
+    issues: [
+      {
+        lineItemType: "SchematicBoxOverlap",
+        firstSchematicBox: {
+          positionAnchor: "center",
+          schX: 0,
+          schY: 0,
+          width: 3,
+          height: 2,
+          schematicComponentId: "schematic_component_a",
+        },
+        secondSchematicBox: {
+          positionAnchor: "center",
+          schX: 1,
+          schY: 0.5,
+          width: 3,
+          height: 2,
+          schematicComponentId: "schematic_component_b",
+        },
+        overlapCenter: {
+          schX: 0.5,
+          schY: 0.25,
+        },
+        overlapWidth: 2,
+        overlapHeight: 1.5,
       },
-    },
+    ],
   })
+
+  expect(analysis.toString()).toContain(
+    '<SchematicBoxOverlap firstSchX="0" firstSchY="0" secondSchX="1" secondSchY="0.5" overlapCenterSchX="0.5" overlapCenterSchY="0.25" overlapWidth="2" overlapHeight="1.5" />',
+  )
 
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: overlappingSchematicBoxesCircuitJson,
-      analyzer,
+      analysis,
     }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

@@ -1,18 +1,19 @@
 import type { AnyCircuitElement } from "circuit-json"
 import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
+import { analyzeSchematicPlacement } from "lib/index"
+import type { SchematicPlacementAnalysis } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
-import { SchematicPlacementAnalyzer } from "../../src"
 
 export function createSchematicAnalysisFixtureSvg(input: {
   circuitJson: AnyCircuitElement[]
-  analyzer?: SchematicPlacementAnalyzer
+  analysis?: SchematicPlacementAnalysis
   width?: number
   height?: number
 }): string {
   const width = input.width ?? 1200
   const height = input.height ?? 600
-  const analyzer =
-    input.analyzer ?? new SchematicPlacementAnalyzer(input.circuitJson)
+  const analysis =
+    input.analysis ?? analyzeSchematicPlacement(input.circuitJson)
 
   const circuitSvg = convertCircuitJsonToSchematicSvg(input.circuitJson, {
     width,
@@ -20,7 +21,7 @@ export function createSchematicAnalysisFixtureSvg(input: {
   })
 
   return stackSvgsVertically(
-    [circuitSvg, createAnalyzerTextSvg(analyzer.toString(), width)],
+    [circuitSvg, createAnalyzerTextSvg(analysis.toString(), width)],
     {
       normalizeSize: false,
       gap: 0,
