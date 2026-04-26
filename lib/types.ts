@@ -26,10 +26,10 @@ export interface ComponentOverlap {
 
 export interface OverlapCorrectionSuggestion {
   targetComponentName?: string
-  deltaSchX?: number
-  deltaSchY?: number
-  newSchX?: number
-  newSchY?: number
+  deltaSchX: number
+  deltaSchY: number
+  newSchX: number
+  newSchY: number
 }
 
 export interface SchematicBoxHasALotOfSurroundingWhitespace {

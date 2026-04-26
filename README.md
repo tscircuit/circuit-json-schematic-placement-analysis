@@ -34,8 +34,8 @@ console.log(analysis.toString())
 </SchematicBoxPositions>
 <SchematicPlacementIssues>
 <ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapWidth="0.25" overlapHeight="0.194">
-<OverlapCorrectionSuggestion target="U1" newSchY="-0.194" deltaSchY="-0.194" />
-<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />
+<OverlapCorrectionSuggestion target="R2" newSchX="1.25" newSchY="0.5" deltaSchX="+0.25" deltaSchY="0" />
+<OverlapCorrectionSuggestion target="R2" newSchX="1" newSchY="0.694" deltaSchX="0" deltaSchY="+0.194" />
 </ComponentOverlap>
 </SchematicPlacementIssues>
 ```

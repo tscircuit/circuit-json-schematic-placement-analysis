@@ -67,39 +67,31 @@ const getOverlapCorrectionSuggestions = ({
   overlapWidth: number
   overlapHeight: number
 }): OverlapCorrectionSuggestion[] => {
-  if (overlapWidth <= overlapHeight) {
-    const firstDeltaSchX =
-      firstComponent.schX <= secondComponent.schX ? -overlapWidth : overlapWidth
-    const secondDeltaSchX = -firstDeltaSchX
-
-    return [
-      {
-        targetComponentName: firstComponent.sourceComponentName,
-        deltaSchX: firstDeltaSchX,
-        newSchX: firstComponent.schX + firstDeltaSchX,
-      },
-      {
-        targetComponentName: secondComponent.sourceComponentName,
-        deltaSchX: secondDeltaSchX,
-        newSchX: secondComponent.schX + secondDeltaSchX,
-      },
-    ]
-  }
-
-  const firstDeltaSchY =
-    firstComponent.schY <= secondComponent.schY ? -overlapHeight : overlapHeight
-  const secondDeltaSchY = -firstDeltaSchY
+  const firstArea = firstComponent.width * firstComponent.height
+  const secondArea = secondComponent.width * secondComponent.height
+  const targetComponent =
+    firstArea <= secondArea ? firstComponent : secondComponent
+  const otherComponent =
+    targetComponent === firstComponent ? secondComponent : firstComponent
+  const deltaSchX =
+    targetComponent.schX <= otherComponent.schX ? -overlapWidth : overlapWidth
+  const deltaSchY =
+    targetComponent.schY <= otherComponent.schY ? -overlapHeight : overlapHeight
 
   return [
     {
-      targetComponentName: firstComponent.sourceComponentName,
-      deltaSchY: firstDeltaSchY,
-      newSchY: firstComponent.schY + firstDeltaSchY,
+      targetComponentName: targetComponent.sourceComponentName,
+      deltaSchX,
+      deltaSchY: 0,
+      newSchX: targetComponent.schX + deltaSchX,
+      newSchY: targetComponent.schY,
     },
     {
-      targetComponentName: secondComponent.sourceComponentName,
-      deltaSchY: secondDeltaSchY,
-      newSchY: secondComponent.schY + secondDeltaSchY,
+      targetComponentName: targetComponent.sourceComponentName,
+      deltaSchX: 0,
+      deltaSchY,
+      newSchX: targetComponent.schX,
+      newSchY: targetComponent.schY + deltaSchY,
     },
   ]
 }
