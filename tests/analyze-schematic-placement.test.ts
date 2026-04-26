@@ -66,8 +66,8 @@ test("outputs schematic box positions", () => {
   ])
   expect(analysis.toString()).toMatchInlineSnapshot(`
     "<SchematicBoxPositions>
-    <SchematicBoxPlacement componentName="U1" sourceComponentId="source_component_1" schematicComponentId="schematic_component_1" schematicSymbolId="schematic_symbol_1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
-    <SchematicBoxPlacement subcircuitId="subcircuit_1" positionAnchor="center" schX="-1" schY="5" width="4" height="2" />
+    <SchematicBoxPlacement componentName="U1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
+    <SchematicBoxPlacement positionAnchor="center" schX="-1" schY="5" width="4" height="2" />
     </SchematicBoxPositions>"
   `)
   expect(analysis.getString()).toBe(analysis.toString())

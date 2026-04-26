@@ -15,10 +15,10 @@ export interface SchematicBoxPlacementLineItem extends SchematicBoxPlacement {
   lineItemType: "SchematicBoxPlacement"
 }
 
-export interface SchematicBoxOverlap {
-  lineItemType: "SchematicBoxOverlap"
-  firstSchematicBox: SchematicBoxPlacement
-  secondSchematicBox: SchematicBoxPlacement
+export interface ComponentOverlap {
+  lineItemType: "ComponentOverlap"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
   overlapCenter: {
     schX: number
     schY: number
@@ -42,7 +42,7 @@ export interface CapacitorSymbolHorizontal {
 }
 
 export type SchematicPlacementIssue =
-  | SchematicBoxOverlap
+  | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
 

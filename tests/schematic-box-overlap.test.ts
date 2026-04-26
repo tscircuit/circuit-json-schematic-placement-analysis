@@ -17,30 +17,28 @@ test("generates a schematic box overlap issue", async () => {
     lineItemType: "SchematicPlacementIssues",
     issues: [
       {
-        lineItemType: "SchematicBoxOverlap",
-        firstSchematicBox: {
+        lineItemType: "ComponentOverlap",
+        firstComponent: {
           positionAnchor: "center",
           schX: 0,
           schY: 0,
-          sourceComponentId: "source_component_0",
           sourceComponentName: "U1",
-          schematicComponentId: "schematic_component_0",
         },
-        secondSchematicBox: {
+        secondComponent: {
           positionAnchor: "center",
           schX: 1,
           schY: 0.5,
-          sourceComponentId: "source_component_1",
           sourceComponentName: "R2",
-          schematicComponentId: "schematic_component_1",
         },
       },
     ],
   })
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxOverlap component1Name="U1" component2Name="R2" component1SchematicComponentId="schematic_component_0" component2SchematicComponentId="schematic_component_1"',
+    '<ComponentOverlap component1Name="U1" component2Name="R2"',
   )
+  expect(analysis.toString()).not.toContain("source_component_")
+  expect(analysis.toString()).not.toContain("schematic_component_")
 
   expect(
     createSchematicAnalysisFixtureSvg({

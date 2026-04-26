@@ -1,7 +1,7 @@
 # circuit-json-schematic-placement-analysis
 
 Analyze `circuit-json` schematic placement, report schematic box positions, and
-emit schematic placement issues such as overlapping schematic boxes.
+emit schematic placement issues such as overlapping components.
 
 This is intended for placement-focused diagnostics. It emits
 `<SchematicBoxPlacement />` rows inside `<SchematicBoxPositions>` and issue nodes
@@ -30,10 +30,10 @@ console.log(analysis.toString())
 
 ```xml
 <SchematicBoxPositions>
-<SchematicBoxPlacement componentName="U1" sourceComponentId="source_component_1" schematicComponentId="schematic_component_1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
+<SchematicBoxPlacement componentName="U1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
 </SchematicBoxPositions>
 <SchematicPlacementIssues>
-<SchematicBoxOverlap component1Name="U1" component2Name="R2" component1SchematicComponentId="schematic_component_1" component2SchematicComponentId="schematic_component_2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapCenterSchX="0.5" overlapCenterSchY="0.25" overlapWidth="2" overlapHeight="1.5" />
+<ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapCenterSchX="0.5" overlapCenterSchY="0.25" overlapWidth="2" overlapHeight="1.5" />
 </SchematicPlacementIssues>
 ```
 

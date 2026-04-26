@@ -6,7 +6,7 @@ import type {
 } from "circuit-json"
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
-  SchematicBoxOverlap,
+  ComponentOverlap,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
 } from "./types"
@@ -115,10 +115,6 @@ const lineItemToString = (lineItem: SchematicBoxPlacementLineItem): string => {
   const attrs: string[] = []
 
   addAttr(attrs, "componentName", lineItem.sourceComponentName)
-  addAttr(attrs, "sourceComponentId", lineItem.sourceComponentId)
-  addAttr(attrs, "schematicComponentId", lineItem.schematicComponentId)
-  addAttr(attrs, "schematicSymbolId", lineItem.schematicSymbolId)
-  addAttr(attrs, "subcircuitId", lineItem.subcircuitId)
   addAttr(attrs, "positionAnchor", lineItem.positionAnchor)
   addAttr(attrs, "schX", lineItem.schX)
   addAttr(attrs, "schY", lineItem.schY)
@@ -128,31 +124,21 @@ const lineItemToString = (lineItem: SchematicBoxPlacementLineItem): string => {
   return `<SchematicBoxPlacement ${attrs.join(" ")} />`
 }
 
-const overlapIssueToString = (issue: SchematicBoxOverlap): string => {
+const overlapIssueToString = (issue: ComponentOverlap): string => {
   const attrs: string[] = []
 
-  addAttr(attrs, "component1Name", issue.firstSchematicBox.sourceComponentName)
-  addAttr(attrs, "component2Name", issue.secondSchematicBox.sourceComponentName)
-  addAttr(
-    attrs,
-    "component1SchematicComponentId",
-    issue.firstSchematicBox.schematicComponentId,
-  )
-  addAttr(
-    attrs,
-    "component2SchematicComponentId",
-    issue.secondSchematicBox.schematicComponentId,
-  )
-  addAttr(attrs, "component1SchX", issue.firstSchematicBox.schX)
-  addAttr(attrs, "component1SchY", issue.firstSchematicBox.schY)
-  addAttr(attrs, "component2SchX", issue.secondSchematicBox.schX)
-  addAttr(attrs, "component2SchY", issue.secondSchematicBox.schY)
+  addAttr(attrs, "component1Name", issue.firstComponent.sourceComponentName)
+  addAttr(attrs, "component2Name", issue.secondComponent.sourceComponentName)
+  addAttr(attrs, "component1SchX", issue.firstComponent.schX)
+  addAttr(attrs, "component1SchY", issue.firstComponent.schY)
+  addAttr(attrs, "component2SchX", issue.secondComponent.schX)
+  addAttr(attrs, "component2SchY", issue.secondComponent.schY)
   addAttr(attrs, "overlapCenterSchX", issue.overlapCenter.schX)
   addAttr(attrs, "overlapCenterSchY", issue.overlapCenter.schY)
   addAttr(attrs, "overlapWidth", issue.overlapWidth)
   addAttr(attrs, "overlapHeight", issue.overlapHeight)
 
-  return `<SchematicBoxOverlap ${attrs.join(" ")} />`
+  return `<ComponentOverlap ${attrs.join(" ")} />`
 }
 
 const escapeAttr = (value: string): string =>
@@ -193,7 +179,7 @@ export class SchematicPlacementAnalysis {
             "<SchematicPlacementIssues>",
             ...issues.map((issue) => {
               switch (issue.lineItemType) {
-                case "SchematicBoxOverlap":
+                case "ComponentOverlap":
                   return overlapIssueToString(issue)
                 default:
                   return ""

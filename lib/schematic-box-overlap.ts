@@ -1,5 +1,5 @@
 import type {
-  SchematicBoxOverlap,
+  ComponentOverlap,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "./types"
@@ -23,12 +23,12 @@ const getCenteredRectBounds = (box: SchematicBoxPlacement): RectBounds => {
   }
 }
 
-const getSchematicBoxOverlap = (
-  firstSchematicBox: SchematicBoxPlacement,
-  secondSchematicBox: SchematicBoxPlacement,
-): SchematicBoxOverlap | null => {
-  const firstBounds = getCenteredRectBounds(firstSchematicBox)
-  const secondBounds = getCenteredRectBounds(secondSchematicBox)
+const getComponentOverlap = (
+  firstComponent: SchematicBoxPlacement,
+  secondComponent: SchematicBoxPlacement,
+): ComponentOverlap | null => {
+  const firstBounds = getCenteredRectBounds(firstComponent)
+  const secondBounds = getCenteredRectBounds(secondComponent)
   const left = Math.max(firstBounds.left, secondBounds.left)
   const right = Math.min(firstBounds.right, secondBounds.right)
   const top = Math.max(firstBounds.top, secondBounds.top)
@@ -41,9 +41,9 @@ const getSchematicBoxOverlap = (
   }
 
   return {
-    lineItemType: "SchematicBoxOverlap",
-    firstSchematicBox,
-    secondSchematicBox,
+    lineItemType: "ComponentOverlap",
+    firstComponent,
+    secondComponent,
     overlapCenter: {
       schX: left + overlapWidth / 2,
       schY: top + overlapHeight / 2,
@@ -54,19 +54,23 @@ const getSchematicBoxOverlap = (
 }
 
 export const generateSchematicPlacementIssues = (
-  schematicBoxes: SchematicBoxPlacement[],
+  componentPlacements: SchematicBoxPlacement[],
 ): SchematicPlacementIssue[] => {
   const issues: SchematicPlacementIssue[] = []
 
-  for (let firstIndex = 0; firstIndex < schematicBoxes.length; firstIndex++) {
+  for (
+    let firstIndex = 0;
+    firstIndex < componentPlacements.length;
+    firstIndex++
+  ) {
     for (
       let secondIndex = firstIndex + 1;
-      secondIndex < schematicBoxes.length;
+      secondIndex < componentPlacements.length;
       secondIndex++
     ) {
-      const overlap = getSchematicBoxOverlap(
-        schematicBoxes[firstIndex]!,
-        schematicBoxes[secondIndex]!,
+      const overlap = getComponentOverlap(
+        componentPlacements[firstIndex]!,
+        componentPlacements[secondIndex]!,
       )
 
       if (overlap) {
