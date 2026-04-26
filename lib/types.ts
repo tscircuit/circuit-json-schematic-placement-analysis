@@ -4,6 +4,8 @@ export interface SchematicBoxPlacement {
   schY: number
   width: number
   height: number
+  sourceComponentId?: string
+  sourceComponentName?: string
   schematicComponentId?: string
   schematicSymbolId?: string
   subcircuitId?: string

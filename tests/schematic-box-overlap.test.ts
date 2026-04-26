@@ -1,9 +1,11 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "./fixtures/create-schematic-analysis-fixture-svg"
-import { overlappingSchematicBoxesCircuitJson } from "./fixtures/overlapping-schematic-boxes"
+import { createOverlappingSchematicBoxesCircuitJson } from "./fixtures/overlapping-schematic-boxes"
 
 test("generates a schematic box overlap issue", async () => {
+  const overlappingSchematicBoxesCircuitJson =
+    await createOverlappingSchematicBoxesCircuitJson()
   const analysis = analyzeSchematicPlacement(
     overlappingSchematicBoxesCircuitJson,
   )
@@ -20,30 +22,24 @@ test("generates a schematic box overlap issue", async () => {
           positionAnchor: "center",
           schX: 0,
           schY: 0,
-          width: 3,
-          height: 2,
-          schematicComponentId: "schematic_component_a",
+          sourceComponentId: "source_component_0",
+          sourceComponentName: "U1",
+          schematicComponentId: "schematic_component_0",
         },
         secondSchematicBox: {
           positionAnchor: "center",
           schX: 1,
           schY: 0.5,
-          width: 3,
-          height: 2,
-          schematicComponentId: "schematic_component_b",
+          sourceComponentId: "source_component_1",
+          sourceComponentName: "R2",
+          schematicComponentId: "schematic_component_1",
         },
-        overlapCenter: {
-          schX: 0.5,
-          schY: 0.25,
-        },
-        overlapWidth: 2,
-        overlapHeight: 1.5,
       },
     ],
   })
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxOverlap firstSchX="0" firstSchY="0" secondSchX="1" secondSchY="0.5" overlapCenterSchX="0.5" overlapCenterSchY="0.25" overlapWidth="2" overlapHeight="1.5" />',
+    '<SchematicBoxOverlap component1Name="U1" component2Name="R2" component1SchematicComponentId="schematic_component_0" component2SchematicComponentId="schematic_component_1"',
   )
 
   expect(
