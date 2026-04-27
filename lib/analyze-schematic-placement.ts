@@ -12,7 +12,9 @@ import type {
   OverlapCorrectionSuggestion,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
+  VerboseSchematicNetLabel,
 } from "./types"
+import { generateVerboseNetLabelIssues } from "./verbose-net-label"
 
 const fmtNumber = (value: number): string => {
   if (Number.isInteger(value)) return String(value)
@@ -166,6 +168,19 @@ const capacitorSymbolHorizontalIssueToString = (
   return `<CapacitorSymbolHorizontal ${attrs.join(" ")} />`
 }
 
+const verboseSchematicNetLabelIssueToString = (
+  issue: VerboseSchematicNetLabel,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "text", issue.text)
+  addAttr(attrs, "schX", issue.schX)
+  addAttr(attrs, "schY", issue.schY)
+  addAttr(attrs, "message", issue.message)
+
+  return `<VerboseSchematicNetLabel ${attrs.join(" ")} />`
+}
+
 const correctionSuggestionToString = (
   suggestion: OverlapCorrectionSuggestion,
 ): string => {
@@ -226,6 +241,8 @@ export class SchematicPlacementAnalysis {
                   return overlapIssueToString(issue)
                 case "CapacitorSymbolHorizontal":
                   return capacitorSymbolHorizontalIssueToString(issue)
+                case "VerboseSchematicNetLabel":
+                  return verboseSchematicNetLabelIssueToString(issue)
                 default:
                   return ""
               }
@@ -269,6 +286,7 @@ export const analyzeSchematicPlacement = (
   const issues = [
     ...generateSchematicPlacementIssues(lineItems),
     ...generateCapacitorOrientationIssues(lineItems, circuitJson),
+    ...generateVerboseNetLabelIssues(circuitJson),
   ]
 
   return new SchematicPlacementAnalysis([
