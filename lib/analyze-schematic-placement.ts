@@ -66,6 +66,19 @@ const schematicBoxToPlacement = (
   return placement
 }
 
+const schematicComponentToPlacement = (
+  schematicComponent: SchematicComponent,
+): SchematicBoxPlacement => ({
+  positionAnchor: "center",
+  schX: schematicComponent.center.x,
+  schY: schematicComponent.center.y,
+  width: schematicComponent.size.width,
+  height: schematicComponent.size.height,
+  schematicComponentId: schematicComponent.schematic_component_id,
+  schematicSymbolId: schematicComponent.schematic_symbol_id,
+  subcircuitId: schematicComponent.subcircuit_id,
+})
+
 const placementAttrsToString = (placement: SchematicBoxPlacement): string => {
   const attrs = [
     `positionAnchor="${placement.positionAnchor}"`,
@@ -128,8 +141,24 @@ const findCapacitorOrientationIssues = (
         schematicComponent,
       ]),
   )
+  const schematicBoxComponentIds = new Set(
+    circuitJson
+      .filter(isSchematicBox)
+      .flatMap((schematicBox) =>
+        schematicBox.schematic_component_id
+          ? [schematicBox.schematic_component_id]
+          : [],
+      ),
+  )
 
-  return circuitJson
+  const isCapacitorSchematicComponent = (
+    schematicComponent: SchematicComponent | undefined,
+  ): boolean =>
+    (schematicComponent?.source_component_id !== undefined &&
+      sourceCapacitorIds.has(schematicComponent.source_component_id)) ||
+    isCapacitorSymbolName(schematicComponent?.symbol_name)
+
+  const schematicBoxIssues = circuitJson
     .filter(isSchematicBox)
     .filter((schematicBox) => schematicBox.width > schematicBox.height)
     .filter((schematicBox) => {
@@ -144,16 +173,33 @@ const findCapacitorOrientationIssues = (
         : undefined
 
       return (
-        (schematicComponent?.source_component_id !== undefined &&
-          sourceCapacitorIds.has(schematicComponent.source_component_id)) ||
-        isCapacitorSymbolName(schematicComponent?.symbol_name) ||
+        isCapacitorSchematicComponent(schematicComponent) ||
         isCapacitorSymbolName(schematicSymbol?.name)
       )
     })
     .map((schematicBox) => ({
-      lineItemType: "CapacitorSymbolHorizontal",
+      lineItemType: "CapacitorSymbolHorizontal" as const,
       schematicBox: schematicBoxToPlacement(schematicBox),
     }))
+  const schematicComponentIssues = circuitJson
+    .filter(isSchematicComponent)
+    .filter(
+      (schematicComponent) =>
+        !schematicBoxComponentIds.has(
+          schematicComponent.schematic_component_id,
+        ),
+    )
+    .filter(
+      (schematicComponent) =>
+        schematicComponent.size.width > schematicComponent.size.height,
+    )
+    .filter(isCapacitorSchematicComponent)
+    .map((schematicComponent) => ({
+      lineItemType: "CapacitorSymbolHorizontal" as const,
+      schematicBox: schematicComponentToPlacement(schematicComponent),
+    }))
+
+  return [...schematicBoxIssues, ...schematicComponentIssues]
 }
 
 export class SchematicPlacementAnalysis {

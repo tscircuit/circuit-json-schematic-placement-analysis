@@ -15,7 +15,23 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
-    "@types/bun": "latest"
+    "@tscircuit/copper-pour-solver": "^0.0.24",
+    "@tscircuit/core": "^0.0.1199",
+    "@tscircuit/infer-cable-insertion-point": "^0.0.2",
+    "@tscircuit/math-utils": "^0.0.36",
+    "@tscircuit/miniflex": "^0.0.4",
+    "@tscircuit/schematic-trace-solver": "^0.0.48",
+    "@tscircuit/solver-utils": "^0.0.19",
+    "@tscircuit/soup-util": "^0.0.41",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.14",
+    "calculate-elbow": "^0.0.12",
+    "circuit-json-to-spice": "^0.0.34",
+    "circuit-to-svg": "^0.0.345",
+    "connectivity-map": "^1.0.0",
+    "debug": "^4.4.3",
+    "minicssgrid": "^0.0.9",
+    "spicey": "^0.0.14"
   },
   "peerDependencies": {
     "typescript": "^5"
