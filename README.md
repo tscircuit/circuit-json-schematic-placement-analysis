@@ -1,11 +1,12 @@
 # circuit-json-schematic-placement-analysis
 
-Analyze `circuit-json` schematic placement and report schematic box positions.
+Analyze `circuit-json` schematic placement, report schematic box positions, and
+surface placement issues.
 
-This is intended for placement-focused diagnostics. The first version only emits
-`<SchematicBoxPlacement />` rows inside `<SchematicBoxPositions>`, while future
-versions can add placement issue nodes such as `<SchematicPlacementIssues>`,
-`<SchematicBoxOverlap />`, and related checks.
+This is intended for placement-focused diagnostics. It emits
+`<SchematicBoxPlacement />` rows inside `<SchematicBoxPositions>`, and includes
+`<SchematicPlacementIssues>` when checks find placement problems such as
+horizontal capacitor symbols.
 
 ## Install
 
@@ -29,6 +30,9 @@ console.log(analysis.toString())
 ```xml
 <SchematicBoxPositions>
 <SchematicBoxPlacement positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
+<SchematicPlacementIssues>
+<CapacitorSymbolHorizontal positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
+</SchematicPlacementIssues>
 </SchematicBoxPositions>
 ```
 
