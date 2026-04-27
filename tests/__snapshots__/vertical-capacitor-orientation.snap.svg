@@ -1,0 +1,38 @@
+<svg width="1200" height="724" viewBox="0 0 1200 724" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component-overlay" x="532.173913043476" y="156.52173913042995" width="138.26086956522204" height="286.95652173914004" fill="transparent"/><path d="M 600 156.52173913042995 L 600 281.739130434782" stroke="rgb(132, 0, 0)" fill="none" stroke-width="5.217391304348px" stroke-linecap="round"/><path d="M 600 323.478260869566 L 600 443.47826086957" stroke="rgb(132, 0, 0)" fill="none" stroke-width="5.217391304348px" stroke-linecap="round"/><path d="M 532.173913043476 281.739130434782 L 670.434782608698 281.739130434782" stroke="rgb(132, 0, 0)" fill="none" stroke-width="5.217391304348px" stroke-linecap="round"/><path d="M 532.173913043476 323.478260869566 L 670.434782608698 323.478260869566" stroke="rgb(132, 0, 0)" fill="none" stroke-width="5.217391304348px" stroke-linecap="round"/><text x="630.000000000001" y="247.82608695652" stroke="rgb(245, 241, 237)" stroke-width="5.217391304348px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="start" dominant-baseline="ideographic" font-size="46.956521739132px">C1</text><text x="630.000000000001" y="352.17391304348" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="start" dominant-baseline="hanging" font-size="46.956521739132px">1uF</text><circle cx="600" cy="443.47826086957" r="5.217391304348px" stroke-width="5.217391304348px" fill="none" stroke="rgb(132, 0, 0)"/><circle cx="600" cy="156.52173913042995" r="5.217391304348px" stroke-width="5.217391304348px" fill="none" stroke="rgb(132, 0, 0)"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="600" cy="443.47826086957" r="10.434782608696" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="600" cy="156.52173913042998" r="10.434782608696" fill="red" opacity="0"/></g>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+    <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C1&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;0.53&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;1.1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+</text>
+  </g>
+</svg>

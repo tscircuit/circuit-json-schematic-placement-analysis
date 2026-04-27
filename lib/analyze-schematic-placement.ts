@@ -4,8 +4,10 @@ import type {
   SchematicBox,
   SchematicComponent,
 } from "circuit-json"
+import { generateCapacitorOrientationIssues } from "./capacitor-orientation"
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
+  CapacitorSymbolHorizontal,
   ComponentOverlap,
   OverlapCorrectionSuggestion,
   SchematicBoxPlacementLineItem,
@@ -150,6 +152,20 @@ const overlapIssueToString = (issue: ComponentOverlap): string => {
   ].join("\n")
 }
 
+const capacitorSymbolHorizontalIssueToString = (
+  issue: CapacitorSymbolHorizontal,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
+  addAttr(attrs, "schX", issue.schematicBox.schX)
+  addAttr(attrs, "schY", issue.schematicBox.schY)
+  addAttr(attrs, "width", issue.schematicBox.width)
+  addAttr(attrs, "height", issue.schematicBox.height)
+
+  return `<CapacitorSymbolHorizontal ${attrs.join(" ")} />`
+}
+
 const correctionSuggestionToString = (
   suggestion: OverlapCorrectionSuggestion,
 ): string => {
@@ -208,6 +224,8 @@ export class SchematicPlacementAnalysis {
               switch (issue.lineItemType) {
                 case "ComponentOverlap":
                   return overlapIssueToString(issue)
+                case "CapacitorSymbolHorizontal":
+                  return capacitorSymbolHorizontalIssueToString(issue)
                 default:
                   return ""
               }
@@ -248,7 +266,10 @@ export const analyzeSchematicPlacement = (
       )
       .map((schematicBox) => schematicBoxToLineItem(schematicBox, circuitJson)),
   ]
-  const issues = generateSchematicPlacementIssues(lineItems)
+  const issues = [
+    ...generateSchematicPlacementIssues(lineItems),
+    ...generateCapacitorOrientationIssues(lineItems, circuitJson),
+  ]
 
   return new SchematicPlacementAnalysis([
     ...lineItems,
