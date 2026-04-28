@@ -1,7 +1,7 @@
 import type { CircuitJson, SchematicNetLabel, SourcePort } from "circuit-json"
 import type { VerboseSchematicNetLabel } from "./types"
 
-export const VERBOSE_NET_LABEL_MESSAGE = "Create <trace /> with schDisplayLabel"
+export const VERBOSE_NET_LABEL_MESSAGE = "Create trace with schDisplayLabel"
 
 const isSchematicNetLabel = (
   element: CircuitJson[number],

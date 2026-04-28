@@ -47,15 +47,11 @@ function createAnalyzerTextSvg(text: string, width: number): string {
     `<text x="${padding}" y="${padding + lineHeight}" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">`,
     ...lines.map(
       (line, index) =>
-        `<tspan x="${padding}" dy="${index === 0 ? 0 : lineHeight}">${escapeAnalyzerText(line)}</tspan>`,
+        `<tspan x="${padding}" dy="${index === 0 ? 0 : lineHeight}">${escapeXml(line)}</tspan>`,
     ),
     "</text>",
     "</svg>",
   ].join("\n")
-}
-
-function escapeAnalyzerText(value: string): string {
-  return escapeXml(value).replaceAll("&lt;trace /&gt;", "<![CDATA[<trace />]]>")
 }
 
 function escapeXml(value: string): string {
