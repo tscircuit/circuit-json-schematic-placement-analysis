@@ -114,12 +114,19 @@ const addAttr = (
   attrs: string[],
   key: string,
   value: string | number | undefined,
-  options?: { formatDelta?: boolean },
+  options?: { formatDelta?: boolean; escape?: boolean },
 ) => {
   if (value === undefined) return
-  attrs.push(
-    `${key}="${typeof value === "number" ? (options?.formatDelta ? fmtDelta(value) : fmtNumber(value)) : escapeAttr(value)}"`,
-  )
+  const stringValue =
+    typeof value === "number"
+      ? options?.formatDelta
+        ? fmtDelta(value)
+        : fmtNumber(value)
+      : options?.escape === false
+        ? value
+        : escapeAttr(value)
+
+  attrs.push(`${key}="${stringValue}"`)
 }
 
 const lineItemToString = (lineItem: SchematicBoxPlacementLineItem): string => {
@@ -173,10 +180,11 @@ const verboseSchematicNetLabelIssueToString = (
 ): string => {
   const attrs: string[] = []
 
+  addAttr(attrs, "message", issue.message, { escape: false })
   addAttr(attrs, "text", issue.text)
+  addAttr(attrs, "involvedPins", issue.involvedPins.join(","))
   addAttr(attrs, "schX", issue.schX)
   addAttr(attrs, "schY", issue.schY)
-  addAttr(attrs, "message", issue.message)
 
   return `<VerboseSchematicNetLabel ${attrs.join(" ")} />`
 }

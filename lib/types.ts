@@ -51,6 +51,7 @@ export interface VerboseSchematicNetLabel {
   schematicNetLabelId?: string
   sourceNetId?: string
   text: string
+  involvedPins: string[]
   schX: number
   schY: number
   message: string
