@@ -3,7 +3,7 @@ import type {
   OverlapCorrectionSuggestion,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
-} from "./types"
+} from "../types"
 
 interface RectBounds {
   left: number

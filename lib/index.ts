@@ -1,8 +1,9 @@
 export {
   SchematicPlacementAnalysis,
   analyzeSchematicPlacement,
-} from "./analyze-schematic-placement"
-export { generateCapacitorOrientationIssues } from "./capacitor-orientation"
-export { generateSchematicPlacementIssues } from "./schematic-box-overlap"
-export { generateVerboseNetLabelIssues } from "./verbose-net-label"
+} from "./analyzers/analyze-schematic-placement"
+export { generateCapacitorOrientationIssues } from "./analyzers/capacitor-orientation"
+export { generateSchematicBoxSizingIssues } from "./analyzers/schematic-box-sizing"
+export { generateSchematicPlacementIssues } from "./analyzers/schematic-box-overlap"
+export { generateVerboseNetLabelIssues } from "./analyzers/verbose-net-label"
 export * from "./types"

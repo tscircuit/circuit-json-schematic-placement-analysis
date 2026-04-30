@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createSchematicAnalysisFixtureSvg } from "./fixtures/create-schematic-analysis-fixture-svg"
-import { createVerticalCapacitorCircuitJson } from "./fixtures/vertical-capacitor"
+import { createVerticalCapacitorCircuitJson } from "../assets/vertical-capacitor"
+import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 test("does not generate an orientation issue for a vertical capacitor", async () => {
   const verticalCapacitorCircuitJson =

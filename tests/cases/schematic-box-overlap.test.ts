@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createSchematicAnalysisFixtureSvg } from "./fixtures/create-schematic-analysis-fixture-svg"
-import { createOverlappingSchematicBoxesCircuitJson } from "./fixtures/overlapping-schematic-boxes"
+import { createOverlappingSchematicBoxesCircuitJson } from "../assets/overlapping-schematic-boxes"
+import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 test("generates a schematic box overlap issue", async () => {
   const overlappingSchematicBoxesCircuitJson =

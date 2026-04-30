@@ -1,5 +1,5 @@
 import type { CircuitJson, SchematicComponent } from "circuit-json"
-import type { CapacitorSymbolHorizontal, SchematicBoxPlacement } from "./types"
+import type { CapacitorSymbolHorizontal, SchematicBoxPlacement } from "../types"
 
 const HORIZONTAL_CAPACITOR_SYMBOL_NAMES = new Set([
   "capacitor_left",

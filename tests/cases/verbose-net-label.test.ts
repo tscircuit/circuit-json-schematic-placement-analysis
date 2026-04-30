@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createSchematicAnalysisFixtureSvg } from "./fixtures/create-schematic-analysis-fixture-svg"
-import { createVerboseNetLabelCircuitJson } from "./fixtures/verbose-net-label"
+import { createVerboseNetLabelCircuitJson } from "../assets/verbose-net-label"
+import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 test("generates a verbose schematic net label issue", async () => {
   const verboseNetLabelCircuitJson = await createVerboseNetLabelCircuitJson()

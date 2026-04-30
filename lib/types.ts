@@ -57,11 +57,21 @@ export interface VerboseSchematicNetLabel {
   message: string
 }
 
+export interface SchematicBoxTooWide {
+  lineItemType: "SchematicBoxTooWide"
+  schematicBox: SchematicBoxPlacement
+  measuredGap: number
+  maxAllowedGap: number
+  suggestedWidth: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
   | VerboseSchematicNetLabel
+  | SchematicBoxTooWide
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

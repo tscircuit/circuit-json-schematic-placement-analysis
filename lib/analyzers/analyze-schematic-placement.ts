@@ -5,15 +5,17 @@ import type {
   SchematicComponent,
 } from "circuit-json"
 import { generateCapacitorOrientationIssues } from "./capacitor-orientation"
+import { generateSchematicBoxSizingIssues } from "./schematic-box-sizing"
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
   CapacitorSymbolHorizontal,
   ComponentOverlap,
   OverlapCorrectionSuggestion,
+  SchematicBoxTooWide,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
   VerboseSchematicNetLabel,
-} from "./types"
+} from "../types"
 import { generateVerboseNetLabelIssues } from "./verbose-net-label"
 
 const fmtNumber = (value: number): string => {
@@ -189,6 +191,21 @@ const verboseSchematicNetLabelIssueToString = (
   return `<VerboseSchematicNetLabel ${attrs.join(" ")} />`
 }
 
+const schematicBoxTooWideIssueToString = (
+  issue: SchematicBoxTooWide,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "message", issue.message, { escape: false })
+  addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
+  addAttr(attrs, "width", issue.schematicBox.width)
+  addAttr(attrs, "measuredGap", issue.measuredGap)
+  addAttr(attrs, "maxAllowedGap", issue.maxAllowedGap)
+  addAttr(attrs, "suggestedWidth", issue.suggestedWidth)
+
+  return `<SchematicBoxTooWide ${attrs.join(" ")} />`
+}
+
 const correctionSuggestionToString = (
   suggestion: OverlapCorrectionSuggestion,
 ): string => {
@@ -251,6 +268,8 @@ export class SchematicPlacementAnalysis {
                   return capacitorSymbolHorizontalIssueToString(issue)
                 case "VerboseSchematicNetLabel":
                   return verboseSchematicNetLabelIssueToString(issue)
+                case "SchematicBoxTooWide":
+                  return schematicBoxTooWideIssueToString(issue)
                 default:
                   return ""
               }
@@ -295,6 +314,7 @@ export const analyzeSchematicPlacement = (
     ...generateSchematicPlacementIssues(lineItems),
     ...generateCapacitorOrientationIssues(lineItems, circuitJson),
     ...generateVerboseNetLabelIssues(circuitJson),
+    ...generateSchematicBoxSizingIssues(lineItems, circuitJson),
   ]
 
   return new SchematicPlacementAnalysis([
