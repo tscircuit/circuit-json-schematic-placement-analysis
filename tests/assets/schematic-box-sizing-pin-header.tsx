@@ -19,7 +19,7 @@ const ONE_SIDED_PIN_LABELS = {
 
 const ONE_SIDED_PINS = Object.keys(ONE_SIDED_PIN_LABELS)
 
-export async function createSchematicBoxSizingCircuitJson(): Promise<CircuitJson> {
+export async function createSchematicBoxSizingPinHeaderCircuitJson(): Promise<CircuitJson> {
   const circuit = new Circuit()
 
   circuit.add(

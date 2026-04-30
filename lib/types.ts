@@ -57,14 +57,26 @@ export interface VerboseSchematicNetLabel {
   message: string
 }
 
-export interface SchematicBoxTooWide {
-  lineItemType: "SchematicBoxTooWide"
+interface BaseSchematicBoxTooWide {
   schematicBox: SchematicBoxPlacement
-  measuredGap: number
-  maxAllowedGap: number
-  suggestedWidth: number
+  measuredInnerLabelHorizontalEmptySpace: number
+  maxAllowedInnerLabelHorizontalEmptySpace: number
+  suggestedSchWidth: number
   message: string
 }
+
+export interface SchematicBoxTooWideForPinHeader
+  extends BaseSchematicBoxTooWide {
+  lineItemType: "SchematicBoxTooWideForPinHeader"
+}
+
+export interface SchematicBoxTooWideForChip extends BaseSchematicBoxTooWide {
+  lineItemType: "SchematicBoxTooWideForChip"
+}
+
+export type SchematicBoxTooWide =
+  | SchematicBoxTooWideForPinHeader
+  | SchematicBoxTooWideForChip
 
 export type SchematicPlacementIssue =
   | ComponentOverlap
