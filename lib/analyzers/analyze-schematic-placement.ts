@@ -186,10 +186,39 @@ const verboseSchematicNetLabelIssueToString = (
   issue: VerboseSchematicNetLabel,
 ): string => {
   const attrs: string[] = []
+  const involvedPinsByComponent = new Map<string, Set<string>>()
+
+  for (const involvedPin of issue.involvedPins) {
+    const separatorIndex = involvedPin.indexOf(".")
+    if (separatorIndex <= 0 || separatorIndex >= involvedPin.length - 1) {
+      continue
+    }
+
+    const componentName = involvedPin.slice(0, separatorIndex)
+    const pinName = involvedPin.slice(separatorIndex + 1)
+    const existingPinNames = involvedPinsByComponent.get(componentName)
+
+    if (existingPinNames) {
+      existingPinNames.add(pinName)
+      continue
+    }
+
+    involvedPinsByComponent.set(componentName, new Set([pinName]))
+  }
+
+  const groupedInvolvedPins = Array.from(involvedPinsByComponent.entries())
+    .sort(([firstComponentName], [secondComponentName]) =>
+      firstComponentName.localeCompare(secondComponentName),
+    )
+    .map(([componentName, pinNames]) => {
+      const sortedPinNames = Array.from(pinNames).sort()
+      return `${componentName}:${sortedPinNames.join(",")}`
+    })
+    .join("|")
 
   addAttr(attrs, "message", issue.message, { escape: false })
   addAttr(attrs, "text", issue.text)
-  addAttr(attrs, "involvedPins", issue.involvedPins.join(","))
+  addAttr(attrs, "involvedPins", groupedInvolvedPins)
   addAttr(attrs, "schX", issue.schX)
   addAttr(attrs, "schY", issue.schY)
 

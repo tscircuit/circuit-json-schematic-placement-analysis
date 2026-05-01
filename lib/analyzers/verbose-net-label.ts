@@ -110,12 +110,14 @@ export const generateVerboseNetLabelIssues = (
 
     if (issuesByText.has(netLabel.text)) continue
 
+    const involvedPins = getInvolvedPins(netLabel.text, tokenToInvolvedPin)
+
     issuesByText.set(netLabel.text, {
       lineItemType: "VerboseSchematicNetLabel" as const,
       schematicNetLabelId: netLabel.schematic_net_label_id,
       sourceNetId: netLabel.source_net_id,
       text: netLabel.text,
-      involvedPins: getInvolvedPins(netLabel.text, tokenToInvolvedPin),
+      involvedPins,
       schX: netLabel.center.x,
       schY: netLabel.center.y,
       message: VERBOSE_NET_LABEL_MESSAGE,

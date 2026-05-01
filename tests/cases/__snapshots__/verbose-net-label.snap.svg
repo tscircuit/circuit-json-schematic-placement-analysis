@@ -62,7 +62,7 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuit80_co
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot; text=&quot;R1_pin2/U1_pin2&quot;</tspan>
-    <tspan x="18" dy="22">  involvedPins=&quot;R1.pin2,U1.pin2&quot; schX=&quot;-1.35&quot; schY=&quot;0.1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  involvedPins=&quot;R1:pin2|U1:pin2&quot; schX=&quot;-1.35&quot; schY=&quot;0.1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
