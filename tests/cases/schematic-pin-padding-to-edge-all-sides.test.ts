@@ -17,6 +17,28 @@ test("generates schematic pin padding to edge issues for labels on all sides", a
       : []
 
   expect(pinPaddingIssues).toHaveLength(8)
+
+  for (const issue of pinPaddingIssues) {
+    const expectedExcessPadding =
+      issue.measuredPadding - issue.maxAllowedPadding
+    expect(issue.excessPadding).toBeCloseTo(expectedExcessPadding, 10)
+
+    if (issue.pinSide === "left" || issue.pinSide === "right") {
+      const expectedSuggestedSchHeight =
+        issue.schematicBox.height - expectedExcessPadding * 2
+      expect(issue.suggestedSchHeight).toBeCloseTo(
+        expectedSuggestedSchHeight,
+        10,
+      )
+      expect(issue.suggestedSchWidth).toBeUndefined()
+    } else {
+      const expectedSuggestedSchWidth =
+        issue.schematicBox.width - expectedExcessPadding * 2
+      expect(issue.suggestedSchWidth).toBeCloseTo(expectedSuggestedSchWidth, 10)
+      expect(issue.suggestedSchHeight).toBeUndefined()
+    }
+  }
+
   expect(
     pinPaddingIssues.map((issue) => ({
       pinSide: issue.pinSide,

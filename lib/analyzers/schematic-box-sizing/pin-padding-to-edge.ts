@@ -176,18 +176,34 @@ const getMaxAllowedPinPadding = (input: {
 
 const createPinPaddingToEdgeIssue = (
   candidate: PinPaddingToEdgeCandidate,
-): SchematicPinPaddingToEdgeTooLarge => ({
-  lineItemType: "SchematicPinPaddingToEdgeTooLarge",
-  pinSide: candidate.pinSide,
-  edgeSide: candidate.edgeSide,
-  pinName: candidate.pinName,
-  schematicBox: candidate.schematicBox,
-  measuredPadding: candidate.measuredPadding,
-  maxAllowedPadding: candidate.maxAllowedPadding,
-  message: isHorizontalSide(candidate.pinSide)
-    ? `${SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE} height`
-    : `${SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE} width`,
-})
+): SchematicPinPaddingToEdgeTooLarge => {
+  const excessPadding = Math.max(
+    0,
+    candidate.measuredPadding - candidate.maxAllowedPadding,
+  )
+  const widthReduction = excessPadding * 2
+  const heightReduction = excessPadding * 2
+
+  return {
+    lineItemType: "SchematicPinPaddingToEdgeTooLarge",
+    pinSide: candidate.pinSide,
+    edgeSide: candidate.edgeSide,
+    pinName: candidate.pinName,
+    schematicBox: candidate.schematicBox,
+    measuredPadding: candidate.measuredPadding,
+    maxAllowedPadding: candidate.maxAllowedPadding,
+    excessPadding,
+    suggestedSchWidth: isHorizontalSide(candidate.pinSide)
+      ? undefined
+      : Math.max(0, candidate.schematicBox.width - widthReduction),
+    suggestedSchHeight: isHorizontalSide(candidate.pinSide)
+      ? Math.max(0, candidate.schematicBox.height - heightReduction)
+      : undefined,
+    message: isHorizontalSide(candidate.pinSide)
+      ? `${SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE} height`
+      : `${SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE} width`,
+  }
+}
 
 export const generateSchematicPinPaddingToEdgeCandidates = (
   componentPlacements: SchematicBoxPlacement[],

@@ -36,10 +36,10 @@
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U3&quot; pinSide=&quot;right&quot; edgeSide=&quot;top&quot; pinName=&quot;RUN&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.2&quot; maxAllowedPadding=&quot;0.2&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.2&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;1&quot; suggestedSchHeight=&quot;1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U3&quot; pinSide=&quot;right&quot; edgeSide=&quot;bottom&quot; pinName=&quot;DVDD&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.2&quot; maxAllowedPadding=&quot;0.2&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.2&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;1&quot; suggestedSchHeight=&quot;1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

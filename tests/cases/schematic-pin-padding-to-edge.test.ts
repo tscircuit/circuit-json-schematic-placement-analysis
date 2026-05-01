@@ -32,6 +32,8 @@ test("generates a schematic pin padding to edge issue", async () => {
       },
       measuredPadding: 1.2,
       maxAllowedPadding: 0.2,
+      excessPadding: 1,
+      suggestedSchHeight: 1,
       message:
         "Move schematic pins closer to the box edge or change the schematic box height",
     },
@@ -46,16 +48,18 @@ test("generates a schematic pin padding to edge issue", async () => {
       },
       measuredPadding: 1.2,
       maxAllowedPadding: 0.2,
+      excessPadding: 1,
+      suggestedSchHeight: 1,
       message:
         "Move schematic pins closer to the box edge or change the schematic box height",
     },
   ])
 
   expect(analysis.toString()).toContain(
-    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="top" pinName="RUN" measuredPadding="1.2" maxAllowedPadding="0.2" />',
+    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="top" pinName="RUN" measuredPadding="1.2" maxAllowedPadding="0.2" excessPadding="1" suggestedSchHeight="1" />',
   )
   expect(analysis.toString()).toContain(
-    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="bottom" pinName="DVDD" measuredPadding="1.2" maxAllowedPadding="0.2" />',
+    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="bottom" pinName="DVDD" measuredPadding="1.2" maxAllowedPadding="0.2" excessPadding="1" suggestedSchHeight="1" />',
   )
 
   expect(

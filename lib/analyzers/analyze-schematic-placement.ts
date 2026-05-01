@@ -231,6 +231,9 @@ const schematicPinPaddingToEdgeTooLargeIssueToString = (
   addAttr(attrs, "pinName", issue.pinName)
   addAttr(attrs, "measuredPadding", issue.measuredPadding)
   addAttr(attrs, "maxAllowedPadding", issue.maxAllowedPadding)
+  addAttr(attrs, "excessPadding", issue.excessPadding)
+  addAttr(attrs, "suggestedSchWidth", issue.suggestedSchWidth)
+  addAttr(attrs, "suggestedSchHeight", issue.suggestedSchHeight)
 
   return `<SchematicPinPaddingToEdgeTooLarge ${attrs.join(" ")} />`
 }

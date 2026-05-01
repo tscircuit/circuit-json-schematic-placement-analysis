@@ -25,6 +25,8 @@ test("generates a schematic pin padding to edge width message", async () => {
       lineItemType: "SchematicPinPaddingToEdgeTooLarge",
       pinSide: "top",
       edgeSide: "left",
+      excessPadding: 1,
+      suggestedSchWidth: 1,
       maxAllowedPadding: 0.2,
       message:
         "Move schematic pins closer to the box edge or change the schematic box width",
@@ -33,6 +35,8 @@ test("generates a schematic pin padding to edge width message", async () => {
       lineItemType: "SchematicPinPaddingToEdgeTooLarge",
       pinSide: "top",
       edgeSide: "right",
+      excessPadding: 1,
+      suggestedSchWidth: 1,
       maxAllowedPadding: 0.2,
       message:
         "Move schematic pins closer to the box edge or change the schematic box width",
@@ -40,7 +44,7 @@ test("generates a schematic pin padding to edge width message", async () => {
   ])
 
   expect(analysis.toString()).toContain(
-    'message="Move schematic pins closer to the box edge or change the schematic box width"',
+    'message="Move schematic pins closer to the box edge or change the schematic box width" componentName="U4" pinSide="top" edgeSide="left" pinName="RUN" measuredPadding="1.2" maxAllowedPadding="0.2" excessPadding="1" suggestedSchWidth="1"',
   )
 
   expect(

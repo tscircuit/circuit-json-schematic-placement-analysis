@@ -88,6 +88,9 @@ export interface SchematicPinPaddingToEdgeTooLarge {
   schematicBox: SchematicBoxPlacement
   measuredPadding: number
   maxAllowedPadding: number
+  excessPadding: number
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
   message: string
 }
 

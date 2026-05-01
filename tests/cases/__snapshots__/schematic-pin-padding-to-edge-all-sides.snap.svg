@@ -1,4 +1,4 @@
-<svg width="1200" height="1362" viewBox="0 0 1200 1362" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1538" viewBox="0 0 1200 1538" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -39,28 +39,36 @@
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.77&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U5&quot; pinSide=&quot;left&quot; edgeSide=&quot;top&quot; pinName=&quot;L&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; excessPadding=&quot;0.777&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedSchHeight=&quot;1.445&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U5&quot; pinSide=&quot;left&quot; edgeSide=&quot;bottom&quot; pinName=&quot;LL&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; excessPadding=&quot;0.777&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedSchHeight=&quot;1.445&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U5&quot; pinSide=&quot;right&quot; edgeSide=&quot;top&quot; pinName=&quot;RRR&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; excessPadding=&quot;0.777&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedSchHeight=&quot;1.445&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;U5&quot; pinSide=&quot;right&quot; edgeSide=&quot;bottom&quot; pinName=&quot;RRRR&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.622&quot; excessPadding=&quot;0.777&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedSchHeight=&quot;1.445&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U5&quot; pinSide=&quot;top&quot; edgeSide=&quot;left&quot; pinName=&quot;TTTTT&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; excessPadding=&quot;1.015&quot; suggestedSchWidth=&quot;0.97&quot;</tspan>
+    <tspan x="18" dy="22">  /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U5&quot; pinSide=&quot;top&quot; edgeSide=&quot;right&quot; pinName=&quot;TT&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; excessPadding=&quot;1.015&quot; suggestedSchWidth=&quot;0.97&quot;</tspan>
+    <tspan x="18" dy="22">  /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U5&quot; pinSide=&quot;bottom&quot; edgeSide=&quot;left&quot; pinName=&quot;BBBBBB&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; excessPadding=&quot;1.015&quot; suggestedSchWidth=&quot;0.97&quot;</tspan>
+    <tspan x="18" dy="22">  /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U5&quot; pinSide=&quot;bottom&quot; edgeSide=&quot;right&quot; pinName=&quot;B&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; excessPadding=&quot;1.015&quot; suggestedSchWidth=&quot;0.97&quot;</tspan>
+    <tspan x="18" dy="22">  /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
