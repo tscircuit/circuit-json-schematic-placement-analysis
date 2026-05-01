@@ -43,7 +43,7 @@ async function createSchematicPinSpacingCircuitJson(
 }
 
 export async function createSchematicPinSpacingTooSmallCircuitJson(): Promise<CircuitJson> {
-  return createSchematicPinSpacingCircuitJson(0.2)
+  return createSchematicPinSpacingCircuitJson(0.15)
 }
 
 export async function createSchematicPinSpacingTooLargeCircuitJson(): Promise<CircuitJson> {

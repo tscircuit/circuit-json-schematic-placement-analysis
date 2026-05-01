@@ -18,12 +18,6 @@ test("generates a schematic box overlap issue", async () => {
           (issue) => issue.lineItemType === "ComponentOverlap",
         )
       : []
-  const pinSpacingIssues =
-    issuesLineItem?.lineItemType === "SchematicPlacementIssues"
-      ? issuesLineItem.issues.filter(
-          (issue) => issue.lineItemType === "SchematicPinSpacingTooSmall",
-        )
-      : []
 
   expect(overlapIssues).toMatchObject([
     {
@@ -59,27 +53,13 @@ test("generates a schematic box overlap issue", async () => {
     },
   ])
 
-  expect(pinSpacingIssues).toMatchObject([
-    {
-      lineItemType: "SchematicPinSpacingTooSmall",
-      schematicBox: {
-        sourceComponentName: "U1",
-      },
-      measuredSpacing: 0.2,
-      minAllowedSpacing: 0.25,
-      message: "Increase schematic pin spacing to 0.25",
-    },
-  ])
-
   expect(analysis.toString()).toContain(
     '<OverlapCorrectionSuggestion target="R2" newSchX="1.25" deltaSchX="+0.25" />',
   )
   expect(analysis.toString()).toContain(
     '<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />',
   )
-  expect(analysis.toString()).toContain(
-    '<SchematicPinSpacingTooSmall message="Increase schematic pin spacing to 0.25" componentName="U1" measuredSpacing="0.2" minAllowedSpacing="0.25" />',
-  )
+  expect(analysis.toString()).not.toContain("SchematicPinSpacingTooSmall")
   expect(analysis.toString()).not.toContain('deltaSchX="0"')
   expect(analysis.toString()).not.toContain('deltaSchY="0"')
   expect(analysis.toString()).not.toContain(

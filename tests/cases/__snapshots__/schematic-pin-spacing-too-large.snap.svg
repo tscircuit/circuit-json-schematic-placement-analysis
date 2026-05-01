@@ -65,8 +65,8 @@
     <tspan x="18" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;U4&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;1.9&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.04&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.86&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicPinSpacingTooLarge message=&quot;Decrease schematic pin spacing to 0.25&quot; componentName=&quot;U4&quot;</tspan>
-    <tspan x="18" dy="22">  measuredSpacing=&quot;0.3&quot; maxAllowedSpacing=&quot;0.25&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPinSpacingTooLarge message=&quot;Decrease schematic pin spacing to 0.2&quot; componentName=&quot;U4&quot;</tspan>
+    <tspan x="18" dy="22">  measuredSpacing=&quot;0.3&quot; maxAllowedSpacing=&quot;0.2&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

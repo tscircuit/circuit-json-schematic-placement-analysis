@@ -25,14 +25,14 @@ test("generates a schematic pin spacing too small issue", async () => {
         sourceComponentName: "U4",
         width: 1.9000000000000001,
       },
-      measuredSpacing: 0.2,
-      minAllowedSpacing: 0.25,
-      message: "Increase schematic pin spacing to 0.25",
+      measuredSpacing: 0.15,
+      minAllowedSpacing: 0.2,
+      message: "Increase schematic pin spacing to 0.2",
     },
   ])
 
   expect(analysis.toString()).toContain(
-    '<SchematicPinSpacingTooSmall message="Increase schematic pin spacing to 0.25" componentName="U4" measuredSpacing="0.2" minAllowedSpacing="0.25" />',
+    '<SchematicPinSpacingTooSmall message="Increase schematic pin spacing to 0.2" componentName="U4" measuredSpacing="0.15" minAllowedSpacing="0.2" />',
   )
 
   expect(
