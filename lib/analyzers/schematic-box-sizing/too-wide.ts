@@ -1,11 +1,11 @@
 import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
 import type {
+  GenericSchematicBoxTooWide,
+  PinHeaderSchematicBoxTooWide,
   SchematicBoxPlacement,
-  SchematicBoxTooWideForChip,
-  SchematicBoxTooWideForPinHeader,
 } from "../../types"
 import {
-  CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+  GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   PIN_LABEL_EDGE_PADDING,
   SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
@@ -85,8 +85,8 @@ const createPinHeaderIssue = (input: {
   schematicBox: SchematicBoxPlacement
   measuredInnerLabelHorizontalEmptySpace: number
   suggestedSchWidth: number
-}): SchematicBoxTooWideForPinHeader => ({
-  lineItemType: "SchematicBoxTooWideForPinHeader",
+}): PinHeaderSchematicBoxTooWide => ({
+  lineItemType: "PinHeaderSchematicBoxTooWide",
   schematicBox: input.schematicBox,
   measuredInnerLabelHorizontalEmptySpace:
     input.measuredInnerLabelHorizontalEmptySpace,
@@ -96,17 +96,17 @@ const createPinHeaderIssue = (input: {
   message: SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
 })
 
-const createChipIssue = (input: {
+const createGenericIssue = (input: {
   schematicBox: SchematicBoxPlacement
   measuredInnerLabelHorizontalEmptySpace: number
   suggestedSchWidth: number
-}): SchematicBoxTooWideForChip => ({
-  lineItemType: "SchematicBoxTooWideForChip",
+}): GenericSchematicBoxTooWide => ({
+  lineItemType: "GenericSchematicBoxTooWide",
   schematicBox: input.schematicBox,
   measuredInnerLabelHorizontalEmptySpace:
     input.measuredInnerLabelHorizontalEmptySpace,
   maxAllowedInnerLabelHorizontalEmptySpace:
-    CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+    GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   suggestedSchWidth: input.suggestedSchWidth,
   message: SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
 })
@@ -179,9 +179,9 @@ export const generateSchematicBoxWidthSizingCandidates = (
   return candidates
 }
 
-export const getSchematicBoxTooWideForPinHeaderIssues = (
+export const getPinHeaderSchematicBoxTooWideIssues = (
   candidates: SchematicBoxWidthSizingCandidate[],
-): SchematicBoxTooWideForPinHeader[] =>
+): PinHeaderSchematicBoxTooWide[] =>
   candidates
     .filter(
       (candidate) => candidate.sourceComponentFtype === "simple_pin_header",
@@ -207,19 +207,21 @@ export const getSchematicBoxTooWideForPinHeaderIssues = (
       }),
     )
 
-export const getSchematicBoxTooWideForChipIssues = (
+export const getGenericSchematicBoxTooWideIssues = (
   candidates: SchematicBoxWidthSizingCandidate[],
-): SchematicBoxTooWideForChip[] =>
+): GenericSchematicBoxTooWide[] =>
   candidates
-    .filter((candidate) => candidate.sourceComponentFtype === "simple_chip")
+    .filter(
+      (candidate) => candidate.sourceComponentFtype !== "simple_pin_header",
+    )
     .filter((candidate) =>
       exceedsMaxAllowedGap(
         candidate.measuredInnerLabelHorizontalEmptySpace,
-        CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+        GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
       ),
     )
     .map((candidate) =>
-      createChipIssue({
+      createGenericIssue({
         schematicBox: candidate.schematicBox,
         measuredInnerLabelHorizontalEmptySpace:
           candidate.measuredInnerLabelHorizontalEmptySpace,
@@ -227,24 +229,24 @@ export const getSchematicBoxTooWideForChipIssues = (
           measuredInnerLabelHorizontalEmptySpace:
             candidate.measuredInnerLabelHorizontalEmptySpace,
           maxAllowedInnerLabelHorizontalEmptySpace:
-            CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+            GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
           currentWidth: candidate.schematicBox.width,
         }),
       }),
     )
 
-export const generateSchematicBoxTooWideForPinHeaderIssues = (
+export const generatePinHeaderSchematicBoxTooWideIssues = (
   componentPlacements: SchematicBoxPlacement[],
   circuitJson: CircuitJson,
-): SchematicBoxTooWideForPinHeader[] =>
-  getSchematicBoxTooWideForPinHeaderIssues(
+): PinHeaderSchematicBoxTooWide[] =>
+  getPinHeaderSchematicBoxTooWideIssues(
     generateSchematicBoxWidthSizingCandidates(componentPlacements, circuitJson),
   )
 
-export const generateSchematicBoxTooWideForChipIssues = (
+export const generateGenericSchematicBoxTooWideIssues = (
   componentPlacements: SchematicBoxPlacement[],
   circuitJson: CircuitJson,
-): SchematicBoxTooWideForChip[] =>
-  getSchematicBoxTooWideForChipIssues(
+): GenericSchematicBoxTooWide[] =>
+  getGenericSchematicBoxTooWideIssues(
     generateSchematicBoxWidthSizingCandidates(componentPlacements, circuitJson),
   )

@@ -4,9 +4,9 @@ export {
 } from "./analyzers/analyze-schematic-placement"
 export { generateCapacitorOrientationIssues } from "./analyzers/capacitor-orientation"
 export {
+  generateGenericSchematicBoxTooWideIssues,
+  generatePinHeaderSchematicBoxTooWideIssues,
   generateSchematicBoxSizingIssues,
-  generateSchematicBoxTooWideForChipIssues,
-  generateSchematicBoxTooWideForPinHeaderIssues,
   generateSchematicPinPaddingToEdgeTooLargeIssues,
 } from "./analyzers/schematic-box-sizing"
 export { generateSchematicPlacementIssues } from "./analyzers/schematic-box-overlap"

@@ -15,14 +15,14 @@ test("generates a schematic box sizing issue for a pin header", async () => {
   const boxSizingIssues =
     issuesLineItem?.lineItemType === "SchematicPlacementIssues"
       ? issuesLineItem.issues.filter(
-          (issue) => issue.lineItemType === "SchematicBoxTooWideForPinHeader",
+          (issue) => issue.lineItemType === "PinHeaderSchematicBoxTooWide",
         )
       : []
 
   expect(boxSizingIssues).toHaveLength(1)
   expect(boxSizingIssues).toMatchObject([
     {
-      lineItemType: "SchematicBoxTooWideForPinHeader",
+      lineItemType: "PinHeaderSchematicBoxTooWide",
       schematicBox: {
         sourceComponentName: "JP2",
         width: 1.8000000000000003,
@@ -35,7 +35,7 @@ test("generates a schematic box sizing issue for a pin header", async () => {
   ])
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxTooWideForPinHeader message="Shrink schematic box width" componentName="JP2" currentSchWidth="1.8" measuredInnerLabelHorizontalEmptySpace="1.035" maxAllowedInnerLabelHorizontalEmptySpace="0.1" suggestedSchWidth="0.865" />',
+    '<PinHeaderSchematicBoxTooWide message="Shrink schematic box width" componentName="JP2" currentSchWidth="1.8" measuredInnerLabelHorizontalEmptySpace="1.035" maxAllowedInnerLabelHorizontalEmptySpace="0.1" suggestedSchWidth="0.865" />',
   )
   expect(
     createSchematicAnalysisFixtureSvg({

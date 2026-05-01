@@ -13,14 +13,14 @@ test("generates a schematic box sizing issue for a chip", async () => {
   const boxSizingIssues =
     issuesLineItem?.lineItemType === "SchematicPlacementIssues"
       ? issuesLineItem.issues.filter(
-          (issue) => issue.lineItemType === "SchematicBoxTooWideForChip",
+          (issue) => issue.lineItemType === "GenericSchematicBoxTooWide",
         )
       : []
 
   expect(boxSizingIssues).toHaveLength(1)
   expect(boxSizingIssues).toMatchObject([
     {
-      lineItemType: "SchematicBoxTooWideForChip",
+      lineItemType: "GenericSchematicBoxTooWide",
       schematicBox: {
         sourceComponentName: "U2",
         width: 3,
@@ -33,7 +33,7 @@ test("generates a schematic box sizing issue for a chip", async () => {
   ])
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxTooWideForChip message="Shrink schematic box width" componentName="U2" currentSchWidth="3" measuredInnerLabelHorizontalEmptySpace="2.14" maxAllowedInnerLabelHorizontalEmptySpace="1" suggestedSchWidth="1.86" />',
+    '<GenericSchematicBoxTooWide message="Shrink schematic box width" componentName="U2" currentSchWidth="3" measuredInnerLabelHorizontalEmptySpace="2.14" maxAllowedInnerLabelHorizontalEmptySpace="1" suggestedSchWidth="1.86" />',
   )
 
   expect(

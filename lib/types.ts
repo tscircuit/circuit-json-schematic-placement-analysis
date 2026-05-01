@@ -65,18 +65,18 @@ interface BaseSchematicBoxTooWide {
   message: string
 }
 
-export interface SchematicBoxTooWideForPinHeader
+export interface PinHeaderSchematicBoxTooWide
   extends BaseSchematicBoxTooWide {
-  lineItemType: "SchematicBoxTooWideForPinHeader"
+  lineItemType: "PinHeaderSchematicBoxTooWide"
 }
 
-export interface SchematicBoxTooWideForChip extends BaseSchematicBoxTooWide {
-  lineItemType: "SchematicBoxTooWideForChip"
+export interface GenericSchematicBoxTooWide extends BaseSchematicBoxTooWide {
+  lineItemType: "GenericSchematicBoxTooWide"
 }
 
-export type SchematicBoxTooWide =
-  | SchematicBoxTooWideForPinHeader
-  | SchematicBoxTooWideForChip
+export type SchematicBoxTooWideIssue =
+  | PinHeaderSchematicBoxTooWide
+  | GenericSchematicBoxTooWide
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"
 
@@ -96,7 +96,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
   | VerboseSchematicNetLabel
-  | SchematicBoxTooWide
+  | SchematicBoxTooWideIssue
   | SchematicPinPaddingToEdgeTooLarge
 
 export interface SchematicPlacementIssues {

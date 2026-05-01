@@ -1,8 +1,8 @@
 import type { CircuitJson } from "circuit-json"
 import type {
   SchematicBoxPlacement,
+  SchematicBoxTooWideIssue,
   SchematicPinPaddingToEdgeTooLarge,
-  SchematicBoxTooWide,
 } from "../../types"
 import {
   generateSchematicPinPaddingToEdgeCandidates,
@@ -10,26 +10,26 @@ import {
 } from "./pin-padding-to-edge"
 import {
   generateSchematicBoxWidthSizingCandidates,
-  getSchematicBoxTooWideForChipIssues,
-  getSchematicBoxTooWideForPinHeaderIssues,
+  getGenericSchematicBoxTooWideIssues,
+  getPinHeaderSchematicBoxTooWideIssues,
 } from "./too-wide"
 
 export {
-  CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+  GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE,
   SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
 } from "./shared"
 export { generateSchematicPinPaddingToEdgeTooLargeIssues } from "./pin-padding-to-edge"
 export {
-  generateSchematicBoxTooWideForChipIssues,
-  generateSchematicBoxTooWideForPinHeaderIssues,
+  generateGenericSchematicBoxTooWideIssues,
+  generatePinHeaderSchematicBoxTooWideIssues,
 } from "./too-wide"
 
 export const generateSchematicBoxSizingIssues = (
   componentPlacements: SchematicBoxPlacement[],
   circuitJson: CircuitJson,
-): Array<SchematicBoxTooWide | SchematicPinPaddingToEdgeTooLarge> => {
+): Array<SchematicBoxTooWideIssue | SchematicPinPaddingToEdgeTooLarge> => {
   const widthCandidates = generateSchematicBoxWidthSizingCandidates(
     componentPlacements,
     circuitJson,
@@ -40,8 +40,8 @@ export const generateSchematicBoxSizingIssues = (
   )
 
   return [
-    ...getSchematicBoxTooWideForPinHeaderIssues(widthCandidates),
-    ...getSchematicBoxTooWideForChipIssues(widthCandidates),
+    ...getPinHeaderSchematicBoxTooWideIssues(widthCandidates),
+    ...getGenericSchematicBoxTooWideIssues(widthCandidates),
     ...getSchematicPinPaddingToEdgeTooLargeIssues(pinPaddingCandidates),
   ]
 }

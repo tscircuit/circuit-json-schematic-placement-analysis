@@ -10,7 +10,7 @@ export const SCHEMATIC_BOX_TOO_WIDE_MESSAGE = "Shrink schematic box width"
 export const SCHEMATIC_PIN_PADDING_TO_EDGE_TOO_LARGE_MESSAGE =
   "Move schematic pins closer to the box edge or change the schematic box"
 export const PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP = 0.1
-export const CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP = 1
+export const GENERIC_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP = 1
 
 export const PIN_LABEL_EDGE_PADDING = 0.1
 const PIN_NAME_CHARACTER_WIDTH = 0.095

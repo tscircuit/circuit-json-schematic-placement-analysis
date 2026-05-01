@@ -34,7 +34,7 @@
     <tspan x="18" dy="22">  height=&quot;2.8&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxTooWideForPinHeader message=&quot;Shrink schematic box width&quot; componentName=&quot;JP2&quot;</tspan>
+    <tspan x="18" dy="22">&lt;PinHeaderSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;JP2&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;1.8&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.035&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;0.1&quot; suggestedSchWidth=&quot;0.865&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>

@@ -34,7 +34,7 @@
     <tspan x="18" dy="22">  height=&quot;3&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxTooWideForChip message=&quot;Shrink schematic box width&quot; componentName=&quot;U5&quot;</tspan>
+    <tspan x="18" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;U5&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;3&quot; measuredInnerLabelHorizontalEmptySpace=&quot;2.23&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.77&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
