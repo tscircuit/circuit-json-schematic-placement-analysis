@@ -78,12 +78,26 @@ export type SchematicBoxTooWide =
   | SchematicBoxTooWideForPinHeader
   | SchematicBoxTooWideForChip
 
+export type SchematicSide = "left" | "right" | "top" | "bottom"
+
+export interface SchematicPinPaddingToEdgeTooLarge {
+  lineItemType: "SchematicPinPaddingToEdgeTooLarge"
+  pinSide: SchematicSide
+  edgeSide: SchematicSide
+  pinName?: string
+  schematicBox: SchematicBoxPlacement
+  measuredPadding: number
+  maxAllowedPadding: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
   | VerboseSchematicNetLabel
   | SchematicBoxTooWide
+  | SchematicPinPaddingToEdgeTooLarge
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

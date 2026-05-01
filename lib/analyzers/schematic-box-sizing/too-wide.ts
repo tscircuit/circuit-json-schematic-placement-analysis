@@ -1,26 +1,26 @@
 import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
 import type {
   SchematicBoxPlacement,
-  SchematicBoxTooWide,
   SchematicBoxTooWideForChip,
   SchematicBoxTooWideForPinHeader,
-} from "../types"
-
-export const SCHEMATIC_BOX_SIZING_MESSAGE = "Shrink schematic box width"
-export const PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP = 0.1
-export const CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP = 1
-
-const PIN_LABEL_EDGE_PADDING = 0.1
-const PIN_NAME_CHARACTER_WIDTH = 0.095
-const FALLBACK_CHARACTER_WIDTH = 0.13
-const GAP_COMPARISON_EPSILON = 1e-9
-
-type HorizontalSide = "left" | "right"
-
-interface RectBounds {
-  left: number
-  right: number
-}
+} from "../../types"
+import {
+  CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+  PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
+  PIN_LABEL_EDGE_PADDING,
+  SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
+  type HorizontalSide,
+  type RectBounds,
+  exceedsMaxAllowedGap,
+  estimateLabelWidth,
+  getCenteredRectBounds,
+  getPlacementBySchematicComponentId,
+  getPortsBySchematicComponentId,
+  getSourceComponentById,
+  getSourceComponentFtype,
+  getSourcePortById,
+  isHorizontalSide,
+} from "./shared"
 
 interface LabelColumn {
   side: HorizontalSide
@@ -28,81 +28,10 @@ interface LabelColumn {
   maxLabelWidth: number
 }
 
-interface SourceComponentWithFtype {
-  type: "source_component"
-  source_component_id: string
-  ftype?: string
-}
-
-interface SchematicBoxSizingCandidate {
+interface SchematicBoxWidthSizingCandidate {
   schematicBox: SchematicBoxPlacement
   sourceComponentFtype?: string
   measuredInnerLabelHorizontalEmptySpace: number
-}
-
-const isSchematicPort = (
-  element: CircuitJson[number],
-): element is SchematicPort => element.type === "schematic_port"
-
-const isSourcePort = (element: CircuitJson[number]): element is SourcePort =>
-  element.type === "source_port"
-
-const getSourceComponentWithFtype = (
-  element: CircuitJson[number],
-): SourceComponentWithFtype | null => {
-  if (
-    element.type !== "source_component" ||
-    !("source_component_id" in element) ||
-    typeof element.source_component_id !== "string"
-  ) {
-    return null
-  }
-
-  return {
-    type: "source_component",
-    source_component_id: element.source_component_id,
-    ftype:
-      "ftype" in element && typeof element.ftype === "string"
-        ? element.ftype
-        : undefined,
-  }
-}
-
-const isHorizontalSide = (
-  side: SchematicPort["side_of_component"],
-): side is HorizontalSide => side === "left" || side === "right"
-
-const getCenteredRectBounds = (box: SchematicBoxPlacement): RectBounds => {
-  const halfWidth = box.width / 2
-
-  return {
-    left: box.schX - halfWidth,
-    right: box.schX + halfWidth,
-  }
-}
-
-const isPinNameLabel = (
-  label: string,
-  sourcePort: SourcePort | undefined,
-): boolean => {
-  if (!sourcePort) return false
-
-  return (
-    label === sourcePort.name ||
-    label === String(sourcePort.pin_number) ||
-    (sourcePort.port_hints ?? []).includes(label)
-  )
-}
-
-const estimateLabelWidth = (
-  label: string,
-  sourcePort: SourcePort | undefined,
-): number => {
-  const characterWidth = isPinNameLabel(label, sourcePort)
-    ? PIN_NAME_CHARACTER_WIDTH
-    : FALLBACK_CHARACTER_WIDTH
-
-  return Array.from(label).length * characterWidth
 }
 
 const getLabelColumn = (
@@ -152,14 +81,6 @@ const getSuggestedWidth = (input: {
   input.measuredInnerLabelHorizontalEmptySpace +
   input.maxAllowedInnerLabelHorizontalEmptySpace
 
-const exceedsMaxAllowedGap = (
-  measuredInnerLabelHorizontalEmptySpace: number,
-  maxAllowedInnerLabelHorizontalEmptySpace: number,
-): boolean =>
-  measuredInnerLabelHorizontalEmptySpace -
-    maxAllowedInnerLabelHorizontalEmptySpace >
-  GAP_COMPARISON_EPSILON
-
 const createPinHeaderIssue = (input: {
   schematicBox: SchematicBoxPlacement
   measuredInnerLabelHorizontalEmptySpace: number
@@ -172,7 +93,7 @@ const createPinHeaderIssue = (input: {
   maxAllowedInnerLabelHorizontalEmptySpace:
     PIN_HEADER_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   suggestedSchWidth: input.suggestedSchWidth,
-  message: SCHEMATIC_BOX_SIZING_MESSAGE,
+  message: SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
 })
 
 const createChipIssue = (input: {
@@ -187,49 +108,23 @@ const createChipIssue = (input: {
   maxAllowedInnerLabelHorizontalEmptySpace:
     CHIP_SCHEMATIC_BOX_SIZING_MAX_ALLOWED_GAP,
   suggestedSchWidth: input.suggestedSchWidth,
-  message: SCHEMATIC_BOX_SIZING_MESSAGE,
+  message: SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
 })
 
-const generateSchematicBoxSizingCandidates = (
+export const generateSchematicBoxWidthSizingCandidates = (
   componentPlacements: SchematicBoxPlacement[],
   circuitJson: CircuitJson,
-): SchematicBoxSizingCandidate[] => {
-  const placementBySchematicComponentId = new Map(
-    componentPlacements
-      .filter((placement) => placement.schematicComponentId)
-      .map((placement) => [placement.schematicComponentId!, placement]),
+): SchematicBoxWidthSizingCandidate[] => {
+  const placementBySchematicComponentId =
+    getPlacementBySchematicComponentId(componentPlacements)
+  const sourcePortById = getSourcePortById(circuitJson)
+  const sourceComponentById = getSourceComponentById(circuitJson)
+  const portsBySchematicComponentId = getPortsBySchematicComponentId(
+    circuitJson,
+    isHorizontalSide,
   )
-  const sourcePortById = new Map(
-    circuitJson
-      .filter(isSourcePort)
-      .map((sourcePort) => [sourcePort.source_port_id, sourcePort]),
-  )
-  const sourceComponentById = new Map(
-    circuitJson
-      .flatMap((element) => {
-        const sourceComponent = getSourceComponentWithFtype(element)
-        return sourceComponent ? [sourceComponent] : []
-      })
-      .map((sourceComponent) => [
-        sourceComponent.source_component_id,
-        sourceComponent,
-      ]),
-  )
-  const portsBySchematicComponentId = new Map<string, SchematicPort[]>()
 
-  for (const port of circuitJson.filter(isSchematicPort)) {
-    if (!port.schematic_component_id) continue
-    if (!isHorizontalSide(port.side_of_component)) continue
-
-    const ports = portsBySchematicComponentId.get(port.schematic_component_id)
-    if (ports) {
-      ports.push(port)
-    } else {
-      portsBySchematicComponentId.set(port.schematic_component_id, [port])
-    }
-  }
-
-  const candidates: SchematicBoxSizingCandidate[] = []
+  const candidates: SchematicBoxWidthSizingCandidate[] = []
 
   for (const [schematicComponentId, ports] of portsBySchematicComponentId) {
     const schematicBox =
@@ -239,9 +134,10 @@ const generateSchematicBoxSizingCandidates = (
     const bounds = getCenteredRectBounds(schematicBox)
     const leftLabelColumn = getLabelColumn("left", ports, sourcePortById)
     const rightLabelColumn = getLabelColumn("right", ports, sourcePortById)
-    const sourceComponentFtype = schematicBox.sourceComponentId
-      ? sourceComponentById.get(schematicBox.sourceComponentId)?.ftype
-      : undefined
+    const sourceComponentFtype = getSourceComponentFtype(
+      schematicBox,
+      sourceComponentById,
+    )
 
     if (leftLabelColumn && rightLabelColumn) {
       const measuredInnerLabelHorizontalEmptySpace =
@@ -283,8 +179,8 @@ const generateSchematicBoxSizingCandidates = (
   return candidates
 }
 
-const getSchematicBoxTooWideForPinHeaderIssues = (
-  candidates: SchematicBoxSizingCandidate[],
+export const getSchematicBoxTooWideForPinHeaderIssues = (
+  candidates: SchematicBoxWidthSizingCandidate[],
 ): SchematicBoxTooWideForPinHeader[] =>
   candidates
     .filter(
@@ -311,8 +207,8 @@ const getSchematicBoxTooWideForPinHeaderIssues = (
       }),
     )
 
-const getSchematicBoxTooWideForChipIssues = (
-  candidates: SchematicBoxSizingCandidate[],
+export const getSchematicBoxTooWideForChipIssues = (
+  candidates: SchematicBoxWidthSizingCandidate[],
 ): SchematicBoxTooWideForChip[] =>
   candidates
     .filter((candidate) => candidate.sourceComponentFtype === "simple_chip")
@@ -342,7 +238,7 @@ export const generateSchematicBoxTooWideForPinHeaderIssues = (
   circuitJson: CircuitJson,
 ): SchematicBoxTooWideForPinHeader[] =>
   getSchematicBoxTooWideForPinHeaderIssues(
-    generateSchematicBoxSizingCandidates(componentPlacements, circuitJson),
+    generateSchematicBoxWidthSizingCandidates(componentPlacements, circuitJson),
   )
 
 export const generateSchematicBoxTooWideForChipIssues = (
@@ -350,20 +246,5 @@ export const generateSchematicBoxTooWideForChipIssues = (
   circuitJson: CircuitJson,
 ): SchematicBoxTooWideForChip[] =>
   getSchematicBoxTooWideForChipIssues(
-    generateSchematicBoxSizingCandidates(componentPlacements, circuitJson),
+    generateSchematicBoxWidthSizingCandidates(componentPlacements, circuitJson),
   )
-
-export const generateSchematicBoxSizingIssues = (
-  componentPlacements: SchematicBoxPlacement[],
-  circuitJson: CircuitJson,
-): SchematicBoxTooWide[] => {
-  const candidates = generateSchematicBoxSizingCandidates(
-    componentPlacements,
-    circuitJson,
-  )
-
-  return [
-    ...getSchematicBoxTooWideForPinHeaderIssues(candidates),
-    ...getSchematicBoxTooWideForChipIssues(candidates),
-  ]
-}

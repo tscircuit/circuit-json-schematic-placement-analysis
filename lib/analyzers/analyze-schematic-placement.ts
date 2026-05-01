@@ -8,12 +8,14 @@ import { generateCapacitorOrientationIssues } from "./capacitor-orientation"
 import {
   generateSchematicBoxTooWideForChipIssues,
   generateSchematicBoxTooWideForPinHeaderIssues,
+  generateSchematicPinPaddingToEdgeTooLargeIssues,
 } from "./schematic-box-sizing"
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
   CapacitorSymbolHorizontal,
   ComponentOverlap,
   OverlapCorrectionSuggestion,
+  SchematicPinPaddingToEdgeTooLarge,
   SchematicBoxTooWide,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
@@ -217,6 +219,22 @@ const schematicBoxTooWideIssueToString = (
   return `<${issue.lineItemType} ${attrs.join(" ")} />`
 }
 
+const schematicPinPaddingToEdgeTooLargeIssueToString = (
+  issue: SchematicPinPaddingToEdgeTooLarge,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "message", issue.message, { escape: false })
+  addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
+  addAttr(attrs, "pinSide", issue.pinSide)
+  addAttr(attrs, "edgeSide", issue.edgeSide)
+  addAttr(attrs, "pinName", issue.pinName)
+  addAttr(attrs, "measuredPadding", issue.measuredPadding)
+  addAttr(attrs, "maxAllowedPadding", issue.maxAllowedPadding)
+
+  return `<SchematicPinPaddingToEdgeTooLarge ${attrs.join(" ")} />`
+}
+
 const correctionSuggestionToString = (
   suggestion: OverlapCorrectionSuggestion,
 ): string => {
@@ -282,6 +300,8 @@ export class SchematicPlacementAnalysis {
                 case "SchematicBoxTooWideForPinHeader":
                 case "SchematicBoxTooWideForChip":
                   return schematicBoxTooWideIssueToString(issue)
+                case "SchematicPinPaddingToEdgeTooLarge":
+                  return schematicPinPaddingToEdgeTooLargeIssueToString(issue)
                 default:
                   return ""
               }
@@ -328,6 +348,7 @@ export const analyzeSchematicPlacement = (
     ...generateVerboseNetLabelIssues(circuitJson),
     ...generateSchematicBoxTooWideForPinHeaderIssues(lineItems, circuitJson),
     ...generateSchematicBoxTooWideForChipIssues(lineItems, circuitJson),
+    ...generateSchematicPinPaddingToEdgeTooLargeIssues(lineItems, circuitJson),
   ]
 
   return new SchematicPlacementAnalysis([
