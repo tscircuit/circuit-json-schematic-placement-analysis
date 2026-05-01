@@ -90,6 +90,26 @@ export interface SchematicPinPaddingToEdgeTooLarge {
   message: string
 }
 
+export type SchematicPinSpacingTooLarge = {
+  lineItemType: "SchematicPinSpacingTooLarge"
+  schematicBox: SchematicBoxPlacement
+  measuredSpacing: number
+  maxAllowedSpacing: number
+  message: string
+}
+
+export type SchematicPinSpacingTooSmall = {
+  lineItemType: "SchematicPinSpacingTooSmall"
+  schematicBox: SchematicBoxPlacement
+  measuredSpacing: number
+  minAllowedSpacing: number
+  message: string
+}
+
+export type SchematicPinSpacingIssue =
+  | SchematicPinSpacingTooLarge
+  | SchematicPinSpacingTooSmall
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -97,6 +117,7 @@ export type SchematicPlacementIssue =
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicPinPaddingToEdgeTooLarge
+  | SchematicPinSpacingIssue
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

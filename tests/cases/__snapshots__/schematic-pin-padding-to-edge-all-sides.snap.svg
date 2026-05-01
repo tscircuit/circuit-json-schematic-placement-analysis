@@ -1,4 +1,4 @@
-<svg width="1200" height="1362" viewBox="0 0 1200 1362" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1406" viewBox="0 0 1200 1406" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -61,6 +61,8 @@
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U5&quot; pinSide=&quot;bottom&quot; edgeSide=&quot;right&quot; pinName=&quot;B&quot;</tspan>
     <tspan x="18" dy="22">  measuredPadding=&quot;1.4&quot; maxAllowedPadding=&quot;0.385&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPinSpacingTooSmall message=&quot;Increase schematic pin spacing to 0.25&quot; componentName=&quot;U5&quot;</tspan>
+    <tspan x="18" dy="22">  measuredSpacing=&quot;0.2&quot; minAllowedSpacing=&quot;0.25&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

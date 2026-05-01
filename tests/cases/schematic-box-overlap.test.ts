@@ -12,49 +12,73 @@ test("generates a schematic box overlap issue", async () => {
   const issuesLineItem = analysis
     .getLineItems()
     .find((lineItem) => lineItem.lineItemType === "SchematicPlacementIssues")
+  const overlapIssues =
+    issuesLineItem?.lineItemType === "SchematicPlacementIssues"
+      ? issuesLineItem.issues.filter(
+          (issue) => issue.lineItemType === "ComponentOverlap",
+        )
+      : []
+  const pinSpacingIssues =
+    issuesLineItem?.lineItemType === "SchematicPlacementIssues"
+      ? issuesLineItem.issues.filter(
+          (issue) => issue.lineItemType === "SchematicPinSpacingTooSmall",
+        )
+      : []
 
-  expect(issuesLineItem).toMatchObject({
-    lineItemType: "SchematicPlacementIssues",
-    issues: [
-      {
-        lineItemType: "ComponentOverlap",
-        firstComponent: {
-          positionAnchor: "center",
-          schX: 0,
-          schY: 0,
-          sourceComponentName: "U1",
-        },
-        secondComponent: {
-          positionAnchor: "center",
-          schX: 1,
-          schY: 0.5,
-          sourceComponentName: "R2",
-        },
-        correctionSuggestions: [
-          {
-            targetComponentName: "R2",
-            deltaSchX: 0.2500000000000001,
-            deltaSchY: 0,
-            newSchX: 1.25,
-            newSchY: 0.5,
-          },
-          {
-            targetComponentName: "R2",
-            deltaSchX: 0,
-            deltaSchY: 0.19445534999999947,
-            newSchX: 1,
-            newSchY: 0.6944553499999995,
-          },
-        ],
+  expect(overlapIssues).toMatchObject([
+    {
+      lineItemType: "ComponentOverlap",
+      firstComponent: {
+        positionAnchor: "center",
+        schX: 0,
+        schY: 0,
+        sourceComponentName: "U1",
       },
-    ],
-  })
+      secondComponent: {
+        positionAnchor: "center",
+        schX: 1,
+        schY: 0.5,
+        sourceComponentName: "R2",
+      },
+      correctionSuggestions: [
+        {
+          targetComponentName: "R2",
+          deltaSchX: 0.2500000000000001,
+          deltaSchY: 0,
+          newSchX: 1.25,
+          newSchY: 0.5,
+        },
+        {
+          targetComponentName: "R2",
+          deltaSchX: 0,
+          deltaSchY: 0.19445534999999947,
+          newSchX: 1,
+          newSchY: 0.6944553499999995,
+        },
+      ],
+    },
+  ])
+
+  expect(pinSpacingIssues).toMatchObject([
+    {
+      lineItemType: "SchematicPinSpacingTooSmall",
+      schematicBox: {
+        sourceComponentName: "U1",
+      },
+      measuredSpacing: 0.2,
+      minAllowedSpacing: 0.25,
+      message: "Increase schematic pin spacing to 0.25",
+    },
+  ])
 
   expect(analysis.toString()).toContain(
     '<OverlapCorrectionSuggestion target="R2" newSchX="1.25" deltaSchX="+0.25" />',
   )
   expect(analysis.toString()).toContain(
     '<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />',
+  )
+  expect(analysis.toString()).toContain(
+    '<SchematicPinSpacingTooSmall message="Increase schematic pin spacing to 0.25" componentName="U1" measuredSpacing="0.2" minAllowedSpacing="0.25" />',
   )
   expect(analysis.toString()).not.toContain('deltaSchX="0"')
   expect(analysis.toString()).not.toContain('deltaSchY="0"')

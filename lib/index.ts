@@ -9,6 +9,7 @@ export {
   generateSchematicBoxSizingIssues,
   generateSchematicPinPaddingToEdgeTooLargeIssues,
 } from "./analyzers/schematic-box-sizing"
+export { generateSchematicPinSpacingIssues } from "./analyzers/pin-spacing"
 export { generateSchematicPlacementIssues } from "./analyzers/schematic-box-overlap"
 export { generateVerboseNetLabelIssues } from "./analyzers/verbose-net-label"
 export * from "./types"

@@ -1,4 +1,4 @@
-<svg width="1200" height="1134" viewBox="0 0 1200 1134" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1178" viewBox="0 0 1200 1178" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -37,6 +37,8 @@
     <tspan x="18" dy="22">&lt;PinHeaderSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;JP2&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;1.8&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.035&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;0.1&quot; suggestedSchWidth=&quot;0.865&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPinSpacingTooSmall message=&quot;Increase schematic pin spacing to 0.25&quot;</tspan>
+    <tspan x="18" dy="22">  componentName=&quot;JP2&quot; measuredSpacing=&quot;0.2&quot; minAllowedSpacing=&quot;0.25&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

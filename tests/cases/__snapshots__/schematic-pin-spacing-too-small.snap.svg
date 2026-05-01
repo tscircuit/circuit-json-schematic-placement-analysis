@@ -1,0 +1,73 @@
+<svg width="1200" height="878" viewBox="0 0 1200 878" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component chip" x="203.065573770415" y="177.04918032785" width="467.2131147541701" height="245.90163934430004" stroke-width="4.918032786886px" fill="rgb(255, 255, 194)" stroke="rgb(132, 0, 0)"/><rect class="component-overlay" x="203.065573770415" y="177.04918032785" width="467.2131147541701" height="245.90163934430004" fill="transparent"/><text x="203.065573770415" y="454.918032786909" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="44.262295081974px" transform="rotate(0, 203.065573770415, 454.918032786909)"></text><text x="203.065573770415" y="145.081967213091" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="44.262295081974px" transform="rotate(0, 203.065573770415, 145.081967213091)">U4</text><line class="component-pin" x1="670.278688524585" y1="226.22950819671" x2="768.639344262305" y2="226.22950819671" stroke-width="4.918032786886px"/><g data-schematic-port-id="source_port_0"><rect x="763.721311475419" y="221.311475409824" width="9.836065573772" height="9.836065573772" opacity="0"/></g><text class="pin-number" x="719.459016393445" y="221.31147540982397" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="36.885245901645px" transform="">1</text><text class="pin-number" x="645.688524590155" y="226.22950819671" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="36.885245901645px" transform="">RUN</text><line class="component-pin" x1="670.278688524585" y1="275.40983606557" x2="768.639344262305" y2="275.40983606557" stroke-width="4.918032786886px"/><g data-schematic-port-id="source_port_1"><rect x="763.721311475419" y="270.491803278684" width="9.836065573772" height="9.836065573772" opacity="0"/></g><text class="pin-number" x="719.459016393445" y="270.491803278684" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="36.885245901645px" transform="">2</text><text class="pin-number" x="645.688524590155" y="275.40983606557" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="36.885245901645px" transform="">IOVDD</text><line class="component-pin" x1="670.278688524585" y1="324.59016393443" x2="768.639344262305" y2="324.59016393443" stroke-width="4.918032786886px"/><g data-schematic-port-id="source_port_2"><rect x="763.721311475419" y="319.672131147544" width="9.836065573772" height="9.836065573772" opacity="0"/></g><text class="pin-number" x="719.459016393445" y="319.672131147544" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="36.885245901645px" transform="">3</text><text class="pin-number" x="645.688524590155" y="324.59016393443" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="36.885245901645px" transform="">ADC_AVDD</text><line class="component-pin" x1="670.278688524585" y1="373.77049180329004" x2="768.639344262305" y2="373.77049180329004" stroke-width="4.918032786886px"/><g data-schematic-port-id="source_port_3"><rect x="763.721311475419" y="368.85245901640405" width="9.836065573772" height="9.836065573772" opacity="0"/></g><text class="pin-number" x="719.459016393445" y="368.852459016404" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="36.885245901645px" transform="">4</text><text class="pin-number" x="645.688524590155" y="373.77049180329004" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="36.885245901645px" transform="">DVDD</text></g><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="768.639344262305" cy="226.22950819671" r="9.836065573772" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="768.639344262305" cy="275.40983606557" r="9.836065573772" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_2"><circle cx="768.639344262305" cy="324.59016393443" r="9.836065573772" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_3"><circle cx="768.639344262305" cy="373.77049180329004" r="9.836065573772" fill="red" opacity="0"/></g><path class="net-label" d="
+    M 768.639344262305,226.22950819671
+    L 781.9180327868972,199.6721311475256
+    L 900.049180327899,199.6721311475256
+    L 900.049180327899,252.78688524589438
+    L 781.9180327868972,252.78688524589438
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="4.918032786886px"/><text class="net-label-text" x="790.7704918032921" y="226.22950819671" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="44.262295081974px" transform="">RUN</text><path class="net-label" d="
+    M 768.639344262305,275.40983606557
+    L 781.9180327868972,248.8524590163856
+    L 946.3442622951192,248.8524590163856
+    L 946.3442622951192,301.96721311475443
+    L 781.9180327868972,301.96721311475443
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="4.918032786886px"/><text class="net-label-text" x="790.7704918032921" y="275.40983606557" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="44.262295081974px" transform="">IOVDD</text><path class="net-label" d="
+    M 768.639344262305,324.59016393443
+    L 781.9180327868972,298.03278688524557
+    L 1041.1967213115272,298.03278688524557
+    L 1041.1967213115272,351.1475409836144
+    L 781.9180327868972,351.1475409836144
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="4.918032786886px"/><text class="net-label-text" x="790.7704918032921" y="324.59016393443" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="44.262295081974px" transform="">ADC_AVDD</text><path class="net-label" d="
+    M 768.639344262305,373.77049180329004
+    L 781.9180327868972,347.2131147541056
+    L 928.9344262295427,347.2131147541056
+    L 928.9344262295427,400.32786885247447
+    L 781.9180327868972,400.32786885247447
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="4.918032786886px"/><text class="net-label-text" x="790.7704918032921" y="373.77049180329004" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="44.262295081974px" transform="">DVDD</text>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+    <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;U4&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;1.9&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;U4&quot;</tspan>
+    <tspan x="18" dy="22">  currentSchWidth=&quot;1.9&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.04&quot;</tspan>
+    <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.86&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPinSpacingTooSmall message=&quot;Increase schematic pin spacing to 0.25&quot; componentName=&quot;U4&quot;</tspan>
+    <tspan x="18" dy="22">  measuredSpacing=&quot;0.2&quot; minAllowedSpacing=&quot;0.25&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
+</text>
+  </g>
+</svg>

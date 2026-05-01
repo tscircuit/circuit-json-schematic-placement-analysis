@@ -10,12 +10,15 @@ import {
   generatePinHeaderSchematicBoxTooWideIssues,
   generateSchematicPinPaddingToEdgeTooLargeIssues,
 } from "./schematic-box-sizing"
+import { generateSchematicPinSpacingIssues } from "./pin-spacing"
 import { generateSchematicPlacementIssues } from "./schematic-box-overlap"
 import type {
   CapacitorSymbolHorizontal,
   ComponentOverlap,
   OverlapCorrectionSuggestion,
   SchematicPinPaddingToEdgeTooLarge,
+  SchematicPinSpacingTooLarge,
+  SchematicPinSpacingTooSmall,
   SchematicBoxTooWideIssue,
   SchematicBoxPlacementLineItem,
   SchematicPlacementLineItem,
@@ -235,6 +238,24 @@ const schematicPinPaddingToEdgeTooLargeIssueToString = (
   return `<SchematicPinPaddingToEdgeTooLarge ${attrs.join(" ")} />`
 }
 
+const schematicPinSpacingIssueToString = (
+  issue: SchematicPinSpacingTooLarge | SchematicPinSpacingTooSmall,
+): string => {
+  const attrs: string[] = []
+
+  addAttr(attrs, "message", issue.message, { escape: false })
+  addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
+  addAttr(attrs, "measuredSpacing", issue.measuredSpacing)
+
+  if (issue.lineItemType === "SchematicPinSpacingTooLarge") {
+    addAttr(attrs, "maxAllowedSpacing", issue.maxAllowedSpacing)
+  } else {
+    addAttr(attrs, "minAllowedSpacing", issue.minAllowedSpacing)
+  }
+
+  return `<${issue.lineItemType} ${attrs.join(" ")} />`
+}
+
 const correctionSuggestionToString = (
   suggestion: OverlapCorrectionSuggestion,
 ): string => {
@@ -302,6 +323,9 @@ export class SchematicPlacementAnalysis {
                   return schematicBoxTooWideIssueToString(issue)
                 case "SchematicPinPaddingToEdgeTooLarge":
                   return schematicPinPaddingToEdgeTooLargeIssueToString(issue)
+                case "SchematicPinSpacingTooLarge":
+                case "SchematicPinSpacingTooSmall":
+                  return schematicPinSpacingIssueToString(issue)
                 default:
                   return ""
               }
@@ -349,6 +373,7 @@ export const analyzeSchematicPlacement = (
     ...generatePinHeaderSchematicBoxTooWideIssues(lineItems, circuitJson),
     ...generateGenericSchematicBoxTooWideIssues(lineItems, circuitJson),
     ...generateSchematicPinPaddingToEdgeTooLargeIssues(lineItems, circuitJson),
+    ...generateSchematicPinSpacingIssues(lineItems, circuitJson),
   ]
 
   return new SchematicPlacementAnalysis([
