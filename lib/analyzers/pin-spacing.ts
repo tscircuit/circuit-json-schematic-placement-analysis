@@ -7,10 +7,8 @@ import type {
 } from "../types"
 
 export const TARGET_SCHEMATIC_PIN_SPACING = 0.25
-export const SCHEMATIC_PIN_SPACING_TOO_LARGE_MESSAGE =
-  `Decrease schematic pin spacing to ${TARGET_SCHEMATIC_PIN_SPACING}`
-export const SCHEMATIC_PIN_SPACING_TOO_SMALL_MESSAGE =
-  `Increase schematic pin spacing to ${TARGET_SCHEMATIC_PIN_SPACING}`
+export const SCHEMATIC_PIN_SPACING_TOO_LARGE_MESSAGE = `Decrease schematic pin spacing to ${TARGET_SCHEMATIC_PIN_SPACING}`
+export const SCHEMATIC_PIN_SPACING_TOO_SMALL_MESSAGE = `Increase schematic pin spacing to ${TARGET_SCHEMATIC_PIN_SPACING}`
 
 interface SchematicPinSpacingCandidate {
   schematicBox: SchematicBoxPlacement
