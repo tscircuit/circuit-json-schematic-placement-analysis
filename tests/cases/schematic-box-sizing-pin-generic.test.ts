@@ -6,7 +6,9 @@ import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-
 test("generates a schematic box sizing issue for a generic connector", async () => {
   const schematicBoxSizingGenericCircuitJson =
     await createSchematicBoxSizingGenericCircuitJson()
-  const analysis = analyzeSchematicPlacement(schematicBoxSizingGenericCircuitJson)
+  const analysis = analyzeSchematicPlacement(
+    schematicBoxSizingGenericCircuitJson,
+  )
   const issuesLineItem = analysis
     .getLineItems()
     .find((lineItem) => lineItem.lineItemType === "SchematicPlacementIssues")

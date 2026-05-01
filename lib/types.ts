@@ -65,8 +65,7 @@ interface BaseSchematicBoxTooWide {
   message: string
 }
 
-export interface PinHeaderSchematicBoxTooWide
-  extends BaseSchematicBoxTooWide {
+export interface PinHeaderSchematicBoxTooWide extends BaseSchematicBoxTooWide {
   lineItemType: "PinHeaderSchematicBoxTooWide"
 }
 
