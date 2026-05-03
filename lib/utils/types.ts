@@ -15,6 +15,8 @@ export interface SchematicBoxPlacementLineItem extends SchematicBoxPlacement {
   lineItemType: "SchematicBoxPlacement"
 }
 
+export type SchematicSide = "left" | "right" | "top" | "bottom"
+
 export interface ComponentOverlap {
   lineItemType: "ComponentOverlap"
   firstComponent: SchematicBoxPlacement
@@ -76,8 +78,6 @@ export interface GenericSchematicBoxTooWide extends BaseSchematicBoxTooWide {
 export type SchematicBoxTooWideIssue =
   | PinHeaderSchematicBoxTooWide
   | GenericSchematicBoxTooWide
-
-export type SchematicSide = "left" | "right" | "top" | "bottom"
 
 export interface SchematicPinPaddingToEdgeTooLarge {
   lineItemType: "SchematicPinPaddingToEdgeTooLarge"
