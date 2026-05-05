@@ -23,7 +23,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
   constructor(
     private readonly params: {
       ctx: SolverContext
-      out: SchematicPlacementIssue[]
+      issues: SchematicPlacementIssue[]
     },
   ) {
     super()
@@ -55,7 +55,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
       schY: label.center.y,
       message: this.VERBOSE_NET_LABEL_MESSAGE,
     }
-    this.params.out.push(issue)
+    this.params.issues.push(issue)
   }
 
   static issueToString(issue: VerboseSchematicNetLabel): string {

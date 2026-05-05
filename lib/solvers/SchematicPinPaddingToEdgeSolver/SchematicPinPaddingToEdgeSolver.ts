@@ -51,7 +51,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
   constructor(
     private readonly params: {
       ctx: SolverContext
-      out: SchematicPlacementIssue[]
+      issues: SchematicPlacementIssue[]
     },
   ) {
     super()
@@ -117,7 +117,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         if (!this.exceedsMaxAllowedGap(measuredPadding, maxAllowedPadding))
           continue
 
-        this.params.out.push(
+        this.params.issues.push(
           this.createIssue({
             schematicBox,
             pinSide,

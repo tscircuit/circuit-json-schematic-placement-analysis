@@ -47,7 +47,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
   constructor(
     private readonly params: {
       ctx: SolverContext
-      out: SchematicPlacementIssue[]
+      issues: SchematicPlacementIssue[]
     },
   ) {
     super()
@@ -106,7 +106,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     })
 
     if (ftype === "simple_pin_header") {
-      this.params.out.push({
+      this.params.issues.push({
         lineItemType: "PinHeaderSchematicBoxTooWide",
         schematicBox,
         measuredInnerLabelHorizontalEmptySpace: measuredSpace,
@@ -115,7 +115,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
         message: this.SCHEMATIC_BOX_TOO_WIDE_MESSAGE,
       })
     } else {
-      this.params.out.push({
+      this.params.issues.push({
         lineItemType: "GenericSchematicBoxTooWide",
         schematicBox,
         measuredInnerLabelHorizontalEmptySpace: measuredSpace,

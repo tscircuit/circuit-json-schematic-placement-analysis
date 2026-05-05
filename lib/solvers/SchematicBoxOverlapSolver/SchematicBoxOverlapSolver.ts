@@ -23,7 +23,7 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
   constructor(
     private readonly params: {
       ctx: SolverContext
-      out: SchematicPlacementIssue[]
+      issues: SchematicPlacementIssue[]
     },
   ) {
     super()
@@ -41,7 +41,7 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
       this.placements[this.firstIndex]!,
       this.placements[this.secondIndex]!,
     )
-    if (overlap) this.params.out.push(overlap)
+    if (overlap) this.params.issues.push(overlap)
 
     this.secondIndex++
     if (this.secondIndex >= this.placements.length) {

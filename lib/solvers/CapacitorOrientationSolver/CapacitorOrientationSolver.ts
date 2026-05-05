@@ -43,10 +43,10 @@ export class CapacitorOrientationSolver extends BaseSolver {
 
   constructor({
     ctx,
-    out,
+    issues: out,
   }: {
     ctx: SolverContext
-    out: SchematicPlacementIssue[]
+    issues: SchematicPlacementIssue[]
   }) {
     super()
     this.ctx = ctx

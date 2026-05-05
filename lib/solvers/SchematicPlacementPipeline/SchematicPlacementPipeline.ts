@@ -13,7 +13,7 @@ import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/Schemati
 import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 
-type SolverParams = { ctx: SolverContext; out: SchematicPlacementIssue[] }
+type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
 export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> {
   ctx!: SolverContext
@@ -24,35 +24,35 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       "SchematicBoxOverlapSolver",
       SchematicBoxOverlapSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, out: p.issues },
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
     definePipelineStep(
       "CapacitorOrientationSolver",
       CapacitorOrientationSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, out: p.issues },
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
     definePipelineStep(
       "VerboseNetLabelSolver",
       VerboseNetLabelSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, out: p.issues },
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
     definePipelineStep(
       "SchematicBoxTooWideSolver",
       SchematicBoxTooWideSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, out: p.issues },
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
     definePipelineStep(
       "SchematicPinPaddingToEdgeSolver",
       SchematicPinPaddingToEdgeSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, out: p.issues },
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
   ]
