@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "jsx": "react-jsx",
     "module": "Preserve",
@@ -20,6 +20,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "paths": {
       "lib/*": ["./lib/*"],
+      "site/*": ["./site/*"],
       "tests/*": ["./tests/*"]
     }
   }

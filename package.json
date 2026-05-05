@@ -11,8 +11,11 @@
       "import": "./lib/index.ts"
     }
   },
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "scripts": {
+    "start": "cosmos",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test": "bun test",
@@ -55,17 +58,20 @@
     "connectivity-map": "^1.0.0",
     "eecircuit-engine": "^1.7.0",
     "flatbush": "^4.5.1",
-    "format-si-unit": "^0.0.3",
     "graphics-debug": "^0.0.94",
+    "format-si-unit": "^0.0.3",
     "minicssgrid": "^0.0.9",
     "poppygl": "^0.0.20",
     "react": "^19.2.5",
+    "react-cosmos": "^7.0.0",
+    "react-cosmos-plugin-vite": "^7.0.0",
     "react-dom": "^19.2.5",
     "schematic-symbols": "^0.0.224",
     "spicey": "^0.0.14",
     "circuit-json": "^0.0.420",
     "stack-svgs": "^0.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.3"
   },
   "peerDependencies": {
     "circuit-json": "*",
