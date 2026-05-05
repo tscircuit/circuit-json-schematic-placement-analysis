@@ -1,14 +1,11 @@
 export {
   SchematicPlacementAnalysis,
   analyzeSchematicPlacement,
-} from "./analyzers/analyze-schematic-placement"
-export { generateCapacitorOrientationIssues } from "./analyzers/capacitor-orientation"
-export {
-  generateGenericSchematicBoxTooWideIssues,
-  generatePinHeaderSchematicBoxTooWideIssues,
-  generateSchematicBoxSizingIssues,
-  generateSchematicPinPaddingToEdgeTooLargeIssues,
-} from "./analyzers/schematic-box-sizing"
-export { generateSchematicPlacementIssues } from "./analyzers/schematic-box-overlap"
-export { generateVerboseNetLabelIssues } from "./analyzers/verbose-net-label"
+} from "./analyze-schematic-placement"
+export { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
+export { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
+export { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
+export { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
+export { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
+export { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 export * from "./types"

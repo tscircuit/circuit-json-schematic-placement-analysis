@@ -16,7 +16,9 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test": "bun test",
-    "typecheck": "bunx tsc --noEmit"
+    "typecheck": "bunx tsc --noEmit",
+    "start": "cosmos",
+    "build:site": "cosmos-export"
   },
   "dependencies": {
     "@tscircuit/circuit-json-util": "^0.0.94"
@@ -43,9 +45,12 @@
     "@tscircuit/solver-utils": "^0.0.19",
     "@tscircuit/soup-util": "^0.0.41",
     "@types/bun": "latest",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
     "bpc-graph": "^0.0.66",
     "bun-match-svg": "^0.0.15",
     "calculate-packing": "^0.0.71",
+    "circuit-json": "^0.0.420",
     "circuit-json-to-bpc": "^0.0.13",
     "circuit-json-to-connectivity-map": "^0.0.23",
     "circuit-json-to-gltf": "^0.0.96",
@@ -60,12 +65,14 @@
     "minicssgrid": "^0.0.9",
     "poppygl": "^0.0.20",
     "react": "^19.2.5",
+    "react-cosmos": "^7.3.0",
+    "react-cosmos-plugin-vite": "^7.3.0",
     "react-dom": "^19.2.5",
     "schematic-symbols": "^0.0.224",
     "spicey": "^0.0.14",
-    "circuit-json": "^0.0.420",
     "stack-svgs": "^0.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.10"
   },
   "peerDependencies": {
     "circuit-json": "*",
