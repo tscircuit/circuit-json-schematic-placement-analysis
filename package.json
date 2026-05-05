@@ -45,8 +45,6 @@
     "@tscircuit/solver-utils": "^0.0.19",
     "@tscircuit/soup-util": "^0.0.41",
     "@types/bun": "latest",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
     "bpc-graph": "^0.0.66",
     "bun-match-svg": "^0.0.15",
     "calculate-packing": "^0.0.71",
