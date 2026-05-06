@@ -3,6 +3,7 @@ import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import type {
@@ -47,6 +48,8 @@ export class SchematicPlacementAnalysis {
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
         return SchematicBoxTooWideSolver.issueToString(issue)
+      case "SchematicBoxTooSmall":
+        return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
       default:
