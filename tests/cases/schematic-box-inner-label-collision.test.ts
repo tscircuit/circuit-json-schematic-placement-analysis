@@ -12,14 +12,14 @@ test("generates an inner label collision issue for a chip", async () => {
   const collisionIssues =
     issuesLineItem?.lineItemType === "SchematicPlacementIssues"
       ? issuesLineItem.issues.filter(
-          (issue) => issue.lineItemType === "SchematicBoxTooSmall",
+          (issue) => issue.lineItemType === "SchematicBoxInnerLabelCollision",
         )
       : []
 
   expect(collisionIssues).toHaveLength(1)
   expect(collisionIssues).toMatchObject([
     {
-      lineItemType: "SchematicBoxTooSmall",
+      lineItemType: "SchematicBoxInnerLabelCollision",
       schematicBox: {
         sourceComponentName: "U2",
         width: 3,
@@ -40,7 +40,7 @@ test("generates an inner label collision issue for a chip", async () => {
   )
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxTooSmall message="Inner labels are colliding. Increase the schWidth or schHeight." componentName="U2" currentSchWidth="3" currentSchHeight="2" overlappingSides="top,bottom" />',
+    '<SchematicBoxInnerLabelCollision message="Inner labels are colliding. Increase the schWidth or schHeight." componentName="U2" currentSchWidth="3" currentSchHeight="2" overlappingSides="top,bottom" />',
   )
 
   expect(

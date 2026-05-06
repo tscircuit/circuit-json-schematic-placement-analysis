@@ -2,7 +2,7 @@ import { BaseSolver } from "@tscircuit/solver-utils"
 import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
 import type {
   SchematicBoxPlacement,
-  SchematicBoxTooSmall,
+  SchematicBoxInnerLabelCollision,
   SchematicPlacementIssue,
   SchematicSide,
 } from "../../types"
@@ -78,21 +78,21 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     if (collisionSummary.overlappingSides.length === 0) return
 
     this.params.issues.push({
-      lineItemType: "SchematicBoxTooSmall",
+      lineItemType: "SchematicBoxInnerLabelCollision",
       schematicBox,
       overlappingSides: collisionSummary.overlappingSides,
       message: this.MESSAGE,
     })
   }
 
-  static issueToString(issue: SchematicBoxTooSmall): string {
+  static issueToString(issue: SchematicBoxInnerLabelCollision): string {
     const attrs: string[] = []
     addAttr(attrs, "message", issue.message, { escape: false })
     addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
     addAttr(attrs, "currentSchWidth", issue.schematicBox.width)
     addAttr(attrs, "currentSchHeight", issue.schematicBox.height)
     addAttr(attrs, "overlappingSides", issue.overlappingSides.join(","))
-    return `<SchematicBoxTooSmall ${attrs.join(" ")} />`
+    return `<SchematicBoxInnerLabelCollision ${attrs.join(" ")} />`
   }
 
   private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {

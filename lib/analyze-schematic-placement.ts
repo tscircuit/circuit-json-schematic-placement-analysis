@@ -48,7 +48,7 @@ export class SchematicPlacementAnalysis {
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
         return SchematicBoxTooWideSolver.issueToString(issue)
-      case "SchematicBoxTooSmall":
+      case "SchematicBoxInnerLabelCollision":
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)

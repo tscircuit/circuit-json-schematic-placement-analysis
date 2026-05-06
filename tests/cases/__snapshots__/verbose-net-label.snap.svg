@@ -63,8 +63,8 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuit549_c
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot; text=&quot;R1_pin2/U1_pin2&quot;</tspan>
     <tspan x="18" dy="22">  involvedPins=&quot;R1.pin2,U1.pin2&quot; schX=&quot;-1.35&quot; schY=&quot;0.1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxTooSmall message=&quot;Inner labels are colliding. Increase the schWidth or schHeight.&quot;</tspan>
-    <tspan x="18" dy="22">  componentName=&quot;R1&quot; currentSchWidth=&quot;0.389&quot; currentSchHeight=&quot;1.1&quot;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Inner labels are colliding. Increase the schWidth or</tspan>
+    <tspan x="18" dy="22">  schHeight.&quot; componentName=&quot;R1&quot; currentSchWidth=&quot;0.389&quot; currentSchHeight=&quot;1.1&quot;</tspan>
     <tspan x="18" dy="22">  overlappingSides=&quot;top,bottom&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>

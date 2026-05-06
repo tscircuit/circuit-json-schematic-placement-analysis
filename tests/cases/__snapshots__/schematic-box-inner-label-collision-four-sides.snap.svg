@@ -50,8 +50,8 @@
     <tspan x="18" dy="22">  the schematic box width&quot; componentName=&quot;U2&quot; pinSide=&quot;bottom&quot; edgeSide=&quot;right&quot;</tspan>
     <tspan x="18" dy="22">  pinName=&quot;BOTTOM_DVDD&quot; measuredPadding=&quot;0.625&quot; maxAllowedPadding=&quot;0.622&quot; excessPadding=&quot;0.003&quot;</tspan>
     <tspan x="18" dy="22">  suggestedSchWidth=&quot;1.245&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxTooSmall message=&quot;Inner labels are colliding. Increase the schWidth or schHeight.&quot;</tspan>
-    <tspan x="18" dy="22">  componentName=&quot;U2&quot; currentSchWidth=&quot;1.25&quot; currentSchHeight=&quot;2&quot;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Inner labels are colliding. Increase the schWidth or</tspan>
+    <tspan x="18" dy="22">  schHeight.&quot; componentName=&quot;U2&quot; currentSchWidth=&quot;1.25&quot; currentSchHeight=&quot;2&quot;</tspan>
     <tspan x="18" dy="22">  overlappingSides=&quot;left,right,top,bottom&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>

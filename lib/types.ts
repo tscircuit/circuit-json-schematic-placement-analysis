@@ -77,8 +77,8 @@ export type SchematicBoxTooWideIssue =
   | PinHeaderSchematicBoxTooWide
   | GenericSchematicBoxTooWide
 
-export interface SchematicBoxTooSmall {
-  lineItemType: "SchematicBoxTooSmall"
+export interface SchematicBoxInnerLabelCollision {
+  lineItemType: "SchematicBoxInnerLabelCollision"
   schematicBox: SchematicBoxPlacement
   overlappingSides: SchematicSide[]
   message: string
@@ -106,7 +106,7 @@ export type SchematicPlacementIssue =
   | CapacitorSymbolHorizontal
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
-  | SchematicBoxTooSmall
+  | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
 
 export interface SchematicPlacementIssues {
