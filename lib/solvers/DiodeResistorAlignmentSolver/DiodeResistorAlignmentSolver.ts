@@ -87,9 +87,8 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
     const diodeCompId = DIODE_FTYPES.has(startFtype!)
       ? startSourceCompId
       : endSourceCompId
-    const resistorCompId = startFtype === "simple_resistor"
-      ? startSourceCompId
-      : endSourceCompId
+    const resistorCompId =
+      startFtype === "simple_resistor" ? startSourceCompId : endSourceCompId
 
     const diodeBox = this.schematicBoxBySourceComponentId.get(diodeCompId)
     const resistorBox = this.schematicBoxBySourceComponentId.get(resistorCompId)
@@ -128,21 +127,35 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
       message,
     })
 
-    if (!DiodeResistorAlignmentSolver.isCoLinear(diodePort.center, resistorPort.center)) {
-      this.out.push(makeIssue(
-        `trace has corners — align ${diodeName} and ${resistorName} on same axis and rotate so ${diodePinDesc} faces ${resistorPinDesc}`,
-      ))
+    if (
+      !DiodeResistorAlignmentSolver.isCoLinear(
+        diodePort.center,
+        resistorPort.center,
+      )
+    ) {
+      this.out.push(
+        makeIssue(
+          `trace has corners — align ${diodeName} and ${resistorName} on same axis and rotate so ${diodePinDesc} faces ${resistorPinDesc}`,
+        ),
+      )
       return
     }
 
     if (
       diodeFacing &&
       resistorFacing &&
-      !DiodeResistorAlignmentSolver.pinsFacingEachOther(diodePort.center, diodeFacing, resistorPort.center, resistorFacing)
+      !DiodeResistorAlignmentSolver.pinsFacingEachOther(
+        diodePort.center,
+        diodeFacing,
+        resistorPort.center,
+        resistorFacing,
+      )
     ) {
-      this.out.push(makeIssue(
-        `${diodePinDesc} and ${resistorPinDesc} face away from each other — rotate ${diodeName} so ${diodePinDesc} faces ${resistorPinDesc}`,
-      ))
+      this.out.push(
+        makeIssue(
+          `${diodePinDesc} and ${resistorPinDesc} face away from each other — rotate ${diodeName} so ${diodePinDesc} faces ${resistorPinDesc}`,
+        ),
+      )
     }
   }
 
@@ -258,7 +271,11 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
 
   static issueToString(issue: DiodeResistorNotAligned): string {
     const attrs: string[] = []
-    addAttr(attrs, "diodeComponentName", issue.diodeSchematicBox.sourceComponentName)
+    addAttr(
+      attrs,
+      "diodeComponentName",
+      issue.diodeSchematicBox.sourceComponentName,
+    )
     addAttr(attrs, "diodePin", issue.diodePin)
     addAttr(
       attrs,
