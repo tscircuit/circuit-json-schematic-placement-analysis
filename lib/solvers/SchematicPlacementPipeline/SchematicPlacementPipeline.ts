@@ -13,6 +13,7 @@ import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabel
 import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
 import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
@@ -59,6 +60,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SchematicBoxInnerLabelCollisionSolver",
       SchematicBoxInnerLabelCollisionSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "DiodeResistorAlignmentSolver",
+      DiodeResistorAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

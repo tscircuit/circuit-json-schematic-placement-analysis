@@ -6,6 +6,7 @@ import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNe
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
+import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -52,6 +53,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "DiodeResistorNotAligned":
+        return DiodeResistorAlignmentSolver.issueToString(issue)
       default:
         return ""
     }

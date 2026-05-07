@@ -100,6 +100,17 @@ export interface SchematicPinPaddingToEdgeTooLarge {
   message: string
 }
 
+export interface DiodeResistorNotAligned {
+  lineItemType: "DiodeResistorNotAligned"
+  diodeSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  diodePin?: string
+  resistorPin?: string
+  diodePinFacingDirection?: string
+  resistorPinFacingDirection?: string
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -108,6 +119,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
+  | DiodeResistorNotAligned
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
