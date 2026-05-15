@@ -1,0 +1,83 @@
+<svg width="1200" height="1076" viewBox="0 0 1200 1076" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) :is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]) { filter: invert(1); }
+svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"] .trace-crossing-outline { opacity: 0; }
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g class="trace" data-layer="base" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_0"><path d="M 169.20694259027493 147.39652870499998 L 137.16421895877494 147.39652870499998 L 137.16421895877494 307.61014686249996 L 700.3150867823874 307.61014686249996 L 700.3150867823874 467.82376502 L 668.2723631508874 467.82376502" class="trace-invisible-hover-outline" stroke="rgb(0, 150, 0)" fill="none" stroke-width="25.634178905200002px" stroke-linecap="round" opacity="0" stroke-linejoin="round"/><path d="M 169.20694259027493 147.39652870499998 L 137.16421895877494 147.39652870499998 L 137.16421895877494 307.61014686249996 L 700.3150867823874 307.61014686249996 L 700.3150867823874 467.82376502 L 668.2723631508874 467.82376502" stroke="rgb(0, 150, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round" stroke-linejoin="round"/></g><g class="trace-overlays" data-layer="overlay" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_0"/><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component-overlay" x="491.2363150868499" y="416.5554072096" width="173.03070761010008" height="73.69826435245" fill="transparent"/><path d="M 600.18157543395 467.82376502 L 556.9238985314249 490.25367156205" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 598.579439252375 467.82376502 L 664.26702269695 467.82376502" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 556.9238985314249 446.99599465952497 L 600.18157543395 467.82376502" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 556.9238985314249 490.25367156205 L 556.9238985314249 446.99599465952497" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 600.18157543395 446.99599465952497 L 600.18157543395 490.25367156205" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 556.9238985314249 467.82376502 L 491.2363150868499 467.82376502" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 603.3858477970999 421.361815754325 L 617.805073431275 419.75967957275 L 612.9986648865499 434.178905206925" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 590.5687583445 440.587449933225 L 592.1708945260749 440.587449933225 L 611.3965287049749 424.566088117475 L 611.3965287049749 424.566088117475" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 574.5473965287499 418.157543391175 L 590.5687583445 416.5554072096 L 584.1602136181999 430.974632843775" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 561.73030707615 437.383177570075 L 563.332443257725 435.7810413885 L 584.1602136181999 421.361815754325 L 584.1602136181999 421.361815754325" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><text x="577.7516688919" y="501.468624833075" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="28.83845126835px"></text><text x="577.7516688919" y="402.136181575425" stroke="rgb(245, 241, 237)" stroke-width="3.2042723631500003px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="ideographic" font-size="28.83845126835px">D1</text></g><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_1"><rect class="component-overlay" x="169.20694259027505" y="126.56875834452498" width="176.2349799732499" height="43.25767690252499" fill="transparent"/><path d="M 169.20694259027505 147.39652870499998 L 214.06675567437503 147.39652870499998" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 298.97997329785 147.39652870499998 L 345.44192256352494 147.39652870499998" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 257.3244325769 126.56875834452498 L 298.97997329785 126.56875834452498 L 298.97997329785 169.82643524704997 L 214.06675567437503 169.82643524704997 L 214.06675567437503 126.56875834452498 L 257.3244325769 126.56875834452498" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><text x="254.12016021375" y="118.64533778377955" stroke="rgb(245, 241, 237)" stroke-width="3.2042723631500003px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="ideographic" font-size="28.83845126835px">R1</text><text x="254.12016021375" y="180.95412817094538" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="28.83845126835px">1kΩ</text></g><g data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_2"><rect class="component-overlay" x="810.061415220275" y="105.74098798404997" width="176.23497997325012" height="84.91321762347498" fill="transparent"/><path d="M 986.2963951935251 147.39652870499995 L 909.393858477925 147.39652870499995" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 883.7596795727251 147.39652870499995 L 810.061415220275 147.39652870499995" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 909.393858477925 105.74098798404997 L 909.393858477925 190.65420560752494" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><path d="M 883.7596795727251 105.74098798404997 L 883.7596795727251 190.65420560752494" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.2042723631500003px" stroke-linecap="round"/><text x="896.576769025325" y="83.31108144199997" stroke="rgb(245, 241, 237)" stroke-width="3.2042723631500003px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="ideographic" font-size="28.83845126835px">C1</text><text x="898.1789052069" y="217.89052069429994" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="28.83845126835px">1uF</text></g><g class="schematic-port-hover" data-schematic-port-id="source_port_0"><circle cx="491.2363150868499" cy="467.82376502" r="6.408544726300001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_1"><circle cx="664.26702269695" cy="467.82376502" r="6.408544726300001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_2"><circle cx="169.20694259027493" cy="147.39652870499998" r="6.408544726300001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_3"><circle cx="345.44192256352494" cy="147.39652870499998" r="6.408544726300001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_4"><circle cx="810.061415220275" cy="147.39652870499998" r="6.408544726300001" fill="red" opacity="0"/></g><g class="schematic-port-hover" data-schematic-port-id="source_port_5"><circle cx="986.296395193525" cy="147.39652870499998" r="6.408544726300001" fill="red" opacity="0"/></g><path class="net-label" d="
+    M 487.2309746329125,467.82376502
+    L 478.5794392524075,485.12683578101
+    L 241.99732977316583,485.12683578100996
+    L 241.99732977316583,450.52069425899
+    L 478.5794392524075,450.52069425899
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="3.2042723631500003px"/><text class="net-label-text" x="472.81174899873747" y="467.82376502" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="28.83845126835px" transform="">D1_pin1/C1_pin1</text><path class="net-label" d="
+    M 810.061415220275,147.39652870499998
+    L 801.4098798397699,164.69959946600997
+    L 564.8277703605283,164.69959946600994
+    L 564.8277703605283,130.09345794398996
+    L 801.4098798397699,130.09345794399
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="3.2042723631500003px"/><text class="net-label-text" x="795.6421895861" y="147.39652870499998" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="28.83845126835px" transform="">D1_pin1/C1_pin1</text><path class="net-label" d="
+    M 345.44192256352494,147.39652870499998
+    L 354.0934579440299,130.09345794399
+    L 433.1962616823263,130.09345794399
+    L 433.1962616823263,164.69959946600997
+    L 354.0934579440299,164.69959946600997
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="3.2042723631500003px"/><text class="net-label-text" x="359.86114819769995" y="147.39652870499998" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="28.83845126835px" transform="">GND</text><path class="net-label" d="
+    M 986.296395193525,147.39652870499998
+    L 994.94793057403,130.09345794399
+    L 1070.8464619491763,130.09345794399
+    L 1070.8464619491763,164.69959946600997
+    L 994.94793057403,164.69959946600997
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="3.2042723631500003px"/><text class="net-label-text" x="1000.7156208276999" y="147.39652870499998" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="28.83845126835px" transform="">VCC</text>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+    <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;D1&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;1.13&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R1&quot; positionAnchor=&quot;center&quot; schX=&quot;-2&quot; schY=&quot;2&quot; width=&quot;1.1&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;0.389&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C1&quot; positionAnchor=&quot;center&quot; schX=&quot;2&quot; schY=&quot;2&quot; width=&quot;1.1&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;0.84&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;CapacitorSymbolHorizontal componentName=&quot;C1&quot; schX=&quot;2&quot; schY=&quot;2&quot; width=&quot;1.1&quot; height=&quot;0.84&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot; text=&quot;D1_pin1/C1_pin1&quot;</tspan>
+    <tspan x="18" dy="22">  involvedPins=&quot;D1.pin1,C1.pin1&quot; schX=&quot;-1.525&quot; schY=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DiodeResistorNotAligned diodeComponentName=&quot;D1&quot; diodePin=&quot;cathode&quot; resistorComponentName=&quot;R1&quot;</tspan>
+    <tspan x="18" dy="22">  resistorPin=&quot;anode&quot; message=&quot;trace has corners — align D1 and R1 on same axis and rotate so</tspan>
+    <tspan x="18" dy="22">  D1.cathode faces R1.anode&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ResistorDiodeCapacitorNotAligned resistorComponentName=&quot;R1&quot; resistorPin=&quot;anode&quot;</tspan>
+    <tspan x="18" dy="22">  diodeComponentName=&quot;D1&quot; diodeResistorSidePin=&quot;cathode&quot; diodeCapacitorSidePin=&quot;anode&quot;</tspan>
+    <tspan x="18" dy="22">  capacitorComponentName=&quot;C1&quot; capacitorPin=&quot;pos&quot; message=&quot;R-D-C chain not colinear — align R1,</tspan>
+    <tspan x="18" dy="22">  D1, C1 on same axis and rotate so R1.anode faces D1.cathode and D1.anode faces C1.pos&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
+</text>
+  </g>
+</svg>

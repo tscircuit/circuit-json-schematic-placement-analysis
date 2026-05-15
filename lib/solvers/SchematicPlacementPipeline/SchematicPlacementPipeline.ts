@@ -14,6 +14,7 @@ import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/Schemati
 import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { ResistorDiodeCapacitorAlignmentSolver } from "../ResistorDiodeCapacitorAlignmentSolver/ResistorDiodeCapacitorAlignmentSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
@@ -67,6 +68,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "DiodeResistorAlignmentSolver",
       DiodeResistorAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ResistorDiodeCapacitorAlignmentSolver",
+      ResistorDiodeCapacitorAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

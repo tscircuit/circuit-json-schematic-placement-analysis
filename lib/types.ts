@@ -111,6 +111,22 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+export interface ResistorDiodeCapacitorNotAligned {
+  lineItemType: "ResistorDiodeCapacitorNotAligned"
+  resistorSchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorPin?: string
+  diodeResistorSidePin?: string
+  diodeCapacitorSidePin?: string
+  capacitorPin?: string
+  resistorPinFacingDirection?: string
+  diodeResistorSidePinFacingDirection?: string
+  diodeCapacitorSidePinFacingDirection?: string
+  capacitorPinFacingDirection?: string
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -120,6 +136,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ResistorDiodeCapacitorNotAligned
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
