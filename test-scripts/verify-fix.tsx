@@ -10,7 +10,13 @@ async function main() {
   const hCircuit = new Circuit()
   hCircuit.add(
     <board width="10mm" height="10mm">
-      <capacitor name="C1" capacitance="1uF" footprint="0402" schX={0} schY={0} />
+      <capacitor
+        name="C1"
+        capacitance="1uF"
+        footprint="0402"
+        schX={0}
+        schY={0}
+      />
     </board>,
   )
   await hCircuit.renderUntilSettled()
@@ -42,12 +48,8 @@ async function main() {
   console.log()
 
   // --- Summary ---
-  const hHasIssue = hAnalysis
-    .toString()
-    .includes("CapacitorSymbolHorizontal")
-  const vHasIssue = vAnalysis
-    .toString()
-    .includes("CapacitorSymbolHorizontal")
+  const hHasIssue = hAnalysis.toString().includes("CapacitorSymbolHorizontal")
+  const vHasIssue = vAnalysis.toString().includes("CapacitorSymbolHorizontal")
 
   console.log(
     `Horizontal capacitor → CapacitorSymbolHorizontal: ${hHasIssue ? "✓ (expected)" : "✗ MISSING!"}`,
@@ -56,9 +58,7 @@ async function main() {
     `Vertical capacitor   → CapacitorSymbolHorizontal: ${vHasIssue ? "✗ BUG!" : "✓ (none, expected)"}`,
   )
   console.log()
-  console.log(
-    hHasIssue && !vHasIssue ? "ALL CHECKS PASSED ✓" : "FAILED ✗",
-  )
+  console.log(hHasIssue && !vHasIssue ? "ALL CHECKS PASSED ✓" : "FAILED ✗")
 }
 
 main()
