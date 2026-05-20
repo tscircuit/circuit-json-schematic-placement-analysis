@@ -41,6 +41,11 @@ export class CapacitorOrientationSolver extends BaseSolver {
     "capacitor_right",
   ])
 
+  private readonly verticalSymbolNames = new Set([
+    "capacitor_top",
+    "capacitor_bottom",
+  ])
+
   constructor({
     ctx,
     issues: out,
@@ -177,6 +182,14 @@ export class CapacitorOrientationSolver extends BaseSolver {
       placement.schematicComponentId,
     )
     if (!schematicComponent) return
+
+    // Explicitly vertical symbols → no horizontal-flag needed
+    if (this.verticalSymbolNames.has(schematicComponent.symbol_name ?? ""))
+      return
+
+    // Orientation fallback — a capacitor whose schematic box is taller than
+    // wide is drawn vertically and should not be flagged.
+    if (placement.height > placement.width) return
 
     if (!this.horizontalSymbolNames.has(schematicComponent.symbol_name ?? ""))
       return
