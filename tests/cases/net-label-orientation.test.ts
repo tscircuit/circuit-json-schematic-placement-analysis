@@ -4,8 +4,18 @@ import { analyzeSchematicPlacement } from "../../lib/index"
 import type { CircuitJson } from "circuit-json"
 
 const netLabelUpsideDownCircuitJson: CircuitJson = [
-  { type: "source_net", source_net_id: "net_GND", name: "GND", member_source_group_ids: [] },
-  { type: "source_net", source_net_id: "net_V3_3", name: "V3_3", member_source_group_ids: [] },
+  {
+    type: "source_net",
+    source_net_id: "net_GND",
+    name: "GND",
+    member_source_group_ids: [],
+  },
+  {
+    type: "source_net",
+    source_net_id: "net_V3_3",
+    name: "V3_3",
+    member_source_group_ids: [],
+  },
   {
     type: "schematic_net_label",
     schematic_net_label_id: "schematic_net_label_GND",

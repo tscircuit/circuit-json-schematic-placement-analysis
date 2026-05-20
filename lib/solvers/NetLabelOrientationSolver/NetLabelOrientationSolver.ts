@@ -1,6 +1,9 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { CircuitJson, SchematicNetLabel } from "circuit-json"
-import type { SchematicPlacementIssue, NetLabelOrientationUnreadable } from "../../types"
+import type {
+  SchematicPlacementIssue,
+  NetLabelOrientationUnreadable,
+} from "../../types"
 import type { SolverContext } from "../SolverContext"
 import { addAttr } from "../../utils/format"
 
@@ -62,12 +65,19 @@ export class NetLabelOrientationSolver extends BaseSolver {
     return `<NetLabelOrientationUnreadable ${attrs.join(" ")} />`
   }
 
-  private isSchematicNetLabel(el: CircuitJson[number]): el is SchematicNetLabel {
+  private isSchematicNetLabel(
+    el: CircuitJson[number],
+  ): el is SchematicNetLabel {
     return el.type === "schematic_net_label"
   }
 
-  private computeAngleDeg(center: { x: number; y: number }, anchor: { x: number; y: number }): number {
-    return Math.atan2(anchor.y - center.y, anchor.x - center.x) * (180 / Math.PI)
+  private computeAngleDeg(
+    center: { x: number; y: number },
+    anchor: { x: number; y: number },
+  ): number {
+    return (
+      Math.atan2(anchor.y - center.y, anchor.x - center.x) * (180 / Math.PI)
+    )
   }
 
   private isUpsideDown(angleDeg: number): boolean {
