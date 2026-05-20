@@ -111,6 +111,15 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+export interface NetLabelOrientationUnreadable {
+  lineItemType: "NetLabelOrientationUnreadable"
+  schematicNetLabelId: string
+  text: string
+  anchorSide: SchematicSide
+  currentAngleDeg: number
+  normalizedAngleDeg: number
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -120,6 +129,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | NetLabelOrientationUnreadable
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

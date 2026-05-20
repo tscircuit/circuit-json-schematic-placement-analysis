@@ -1,4 +1,4 @@
-<svg width="1200" height="878" viewBox="0 0 1200 878" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -51,6 +51,8 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-o
     <tspan x="18" dy="22">  height=&quot;0.389&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;GND&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;DiodeResistorNotAligned diodeComponentName=&quot;D1&quot; diodePin=&quot;cathode&quot; resistorComponentName=&quot;R1&quot;</tspan>
     <tspan x="18" dy="22">  resistorPin=&quot;anode&quot; message=&quot;D1.cathode and R1.anode face away from each other — rotate D1 so</tspan>
     <tspan x="18" dy="22">  D1.cathode faces R1.anode&quot; /&gt;</tspan>

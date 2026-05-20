@@ -1,4 +1,4 @@
-<svg width="1200" height="1134" viewBox="0 0 1200 1134" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1398" viewBox="0 0 1200 1398" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -76,6 +76,18 @@
     <tspan x="18" dy="22">  width=&quot;4.4&quot; height=&quot;2&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;VBUS&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;D_PLUS&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;D_MINUS&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;CC1&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;CC2&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;NetLabelOrientationUnreadable text=&quot;GND&quot; anchorSide=&quot;left&quot; currentAngleDeg=&quot;180&quot;</tspan>
+    <tspan x="18" dy="22">  normalizedAngleDeg=&quot;0&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;U3&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;4.4&quot; measuredInnerLabelHorizontalEmptySpace=&quot;3.635&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.765&quot; /&gt;</tspan>
