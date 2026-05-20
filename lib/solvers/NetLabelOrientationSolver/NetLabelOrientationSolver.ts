@@ -85,7 +85,9 @@ export class NetLabelOrientationSolver extends BaseSolver {
   }
 
   private normalizeAngle(angleDeg: number): number {
-    return ((angleDeg + 90) % 180) - 90
+    const shifted = (angleDeg + 90) % 180
+    const positive = shifted < 0 ? shifted + 180 : shifted
+    return positive - 90
   }
 
   private computeNetLabels(circuitJson: CircuitJson): NetLabel[] {

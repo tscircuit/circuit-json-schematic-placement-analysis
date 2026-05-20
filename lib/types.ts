@@ -115,7 +115,7 @@ export interface NetLabelOrientationUnreadable {
   lineItemType: "NetLabelOrientationUnreadable"
   schematicNetLabelId: string
   text: string
-  anchorSide: "top" | "bottom" | "left" | "right"
+  anchorSide: SchematicSide
   currentAngleDeg: number
   normalizedAngleDeg: number
 }
