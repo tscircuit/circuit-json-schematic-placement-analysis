@@ -44,6 +44,8 @@ export class CapacitorOrientationSolver extends BaseSolver {
   private readonly verticalSymbolNames = new Set([
     "capacitor_top",
     "capacitor_bottom",
+    "capacitor_up",
+    "capacitor_down",
   ])
 
   constructor({
