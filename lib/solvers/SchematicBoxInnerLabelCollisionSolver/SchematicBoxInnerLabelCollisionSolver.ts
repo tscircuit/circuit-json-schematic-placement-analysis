@@ -38,7 +38,7 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
   private readonly INNER_LABEL_COLLISION_PADDING = 0.02
   private readonly COLLISION_COMPARISON_EPSILON = 1e-9
 
-  private readonly entries: Array<[string, SchematicPort[]]>
+  private entries: Array<[string, SchematicPort[]]>
   private readonly placementById: Map<string, SchematicBoxPlacement>
   private readonly sourcePortById: Map<string, SourcePort>
   private currentIndex = 0
@@ -55,6 +55,16 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.sourcePortById = this.getSourcePortById(circuitJson)
     this.entries = Array.from(this.getPortsBySchematicComponentId(circuitJson))
+    const passiveComponentIds = new Set(
+      circuitJson
+        .filter(
+          (el): el is Extract<typeof el, { type: "schematic_component" }> =>
+            el.type === "schematic_component",
+        )
+        .filter((el) => el.symbol_name)
+        .map((el) => el.schematic_component_id),
+    )
+    this.entries = this.entries.filter(([id]) => !passiveComponentIds.has(id))
     this.solved = this.entries.length === 0
   }
 

@@ -111,6 +111,44 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+export interface ComponentNetLabelCollision {
+  lineItemType: "ComponentNetLabelCollision"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  message: string
+  overlappingLabel1Bounds: { left: number; right: number; top: number; bottom: number }
+  overlappingLabel2Bounds: { left: number; right: number; top: number; bottom: number }
+  suggestion?: {
+    componentName: string
+    newSchX: number
+    newSchY: number
+  }
+}
+
+export interface ComponentBoxNetLabelCollision {
+  lineItemType: "ComponentBoxNetLabelCollision"
+  boxComponent: SchematicBoxPlacement
+  labelComponent: SchematicBoxPlacement
+  message: string
+  boxBounds: { left: number; right: number; top: number; bottom: number }
+  labelBounds: { left: number; right: number; top: number; bottom: number }
+  suggestion?: {
+    componentName: string
+    newSchX: number
+    newSchY: number
+  }
+}
+
+export interface NetLabelCollision {
+  lineItemType: "NetLabelCollision"
+  pairs: Array<{ comp1Name: string; comp2Name: string }>
+  moves: Array<{
+    componentName: string
+    newSchX: number
+    newSchY: number
+  }>
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -120,6 +158,9 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ComponentNetLabelCollision
+  | ComponentBoxNetLabelCollision
+  | NetLabelCollision
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
