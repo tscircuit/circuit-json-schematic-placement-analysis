@@ -5,7 +5,7 @@ import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-
 test("verbose net label fixed - no component collision after applying suggestions", async () => {
   const circuitJson = await createVerboseNetLabelFixedCircuitJson()
 
-  expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson }),
-  ).toMatchSvgSnapshot(import.meta.path)
+  expect(createSchematicAnalysisFixtureSvg({ circuitJson })).toMatchSvgSnapshot(
+    import.meta.path,
+  )
 })

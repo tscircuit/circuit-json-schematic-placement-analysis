@@ -5,7 +5,7 @@ import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-
 test("component label overlap fixed - no collision after applying suggestions", async () => {
   const circuitJson = await createComponentLabelOverlapFixedCircuitJson()
 
-  expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson }),
-  ).toMatchSvgSnapshot(import.meta.path)
+  expect(createSchematicAnalysisFixtureSvg({ circuitJson })).toMatchSvgSnapshot(
+    import.meta.path,
+  )
 })

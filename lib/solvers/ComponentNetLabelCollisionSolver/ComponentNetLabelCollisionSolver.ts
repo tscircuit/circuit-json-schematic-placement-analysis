@@ -1,12 +1,20 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicNetLabel, SchematicPort } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicNetLabel,
+  SchematicPort,
+} from "circuit-json"
 import type {
   NetLabelCollision,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
 import type { SolverContext } from "../SolverContext"
-import { centeredRect, rectOverlap, type RectBounds } from "../../utils/geometry"
+import {
+  centeredRect,
+  rectOverlap,
+  type RectBounds,
+} from "../../utils/geometry"
 
 type CollisionSuggestion = {
   componentName: string
@@ -52,7 +60,9 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   ) {
     super()
     this.placements = params.ctx.componentPlacements
-    this.netLabelsByComponentId = this.buildNetLabelsByComponentId(params.ctx.circuitJson)
+    this.netLabelsByComponentId = this.buildNetLabelsByComponentId(
+      params.ctx.circuitJson,
+    )
     this.solved = this.placements.length < 2
   }
 
@@ -72,7 +82,10 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     }
   }
 
-  private detectPair(compA: SchematicBoxPlacement, compB: SchematicBoxPlacement): void {
+  private detectPair(
+    compA: SchematicBoxPlacement,
+    compB: SchematicBoxPlacement,
+  ): void {
     this.rawCollisions.push(...this.detectLabelLabel(compA, compB))
     this.rawCollisions.push(...this.detectBoxLabel(compA, compB))
     this.rawCollisions.push(...this.detectBoxLabel(compB, compA))
@@ -128,7 +141,12 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const labels = this.netLabelsByComponentId.get(labelId) ?? []
     if (labels.length === 0) return []
 
-    const boxBounds = centeredRect(boxComp.schX, boxComp.schY, boxComp.width, boxComp.height)
+    const boxBounds = centeredRect(
+      boxComp.schX,
+      boxComp.schY,
+      boxComp.width,
+      boxComp.height,
+    )
     const boxIsLeft = boxComp.schX <= labelComp.schX
     const hits: RawBoxLabelCollision[] = []
 
@@ -141,7 +159,14 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       } else {
         xSeparation = labelBounds.right - boxBounds.left + 0.1
       }
-      hits.push({ type: "box-label", boxComp, labelComp, boxId, labelId, xSeparation })
+      hits.push({
+        type: "box-label",
+        boxComp,
+        labelComp,
+        boxId,
+        labelId,
+        xSeparation,
+      })
     }
     return hits
   }
@@ -181,14 +206,19 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   private computeGlobalFixes(): Map<string, CollisionSuggestion> {
     const compById = new Map<string, SchematicBoxPlacement>()
     for (const placement of this.placements) {
-      if (placement.schematicComponentId) compById.set(placement.schematicComponentId, placement)
+      if (placement.schematicComponentId)
+        compById.set(placement.schematicComponentId, placement)
     }
 
     // Build 1D separation constraints: newRight.x - newLeft.x >= minSep
     type Constraint = { leftId: string; rightId: string; minSep: number }
     const constraintMap = new Map<string, number>()
 
-    const addConstraint = (leftId: string, rightId: string, xSeparation: number): void => {
+    const addConstraint = (
+      leftId: string,
+      rightId: string,
+      xSeparation: number,
+    ): void => {
       const leftComp = compById.get(leftId)
       const rightComp = compById.get(rightId)
       if (!leftComp || !rightComp) return
@@ -199,7 +229,11 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
     for (const collision of this.rawCollisions) {
       if (collision.type === "label-label") {
-        addConstraint(collision.leftId, collision.rightId, collision.xSeparation)
+        addConstraint(
+          collision.leftId,
+          collision.rightId,
+          collision.xSeparation,
+        )
       } else if (collision.boxComp.schX <= collision.labelComp.schX) {
         addConstraint(collision.boxId, collision.labelId, collision.xSeparation)
       } else {
@@ -207,10 +241,16 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       }
     }
 
-    const constraints: Constraint[] = [...constraintMap.entries()].map(([key, minSep]) => {
-      const pipeIndex = key.indexOf("|")
-      return { leftId: key.slice(0, pipeIndex), rightId: key.slice(pipeIndex + 1), minSep }
-    })
+    const constraints: Constraint[] = [...constraintMap.entries()].map(
+      ([key, minSep]) => {
+        const pipeIndex = key.indexOf("|")
+        return {
+          leftId: key.slice(0, pipeIndex),
+          rightId: key.slice(pipeIndex + 1),
+          minSep,
+        }
+      },
+    )
 
     // BFS to find connected component groups
     const allIds = new Set<string>()
@@ -244,10 +284,15 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         }
       }
 
-      group.sort((idA, idB) => (compById.get(idA)?.schX ?? 0) - (compById.get(idB)?.schX ?? 0))
+      group.sort(
+        (idA, idB) =>
+          (compById.get(idA)?.schX ?? 0) - (compById.get(idB)?.schX ?? 0),
+      )
 
       const groupIds = new Set(group)
-      const groupConstraints = constraints.filter((c) => groupIds.has(c.leftId) && groupIds.has(c.rightId))
+      const groupConstraints = constraints.filter(
+        (c) => groupIds.has(c.leftId) && groupIds.has(c.rightId),
+      )
 
       // Forward pass: place each component at max(origX, leftNeighbour + minSep)
       const assigned = new Map<string, number>()
@@ -263,7 +308,8 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
       // Centering: shift group left to distribute displacement across components
       const totalPush = [...assigned.entries()].reduce(
-        (sum, [compId, newX]) => sum + (newX - (compById.get(compId)?.schX ?? 0)),
+        (sum, [compId, newX]) =>
+          sum + (newX - (compById.get(compId)?.schX ?? 0)),
         0,
       )
       if (totalPush > 1e-9) {
@@ -281,7 +327,10 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         const maxDisplacement = (positions: Map<string, number>) =>
           [...positions.entries()].reduce(
             (currentMax, [compId, newX]) =>
-              Math.max(currentMax, Math.abs(newX - (compById.get(compId)?.schX ?? 0))),
+              Math.max(
+                currentMax,
+                Math.abs(newX - (compById.get(compId)?.schX ?? 0)),
+              ),
             0,
           )
         if (maxDisplacement(shifted) < maxDisplacement(assigned)) {
@@ -303,14 +352,24 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     return result
   }
 
-  private buildNetLabelsByComponentId(circuitJson: CircuitJson): Map<string, SchematicNetLabel[]> {
+  private buildNetLabelsByComponentId(
+    circuitJson: CircuitJson,
+  ): Map<string, SchematicNetLabel[]> {
     const MATCH_EPSILON = 1e-4
-    const portPositions: Array<{ componentId: string; cx: number; cy: number }> = []
+    const portPositions: Array<{
+      componentId: string
+      cx: number
+      cy: number
+    }> = []
     for (const element of circuitJson) {
       if (element.type !== "schematic_port") continue
       const port = element as SchematicPort
       if (!port.schematic_component_id) continue
-      portPositions.push({ componentId: port.schematic_component_id, cx: port.center.x, cy: port.center.y })
+      portPositions.push({
+        componentId: port.schematic_component_id,
+        cx: port.center.x,
+        cy: port.center.y,
+      })
     }
 
     const result = new Map<string, SchematicNetLabel[]>()
@@ -320,7 +379,10 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       if (!label.anchor_position) continue
       const { x: anchorX, y: anchorY } = label.anchor_position
 
-      const matches = portPositions.filter((port) => Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON)
+      const matches = portPositions.filter(
+        (port) =>
+          Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON,
+      )
       if (matches.length === 0) continue
 
       const componentIds = new Set(matches.map((match) => match.componentId))
@@ -340,11 +402,18 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
     if (isVertical) {
       const anchorY = label.anchor_position?.y ?? label.center.y
-      const textHalfExtent = ((label.text?.length ?? 8) * this.SCH_CHAR_WIDTH) / 2 + this.LABEL_BOUNDS_SLACK
+      const textHalfExtent =
+        ((label.text?.length ?? 8) * this.SCH_CHAR_WIDTH) / 2 +
+        this.LABEL_BOUNDS_SLACK
       const left = label.center.x - this.LABEL_HALF_HEIGHT
       const right = label.center.x + this.LABEL_HALF_HEIGHT
       if (anchorSide === "top") {
-        return { left, right, top: anchorY, bottom: anchorY - textHalfExtent * 2 }
+        return {
+          left,
+          right,
+          top: anchorY,
+          bottom: anchorY - textHalfExtent * 2,
+        }
       }
       return { left, right, top: anchorY + textHalfExtent * 2, bottom: anchorY }
     }
@@ -355,15 +424,23 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const top = label.center.y + this.LABEL_HALF_HEIGHT
     const bottom = label.center.y - this.LABEL_HALF_HEIGHT
     if (label.center.x >= anchorX) {
-      return { left: anchorX, right: label.center.x + farHalfWidth, top, bottom }
+      return {
+        left: anchorX,
+        right: label.center.x + farHalfWidth,
+        top,
+        bottom,
+      }
     }
     return { left: label.center.x - farHalfWidth, right: anchorX, top, bottom }
   }
 
   static netLabelCollisionToString(issue: NetLabelCollision): string {
-    const pairAttrs = issue.pairs.map((pair, i) => `pair${i + 1}="${pair.comp1Name}/${pair.comp2Name}"`).join(" ")
+    const pairAttrs = issue.pairs
+      .map((pair, i) => `pair${i + 1}="${pair.comp1Name}/${pair.comp2Name}"`)
+      .join(" ")
     const moves = issue.moves.map(
-      (move) => `    <Move componentName="${move.componentName}" newSchX="${move.newSchX}" newSchY="${move.newSchY}" />`,
+      (move) =>
+        `    <Move componentName="${move.componentName}" newSchX="${move.newSchX}" newSchY="${move.newSchY}" />`,
     )
     return [
       `<ComponentNetLabelCollision ${pairAttrs}>`,

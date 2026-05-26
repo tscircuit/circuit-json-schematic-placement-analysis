@@ -116,8 +116,18 @@ export interface ComponentNetLabelCollision {
   firstComponent: SchematicBoxPlacement
   secondComponent: SchematicBoxPlacement
   message: string
-  overlappingLabel1Bounds: { left: number; right: number; top: number; bottom: number }
-  overlappingLabel2Bounds: { left: number; right: number; top: number; bottom: number }
+  overlappingLabel1Bounds: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+  }
+  overlappingLabel2Bounds: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+  }
   suggestion?: {
     componentName: string
     newSchX: number

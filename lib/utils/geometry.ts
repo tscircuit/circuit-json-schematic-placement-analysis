@@ -2,8 +2,8 @@
 export interface RectBounds {
   left: number
   right: number
-  top: number    // larger Y value (cartesian up)
-  bottom: number  // smaller Y value
+  top: number // larger Y value (cartesian up)
+  bottom: number // smaller Y value
 }
 
 /** Create center-anchored rectangle bounds. */
