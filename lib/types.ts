@@ -44,6 +44,7 @@ export interface SchematicBoxHasALotOfSurroundingWhitespace {
 export interface CapacitorSymbolHorizontal {
   lineItemType: "CapacitorSymbolHorizontal"
   schematicBox: SchematicBoxPlacement
+  message: string
 }
 
 export interface VerboseSchematicNetLabel {

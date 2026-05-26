@@ -1,4 +1,4 @@
-<svg width="1200" height="790" viewBox="0 0 1200 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="812" viewBox="0 0 1200 812" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -34,7 +34,8 @@
     <tspan x="18" dy="22">  height=&quot;0.84&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;CapacitorSymbolHorizontal componentName=&quot;C1&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;1.1&quot; height=&quot;0.84&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;CapacitorSymbolHorizontal componentName=&quot;C1&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;1.1&quot; height=&quot;0.84&quot;</tspan>
+    <tspan x="18" dy="22">  message=&quot;Use schOrientation=&quot;vertical&quot; on this capacitor to fix the symbol orientation&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

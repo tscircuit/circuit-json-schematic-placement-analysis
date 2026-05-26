@@ -27,7 +27,7 @@ test("generates a horizontal capacitor orientation issue", async () => {
   })
 
   expect(analysis.toString()).toContain(
-    '<CapacitorSymbolHorizontal componentName="C1" schX="0" schY="0" width="1.1" height="0.84" />',
+    '<CapacitorSymbolHorizontal componentName="C1" schX="0" schY="0" width="1.1" height="0.84" message="Use schOrientation="vertical" on this capacitor to fix the symbol orientation" />',
   )
 
   expect(

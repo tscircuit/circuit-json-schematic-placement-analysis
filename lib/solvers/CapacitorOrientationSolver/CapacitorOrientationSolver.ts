@@ -30,6 +30,9 @@ interface SourceComponentWithFtype {
 }
 
 export class CapacitorOrientationSolver extends BaseSolver {
+  private static readonly ORIENTATION_MESSAGE =
+    'Use schOrientation="vertical" on this capacitor to fix the symbol orientation'
+
   private readonly ctx: SolverContext
   private readonly out: SchematicPlacementIssue[]
   private readonly schematicComponentById: Map<string, SchematicComponent>
@@ -184,6 +187,7 @@ export class CapacitorOrientationSolver extends BaseSolver {
     return {
       lineItemType: "CapacitorSymbolHorizontal",
       schematicBox: this.createIssuePlacement(placement),
+      message: CapacitorOrientationSolver.ORIENTATION_MESSAGE,
     }
   }
 
@@ -194,6 +198,7 @@ export class CapacitorOrientationSolver extends BaseSolver {
     addAttr(attrs, "schY", issue.schematicBox.schY)
     addAttr(attrs, "width", issue.schematicBox.width)
     addAttr(attrs, "height", issue.schematicBox.height)
+    addAttr(attrs, "message", issue.message, { escape: false })
     return `<CapacitorSymbolHorizontal ${attrs.join(" ")} />`
   }
 }
