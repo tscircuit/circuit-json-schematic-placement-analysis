@@ -6,6 +6,7 @@ import type {
 } from "../../types"
 import type { SolverContext } from "../SolverContext"
 import { addAttr } from "../../utils/format"
+import { getSchematicSheetNameByIdMap } from "../../utils/schematic-sheets"
 
 interface SourceComponentWithName {
   source_component_id: string
@@ -31,8 +32,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
     const { circuitJson } = params.ctx
     this.netLabels = circuitJson.filter((el) => this.isSchematicNetLabel(el))
     this.tokenToInvolvedPin = this.buildTokenToInvolvedPinMap(circuitJson)
-    this.schematicSheetNameById =
-      this.buildSchematicSheetNameByIdMap(circuitJson)
+    this.schematicSheetNameById = getSchematicSheetNameByIdMap(circuitJson)
     this.solved = this.netLabels.length === 0
   }
 
@@ -141,22 +141,6 @@ export class VerboseNetLabelSolver extends BaseSolver {
       }
     }
 
-    return map
-  }
-
-  private buildSchematicSheetNameByIdMap(
-    circuitJson: CircuitJson,
-  ): Map<string, string> {
-    const map = new Map<string, string>()
-    for (const element of circuitJson) {
-      if (
-        element.type === "schematic_sheet" &&
-        element.schematic_sheet_id &&
-        element.name
-      ) {
-        map.set(element.schematic_sheet_id, element.name)
-      }
-    }
     return map
   }
 

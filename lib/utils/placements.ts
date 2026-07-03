@@ -9,6 +9,7 @@ import type {
   SchematicBoxPlacementLineItem,
 } from "../types"
 import type { SolverContext } from "../solvers/SolverContext"
+import { getSchematicSheetNameByIdMap } from "./schematic-sheets"
 
 const isSchematicBox = (el: CircuitJson[number]): el is SchematicBox =>
   el.type === "schematic_box"
@@ -20,21 +21,6 @@ const isSchematicComponent = (
 const getSchematicSheetId = (
   el: Pick<SchematicBox | SchematicComponent, "schematic_sheet_id">,
 ): string | undefined => el.schematic_sheet_id
-
-const getSchematicSheetNameById = (
-  circuitJson: CircuitJson,
-): Map<string, string> => {
-  const map = new Map<string, string>()
-  for (const el of circuitJson) {
-    if (el.type !== "schematic_sheet") continue
-    const sheet = el as Extract<
-      CircuitJson[number],
-      { type: "schematic_sheet" }
-    >
-    if (sheet.name) map.set(sheet.schematic_sheet_id, sheet.name)
-  }
-  return map
-}
 
 const getSourceComponentName = (
   circuitJson: CircuitJson,
@@ -62,13 +48,14 @@ const getSourceComponentMetadata = (
 export const schematicComponentToPlacement = (
   schematicComponent: SchematicComponent,
   circuitJson: CircuitJson,
+  schematicSheetNameById: Map<string, string>,
   schematicBox?: SchematicBox,
 ): SchematicBoxPlacementLineItem => {
   const schematicSheetId =
     getSchematicSheetId(schematicComponent) ??
     (schematicBox ? getSchematicSheetId(schematicBox) : undefined)
   const schematicSheetName = schematicSheetId
-    ? getSchematicSheetNameById(circuitJson).get(schematicSheetId)
+    ? schematicSheetNameById.get(schematicSheetId)
     : undefined
   return {
     lineItemType: "SchematicBoxPlacement",
@@ -96,10 +83,11 @@ export const schematicComponentToPlacement = (
 export const schematicBoxToPlacement = (
   schematicBox: SchematicBox,
   circuitJson: CircuitJson,
+  schematicSheetNameById: Map<string, string>,
 ): SchematicBoxPlacementLineItem => {
   const schematicSheetId = getSchematicSheetId(schematicBox)
   const schematicSheetName = schematicSheetId
-    ? getSchematicSheetNameById(circuitJson).get(schematicSheetId)
+    ? schematicSheetNameById.get(schematicSheetId)
     : undefined
   return {
     lineItemType: "SchematicBoxPlacement",
@@ -119,6 +107,7 @@ export const schematicBoxToPlacement = (
 
 export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
   const schematicBoxes = circuitJson.filter(isSchematicBox)
+  const schematicSheetNameById = getSchematicSheetNameByIdMap(circuitJson)
   const schematicComponentIds = new Set(
     circuitJson
       .filter(isSchematicComponent)
@@ -130,6 +119,7 @@ export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
       schematicComponentToPlacement(
         sc,
         circuitJson,
+        schematicSheetNameById,
         schematicBoxes.find(
           (sb) => sb.schematic_component_id === sc.schematic_component_id,
         ),
@@ -141,7 +131,9 @@ export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
           !sb.schematic_component_id ||
           !schematicComponentIds.has(sb.schematic_component_id),
       )
-      .map((sb) => schematicBoxToPlacement(sb, circuitJson)),
+      .map((sb) =>
+        schematicBoxToPlacement(sb, circuitJson, schematicSheetNameById),
+      ),
   ]
 
   return { circuitJson, componentPlacements }
