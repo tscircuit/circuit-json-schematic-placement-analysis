@@ -1,6 +1,6 @@
 import type { CircuitJson } from "circuit-json"
 
-export const getSchematicSheetNameByIdMap = (
+export const getSchematicSheetNamesById = (
   circuitJson: CircuitJson,
 ): Map<string, string> => {
   const map = new Map<string, string>()

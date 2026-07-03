@@ -9,7 +9,7 @@ import type {
   SchematicBoxPlacementLineItem,
 } from "../types"
 import type { SolverContext } from "../solvers/SolverContext"
-import { getSchematicSheetNameByIdMap } from "./schematic-sheets"
+import { getSchematicSheetNamesById } from "./schematic-sheets"
 
 const isSchematicBox = (el: CircuitJson[number]): el is SchematicBox =>
   el.type === "schematic_box"
@@ -123,7 +123,7 @@ export const schematicBoxToPlacement = (
 
 export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
   const schematicBoxes = circuitJson.filter(isSchematicBox)
-  const schematicSheetNameById = getSchematicSheetNameByIdMap(circuitJson)
+  const schematicSheetNameById = getSchematicSheetNamesById(circuitJson)
   const schematicComponentIds = new Set(
     circuitJson
       .filter(isSchematicComponent)

@@ -6,7 +6,7 @@ import type {
 } from "../../types"
 import type { SolverContext } from "../SolverContext"
 import { addAttr } from "../../utils/format"
-import { getSchematicSheetNameByIdMap } from "../../utils/schematic-sheets"
+import { getSchematicSheetNamesById } from "../../utils/schematic-sheets"
 
 interface SourceComponentWithName {
   source_component_id: string
@@ -32,7 +32,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
     const { circuitJson } = params.ctx
     this.netLabels = circuitJson.filter((el) => this.isSchematicNetLabel(el))
     this.tokenToInvolvedPin = this.buildTokenToInvolvedPinMap(circuitJson)
-    this.schematicSheetNameById = getSchematicSheetNameByIdMap(circuitJson)
+    this.schematicSheetNameById = getSchematicSheetNamesById(circuitJson)
     this.solved = this.netLabels.length === 0
   }
 
