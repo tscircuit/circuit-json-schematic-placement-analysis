@@ -49,14 +49,19 @@ export class VerboseNetLabelSolver extends BaseSolver {
     if (!label.text.includes("/") || this.seen.has(seenKey)) return
     this.seen.add(seenKey)
 
+    let schematicSheetName: string | undefined
+    if (label.schematic_sheet_id) {
+      schematicSheetName = this.schematicSheetNameById.get(
+        label.schematic_sheet_id,
+      )
+    }
+
     const issue: VerboseSchematicNetLabel = {
       lineItemType: "VerboseSchematicNetLabel",
       schematicNetLabelId: label.schematic_net_label_id,
       sourceNetId: label.source_net_id,
       schematicSheetId: label.schematic_sheet_id,
-      schematicSheetName: label.schematic_sheet_id
-        ? this.schematicSheetNameById.get(label.schematic_sheet_id)
-        : undefined,
+      schematicSheetName,
       text: label.text,
       involvedPins: this.getInvolvedPins(label.text, this.tokenToInvolvedPin),
       schX: label.center.x,

@@ -51,21 +51,23 @@ export const schematicComponentToPlacement = (
   schematicSheetNameById: Map<string, string>,
   schematicBox?: SchematicBox,
 ): SchematicBoxPlacementLineItem => {
-  const schematicSheetId =
-    getSchematicSheetId(schematicComponent) ??
-    (schematicBox ? getSchematicSheetId(schematicBox) : undefined)
-  const schematicSheetName = schematicSheetId
-    ? schematicSheetNameById.get(schematicSheetId)
-    : undefined
-  return {
+  let schematicSheetId = getSchematicSheetId(schematicComponent)
+  if (schematicSheetId === undefined && schematicBox) {
+    schematicSheetId = getSchematicSheetId(schematicBox)
+  }
+
+  let schematicSheetName: string | undefined
+  if (schematicSheetId) {
+    schematicSheetName = schematicSheetNameById.get(schematicSheetId)
+  }
+
+  const placement: SchematicBoxPlacementLineItem = {
     lineItemType: "SchematicBoxPlacement",
     positionAnchor: "center",
     schX: schematicComponent.center.x,
     schY: schematicComponent.center.y,
     width: schematicBox?.width ?? schematicComponent.size.width,
     height: schematicBox?.height ?? schematicComponent.size.height,
-    ...(schematicSheetId ? { schematicSheetId } : {}),
-    ...(schematicSheetName ? { schematicSheetName } : {}),
     sourceComponentId: schematicComponent.source_component_id,
     sourceComponentName: getSourceComponentName(
       circuitJson,
@@ -78,6 +80,13 @@ export const schematicComponentToPlacement = (
     subcircuitId:
       schematicComponent.subcircuit_id ?? schematicBox?.subcircuit_id,
   }
+  if (schematicSheetId) {
+    placement.schematicSheetId = schematicSheetId
+  }
+  if (schematicSheetName) {
+    placement.schematicSheetName = schematicSheetName
+  }
+  return placement
 }
 
 export const schematicBoxToPlacement = (
@@ -86,23 +95,30 @@ export const schematicBoxToPlacement = (
   schematicSheetNameById: Map<string, string>,
 ): SchematicBoxPlacementLineItem => {
   const schematicSheetId = getSchematicSheetId(schematicBox)
-  const schematicSheetName = schematicSheetId
-    ? schematicSheetNameById.get(schematicSheetId)
-    : undefined
-  return {
+  let schematicSheetName: string | undefined
+  if (schematicSheetId) {
+    schematicSheetName = schematicSheetNameById.get(schematicSheetId)
+  }
+
+  const placement: SchematicBoxPlacementLineItem = {
     lineItemType: "SchematicBoxPlacement",
     positionAnchor: "center",
     schX: schematicBox.x,
     schY: schematicBox.y,
     width: schematicBox.width,
     height: schematicBox.height,
-    ...(schematicSheetId ? { schematicSheetId } : {}),
-    ...(schematicSheetName ? { schematicSheetName } : {}),
     ...getSourceComponentMetadata(schematicBox, circuitJson),
     schematicComponentId: schematicBox.schematic_component_id,
     schematicSymbolId: schematicBox.schematic_symbol_id,
     subcircuitId: schematicBox.subcircuit_id,
   }
+  if (schematicSheetId) {
+    placement.schematicSheetId = schematicSheetId
+  }
+  if (schematicSheetName) {
+    placement.schematicSheetName = schematicSheetName
+  }
+  return placement
 }
 
 export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
