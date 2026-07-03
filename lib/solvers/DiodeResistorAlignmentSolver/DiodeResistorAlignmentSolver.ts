@@ -70,8 +70,15 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
     const start = firstEdge.from
     const end = lastEdge.to
 
-    const startSourceCompId = this.findSourceComponentIdNearPoint(start)
-    const endSourceCompId = this.findSourceComponentIdNearPoint(end)
+    const schematicSheetId = trace.schematic_sheet_id
+    const startSourceCompId = this.findSourceComponentIdNearPoint(
+      start,
+      schematicSheetId,
+    )
+    const endSourceCompId = this.findSourceComponentIdNearPoint(
+      end,
+      schematicSheetId,
+    )
     if (!startSourceCompId || !endSourceCompId) return
 
     const startFtype = this.sourceComponentFtypeById.get(startSourceCompId)
@@ -96,9 +103,11 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
 
     const diodePort = this.findNearestPort(
       DIODE_FTYPES.has(startFtype!) ? start : end,
+      schematicSheetId,
     )
     const resistorPort = this.findNearestPort(
       startFtype === "simple_resistor" ? start : end,
+      schematicSheetId,
     )
 
     if (!diodePort?.center || !resistorPort?.center) return
@@ -195,13 +204,17 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
     return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
   }
 
-  private findNearestPort(point: {
-    x: number
-    y: number
-  }): SchematicPort | undefined {
+  private findNearestPort(
+    point: {
+      x: number
+      y: number
+    },
+    schematicSheetId?: string,
+  ): SchematicPort | undefined {
     let nearest: SchematicPort | undefined
     let minDist = Infinity
     for (const port of this.schematicPorts) {
+      if (port.schematic_sheet_id !== schematicSheetId) continue
       if (!port.center) continue
       const d = DiodeResistorAlignmentSolver.dist(point, port.center)
       if (d < minDist) {
@@ -212,11 +225,14 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
     return nearest
   }
 
-  private findSourceComponentIdNearPoint(point: {
-    x: number
-    y: number
-  }): string | undefined {
-    const nearest = this.findNearestPort(point)
+  private findSourceComponentIdNearPoint(
+    point: {
+      x: number
+      y: number
+    },
+    schematicSheetId?: string,
+  ): string | undefined {
+    const nearest = this.findNearestPort(point, schematicSheetId)
     if (!nearest || !nearest.source_port_id) return undefined
     return this.sourceComponentIdBySourcePortId.get(nearest.source_port_id)
   }

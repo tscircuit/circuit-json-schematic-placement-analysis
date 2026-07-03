@@ -4,6 +4,8 @@ export interface SchematicBoxPlacement {
   schY: number
   width: number
   height: number
+  schematicSheetId?: string
+  schematicSheetName?: string
   sourceComponentId?: string
   sourceComponentName?: string
   schematicComponentId?: string
@@ -51,6 +53,8 @@ export interface VerboseSchematicNetLabel {
   lineItemType: "VerboseSchematicNetLabel"
   schematicNetLabelId?: string
   sourceNetId?: string
+  schematicSheetId?: string
+  schematicSheetName?: string
   text: string
   involvedPins: string[]
   schX: number

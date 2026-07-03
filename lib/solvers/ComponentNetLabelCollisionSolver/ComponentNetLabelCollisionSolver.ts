@@ -86,6 +86,8 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     compA: SchematicBoxPlacement,
     compB: SchematicBoxPlacement,
   ): void {
+    if (compA.schematicSheetId !== compB.schematicSheetId) return
+
     this.rawCollisions.push(...this.detectLabelLabel(compA, compB))
     this.rawCollisions.push(...this.detectBoxLabel(compA, compB))
     this.rawCollisions.push(...this.detectBoxLabel(compB, compA))
@@ -360,6 +362,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       componentId: string
       cx: number
       cy: number
+      schematicSheetId?: string
     }> = []
     for (const element of circuitJson) {
       if (element.type !== "schematic_port") continue
@@ -369,6 +372,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         componentId: port.schematic_component_id,
         cx: port.center.x,
         cy: port.center.y,
+        schematicSheetId: port.schematic_sheet_id,
       })
     }
 
@@ -381,6 +385,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
       const matches = portPositions.filter(
         (port) =>
+          port.schematicSheetId === label.schematic_sheet_id &&
           Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON,
       )
       if (matches.length === 0) continue

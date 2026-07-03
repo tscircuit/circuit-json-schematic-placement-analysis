@@ -36,6 +36,7 @@ export class SchematicPlacementAnalysis {
     addAttr(attrs, "schY", lineItem.schY)
     addAttr(attrs, "width", lineItem.width)
     addAttr(attrs, "height", lineItem.height)
+    addAttr(attrs, "schSheetName", lineItem.schematicSheetName)
     return `<SchematicBoxPlacement ${attrs.join(" ")} />`
   }
 

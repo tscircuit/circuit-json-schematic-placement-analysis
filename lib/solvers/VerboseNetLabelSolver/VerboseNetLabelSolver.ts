@@ -17,6 +17,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
 
   private readonly netLabels: SchematicNetLabel[]
   private readonly tokenToInvolvedPin: Map<string, string>
+  private readonly schematicSheetNameById: Map<string, string>
   private currentIndex = 0
   private readonly seen = new Set<string>()
 
@@ -30,6 +31,8 @@ export class VerboseNetLabelSolver extends BaseSolver {
     const { circuitJson } = params.ctx
     this.netLabels = circuitJson.filter((el) => this.isSchematicNetLabel(el))
     this.tokenToInvolvedPin = this.buildTokenToInvolvedPinMap(circuitJson)
+    this.schematicSheetNameById =
+      this.buildSchematicSheetNameByIdMap(circuitJson)
     this.solved = this.netLabels.length === 0
   }
 
@@ -42,13 +45,18 @@ export class VerboseNetLabelSolver extends BaseSolver {
 
     this.solved = this.currentIndex >= this.netLabels.length
 
-    if (!label.text.includes("/") || this.seen.has(label.text)) return
-    this.seen.add(label.text)
+    const seenKey = `${label.schematic_sheet_id ?? ""}:${label.text}`
+    if (!label.text.includes("/") || this.seen.has(seenKey)) return
+    this.seen.add(seenKey)
 
     const issue: VerboseSchematicNetLabel = {
       lineItemType: "VerboseSchematicNetLabel",
       schematicNetLabelId: label.schematic_net_label_id,
       sourceNetId: label.source_net_id,
+      schematicSheetId: label.schematic_sheet_id,
+      schematicSheetName: label.schematic_sheet_id
+        ? this.schematicSheetNameById.get(label.schematic_sheet_id)
+        : undefined,
       text: label.text,
       involvedPins: this.getInvolvedPins(label.text, this.tokenToInvolvedPin),
       schX: label.center.x,
@@ -63,6 +71,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
     addAttr(attrs, "message", issue.message, { escape: false })
     addAttr(attrs, "text", issue.text)
     addAttr(attrs, "involvedPins", issue.involvedPins.join(","))
+    addAttr(attrs, "schSheetName", issue.schematicSheetName)
     addAttr(attrs, "schX", issue.schX)
     addAttr(attrs, "schY", issue.schY)
     return `<VerboseSchematicNetLabel ${attrs.join(" ")} />`
@@ -132,6 +141,22 @@ export class VerboseNetLabelSolver extends BaseSolver {
       }
     }
 
+    return map
+  }
+
+  private buildSchematicSheetNameByIdMap(
+    circuitJson: CircuitJson,
+  ): Map<string, string> {
+    const map = new Map<string, string>()
+    for (const element of circuitJson) {
+      if (
+        element.type === "schematic_sheet" &&
+        element.schematic_sheet_id &&
+        element.name
+      ) {
+        map.set(element.schematic_sheet_id, element.name)
+      }
+    }
     return map
   }
 

@@ -1,5 +1,5 @@
 import type { AnyCircuitElement } from "circuit-json"
-import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
+import { convertCircuitJsonToStackedSchematicSheetsSvg } from "circuit-to-svg"
 import { analyzeSchematicPlacement } from "lib/index"
 import type { SchematicPlacementAnalysis } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
@@ -15,10 +15,13 @@ export function createSchematicAnalysisFixtureSvg(input: {
   const analysis =
     input.analysis ?? analyzeSchematicPlacement(input.circuitJson)
 
-  const circuitSvg = convertCircuitJsonToSchematicSvg(input.circuitJson, {
-    width,
-    height,
-  })
+  const circuitSvg = convertCircuitJsonToStackedSchematicSheetsSvg(
+    input.circuitJson,
+    {
+      width,
+      height,
+    },
+  )
 
   return formatFixtureSnapshotSvg(
     stackSvgsVertically(

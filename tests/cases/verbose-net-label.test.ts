@@ -18,8 +18,8 @@ test("generates a verbose schematic net label issue", async () => {
 
   expect(verboseNetLabelIssue).toMatchObject({
     lineItemType: "VerboseSchematicNetLabel",
-    text: "R1_pin2/U1_pin2",
-    involvedPins: ["R1.pin2", "U1.pin2"],
+    text: "C1_pin2/U1_pin1",
+    involvedPins: ["C1.pin2", "U1.pin1"],
     message: "Create trace with schDisplayLabel",
   })
 
@@ -32,7 +32,7 @@ test("generates a verbose schematic net label issue", async () => {
   ).toHaveLength(1)
 
   expect(analysis.toString()).toContain(
-    'message="Create trace with schDisplayLabel" text="R1_pin2/U1_pin2" involvedPins="R1.pin2,U1.pin2"',
+    'message="Create trace with schDisplayLabel" text="C1_pin2/U1_pin1" involvedPins="C1.pin2,U1.pin1"',
   )
 
   expect(

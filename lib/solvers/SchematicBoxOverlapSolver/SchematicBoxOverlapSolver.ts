@@ -135,6 +135,9 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
     firstComponent: SchematicBoxPlacement,
     secondComponent: SchematicBoxPlacement,
   ): ComponentOverlap | null {
+    if (firstComponent.schematicSheetId !== secondComponent.schematicSheetId)
+      return null
+
     const a = this.getCenteredRectBounds(firstComponent)
     const b = this.getCenteredRectBounds(secondComponent)
     const overlapWidth = Math.min(a.right, b.right) - Math.max(a.left, b.left)
