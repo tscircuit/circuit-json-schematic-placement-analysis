@@ -3,6 +3,9 @@
 Analyze `circuit-json` schematic placement, report schematic box positions, and
 emit schematic placement issues such as overlapping components.
 
+The analysis also detects when vertically shifting one of two connected
+components would align multiple opposing pin pairs and simplify their traces.
+
 This is intended for placement-focused diagnostics. It emits
 `<SchematicBoxPlacement />` rows inside `<SchematicBoxPositions>` and issue nodes
 inside `<SchematicPlacementIssues>` when problems are detected.

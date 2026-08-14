@@ -116,6 +116,22 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+export interface ComponentPinsWouldAlignWithVerticalShift {
+  lineItemType: "ComponentPinsWouldAlignWithVerticalShift"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  targetComponent: SchematicBoxPlacement
+  deltaSchY: number
+  newSchY: number
+  currentlyAlignedPinCount: number
+  alignedPinCount: number
+  alignedPinPairs: Array<{
+    firstPin?: string
+    secondPin?: string
+  }>
+  message: string
+}
+
 export interface ComponentNetLabelCollision {
   lineItemType: "ComponentNetLabelCollision"
   firstComponent: SchematicBoxPlacement
@@ -173,6 +189,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ComponentPinsWouldAlignWithVerticalShift
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision

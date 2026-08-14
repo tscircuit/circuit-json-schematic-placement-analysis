@@ -8,6 +8,7 @@ import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/S
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
+import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -57,6 +58,8 @@ export class SchematicPlacementAnalysis {
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
       case "DiodeResistorNotAligned":
         return DiodeResistorAlignmentSolver.issueToString(issue)
+      case "ComponentPinsWouldAlignWithVerticalShift":
+        return ComponentPinAlignmentSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
       default:
