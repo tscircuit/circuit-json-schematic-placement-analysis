@@ -60,7 +60,7 @@ export class TraceSimplificationSolver extends BaseSolver {
     )) {
       const points = this.getTracePoints(trace)
       const currentTurnCount = this.countTurns(points)
-      if (currentTurnCount !== 2) continue
+      if (currentTurnCount !== 3) continue
 
       const candidates = [
         this.getCandidate({
@@ -119,11 +119,13 @@ export class TraceSimplificationSolver extends BaseSolver {
   }): MoveCandidate | undefined {
     if (points.length < 4) return
     const terminalIndex = atStart ? 0 : points.length - 1
-    const neighborIndex = atStart ? 1 : points.length - 2
-    const nextNeighborIndex = atStart ? 2 : points.length - 3
+    const leadIndex = atStart ? 1 : points.length - 2
+    const acrossIndex = atStart ? 2 : points.length - 3
+    const retainedIndex = atStart ? 3 : points.length - 4
     const terminalPoint = points[terminalIndex]!
-    const neighborPoint = points[neighborIndex]!
-    const nextNeighborPoint = points[nextNeighborIndex]!
+    const leadPoint = points[leadIndex]!
+    const acrossPoint = points[acrossIndex]!
+    const retainedPoint = points[retainedIndex]!
     const terminalEdge = atStart ? trace.edges[0] : trace.edges.at(-1)
     if (!terminalEdge) return
 
@@ -135,18 +137,30 @@ export class TraceSimplificationSolver extends BaseSolver {
       : this.findPortAtPoint(ports, terminalPoint, trace.schematic_sheet_id)
     if (!port?.schematic_component_id || !port.facing_direction) return
 
-    const terminalAxis = this.getAxis(terminalPoint, neighborPoint)
-    const retainedAxis = this.getAxis(neighborPoint, nextNeighborPoint)
+    const leadAxis = this.getAxis(terminalPoint, leadPoint)
+    const shiftAxis = this.getAxis(leadPoint, acrossPoint)
+    const retainedAxis = this.getAxis(acrossPoint, retainedPoint)
     const portAxis =
       port.facing_direction === "left" || port.facing_direction === "right"
         ? "horizontal"
         : "vertical"
-    if (!terminalAxis || !retainedAxis) return
-    if (terminalAxis === portAxis || retainedAxis !== portAxis) return
+    if (!leadAxis || !shiftAxis || !retainedAxis) return
+    if (
+      leadAxis !== portAxis ||
+      shiftAxis === portAxis ||
+      retainedAxis !== portAxis
+    ) {
+      return
+    }
     if (
       !this.isPointInFacingDirection(
-        neighborPoint,
-        nextNeighborPoint,
+        terminalPoint,
+        leadPoint,
+        port.facing_direction,
+      ) ||
+      !this.isPointInFacingDirection(
+        acrossPoint,
+        retainedPoint,
         port.facing_direction,
       )
     ) {
@@ -155,8 +169,8 @@ export class TraceSimplificationSolver extends BaseSolver {
 
     const target = placementsByComponentId.get(port.schematic_component_id)
     if (!target) return
-    const deltaSchX = neighborPoint.x - terminalPoint.x
-    const deltaSchY = neighborPoint.y - terminalPoint.y
+    const deltaSchX = acrossPoint.x - leadPoint.x
+    const deltaSchY = acrossPoint.y - leadPoint.y
     if (
       Math.abs(deltaSchX) <= TraceSimplificationSolver.EPSILON &&
       Math.abs(deltaSchY) <= TraceSimplificationSolver.EPSILON
@@ -164,9 +178,13 @@ export class TraceSimplificationSolver extends BaseSolver {
       return
     }
 
-    const suggestedPoints = points.map((point, index) =>
-      index === terminalIndex ? neighborPoint : point,
-    )
+    const movedTerminalPoint = {
+      x: terminalPoint.x + deltaSchX,
+      y: terminalPoint.y + deltaSchY,
+    }
+    const suggestedPoints = atStart
+      ? [movedTerminalPoint, ...points.slice(2)]
+      : [...points.slice(0, -2), movedTerminalPoint]
     const suggestedTurnCount = this.countTurns(suggestedPoints)
     if (
       suggestedTurnCount === undefined ||

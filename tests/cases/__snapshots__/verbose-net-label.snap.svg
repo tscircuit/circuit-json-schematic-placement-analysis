@@ -1,4 +1,4 @@
-<svg width="1200" height="1098" viewBox="0 0 1200 1098" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1186" viewBox="0 0 1200 1186" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -64,6 +64,10 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot; text=&quot;C1_pin2/U1_pin1&quot;</tspan>
     <tspan x="18" dy="22">  involvedPins=&quot;C1.pin2,U1.pin1&quot; schX=&quot;-1.56&quot; schY=&quot;0.3&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;TraceCanBeSimplifiedByMovingComponent schematicTraceId=&quot;schematic_trace_1&quot;</tspan>
+    <tspan x="18" dy="22">  targetComponentName=&quot;R1&quot; deltaSchX=&quot;-0.551&quot; deltaSchY=&quot;0&quot; newSchX=&quot;-1.151&quot; newSchY=&quot;2.1&quot;</tspan>
+    <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move R1 left by 0.551 (to schX=-1.151,</tspan>
+    <tspan x="18" dy="22">  schY=2.1) to reduce this trace from 3 turns to 1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;C1/U1&quot;&gt;</tspan>
     <tspan x="18" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
     <tspan x="18" dy="22">  circuit.&quot;&gt;</tspan>
