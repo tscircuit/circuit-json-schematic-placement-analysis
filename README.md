@@ -1,14 +1,16 @@
 # circuit-json-schematic-placement-analysis
 
-Analyze `circuit-json` schematic placement, report schematic box positions, and
-emit schematic placement issues such as overlapping components.
+Analyze `circuit-json` schematic placement and emit schematic placement issues
+such as overlapping components, together with only the schematic box positions
+that provide context for those issues.
 
 The analysis also detects when vertically shifting one of two connected
 components would align multiple opposing pin pairs and simplify their traces.
 
-This is intended for placement-focused diagnostics. It emits
-`<SchematicBoxPlacement />` rows inside `<SchematicBoxPositions>` and issue nodes
-inside `<SchematicPlacementIssues>` when problems are detected.
+This is intended for placement-focused diagnostics. Results are grouped by
+schematic sheet. Each group contains issue nodes and, when useful,
+`<SchematicBoxPlacement />` rows for the components involved in those issues.
+Circuits without issues produce an empty string.
 
 ## Install
 
@@ -32,15 +34,18 @@ console.log(analysis.toString())
 ## Sample Output
 
 ```xml
-<SchematicBoxPositions>
-<SchematicBoxPlacement componentName="U1" positionAnchor="center" schX="10" schY="-3.125" width="2.5" height="1.25" />
-</SchematicBoxPositions>
-<SchematicPlacementIssues>
-<ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapWidth="0.25" overlapHeight="0.194">
-<OverlapCorrectionSuggestion target="R2" newSchX="1.25" deltaSchX="+0.25" />
-<OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />
-</ComponentOverlap>
-</SchematicPlacementIssues>
+<SchematicSheet name="Power" id="schematic_sheet_0">
+  <SchematicBoxPositions>
+    <SchematicBoxPlacement componentName="U1" positionAnchor="center" schX="0" schY="0" width="2.5" height="1.25" />
+    <SchematicBoxPlacement componentName="R2" positionAnchor="center" schX="1" schY="0.5" width="1" height="0.5" />
+  </SchematicBoxPositions>
+  <SchematicPlacementIssues>
+    <ComponentOverlap component1Name="U1" component2Name="R2" component1SchX="0" component1SchY="0" component2SchX="1" component2SchY="0.5" overlapWidth="0.25" overlapHeight="0.194">
+      <OverlapCorrectionSuggestion target="R2" newSchX="1.25" deltaSchX="+0.25" />
+      <OverlapCorrectionSuggestion target="R2" newSchY="0.694" deltaSchY="+0.194" />
+    </ComponentOverlap>
+  </SchematicPlacementIssues>
+</SchematicSheet>
 ```
 
 ## Test

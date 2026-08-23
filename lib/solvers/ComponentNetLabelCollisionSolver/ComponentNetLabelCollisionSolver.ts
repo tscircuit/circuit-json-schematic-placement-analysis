@@ -9,12 +9,12 @@ import type {
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
-import type { SolverContext } from "../SolverContext"
 import {
   centeredRect,
-  rectOverlap,
   type RectBounds,
+  rectOverlap,
 } from "../../utils/geometry"
+import type { SolverContext } from "../SolverContext"
 
 type CollisionSuggestion = {
   componentName: string
@@ -176,12 +176,30 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   private buildAndPushIssues(): void {
     if (this.rawCollisions.length === 0) return
 
-    const globalFixes = this.computeGlobalFixes()
+    const collisionsBySheet = new Map<string, RawCollision[]>()
+    for (const collision of this.rawCollisions) {
+      const placement =
+        collision.type === "label-label"
+          ? collision.leftComp
+          : collision.boxComp
+      const sheetKey = placement.schematicSheetId ?? ""
+      const sheetCollisions = collisionsBySheet.get(sheetKey)
+      if (sheetCollisions) sheetCollisions.push(collision)
+      else collisionsBySheet.set(sheetKey, [collision])
+    }
+
+    for (const collisions of collisionsBySheet.values()) {
+      this.buildAndPushIssueForSheet(collisions)
+    }
+  }
+
+  private buildAndPushIssueForSheet(collisions: RawCollision[]): void {
+    const globalFixes = this.computeGlobalFixes(collisions)
     if (globalFixes.size === 0) return
 
     const seenPairs = new Set<string>()
     const pairs: Array<{ comp1Name: string; comp2Name: string }> = []
-    for (const collision of this.rawCollisions) {
+    for (const collision of collisions) {
       let comp1Name: string
       let comp2Name: string
       if (collision.type === "label-label") {
@@ -198,14 +216,23 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       }
     }
 
+    const firstCollision = collisions[0]!
+    const firstPlacement =
+      firstCollision.type === "label-label"
+        ? firstCollision.leftComp
+        : firstCollision.boxComp
     this.params.issues.push({
       lineItemType: "NetLabelCollision",
+      schematicSheetId: firstPlacement.schematicSheetId,
+      schematicSheetName: firstPlacement.schematicSheetName,
       pairs,
       moves: Array.from(globalFixes.values()),
     })
   }
 
-  private computeGlobalFixes(): Map<string, CollisionSuggestion> {
+  private computeGlobalFixes(
+    collisions: RawCollision[],
+  ): Map<string, CollisionSuggestion> {
     const compById = new Map<string, SchematicBoxPlacement>()
     for (const placement of this.placements) {
       if (placement.schematicComponentId)
@@ -229,7 +256,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       constraintMap.set(key, Math.max(constraintMap.get(key) ?? 0, minSep))
     }
 
-    for (const collision of this.rawCollisions) {
+    for (const collision of collisions) {
       if (collision.type === "label-label") {
         addConstraint(
           collision.leftId,
