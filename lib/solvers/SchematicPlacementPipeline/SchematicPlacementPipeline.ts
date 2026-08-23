@@ -5,17 +5,18 @@ import {
 } from "@tscircuit/solver-utils"
 import type { CircuitJson } from "circuit-json"
 import type { SchematicPlacementIssue } from "../../types"
-import type { SolverContext } from "../SolverContext"
 import { buildSolverContext } from "../../utils/placements"
 import { CapacitorOrientationSolver } from "../CapacitorOrientationSolver/CapacitorOrientationSolver"
-import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
-import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
-import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
-import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
-import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
-import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { ComponentNetLabelCollisionSolver } from "../ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "../ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
+import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
+import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
+import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
+import type { SolverContext } from "../SolverContext"
+import { TraceSimplificationSolver } from "../TraceSimplificationSolver/TraceSimplificationSolver"
+import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
@@ -76,6 +77,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ComponentPinAlignmentSolver",
       ComponentPinAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "TraceSimplificationSolver",
+      TraceSimplificationSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
