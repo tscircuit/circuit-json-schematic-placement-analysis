@@ -132,6 +132,19 @@ export interface ComponentPinsWouldAlignWithVerticalShift {
   message: string
 }
 
+export interface TraceCanBeSimplifiedByMovingComponent {
+  lineItemType: "TraceCanBeSimplifiedByMovingComponent"
+  schematicTraceId: string
+  targetComponent: SchematicBoxPlacement
+  deltaSchX: number
+  deltaSchY: number
+  newSchX: number
+  newSchY: number
+  currentTurnCount: number
+  suggestedTurnCount: number
+  message: string
+}
+
 export interface ComponentNetLabelCollision {
   lineItemType: "ComponentNetLabelCollision"
   firstComponent: SchematicBoxPlacement
@@ -190,6 +203,7 @@ export type SchematicPlacementIssue =
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
+  | TraceCanBeSimplifiedByMovingComponent
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
