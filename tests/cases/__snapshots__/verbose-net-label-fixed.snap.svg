@@ -1,4 +1,4 @@
-<svg width="1200" height="1032" viewBox="0 0 1200 1032" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="988" viewBox="0 0 1200 988" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -63,8 +63,7 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
   <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
 <text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
-    <tspan x="18" dy="0">&lt;SchematicSheet&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C1&quot; positionAnchor=&quot;center&quot; schX=&quot;0.27&quot; schY=&quot;2.1&quot;</tspan>
     <tspan x="18" dy="22">  width=&quot;1.1&quot; height=&quot;0.84&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;U1&quot; positionAnchor=&quot;center&quot; schX=&quot;0.92&quot; schY=&quot;0&quot;</tspan>
@@ -80,7 +79,6 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot; text=&quot;U1_pin4/U2_pin2&quot;</tspan>
     <tspan x="18" dy="22">  involvedPins=&quot;U1.pin4,U2.pin2&quot; schX=&quot;-3.92&quot; schY=&quot;-0.3&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicSheet&gt;</tspan>
 </text>
   </g>
 </svg>

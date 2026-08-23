@@ -28,7 +28,10 @@ interface SchematicSheetGroup extends SchematicSheetContext {
 }
 
 export class SchematicPlacementAnalysis {
-  constructor(private readonly lineItems: SchematicPlacementLineItem[]) {}
+  constructor(
+    private readonly lineItems: SchematicPlacementLineItem[],
+    private readonly groupBySchematicSheet = false,
+  ) {}
 
   getLineItems(): SchematicPlacementLineItem[] {
     return this.lineItems
@@ -90,6 +93,9 @@ export class SchematicPlacementAnalysis {
         : [],
     )
     if (issues.length === 0) return ""
+    if (!this.groupBySchematicSheet) {
+      return this.issueContextToLines(schematicBoxPlacements, issues).join("\n")
+    }
 
     const groups = new Map<string, SchematicSheetGroup>()
     const getOrCreateGroup = (
@@ -121,20 +127,29 @@ export class SchematicPlacementAnalysis {
         addAttr(sheetAttrs, "id", group.schematicSheetId)
         return [
           `<SchematicSheet${sheetAttrs.length > 0 ? ` ${sheetAttrs.join(" ")}` : ""}>`,
-          ...(group.placements.length > 0
-            ? [
-                "<SchematicBoxPositions>",
-                ...group.placements.map(this.schematicBoxPlacementsToString),
-                "</SchematicBoxPositions>",
-              ]
-            : []),
-          "<SchematicPlacementIssues>",
-          ...group.issues.map(this.schematicIssuesToString),
-          "</SchematicPlacementIssues>",
+          ...this.issueContextToLines(group.placements, group.issues),
           "</SchematicSheet>",
         ]
       })
       .join("\n")
+  }
+
+  private issueContextToLines(
+    placements: SchematicBoxPlacementLineItem[],
+    issues: SchematicPlacementIssue[],
+  ): string[] {
+    return [
+      ...(placements.length > 0
+        ? [
+            "<SchematicBoxPositions>",
+            ...placements.map(this.schematicBoxPlacementsToString),
+            "</SchematicBoxPositions>",
+          ]
+        : []),
+      "<SchematicPlacementIssues>",
+      ...issues.map(this.schematicIssuesToString),
+      "</SchematicPlacementIssues>",
+    ]
   }
 }
 
@@ -157,5 +172,13 @@ export const analyzeSchematicPlacement = (
       : []),
   ]
 
-  return new SchematicPlacementAnalysis(lineItems)
+  const schematicSheetIds = new Set(
+    circuitJson.flatMap((element) =>
+      "schematic_sheet_id" in element &&
+      typeof element.schematic_sheet_id === "string"
+        ? [element.schematic_sheet_id]
+        : [],
+    ),
+  )
+  return new SchematicPlacementAnalysis(lineItems, schematicSheetIds.size > 1)
 }
