@@ -65,6 +65,8 @@ test("generates a schematic box overlap issue", async () => {
   // expect(analysis.toString()).not.toContain("source_component_")
   // expect(analysis.toString()).not.toContain("schematic_component_")
 
+  expect(analysis.toString()).not.toContain("<SchematicSheet")
+
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: overlappingSchematicBoxesCircuitJson,

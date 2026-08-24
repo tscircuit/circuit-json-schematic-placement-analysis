@@ -185,6 +185,8 @@ export interface ComponentBoxNetLabelCollision {
 
 export interface NetLabelCollision {
   lineItemType: "NetLabelCollision"
+  schematicSheetId?: string
+  schematicSheetName?: string
   pairs: Array<{ comp1Name: string; comp2Name: string }>
   moves: Array<{
     componentName: string

@@ -16,9 +16,22 @@ import type {
   SchematicPlacementLineItem,
 } from "./types"
 import { addAttr } from "./utils/format"
+import {
+  getIssueSchematicSheetContext,
+  getRelevantPlacementsForIssues,
+  type SchematicSheetContext,
+} from "./utils/issue-context"
+
+interface SchematicSheetGroup extends SchematicSheetContext {
+  placements: SchematicBoxPlacementLineItem[]
+  issues: SchematicPlacementIssue[]
+}
 
 export class SchematicPlacementAnalysis {
-  constructor(private readonly lineItems: SchematicPlacementLineItem[]) {}
+  constructor(
+    private readonly lineItems: SchematicPlacementLineItem[],
+    private readonly groupBySchematicSheet = false,
+  ) {}
 
   getLineItems(): SchematicPlacementLineItem[] {
     return this.lineItems
@@ -38,7 +51,6 @@ export class SchematicPlacementAnalysis {
     addAttr(attrs, "schY", lineItem.schY)
     addAttr(attrs, "width", lineItem.width)
     addAttr(attrs, "height", lineItem.height)
-    addAttr(attrs, "schSheetName", lineItem.schematicSheetName)
     return `<SchematicBoxPlacement ${attrs.join(" ")} />`
   }
 
@@ -80,19 +92,64 @@ export class SchematicPlacementAnalysis {
         ? lineItem.issues
         : [],
     )
+    if (issues.length === 0) return ""
+    if (!this.groupBySchematicSheet) {
+      return this.issueContextToLines(schematicBoxPlacements, issues).join("\n")
+    }
 
+    const groups = new Map<string, SchematicSheetGroup>()
+    const getOrCreateGroup = (
+      context: SchematicSheetContext,
+    ): SchematicSheetGroup => {
+      const key =
+        context.schematicSheetId ?? context.schematicSheetName ?? "__default__"
+      const existingGroup = groups.get(key)
+      if (existingGroup) return existingGroup
+      const group = { ...context, placements: [], issues: [] }
+      groups.set(key, group)
+      return group
+    }
+
+    for (const issue of issues) {
+      getOrCreateGroup(getIssueSchematicSheetContext(issue)).issues.push(issue)
+    }
+    for (const placement of schematicBoxPlacements) {
+      getOrCreateGroup({
+        schematicSheetId: placement.schematicSheetId,
+        schematicSheetName: placement.schematicSheetName,
+      }).placements.push(placement)
+    }
+
+    return [...groups.values()]
+      .flatMap((group) => {
+        const sheetAttrs: string[] = []
+        addAttr(sheetAttrs, "name", group.schematicSheetName)
+        addAttr(sheetAttrs, "id", group.schematicSheetId)
+        return [
+          `<SchematicSheet${sheetAttrs.length > 0 ? ` ${sheetAttrs.join(" ")}` : ""}>`,
+          ...this.issueContextToLines(group.placements, group.issues),
+          "</SchematicSheet>",
+        ]
+      })
+      .join("\n")
+  }
+
+  private issueContextToLines(
+    placements: SchematicBoxPlacementLineItem[],
+    issues: SchematicPlacementIssue[],
+  ): string[] {
     return [
-      "<SchematicBoxPositions>",
-      ...schematicBoxPlacements.map(this.schematicBoxPlacementsToString),
-      "</SchematicBoxPositions>",
-      ...(issues.length > 0
+      ...(placements.length > 0
         ? [
-            "<SchematicPlacementIssues>",
-            ...issues.map(this.schematicIssuesToString),
-            "</SchematicPlacementIssues>",
+            "<SchematicBoxPositions>",
+            ...placements.map(this.schematicBoxPlacementsToString),
+            "</SchematicBoxPositions>",
           ]
         : []),
-    ].join("\n")
+      "<SchematicPlacementIssues>",
+      ...issues.map(this.schematicIssuesToString),
+      "</SchematicPlacementIssues>",
+    ]
   }
 }
 
@@ -103,12 +160,25 @@ export const analyzeSchematicPlacement = (
   pipeline.solve()
   const { issues, componentPlacements } = pipeline.getOutput()
 
+  const relevantPlacements = getRelevantPlacementsForIssues({
+    issues,
+    componentPlacements,
+    circuitJson,
+  })
   const lineItems: SchematicPlacementLineItem[] = [
-    ...componentPlacements,
+    ...relevantPlacements,
     ...(issues.length > 0
       ? [{ lineItemType: "SchematicPlacementIssues" as const, issues }]
       : []),
   ]
 
-  return new SchematicPlacementAnalysis(lineItems)
+  const schematicSheetIds = new Set(
+    circuitJson.flatMap((element) =>
+      "schematic_sheet_id" in element &&
+      typeof element.schematic_sheet_id === "string"
+        ? [element.schematic_sheet_id]
+        : [],
+    ),
+  )
+  return new SchematicPlacementAnalysis(lineItems, schematicSheetIds.size > 1)
 }

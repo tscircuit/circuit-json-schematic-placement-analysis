@@ -29,6 +29,12 @@ test("suggests moving R11 right to remove two avoidable trace turns", async () =
   })
   expect(simplificationIssue?.message).toContain("move R11 right by 0.8")
   expect(
+    analysis
+      .getLineItems()
+      .filter((lineItem) => lineItem.lineItemType === "SchematicBoxPlacement")
+      .map((placement) => placement.sourceComponentName),
+  ).toEqual(["U3", "R11"])
+  expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

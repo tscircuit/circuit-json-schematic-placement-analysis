@@ -39,7 +39,9 @@ export function createSchematicAnalysisFixtureSvg(input: {
 }
 
 function createAnalyzerTextSvg(text: string, width: number): string {
-  const lines = text.split("\n").flatMap((line) => wrapLine(line, 96))
+  const lines = text
+    ? text.split("\n").flatMap((line) => wrapLine(line, 96))
+    : []
   const lineHeight = 22
   const padding = 18
   const height = padding * 2 + lines.length * lineHeight

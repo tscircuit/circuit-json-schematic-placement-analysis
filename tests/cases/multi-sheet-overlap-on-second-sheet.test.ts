@@ -31,6 +31,14 @@ test("reports component overlap only for components sharing the same schematic s
   expect(analysis.toString()).toContain('component1Name="LED_STATUS"')
   expect(analysis.toString()).toContain('component2Name="R_BOOT"')
   expect(analysis.toString()).not.toContain('component1Name="C_BULK"')
+  expect(
+    analysis
+      .getLineItems()
+      .filter((lineItem) => lineItem.lineItemType === "SchematicBoxPlacement")
+      .map((placement) => placement.sourceComponentName),
+  ).toEqual(["LED_STATUS", "R_BOOT"])
+  expect(analysis.toString()).toContain('<SchematicSheet name="Logic"')
+  expect(analysis.toString()).not.toContain('name="Power"')
 
   expect(
     createSchematicAnalysisFixtureSvg({

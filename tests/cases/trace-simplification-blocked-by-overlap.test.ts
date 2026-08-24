@@ -21,6 +21,8 @@ test("does not suggest a trace-simplifying move that overlaps another component"
       (issue) => issue.lineItemType === "TraceCanBeSimplifiedByMovingComponent",
     ),
   ).toBe(false)
+  expect(analysis.getLineItems()).toEqual([])
+  expect(analysis.toString()).toBe("")
   expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)

@@ -1,17 +1,17 @@
+import { BaseSolver } from "@tscircuit/solver-utils"
 import type { CircuitJson, SchematicComponent } from "circuit-json"
 import type { GraphicsObject } from "graphics-debug"
-import type { SolverContext } from "../SolverContext"
 import type {
   CapacitorSymbolHorizontal,
   SchematicPlacementIssue,
 } from "../../types"
-import { BaseSolver } from "@tscircuit/solver-utils"
+import { addAttr } from "../../utils/format"
 import {
   highlightPlacement,
   mergeGraphicsObjects,
   visualizeCircuitJson,
 } from "../../utils/graphics"
-import { addAttr } from "../../utils/format"
+import type { SolverContext } from "../SolverContext"
 
 export interface Capacitor {
   schX: number
@@ -21,6 +21,8 @@ export interface Capacitor {
   sourceComponentId?: string
   sourceComponentName?: string
   schematicComponentId?: string
+  schematicSheetId?: string
+  schematicSheetName?: string
 }
 
 interface SourceComponentWithFtype {
@@ -78,6 +80,8 @@ export class CapacitorOrientationSolver extends BaseSolver {
         sourceComponentId: p.sourceComponentId,
         sourceComponentName: p.sourceComponentName,
         schematicComponentId: p.schematicComponentId,
+        schematicSheetId: p.schematicSheetId,
+        schematicSheetName: p.schematicSheetName,
       }))
   }
 
@@ -168,6 +172,8 @@ export class CapacitorOrientationSolver extends BaseSolver {
       sourceComponentId: placement.sourceComponentId,
       sourceComponentName: placement.sourceComponentName,
       schematicComponentId: placement.schematicComponentId,
+      schematicSheetId: placement.schematicSheetId,
+      schematicSheetName: placement.schematicSheetName,
     }
   }
 
