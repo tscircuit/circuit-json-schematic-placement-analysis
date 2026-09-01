@@ -14,7 +14,7 @@ interface PortPosition {
   schematicSheetId?: string
 }
 
-const POSITION_MATCH_TOLERANCE = 1e-4
+const POSITION_MATCH_EPSILON = 1e-4
 
 const positionsMatch = (
   firstPosition: { x: number; y: number },
@@ -23,7 +23,7 @@ const positionsMatch = (
   Math.hypot(
     firstPosition.x - secondPosition.x,
     firstPosition.y - secondPosition.y,
-  ) < POSITION_MATCH_TOLERANCE
+  ) < POSITION_MATCH_EPSILON
 
 const getPortsConnectedToLabel = ({
   label,
@@ -52,7 +52,7 @@ const getPortsConnectedToLabel = ({
           trace.edges.some(
             (edge) =>
               pointToSegmentDistance(anchorPosition, edge.from, edge.to) <
-              POSITION_MATCH_TOLERANCE,
+              POSITION_MATCH_EPSILON,
           )),
     )
     .flatMap((trace) => trace.edges.flatMap((edge) => [edge.from, edge.to]))

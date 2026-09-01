@@ -11,7 +11,7 @@ import {
   rectOverlap,
 } from "../../utils/geometry"
 import type { SolverContext } from "../SolverContext"
-import { getNetLabelsByComponentId } from "./get-net-labels-by-component-id"
+import { getNetLabelsByComponentId } from "./getNetLabelsByComponentId"
 
 type CollisionSuggestion = {
   componentName: string
