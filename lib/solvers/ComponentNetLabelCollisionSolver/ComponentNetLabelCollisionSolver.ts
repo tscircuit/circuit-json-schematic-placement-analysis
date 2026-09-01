@@ -1,9 +1,5 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type {
-  CircuitJson,
-  SchematicNetLabel,
-  SchematicPort,
-} from "circuit-json"
+import type { SchematicNetLabel } from "circuit-json"
 import type {
   NetLabelCollision,
   SchematicBoxPlacement,
@@ -15,6 +11,7 @@ import {
   rectOverlap,
 } from "../../utils/geometry"
 import type { SolverContext } from "../SolverContext"
+import { getNetLabelsByComponentId } from "./getNetLabelsByComponentId"
 
 type CollisionSuggestion = {
   componentName: string
@@ -60,7 +57,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   ) {
     super()
     this.placements = params.ctx.componentPlacements
-    this.netLabelsByComponentId = this.buildNetLabelsByComponentId(
+    this.netLabelsByComponentId = getNetLabelsByComponentId(
       params.ctx.circuitJson,
     )
     this.solved = this.placements.length < 2
@@ -197,7 +194,6 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const globalFixes = this.computeGlobalFixes(collisions)
     if (globalFixes.size === 0) return
 
-    const seenPairs = new Set<string>()
     const pairs: Array<{ comp1Name: string; comp2Name: string }> = []
     for (const collision of collisions) {
       let comp1Name: string
@@ -209,9 +205,12 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         comp1Name = collision.boxComp.sourceComponentName ?? ""
         comp2Name = collision.labelComp.sourceComponentName ?? ""
       }
-      const key = `${comp1Name}/${comp2Name}`
-      if (!seenPairs.has(key)) {
-        seenPairs.add(key)
+      const pairExists = pairs.some(
+        (pair) =>
+          (pair.comp1Name === comp1Name && pair.comp2Name === comp2Name) ||
+          (pair.comp1Name === comp2Name && pair.comp2Name === comp1Name),
+      )
+      if (!pairExists) {
         pairs.push({ comp1Name, comp2Name })
       }
     }
@@ -241,7 +240,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
     // Build 1D separation constraints: newRight.x - newLeft.x >= minSep
     type Constraint = { leftId: string; rightId: string; minSep: number }
-    const constraintMap = new Map<string, number>()
+    const constraints: Constraint[] = []
 
     const addConstraint = (
       leftId: string,
@@ -252,8 +251,15 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       const rightComp = compById.get(rightId)
       if (!leftComp || !rightComp) return
       const minSep = rightComp.schX - leftComp.schX + xSeparation
-      const key = `${leftId}|${rightId}`
-      constraintMap.set(key, Math.max(constraintMap.get(key) ?? 0, minSep))
+      const existingConstraint = constraints.find(
+        (constraint) =>
+          constraint.leftId === leftId && constraint.rightId === rightId,
+      )
+      if (existingConstraint) {
+        existingConstraint.minSep = Math.max(existingConstraint.minSep, minSep)
+        return
+      }
+      constraints.push({ leftId, rightId, minSep })
     }
 
     for (const collision of collisions) {
@@ -269,17 +275,6 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         addConstraint(collision.labelId, collision.boxId, collision.xSeparation)
       }
     }
-
-    const constraints: Constraint[] = [...constraintMap.entries()].map(
-      ([key, minSep]) => {
-        const pipeIndex = key.indexOf("|")
-        return {
-          leftId: key.slice(0, pipeIndex),
-          rightId: key.slice(pipeIndex + 1),
-          minSep,
-        }
-      },
-    )
 
     // BFS to find connected component groups
     const allIds = new Set<string>()
@@ -378,53 +373,6 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       }
     }
 
-    return result
-  }
-
-  private buildNetLabelsByComponentId(
-    circuitJson: CircuitJson,
-  ): Map<string, SchematicNetLabel[]> {
-    const MATCH_EPSILON = 1e-4
-    const portPositions: Array<{
-      componentId: string
-      cx: number
-      cy: number
-      schematicSheetId?: string
-    }> = []
-    for (const element of circuitJson) {
-      if (element.type !== "schematic_port") continue
-      const port = element as SchematicPort
-      if (!port.schematic_component_id) continue
-      portPositions.push({
-        componentId: port.schematic_component_id,
-        cx: port.center.x,
-        cy: port.center.y,
-        schematicSheetId: port.schematic_sheet_id,
-      })
-    }
-
-    const result = new Map<string, SchematicNetLabel[]>()
-    for (const element of circuitJson) {
-      if (element.type !== "schematic_net_label") continue
-      const label = element as SchematicNetLabel
-      if (!label.anchor_position) continue
-      const { x: anchorX, y: anchorY } = label.anchor_position
-
-      const matches = portPositions.filter(
-        (port) =>
-          port.schematicSheetId === label.schematic_sheet_id &&
-          Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON,
-      )
-      if (matches.length === 0) continue
-
-      const componentIds = new Set(matches.map((match) => match.componentId))
-      if (componentIds.size !== 1) continue
-
-      const componentId = matches[0]!.componentId
-      const labels = result.get(componentId) ?? []
-      labels.push(label)
-      result.set(componentId, labels)
-    }
     return result
   }
 
