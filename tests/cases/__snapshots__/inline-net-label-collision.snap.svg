@@ -1,0 +1,50 @@
+<svg width="1200" height="636" viewBox="0 0 1200 636" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) :is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]) { filter: invert(1); }
+svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"]):hover) g.trace-overlays[data-subcircuit-connectivity-map-key="undefined"] .trace-crossing-outline { opacity: 0; }
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g class="trace sch-trace" data-layer="base" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_u3_vdd"><path d="M 493.359375 253.125 L 615.234375 253.125 L 615.234375 309.375 L 493.359375 309.375" class="trace-invisible-hover-outline sch-trace-hitbox" stroke="rgb(0, 150, 0)" fill="none" stroke-width="15px" stroke-linecap="round" opacity="0" stroke-linejoin="round"/><path class="sch-trace-path" d="M 493.359375 253.125 L 615.234375 253.125 L 615.234375 309.375 L 493.359375 309.375" stroke="rgb(0, 150, 0)" fill="none" stroke-width="1.875px" stroke-linecap="round" stroke-linejoin="round"/></g><g class="trace-overlays sch-trace-overlays" data-layer="overlay" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_u3_vdd"/><g class="sch-component" data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_j_eth" data-schematic-sheet-id="schematic_sheet_0"><rect class="component chip sch-component-body" x="720.703125" y="46.87500000000006" width="201.5625" height="374.99999999999994" stroke-width="1.875px" fill="rgb(255, 255, 194)" stroke="rgb(132, 0, 0)"/><rect class="component-overlay sch-component-overlay" x="720.703125" y="46.87500000000006" width="201.5625" height="374.99999999999994" fill="transparent"/><line class="component-pin sch-component-pin sch-port-line" x1="718.359375" y1="309.375" x2="682.734375" y2="309.375" stroke-width="1.875px"/><g class="sch-port" data-schematic-port-id="source_port_j_eth_mdi2_n"><circle class="component-pin sch-component-pin sch-port-terminal" cx="680.859375" cy="309.375" r="1.875" stroke-width="1.875px"/><rect x="678.984375" y="307.5" width="3.75" height="3.75" opacity="0"/></g><text class="pin-number sch-pin-number" x="699.609375" y="307.5" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="14.0625px" transform="">1</text><text class="pin-number sch-pin-label" x="727.734375" y="309.375" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="start" dominant-baseline="middle" font-size="14.0625px" transform="">MDI2-</text></g><g class="sch-component" data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_u3" data-schematic-sheet-id="schematic_sheet_0"><rect class="component chip sch-component-body" x="277.734375" y="159.37499999999994" width="178.125" height="393.75000000000006" stroke-width="1.875px" fill="rgb(255, 255, 194)" stroke="rgb(132, 0, 0)"/><rect class="component-overlay sch-component-overlay" x="277.734375" y="159.37499999999994" width="178.125" height="393.75000000000006" fill="transparent"/><line class="component-pin sch-component-pin sch-port-line" x1="455.859375" y1="309.375" x2="491.484375" y2="309.375" stroke-width="1.875px"/><g class="sch-port" data-schematic-port-id="source_port_u3_dvdd10"><circle class="component-pin sch-component-pin sch-port-terminal" cx="493.359375" cy="309.375" r="1.875" stroke-width="1.875px"/><rect x="491.484375" y="307.5" width="3.75" height="3.75" opacity="0"/></g><text class="pin-number sch-pin-number" x="474.609375" y="307.5" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="14.0625px" transform="">1</text><text class="pin-number sch-pin-label" x="446.484375" y="309.375" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="14.0625px" transform="">DVDD10</text><line class="component-pin sch-component-pin sch-port-line" x1="455.859375" y1="253.125" x2="491.484375" y2="253.125" stroke-width="1.875px"/><g class="sch-port" data-schematic-port-id="source_port_u3_avdd103"><circle class="component-pin sch-component-pin sch-port-terminal" cx="493.359375" cy="253.125" r="1.875" stroke-width="1.875px"/><rect x="491.484375" y="251.25" width="3.75" height="3.75" opacity="0"/></g><text class="pin-number sch-pin-number" x="474.609375" y="251.25" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="14.0625px" transform="">2</text><text class="pin-number sch-pin-label" x="446.484375" y="253.125" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="14.0625px" transform="">AVDD103</text></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_j_eth_mdi2_n" data-schematic-sheet-id="schematic_sheet_0"><circle cx="680.859375" cy="309.375" r="3.75" fill="red" opacity="0"/></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_u3_dvdd10" data-schematic-sheet-id="schematic_sheet_0"><circle cx="493.359375" cy="309.375" r="3.75" fill="red" opacity="0"/></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_u3_avdd103" data-schematic-sheet-id="schematic_sheet_0"><circle cx="493.359375" cy="253.125" r="3.75" fill="red" opacity="0"/></g><path class="net-label sch-net-label" d="
+    M 680.859375,309.375
+    L 675.796875,319.5
+    L 563.046875,319.5
+    L 563.046875,299.25
+    L 675.796875,299.25
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="1.875px"/><text class="net-label-text sch-net-label-text" x="672.421875" y="309.375" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="16.875px" transform="">ETH_MDI2_N</text><path class="net-label sch-net-label" d="
+    M 615.234375,309.375
+    L 620.296875,299.25
+    L 743.434375,299.25
+    L 743.434375,319.5
+    L 620.296875,319.5
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="1.875px"/><text class="net-label-text sch-net-label-text" x="623.671875" y="309.375" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="16.875px" transform="">RTL_VDD_1V0</text>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+</text>
+  </g>
+</svg>
