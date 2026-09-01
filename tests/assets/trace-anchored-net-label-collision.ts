@@ -1,6 +1,6 @@
 import type { CircuitJson } from "circuit-json"
 
-export function createInlineNetLabelCollisionCircuitJson(): CircuitJson {
+export function createTraceAnchoredNetLabelCollisionCircuitJson(): CircuitJson {
   return [
     {
       type: "source_component",
