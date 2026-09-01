@@ -1,8 +1,10 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
+import { pointToSegmentDistance } from "@tscircuit/math-utils"
 import type {
   CircuitJson,
   SchematicNetLabel,
   SchematicPort,
+  SchematicTrace,
 } from "circuit-json"
 import type {
   NetLabelCollision,
@@ -404,17 +406,48 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     }
 
     const result = new Map<string, SchematicNetLabel[]>()
+    const schematicTraces = circuitJson.filter(
+      (element): element is SchematicTrace =>
+        element.type === "schematic_trace",
+    )
     for (const element of circuitJson) {
       if (element.type !== "schematic_net_label") continue
       const label = element as SchematicNetLabel
       if (!label.anchor_position) continue
-      const { x: anchorX, y: anchorY } = label.anchor_position
+      const anchorPosition = label.anchor_position
+      const { x: anchorX, y: anchorY } = anchorPosition
 
-      const matches = portPositions.filter(
+      let matches = portPositions.filter(
         (port) =>
           port.schematicSheetId === label.schematic_sheet_id &&
           Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON,
       )
+      if (matches.length === 0) {
+        const traceEndpoints = schematicTraces
+          .filter(
+            (trace) =>
+              trace.schematic_sheet_id === label.schematic_sheet_id &&
+              (trace.schematic_trace_id === label.schematic_trace_id ||
+                trace.edges.some(
+                  (edge) =>
+                    pointToSegmentDistance(anchorPosition, edge.from, edge.to) <
+                    MATCH_EPSILON,
+                )),
+          )
+          .flatMap((trace) => {
+            const firstEdge = trace.edges[0]
+            const lastEdge = trace.edges.at(-1)
+            if (!firstEdge || !lastEdge) return []
+            return [firstEdge.from, lastEdge.to]
+          })
+        matches = portPositions.filter((port) =>
+          traceEndpoints.some(
+            (endpoint) =>
+              Math.hypot(port.cx - endpoint.x, port.cy - endpoint.y) <
+              MATCH_EPSILON,
+          ),
+        )
+      }
       if (matches.length === 0) continue
 
       const componentIds = new Set(matches.map((match) => match.componentId))
