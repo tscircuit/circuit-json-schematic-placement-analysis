@@ -107,6 +107,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstLoadCapacitorSchematicBox)
         addPlacement(issue.secondLoadCapacitorSchematicBox)
         break
+      case "TwoPinComponentCouldBeFlipped":
+        addPlacement(issue.targetComponent)
+        addPlacement(issue.connectedComponent)
+        break
       case "ComponentNetLabelCollision":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)

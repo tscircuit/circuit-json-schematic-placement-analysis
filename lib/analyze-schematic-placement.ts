@@ -10,6 +10,7 @@ import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/S
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 import { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/TraceSimplificationSolver"
+import { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 import type {
   SchematicBoxPlacementLineItem,
@@ -78,6 +79,8 @@ export class SchematicPlacementAnalysis {
         return TraceSimplificationSolver.issueToString(issue)
       case "CrystalNotCenteredOverLoadCapacitors":
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
+      case "TwoPinComponentCouldBeFlipped":
+        return TwoPinComponentOrientationSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
       default:
