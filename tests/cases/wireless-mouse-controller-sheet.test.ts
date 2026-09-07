@@ -8,6 +8,32 @@ test("reproduces the complete wireless mouse controller sheet layout", () => {
     wirelessMouseControllerSheetCircuitJson,
   )
 
+  const crystalPlacementIssue = analysis
+    .getLineItems()
+    .flatMap((lineItem) =>
+      lineItem.lineItemType === "SchematicPlacementIssues"
+        ? lineItem.issues
+        : [],
+    )
+    .find(
+      (issue) => issue.lineItemType === "CrystalNotCenteredOverLoadCapacitors",
+    )
+
+  expect(crystalPlacementIssue).toMatchObject({
+    lineItemType: "CrystalNotCenteredOverLoadCapacitors",
+    crystalSchematicBox: { sourceComponentName: "X_HF_32M" },
+    firstLoadCapacitorSchematicBox: {
+      sourceComponentName: "C_HF_XC1",
+    },
+    secondLoadCapacitorSchematicBox: {
+      sourceComponentName: "C_HF_XC2",
+    },
+    deltaSchX: 4.5,
+    deltaSchY: -1.7,
+    newSchX: -5.5,
+    newSchY: -7.7,
+  })
+
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: wirelessMouseControllerSheetCircuitJson,

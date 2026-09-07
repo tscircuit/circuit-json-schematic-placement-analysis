@@ -102,6 +102,11 @@ export const getRelevantPlacementsForIssues = ({
           relevantPlacements.add(placement)
         }
         break
+      case "CrystalNotCenteredOverLoadCapacitors":
+        addPlacement(issue.crystalSchematicBox)
+        addPlacement(issue.firstLoadCapacitorSchematicBox)
+        addPlacement(issue.secondLoadCapacitorSchematicBox)
+        break
       case "ComponentNetLabelCollision":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)
