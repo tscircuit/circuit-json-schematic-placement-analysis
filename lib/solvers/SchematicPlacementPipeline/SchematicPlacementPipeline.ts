@@ -9,6 +9,7 @@ import { buildSolverContext } from "../../utils/placements"
 import { CapacitorOrientationSolver } from "../CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "../ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "../ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { CrystalLoadCapacitorPlacementSolver } from "../CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
@@ -84,6 +85,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "TraceSimplificationSolver",
       TraceSimplificationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "CrystalLoadCapacitorPlacementSolver",
+      CrystalLoadCapacitorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

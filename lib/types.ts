@@ -145,6 +145,18 @@ export interface TraceCanBeSimplifiedByMovingComponent {
   message: string
 }
 
+export interface CrystalNotCenteredOverLoadCapacitors {
+  lineItemType: "CrystalNotCenteredOverLoadCapacitors"
+  crystalSchematicBox: SchematicBoxPlacement
+  firstLoadCapacitorSchematicBox: SchematicBoxPlacement
+  secondLoadCapacitorSchematicBox: SchematicBoxPlacement
+  deltaSchX: number
+  deltaSchY: number
+  newSchX: number
+  newSchY: number
+  message: string
+}
+
 export interface ComponentNetLabelCollision {
   lineItemType: "ComponentNetLabelCollision"
   firstComponent: SchematicBoxPlacement
@@ -206,6 +218,7 @@ export type SchematicPlacementIssue =
   | DiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
+  | CrystalNotCenteredOverLoadCapacitors
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
