@@ -87,6 +87,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.diodeSchematicBox)
         addPlacement(issue.resistorSchematicBox)
         break
+      case "DecouplingCapacitorsNotCloseTogether":
+        addPlacement(issue.firstCapacitorSchematicBox)
+        addPlacement(issue.secondCapacitorSchematicBox)
+        break
       case "ComponentPinsWouldAlignWithVerticalShift":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)

@@ -49,6 +49,17 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
+export interface DecouplingCapacitorsNotCloseTogether {
+  lineItemType: "DecouplingCapacitorsNotCloseTogether"
+  railName: string
+  sourceNetId: string
+  firstCapacitorSchematicBox: SchematicBoxPlacement
+  secondCapacitorSchematicBox: SchematicBoxPlacement
+  distance: number
+  maxAllowedDistance: number
+  message: string
+}
+
 export interface VerboseSchematicNetLabel {
   lineItemType: "VerboseSchematicNetLabel"
   schematicNetLabelId?: string
@@ -199,6 +210,7 @@ export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
+  | DecouplingCapacitorsNotCloseTogether
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision

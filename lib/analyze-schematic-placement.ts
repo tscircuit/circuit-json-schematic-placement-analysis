@@ -2,6 +2,7 @@ import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { DecouplingCapacitorGroupingSolver } from "./solvers/DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
@@ -60,6 +61,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxOverlapSolver.issueToString(issue)
       case "CapacitorSymbolHorizontal":
         return CapacitorOrientationSolver.issueToString(issue)
+      case "DecouplingCapacitorsNotCloseTogether":
+        return DecouplingCapacitorGroupingSolver.issueToString(issue)
       case "VerboseSchematicNetLabel":
         return VerboseNetLabelSolver.issueToString(issue)
       case "PinHeaderSchematicBoxTooWide":

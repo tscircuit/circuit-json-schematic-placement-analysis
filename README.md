@@ -7,6 +7,15 @@ that provide context for those issues.
 The analysis also detects when vertically shifting one of two connected
 components would align multiple opposing pin pairs and simplify their traces.
 
+Decoupling capacitors connected between the same power and ground nets on the
+same schematic sheet should form a nearby group. The analyzer reports
+`DecouplingCapacitorsNotCloseTogether` when joining two groups requires a
+center-to-center spacing greater than 5 schematic units. A continuous row of
+nearby capacitors is accepted even when its endpoints are farther apart.
+Power and ground nets are identified from their metadata or common supply
+names, including `VCC`, `VDD`, `P3V3`, and `GND`; electrical connectivity, rather
+than matching net names, determines which capacitors belong together.
+
 This is intended for placement-focused diagnostics. Multi-sheet results are
 grouped by schematic sheet; circuits with zero or one sheet keep a compact flat
 output. Each result contains issue nodes and, when useful,
