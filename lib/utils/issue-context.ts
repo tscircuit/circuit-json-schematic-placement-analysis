@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "DecouplingCapacitorsNotCloseTogether":
+        addPlacement(issue.firstCapacitorSchematicBox)
+        addPlacement(issue.secondCapacitorSchematicBox)
+        break
       case "ComponentOverlap":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)

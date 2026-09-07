@@ -195,6 +195,14 @@ export interface NetLabelCollision {
   }>
 }
 
+export interface DecouplingCapacitorsNotCloseTogether {
+  lineItemType: "DecouplingCapacitorsNotCloseTogether"
+  railName: string
+  firstCapacitorSchematicBox: SchematicBoxPlacement
+  secondCapacitorSchematicBox: SchematicBoxPlacement
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -209,6 +217,7 @@ export type SchematicPlacementIssue =
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
+  | DecouplingCapacitorsNotCloseTogether
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

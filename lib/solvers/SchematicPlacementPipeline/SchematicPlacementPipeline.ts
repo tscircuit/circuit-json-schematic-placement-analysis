@@ -1,3 +1,4 @@
+import { DecouplingCapacitorsDistanceSolver } from "../DecouplingCapacitorsDistanceSolver/DecouplingCapacitorsDistanceSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -28,6 +29,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SchematicBoxOverlapSolver",
       SchematicBoxOverlapSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "DecouplingCapacitorsDistanceSolver",
+      DecouplingCapacitorsDistanceSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

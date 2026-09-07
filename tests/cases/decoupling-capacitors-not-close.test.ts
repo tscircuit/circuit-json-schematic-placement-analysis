@@ -3,7 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createDecouplingCapacitorsNotCloseCircuitJson } from "../assets/decoupling-capacitors-not-close"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test.failing("detects decoupling capacitors on the same rail placed far apart", async () => {
+test("detects decoupling capacitors on the same rail placed far apart", async () => {
   const circuitJson = await createDecouplingCapacitorsNotCloseCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
 
@@ -20,19 +20,22 @@ test.failing("detects decoupling capacitors on the same rail placed far apart", 
     .getLineItems()
     .find((lineItem) => lineItem.lineItemType === "SchematicPlacementIssues")
 
-  expect(issuesLineItem).toMatchObject({
-    lineItemType: "SchematicPlacementIssues",
-    issues: [
-      {
-        lineItemType: "DecouplingCapacitorsNotCloseTogether",
-        railName: "VCC",
-        firstCapacitorSchematicBox: {
-          sourceComponentName: "C1",
-        },
-        secondCapacitorSchematicBox: {
-          sourceComponentName: "C2",
-        },
-      },
-    ],
+  const decouplingIssue =
+    issuesLineItem?.lineItemType === "SchematicPlacementIssues"
+      ? issuesLineItem.issues.find(
+          (issue) =>
+            issue.lineItemType === "DecouplingCapacitorsNotCloseTogether",
+        )
+      : undefined
+
+  expect(decouplingIssue).toMatchObject({
+    lineItemType: "DecouplingCapacitorsNotCloseTogether",
+    railName: "VCC",
+    firstCapacitorSchematicBox: {
+      sourceComponentName: "C1",
+    },
+    secondCapacitorSchematicBox: {
+      sourceComponentName: "C2",
+    },
   })
 })

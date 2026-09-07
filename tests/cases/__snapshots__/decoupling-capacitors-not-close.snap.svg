@@ -1,4 +1,4 @@
-<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1010" viewBox="0 0 1200 1010" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -38,8 +38,13 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  height=&quot;1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C1&quot; positionAnchor=&quot;center&quot; schX=&quot;-10&quot; schY=&quot;8&quot;</tspan>
     <tspan x="18" dy="22">  width=&quot;0.53&quot; height=&quot;1.1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C2&quot; positionAnchor=&quot;center&quot; schX=&quot;10&quot; schY=&quot;-8&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.53&quot; height=&quot;1.1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VCC&quot; firstCapacitorName=&quot;C1&quot;</tspan>
+    <tspan x="18" dy="22">  secondCapacitorName=&quot;C2&quot; message=&quot;Decoupling capacitors C1 and C2 on rail &quot;VCC&quot; are placed far</tspan>
+    <tspan x="18" dy="22">  apart (25.61 units)&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;TraceCanBeSimplifiedByMovingComponent schematicTraceId=&quot;schematic_trace_0&quot;</tspan>
     <tspan x="18" dy="22">  targetComponentName=&quot;U1&quot; deltaSchX=&quot;0&quot; deltaSchY=&quot;+8.45&quot; newSchX=&quot;0&quot; newSchY=&quot;8.45&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move U1 up by 8.45 (to schX=0, schY=8.45)</tspan>

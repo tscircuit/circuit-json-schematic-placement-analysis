@@ -1,3 +1,4 @@
+import { DecouplingCapacitorsDistanceSolver } from "./solvers/DecouplingCapacitorsDistanceSolver/DecouplingCapacitorsDistanceSolver"
 import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
@@ -77,6 +78,8 @@ export class SchematicPlacementAnalysis {
         return TraceSimplificationSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
+      case "DecouplingCapacitorsNotCloseTogether":
+        return DecouplingCapacitorsDistanceSolver.issueToString(issue)
       default:
         return ""
     }
