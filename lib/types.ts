@@ -157,6 +157,36 @@ export interface CrystalNotCenteredOverLoadCapacitors {
   message: string
 }
 
+/** Advisory: a direct negative-feedback R/C network is far from its amplifier. */
+export interface FeedbackNetworkNotCompact {
+  lineItemType: "FeedbackNetworkNotCompact"
+  amplifierSchematicBox: SchematicBoxPlacement
+  feedbackComponents: SchematicBoxPlacement[]
+  distantComponents: Array<{
+    schematicBox: SchematicBoxPlacement
+    bodyGap: number
+    maxRecommendedBodyGap: number
+  }>
+  outputSourcePortId: string
+  invertingInputSourcePortId: string
+  message: string
+}
+
+/** Advisory: an explicitly identified pull resistor is far on the unconventional side. */
+export interface PullResistorOnWrongSide {
+  lineItemType: "PullResistorOnWrongSide"
+  resistorSchematicBox: SchematicBoxPlacement
+  hostSchematicBox: SchematicBoxPlacement
+  signalSourcePortId: string
+  signalPinName: string
+  signalSchY: number
+  pullDirection: "up" | "down"
+  preferredSide: "above" | "below"
+  wrongSideGap: number
+  maxRecommendedWrongSideGap: number
+  message: string
+}
+
 export interface ComponentNetLabelCollision {
   lineItemType: "ComponentNetLabelCollision"
   firstComponent: SchematicBoxPlacement
@@ -219,6 +249,8 @@ export type SchematicPlacementIssue =
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors
+  | FeedbackNetworkNotCompact
+  | PullResistorOnWrongSide
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision

@@ -1,7 +1,15 @@
 import { Circuit } from "@tscircuit/core"
 import type { CircuitJson } from "circuit-json"
 
-export async function createPullResistorsWrongSideCircuitJson(): Promise<CircuitJson> {
+export async function createPullResistorsWrongSideCircuitJson({
+  pullUpY = -3,
+  pullDownY = 3,
+  resistorRotation = 90,
+}: {
+  pullUpY?: number
+  pullDownY?: number
+  resistorRotation?: number
+} = {}): Promise<CircuitJson> {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
@@ -21,20 +29,20 @@ export async function createPullResistorsWrongSideCircuitJson(): Promise<Circuit
           leftSide: { pins: ["pin1", "pin2"], direction: "top-to-bottom" },
         }}
       />
-      {/* Both resistors deliberately sit on the opposite side of their signal. */}
+      {/* The defaults put both resistors on the opposite side of their signal. */}
       <resistor
         name="R1"
         resistance="10k"
         schX={-3}
-        schY={-3}
-        schRotation={90}
+        schY={pullUpY}
+        schRotation={resistorRotation}
       />
       <resistor
         name="R2"
         resistance="10k"
         schX={-6}
-        schY={3}
-        schRotation={90}
+        schY={pullDownY}
+        schRotation={resistorRotation}
       />
       <trace from=".U1 > .RESET_N" to=".R1 > .pin2" />
       <trace from=".R1 > .pin1" to="net.VCC" />
