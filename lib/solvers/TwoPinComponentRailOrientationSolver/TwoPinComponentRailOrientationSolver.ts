@@ -59,14 +59,27 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
           ? ("ground" as const)
           : undefined,
     )
-    // Same-kind rails (e.g. a series supply feed) cannot both face up/down.
-    // Opposite rails can: a bypass capacitor should have power above ground.
-    if (railTypes[0] === railTypes[1]) return
-    const railIndex = railTypes.includes("power")
-      ? railTypes.indexOf("power")
-      : railTypes.indexOf("ground")
+    if (railTypes.every((type) => type === undefined)) return
+    const railType = railTypes.includes("power") ? "power" : "ground"
+    const candidates = nets.flatMap((net, i) =>
+      railTypes[i] === railType ? [{ net, index: i }] : [],
+    )
+    // Series supply parts are also vertical. Prefer the supplying/declared rail
+    // over a load's requires_power/ground pin when choosing which end faces it.
+    const railIndex = (
+      candidates.find(({ net }) =>
+        index.portsByNet
+          .get(net)
+          ?.some((port) =>
+            railType === "power" ? port.provides_power : port.provides_ground,
+          ),
+      ) ??
+      candidates.find(({ net }) =>
+        (railType === "power" ? index.powerNets : index.groundNets).has(net),
+      ) ??
+      candidates[0]!
+    ).index
     const rail = nets[railIndex]!
-    const railType = railTypes[railIndex]!
     const sourcePorts = index.portsByComponent.get(id)!
     const railSourcePort = sourcePorts.find(
       (port) => index.connected(port.source_port_id) === rail,

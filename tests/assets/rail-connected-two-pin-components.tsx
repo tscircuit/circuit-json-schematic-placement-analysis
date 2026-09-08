@@ -14,9 +14,9 @@ export async function createRailConnectedTwoPinComponentsCircuitJson({
       <net name="VCC" isPowerNet />
       <net name="VREF" isPowerNet />
       <net name="VDD" isPowerNet />
-      <net name="GND" isGroundNet />
+      <net name="PGND" isGroundNet />
       <net name="AGND" isGroundNet />
-      <net name="RF_GND" isGroundNet />
+      <net name="GND" isGroundNet />
       <net name="DGND" isGroundNet />
       <capacitor
         name="C1"
@@ -55,9 +55,9 @@ export async function createRailConnectedTwoPinComponentsCircuitJson({
       <trace from=".D1 > .pin1" to="net.VREF" />
       <trace from=".D1 > .pin2" to="net.CLAMP" />
       <trace from=".L1 > .pin1" to="net.RF" />
-      <trace from=".L1 > .pin2" to="net.RF_GND" />
+      <trace from=".L1 > .pin2" to="net.GND" />
       <trace from=".C2 > .pin1" to="net.VDD" />
-      <trace from=".C2 > .pin2" to="net.GND" />
+      <trace from=".C2 > .pin2" to="net.PGND" />
       <trace from=".R0 > .pin1" to="net.VCC" />
       <trace from=".R0 > .pin2" to="net.LINK" />
       <trace from=".LED1 > .pin1" to="net.LED" />

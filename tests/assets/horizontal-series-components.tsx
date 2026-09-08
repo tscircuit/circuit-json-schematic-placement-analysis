@@ -28,7 +28,7 @@ export async function createHorizontalSeriesComponentsCircuitJson(): Promise<Cir
       <trace from=".U1 > .OUT" to=".L3 > .pin1" />
       <trace from=".L3 > .pin2" to=".U2 > .IN" />
 
-      {/* Both D4 ends supply power; this is a series feed, not a pull branch. */}
+      {/* The supply diode should still be vertical when its load requires power. */}
       <net name="VCC" isPowerNet />
       <diode name="D4" schX={0} schY={-2} />
       <chip

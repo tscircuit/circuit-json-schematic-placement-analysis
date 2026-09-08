@@ -14,8 +14,8 @@ test("reports horizontal rail-connected two-pin components and accepts their ver
     expectReproRendered(circuitJson, 6)
     expectReproNets(circuitJson, [
       ["C1.pin2", "net.AGND"],
-      ["L1.pin2", "net.RF_GND"],
-      ["C2.pin2", "net.GND"],
+      ["L1.pin2", "net.GND"],
+      ["C2.pin2", "net.PGND"],
       ["LED1.pin2", "net.DGND"],
       ["C2.pin1", "net.VDD"],
       ["R0.pin1", "net.VCC"],
