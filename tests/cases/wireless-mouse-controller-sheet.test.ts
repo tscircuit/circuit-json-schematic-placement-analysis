@@ -35,6 +35,19 @@ test("reproduces the complete wireless mouse controller sheet layout", () => {
     newSchY: -7.7,
   })
 
+  const railIssues = analysis
+    .getLineItems()
+    .flatMap((item) =>
+      item.lineItemType === "SchematicPlacementIssues"
+        ? item.issues.filter(
+            (issue) => issue.lineItemType === "TwoPinComponentShouldBeVertical",
+          )
+        : [],
+    )
+  expect(railIssues).toMatchObject([
+    { schematicBox: { sourceComponentName: "SW_RESET" }, railType: "ground" },
+  ])
+
   const svg = createSchematicAnalysisFixtureSvg({
     circuitJson: wirelessMouseControllerSheetCircuitJson,
     analysis,
@@ -78,5 +91,7 @@ test("reproduces the complete wireless mouse controller sheet layout", () => {
     ),
   ).toEqual(["1", "1", "1"])
   expect(svg).toContain('data-listing-issue-number="1"')
+  expect(svg).not.toContain('data-issue-type="TwoPinComponentShouldBeVertical"')
+  expect(svg).toContain("&lt;TwoPinComponentShouldBeVertical")
   expect(svg).toMatchSvgSnapshot(import.meta.path)
 })

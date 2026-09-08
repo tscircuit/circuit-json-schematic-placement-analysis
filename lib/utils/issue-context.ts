@@ -137,6 +137,9 @@ export const getRelevantPlacementsForIssues = ({
         for (const component of issue.feedbackComponents)
           addPlacement(component)
         break
+      case "TwoPinComponentShouldBeVertical":
+        addPlacement(issue.schematicBox)
+        break
       case "PullResistorOnWrongSide":
         addPlacement(issue.resistorSchematicBox)
         addPlacement(issue.hostSchematicBox)

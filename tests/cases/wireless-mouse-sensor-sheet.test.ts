@@ -50,6 +50,22 @@ test("reproduces the complete wireless mouse sensor sheet layout", () => {
     },
   ])
 
+  const railIssues = analysis
+    .getLineItems()
+    .flatMap((item) =>
+      item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
+    )
+    .filter((issue) => issue.lineItemType === "TwoPinComponentShouldBeVertical")
+  expect(
+    railIssues.map((issue) => [
+      issue.schematicBox.sourceComponentName,
+      issue.railType,
+    ]),
+  ).toEqual([
+    ["R_SENSOR_LED", "power"],
+    ["R_SENSOR_RESET", "power"],
+  ])
+
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: wirelessMouseSensorSheetCircuitJson,
