@@ -8,6 +8,7 @@ import type {
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import type { SolverContext } from "../SolverContext"
+import { getPowerOrGroundConnectionIds } from "./getPowerOrGroundConnectionIds"
 
 type Point = { x: number; y: number }
 type Axis = "horizontal" | "vertical"
@@ -33,6 +34,7 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
 
   private readonly ctx: SolverContext
   private readonly out: SchematicPlacementIssue[]
+  private readonly powerOrGroundConnectionIds: Set<string>
 
   constructor({
     ctx,
@@ -44,6 +46,9 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
     super()
     this.ctx = ctx
     this.out = issues
+    this.powerOrGroundConnectionIds = getPowerOrGroundConnectionIds(
+      ctx.circuitJson,
+    )
   }
 
   override _step(): void {
@@ -139,6 +144,16 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
 
     const componentPorts = portsByComponentId.get(targetComponentId)
     if (componentPorts?.length !== 2) return
+    // Power/ground arrangements take precedence over reducing trace turns.
+    if (
+      componentPorts.some(
+        (port) =>
+          port.source_port_id &&
+          this.powerOrGroundConnectionIds.has(port.source_port_id),
+      )
+    ) {
+      return
+    }
     const connectedComponentPorts =
       portsByComponentId.get(connectedComponentId) ?? []
     if (connectedComponentPorts.length <= 2) return

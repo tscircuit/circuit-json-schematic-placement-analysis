@@ -3,10 +3,17 @@ import type { CircuitJson, SchematicPort, SchematicTrace } from "circuit-json"
 
 export async function createTwoPinComponentOrientationCircuitJson({
   facesConnectedComponent,
+  componentKind = "capacitor",
+  rail,
+  railPin = 2,
 }: {
   facesConnectedComponent: boolean
+  componentKind?: "capacitor" | "resistor"
+  rail?: "power" | "ground"
+  railPin?: 1 | 2
 }): Promise<CircuitJson> {
   const circuit = new Circuit()
+  const componentName = componentKind === "capacitor" ? "C1" : "R1"
 
   circuit.add(
     <board width="20mm" height="20mm">
@@ -21,14 +28,35 @@ export async function createTwoPinComponentOrientationCircuitJson({
           rightSide: { pins: ["pin3"], direction: "top-to-bottom" },
         }}
       />
-      <capacitor
-        name="C1"
-        capacitance="1uF"
-        footprint="0603"
-        schX={0}
-        schY={3}
-        schRotation={facesConnectedComponent ? 90 : 270}
-      />
+      {componentKind === "capacitor" ? (
+        <capacitor
+          name={componentName}
+          capacitance="1uF"
+          footprint="0603"
+          schX={0}
+          schY={3}
+          schRotation={facesConnectedComponent ? 90 : 270}
+        />
+      ) : (
+        <resistor
+          name={componentName}
+          resistance="10k"
+          footprint="0603"
+          schX={0}
+          schY={3}
+          schRotation={facesConnectedComponent ? 90 : 270}
+        />
+      )}
+      {rail && (
+        <>
+          <net
+            name="RAIL_A"
+            isPowerNet={rail === "power"}
+            isGroundNet={rail === "ground"}
+          />
+          <trace from={`.${componentName} > .pin${railPin}`} to="net.RAIL_A" />
+        </>
+      )}
     </board>,
   )
 
@@ -40,8 +68,8 @@ export async function createTwoPinComponentOrientationCircuitJson({
   const chipSourceComponent = sourceComponents.find(
     (component) => component.name === "U1",
   )
-  const capacitorSourceComponent = sourceComponents.find(
-    (component) => component.name === "C1",
+  const targetSourceComponent = sourceComponents.find(
+    (component) => component.name === componentName,
   )
   const schematicComponents = circuitJson.filter(
     (element) => element.type === "schematic_component",
@@ -51,10 +79,10 @@ export async function createTwoPinComponentOrientationCircuitJson({
       component.source_component_id ===
       chipSourceComponent?.source_component_id,
   )
-  const capacitorComponent = schematicComponents.find(
+  const targetComponent = schematicComponents.find(
     (component) =>
       component.source_component_id ===
-      capacitorSourceComponent?.source_component_id,
+      targetSourceComponent?.source_component_id,
   )
   const schematicPorts = circuitJson.filter(
     (element): element is SchematicPort => element.type === "schematic_port",
@@ -64,22 +92,22 @@ export async function createTwoPinComponentOrientationCircuitJson({
       port.schematic_component_id === chipComponent?.schematic_component_id &&
       port.pin_number === 1,
   )
-  const capacitorPort = schematicPorts.find(
+  const targetPort = schematicPorts.find(
     (port) =>
-      port.schematic_component_id ===
-        capacitorComponent?.schematic_component_id && port.pin_number === 1,
+      port.schematic_component_id === targetComponent?.schematic_component_id &&
+      port.pin_number === 1,
   )
-  if (!chipPort || !capacitorPort) {
-    throw new Error("expected chip and capacitor pin 1 schematic ports")
+  if (!chipPort || !targetPort) {
+    throw new Error("expected chip and two-pin component pin 1 schematic ports")
   }
 
   const tracePoints = facesConnectedComponent
-    ? [capacitorPort.center, chipPort.center]
+    ? [targetPort.center, chipPort.center]
     : [
-        capacitorPort.center,
-        { x: capacitorPort.center.x, y: capacitorPort.center.y + 0.5 },
-        { x: capacitorPort.center.x + 0.5, y: capacitorPort.center.y + 0.5 },
-        { x: capacitorPort.center.x + 0.5, y: chipPort.center.y },
+        targetPort.center,
+        { x: targetPort.center.x, y: targetPort.center.y + 0.5 },
+        { x: targetPort.center.x + 0.5, y: targetPort.center.y + 0.5 },
+        { x: targetPort.center.x + 0.5, y: chipPort.center.y },
         chipPort.center,
       ]
 
