@@ -47,23 +47,6 @@ console.log(analysis.toString())
 </SchematicPlacementIssues>
 ```
 
-## Text clearance and reset grouping
-
-`SchematicTextClearanceSolver` checks independent annotations and generated
-headings against wires, component bounds and other independent text. Component
-reference/value labels, symbol text and trace-owned labels are excluded: their
-owning objects must be moved instead. Issues identify the colliding objects and
-suggest a text-anchor position when one is clear in the modeled geometry.
-Text bounds approximate font size, anchors, rotation and line spacing; custom
-symbol ink geometry is outside this check. Apply a suggestion and reanalyze.
-
-`ResetNetworkGroupingSolver` recognizes a reset pin with one resistor to a known
-supply and one capacitor to ground. It follows connectivity across labels and
-respects separate sheets/groups and ambiguous hosts. The distance heuristic is
-6 schematic units or three RC-symbol dimensions, measured from the reset pin.
-A remote test point alone does not trigger a warning. The issue suggests grouping
-the RC parts without changing connections or prescribing exact coordinates.
-
 ## Test
 
 ```sh
