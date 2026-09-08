@@ -37,7 +37,9 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
     highlightIssues: true,
   })
   const listing = (svg: string) =>
-    svg.match(/<text[^>]*fill="#d00"[^>]*>[\s\S]*?<\/text>/)?.[0]
+    svg
+      .match(/<text[^>]*fill="#d00"[^>]*>[\s\S]*?<\/text>/)?.[0]
+      .replaceAll('x="52"', 'x="18"')
   expect(listing(original)).toBeDefined()
   expect(listing(highlighted)).toBe(listing(original))
   const highlightedSheetIds = [
@@ -48,6 +50,11 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
   expect(highlightedSheetIds).toEqual(
     collisionIssues.map((issue) => issue.schematicSheetId),
   )
+  expect(
+    [...highlighted.matchAll(/data-listing-issue-number="(\d+)"/g)].map(
+      (match) => Number(match[1]),
+    ),
+  ).toEqual([1, 2])
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,
