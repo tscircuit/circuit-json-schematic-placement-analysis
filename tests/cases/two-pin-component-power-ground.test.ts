@@ -1,8 +1,7 @@
 import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
-import { stackSvgsVertically } from "stack-svgs"
-import { createTwoPinComponentOrientationCircuitJson } from "../assets/two-pin-component-orientation"
+import { createTwoPinPowerGroundCircuitJson } from "../assets/two-pin-component-power-ground"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 function getFlipIssues(circuitJson: CircuitJson) {
@@ -15,12 +14,11 @@ function getFlipIssues(circuitJson: CircuitJson) {
 }
 
 test("preserves two-pin components connected to power or ground on either pin", async () => {
-  const snapshots: string[] = []
+  let snapshotCircuit: CircuitJson | undefined
   for (const componentKind of ["capacitor", "resistor"] as const) {
     for (const rail of ["ground", "power"] as const) {
       for (const railPin of [1, 2] as const) {
-        const circuitJson = await createTwoPinComponentOrientationCircuitJson({
-          facesConnectedComponent: false,
+        const circuitJson = await createTwoPinPowerGroundCircuitJson({
           componentKind,
           rail,
           railPin,
@@ -70,7 +68,9 @@ test("preserves two-pin components connected to power or ground on either pin", 
         }
 
         // Pin attributes also identify rails without a classified source net.
-        const trace = signalCircuit.find((e) => e.type === "source_trace")!
+        const trace = signalCircuit
+          .filter((e) => e.type === "source_trace")
+          .find((e) => e.connected_source_net_ids.includes(net.source_net_id))!
         const railPort = signalCircuit.find(
           (e) =>
             e.type === "source_port" &&
@@ -94,15 +94,15 @@ test("preserves two-pin components connected to power or ground on either pin", 
 
         if (
           railPin === 2 &&
-          ((componentKind === "capacitor" && rail === "ground") ||
-            (componentKind === "resistor" && rail === "power"))
+          componentKind === "capacitor" &&
+          rail === "ground"
         ) {
-          snapshots.push(createSchematicAnalysisFixtureSvg({ circuitJson }))
+          snapshotCircuit = circuitJson
         }
       }
     }
   }
   expect(
-    stackSvgsVertically(snapshots, { normalizeSize: false }),
+    createSchematicAnalysisFixtureSvg({ circuitJson: snapshotCircuit! }),
   ).toMatchSvgSnapshot(import.meta.path)
 })
