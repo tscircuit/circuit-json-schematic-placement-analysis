@@ -38,7 +38,7 @@ export function createSchematicAnalysisFixtureSvg(input: {
   )
 }
 
-function createAnalyzerTextSvg(text: string, width: number): string {
+export function createAnalyzerTextSvg(text: string, width: number): string {
   const lines = text
     ? text.split("\n").flatMap((line) => wrapLine(line, 96))
     : []

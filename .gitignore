@@ -3,3 +3,5 @@ dist
 .cursor
 bun.lock
 *.diff.png
+
+cosmos-export
