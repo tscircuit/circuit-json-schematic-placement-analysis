@@ -9,6 +9,7 @@ export { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapaci
 export { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 export { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
 export { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
+export { RailResistorOrientationSolver } from "./solvers/RailResistorOrientationSolver/RailResistorOrientationSolver"
 export { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 export { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 export { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"

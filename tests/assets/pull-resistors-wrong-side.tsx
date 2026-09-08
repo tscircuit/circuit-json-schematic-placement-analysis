@@ -5,10 +5,12 @@ export async function createPullResistorsWrongSideCircuitJson({
   pullUpY = -3,
   pullDownY = 3,
   resistorRotation = 90,
+  declarePullRequirements = true,
 }: {
   pullUpY?: number
   pullDownY?: number
   resistorRotation?: number
+  declarePullRequirements?: boolean
 } = {}): Promise<CircuitJson> {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
@@ -22,8 +24,8 @@ export async function createPullResistorsWrongSideCircuitJson({
         schY={0}
         pinLabels={{ pin1: "RESET_N", pin2: "BOOT" }}
         pinAttributes={{
-          RESET_N: { needsExternalPullup: true },
-          BOOT: { needsExternalPulldown: true },
+          RESET_N: { needsExternalPullup: declarePullRequirements },
+          BOOT: { needsExternalPulldown: declarePullRequirements },
         }}
         schPinArrangement={{
           leftSide: { pins: ["pin1", "pin2"], direction: "top-to-bottom" },

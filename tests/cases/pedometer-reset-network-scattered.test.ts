@@ -61,6 +61,8 @@ beforeAll(async () => {
     await expect(
       createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
     ).toMatchSvgSnapshot(import.meta.path, compact ? "compact" : undefined)
+    // Grouping moves R8 closer without changing its horizontal orientation.
+    expect(issueTypes.includes("RailResistorShouldBeVertical")).toBe(true)
     hasGroupingIssue.push(issueTypes.includes("ResetNetworkNotGrouped"))
   }
 })

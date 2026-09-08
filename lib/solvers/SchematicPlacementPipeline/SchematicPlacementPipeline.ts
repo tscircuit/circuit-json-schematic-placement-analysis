@@ -13,6 +13,7 @@ import { CrystalLoadCapacitorPlacementSolver } from "../CrystalLoadCapacitorPlac
 import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { FeedbackNetworkPlacementSolver } from "../FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
 import { PullResistorPlacementSolver } from "../PullResistorPlacementSolver/PullResistorPlacementSolver"
+import { RailResistorOrientationSolver } from "../RailResistorOrientationSolver/RailResistorOrientationSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
@@ -125,6 +126,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "FeedbackNetworkPlacementSolver",
       FeedbackNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RailResistorOrientationSolver",
+      RailResistorOrientationSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
