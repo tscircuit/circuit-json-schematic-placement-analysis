@@ -68,7 +68,7 @@ selected sheet and the entire export. Select a type to filter the issue list and
 its overlay, then isolate a numbered issue to inspect it. Red highlights mark
 reported component bounds, trace segments, label positions, or collision regions;
 dashed blue boxes provide component context. The SVG viewBox frames the selected
-issue geometry with one bounds-width/height of padding on each side; thin overlay
+issue geometry with half a bounds-width/height of padding on each side; thin overlay
 strokes stay thin when zooming. Zoom and scroll to inspect details,
 toggle the overlay to compare, and download the current SVG or JSON report.
 
@@ -85,3 +85,38 @@ Programmatically, use `analysis.getIssueCounts()` and
 Omit `issueTypes` for all types, or pass `[]` for none. Omit `schematicSheetId`
 for all sheets, or pass `""` for unassigned elements. These methods filter the
 existing results without rerunning solvers.
+
+## Per-issue SVG artifacts for CLI checks
+
+`createSchematicPlacementIssueArtifacts(circuitJson, options?)` returns one
+self-contained SVG per emitted issue. Each SVG frames only that issue's geometry
+and involved components, with half a bounds-width/height of padding on each side,
+and shows only that issue's XML description below the schematic. Other issue
+overlays, descriptions, and count summaries are excluded.
+
+The function performs no filesystem writes. A CLI command such as
+`tsci check schematic-placement` can save the returned artifacts:
+
+```ts
+import { mkdir, writeFile } from "node:fs/promises"
+import { join } from "node:path"
+import {
+  analyzeSchematicPlacement,
+  createSchematicPlacementIssueArtifacts,
+} from "@tscircuit/circuit-json-schematic-placement-analysis"
+
+const analysis = analyzeSchematicPlacement(circuitJson)
+const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, { analysis })
+const outputDir = "dist/schematic-placement"
+if (artifacts.length) await mkdir(outputDir, { recursive: true })
+for (const artifact of artifacts) {
+  await writeFile(join(outputDir, artifact.fileName), artifact.content)
+}
+```
+
+Each artifact includes `issueIndex`, `issue`, `schematicSheetId`, unpadded `bounds`
+(in schematic coordinates, Y up), `descriptionXml`, `fileName`, `contentType`, and
+SVG `content`. Filenames retain the original issue index when filtered. Options
+support `issueTypes`, `schematicSheetId`, and schematic-panel `width`/`height`;
+the XML panel adds to the height. No matching issues returns `[]`. Bounds are
+absent only if an issue has no locatable geometry or involved components.

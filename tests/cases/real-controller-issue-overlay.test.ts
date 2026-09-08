@@ -32,12 +32,12 @@ test("records every issue count and isolates the real controller's crystal repor
     .match(/data-real-to-screen-transform="matrix\(([^)]+)\)"/)![1]!
     .split(",")
     .map(Number)
-  // The selected boxes span [-10.6, -3.55] x [-8.3, -5.8]. Add one full
+  // The selected boxes span [-10.6, -3.55] x [-8.3, -5.8]. Add half a
   // bounds-width/height on every side, then project into the renderer's space.
-  expect(frame[0]).toBeCloseTo(-17.65 * matrix[0]! + matrix[4]!)
-  expect(frame[1]).toBeCloseTo(-3.3 * matrix[3]! + matrix[5]!)
-  expect(frame[2]).toBeCloseTo(21.15 * matrix[0]!)
-  expect(frame[3]).toBeCloseTo(7.5 * Math.abs(matrix[3]!))
+  expect(frame[0]).toBeCloseTo(-14.125 * matrix[0]! + matrix[4]!)
+  expect(frame[1]).toBeCloseTo(-4.55 * matrix[3]! + matrix[5]!)
+  expect(frame[2]).toBeCloseTo(14.1 * matrix[0]!)
+  expect(frame[3]).toBeCloseTo(5 * Math.abs(matrix[3]!))
   expect(createIssueOverlaySvg({ ...input, showOverlay: false })).toContain(
     `viewBox="${viewBox}"`,
   )

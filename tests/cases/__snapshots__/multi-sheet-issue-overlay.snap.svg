@@ -1,6 +1,6 @@
 <svg width="1400" height="1508" viewBox="0 0 1400 1508" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
-    <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="900" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(37.9167357771,0,0,-37.9167357771,700,450)" data-software-used-string="@tscircuit/core@0.0.1382" viewBox="368.228561950375 376.70824348977 637.00116105528 70.75004146626003"><style>
+    <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="900" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(37.9167357771,0,0,-37.9167357771,700,450)" data-software-used-string="@tscircuit/core@0.0.1382" viewBox="474.395422126255 388.70824348977 424.66744070352 46.75004146626003"><style>
               .boundary { fill: rgb(245, 241, 237); }
               .schematic-boundary { fill: none; stroke: #fff; }
               .component { fill: none; stroke: rgb(132, 0, 0); }
@@ -76,7 +76,7 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="LOGIC_LABELS_connectiv
     &lt;Move componentName=&quot;UL1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;
     &lt;Move componentName=&quot;UL2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><g transform="matrix(37.9167357771 0 0 -37.9167357771 700 450)"><rect x="-3.1500000000000004" y="0.7" width="1.9000000000000004" height="0.6000000000000001" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="0.5499999999999999" y="0.7" width="1.9000000000000004" height="0.6000000000000001" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="-0.67" y="0.8" width="0.6399999999999999" height="0.19999999999999996" fill="#ef444433" stroke="#dc2626" stroke-width="0.5"  vector-effect="non-scaling-stroke" /></g><g transform="translate(674.595787029343 412.08326422289997) scale(0.45500082932520003)"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">2</text></g></g></g></svg>
+&lt;/ComponentNetLabelCollision&gt;</title><g transform="matrix(37.9167357771 0 0 -37.9167357771 700 450)"><rect x="-3.1500000000000004" y="0.7" width="1.9000000000000004" height="0.6000000000000001" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="0.5499999999999999" y="0.7" width="1.9000000000000004" height="0.6000000000000001" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="-0.67" y="0.8" width="0.6399999999999999" height="0.19999999999999996" fill="#ef444433" stroke="#dc2626" stroke-width="0.5"  vector-effect="non-scaling-stroke" /></g><g transform="translate(674.595787029343 412.08326422289997) scale(0.3033338862168)"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">2</text></g></g></g></svg>
   </g>
   <g transform="translate(0, 900) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />

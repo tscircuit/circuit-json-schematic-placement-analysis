@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test"
-import { analyzeSchematicPlacement } from "lib/index"
+import {
+  analyzeSchematicPlacement,
+  createSchematicPlacementIssueArtifacts,
+} from "lib/index"
 import { createMultiSheetComponentLabelOverlapCircuitJson } from "../assets/multi-sheet-component-label-overlap"
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
@@ -33,5 +36,15 @@ test("retains exact collision regions and excludes other sheets at identical coo
       `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="#ef444433"`,
     )
   }
+  const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
+    analysis,
+    schematicSheetId: issue.schematicSheetId,
+    issueTypes: ["NetLabelCollision"],
+  })
+  expect(artifacts).toHaveLength(1)
+  expect(artifacts[0]!.issueIndex).toBe(1)
+  expect(artifacts[0]!.fileName).toBe("issue-0002-NetLabelCollision.svg")
+  expect(artifacts[0]!.content).not.toContain("UP1")
+  expect(artifacts[0]!.descriptionXml).toContain("UL1")
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })
