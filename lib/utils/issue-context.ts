@@ -128,6 +128,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstLoadCapacitorSchematicBox)
         addPlacement(issue.secondLoadCapacitorSchematicBox)
         break
+      case "TwoPinComponentCouldBeFlipped":
+        addPlacement(issue.targetComponent)
+        addPlacement(issue.connectedComponent)
+        break
       case "FeedbackNetworkNotCompact":
         addPlacement(issue.amplifierSchematicBox)
         for (const component of issue.feedbackComponents)

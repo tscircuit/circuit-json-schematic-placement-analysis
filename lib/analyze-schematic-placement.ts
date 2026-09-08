@@ -12,6 +12,7 @@ import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/S
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 import { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/TraceSimplificationSolver"
+import { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
@@ -82,6 +83,8 @@ export class SchematicPlacementAnalysis {
         return TraceSimplificationSolver.issueToString(issue)
       case "CrystalNotCenteredOverLoadCapacitors":
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
+      case "TwoPinComponentCouldBeFlipped":
+        return TwoPinComponentOrientationSolver.issueToString(issue)
       case "FeedbackNetworkNotCompact":
         return FeedbackNetworkPlacementSolver.issueToString(issue)
       case "PullResistorOnWrongSide":
