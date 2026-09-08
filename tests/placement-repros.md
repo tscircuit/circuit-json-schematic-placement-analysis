@@ -1,26 +1,25 @@
 # Common schematic placement repros
 
-These original TSX fixtures cover seven placement proposals, with text clearance
-and reset grouping now implemented. Each fixture uses `Circuit`, JSX components
-and native traces
+These TSX fixtures cover seven proposed placement analyzers with independent text clearance
+and reset-network grouping now implemented. Each fixture uses `Circuit`, JSX components and native traces
 or `connections` props. PCB rendering is disabled; no Circuit JSON elements are
 inserted or modified after rendering. The synthetic fixtures keep long traces
 visible; the real pedometer reduction preserves its original auto-label settings.
 
-The text-clearance and reset-network cases now use ordinary passing tests.
-Five remaining proposal cases use `test.failing` for their proposed diagnostics.
+The six text/reset repros use ordinary passing tests. The other five proposals
+keep their `test.failing` assertions.
 Rendering, connectivity checks, geometry preconditions and the stacked SVG
 snapshot run in `beforeAll`, outside the expected failure. A render error,
 disconnected fixture or snapshot mismatch therefore fails the suite normally.
 The snapshot contains the actual analyzer output beneath the schematic; an empty
 analysis panel means the current analyzer emitted nothing.
 
-The remaining expected-failure diagnostic names are proposed contracts for
-subsequent implementations. The tests do not prescribe fixed placement coordinates or production thresholds.
+The remaining expected-failure diagnostics are proposed contracts for future implementations. The
+tests do not prescribe fixed placement coordinates or production thresholds.
 When implementing a diagnostic, replace its `test.failing` with `test` and add
 valid-layout and exception coverage.
 
-| Repro | Diagnostic (implemented or proposed) | Intended placement improvement |
+| Repro | Proposed diagnostic | Intended placement improvement |
 | --- | --- | --- |
 | [Scattered voltage divider](assets/voltage-divider-scattered.tsx) | `VoltageDividerNotCompact` | Bring R1/R2 and their ADC tap into a recognizable compact divider. Accept both clear vertical and L-shaped drawings. |
 | [Pull resistors on the wrong side](assets/pull-resistors-wrong-side.tsx) | `PullResistorOnWrongSide` | Place the RESET_N pull-up above its signal and the BOOT pull-down below its signal. The host ports carry explicit pull-up/pull-down requirements. |
@@ -45,12 +44,10 @@ The divider and series-chain repros already receive generic
 must demonstrate useful grouping or alignment improvements beyond those existing
 moves; merely emitting a new diagnostic name is not sufficient justification.
 
-The original eleven repro tests now comprise six passing tests and five
-expected-failure tests, with thirteen stacked snapshots for seven proposals.
-Among these original repros, text clearance has four tests and five snapshots,
-including two annotation wordings in the wire case. Additional text and reset
-acceptance tests cover valid layouts, geometry,
-connectivity, sheet/group boundaries, and the original pedometer export.
+The original eleven repro tests now comprise six passing tests and five expected
+failures, with thirteen stacked snapshots for seven proposals. Text clearance has four tests and five stacked snapshots,
+including two annotation wordings in the wire case. These are initial repros,
+not complete solver acceptance suites.
 Schematic grouping distances are readability heuristics, not PCB placement
 constraints.
 
@@ -60,30 +57,18 @@ new reductions. Only text clearance and support-network grouping gained concrete
 new repro evidence in that audit; the remaining synthetic proposals still need
 further validation.
 
-## General schematic text clearance
+## Independent schematic text clearance
 
-`SchematicTextCollision` is a content-independent geometry diagnostic, not an
-ANALOG INPUT or analog-circuit rule. A general implementation should consider
-rendered text against trace segments, unrelated symbol bodies and other text.
-This includes free annotations and, where their rendered bounds are available,
-reference designators, values, pin labels and net-label text. Use font size,
-anchor, rotation, sheet and ownership when determining bounds and valid contact.
+`SchematicTextCollision` checks independent sheet-space annotations and generated
+section headings against wires, component bounds and other independent text.
+It does not reposition component reference/value labels, symbol text, or
+trace-owned labels. The existing verbose-net-label fixture also verifies that a
+component-owned reference crossing a wire gets no independent-text move.
 
-The existing `ComponentNetLabelCollisionSolver` handles some net-label/label and
-net-label/component collisions, and `SchematicBoxInnerLabelCollisionSolver`
-handles collisions among internal pin labels. Extend or share their geometry
-and deduplicate diagnostics instead of emitting the same collision twice.
-`SchematicTextClearanceSolver` now checks sheet-space `schematic_text` against
-wires, unrelated bodies and other text. It includes explicit reference/value
-text elements while leaving renderer-only pin labels and net-label glyphs to
-existing coverage; it does not duplicate the existing net-label diagnostics.
-
-Preserve intentional labels inside their own symbols, net-label attachment points
-and text in other sheets. Ignore empty strings. Touching a text anchor or its
-own connector is not equivalent to crossing the visible text. Implementation
-tests should include these valid cases, different font sizes and rotations, and
-reference/value collisions. Moving text is often sufficient; preserve electrical
-connectivity and report the actual colliding objects.
+The reset repros use `ResetNetworkNotGrouped` for their specific RC topology.
+The pedometer case includes a compact control: no grouping diagnostic is expected
+for that layout. Its TSX fixture remains a reduced rendering; it is not an exact
+copy of the original full sheet. See the existing real-circuit audit for provenance.
 
 Run all checks with:
 
@@ -92,27 +77,3 @@ bun test
 bun run typecheck
 bun run format:check
 ```
-
-## Original pedometer regression
-
-`assets/pedometer-original-sheet.json` preserves every `source_*` and
-`schematic_*` record from the saved 78-component Codex pedometer export; only
-non-schematic domains such as PCB/CAD are omitted. Its MCU has all 41 pins and
-the original 2.2 × 4.2 symbol. All positions, labels and wire edges are unchanged.
-The regression runs directly against that data without rerouting and checks that
-the reset issue identifies U1.RSTN with R8, C21 and TP5.
-
-Source export SHA-256:
-`5c14f220ca42a3ce89d75cdd6b5266423b057ef6bd85cb31873b8726f8650e5c`.
-See the original source location and audit context in [real-circuit-audit.md](real-circuit-audit.md).
-The TSX pedometer fixture remains a reduced, freshly routed companion with a
-compact control; it is not described as an exact full-sheet reproduction.
-
-The two reset repros use the narrower `ResetNetworkNotGrouped` contract in place
-of the earlier generic `FunctionalBlockNotGrouped` proposal. Other functional
-blocks, including feedback networks, are not implemented by this reset solver.
-
-The additional acceptance tests sometimes change only text positions, font sizes,
-connectivity cache fields or equivalent wire segmentation to verify those
-representations and to apply suggested text moves. The real-source JSON fixture
-and the eleven original TSX repro renderings are not modified by those tests.

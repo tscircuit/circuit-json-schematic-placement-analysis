@@ -71,8 +71,6 @@ export const getRelevantPlacementsForIssues = ({
         for (const placement of issue.supportComponents) addPlacement(placement)
         break
       case "SchematicTextCollision":
-        if (issue.schematicComponentId)
-          addPlacement(placementByComponentId.get(issue.schematicComponentId))
         if (issue.collidingObject.schematicComponentId)
           addPlacement(
             placementByComponentId.get(

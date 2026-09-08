@@ -49,36 +49,20 @@ console.log(analysis.toString())
 
 ## Text clearance and reset grouping
 
-`SchematicTextClearanceSolver` reports `SchematicTextCollision` when sheet-space
-`schematic_text` overlaps a wire, another text element, or an unrelated component
-body. It covers free annotations, generated section headings, and reference/value
-labels represented as text elements. Geometry follows font size, anchors, rotation,
-and individual lines. Empty text, wire contact along the boundary, text in other
-sheets, and labels inside their own component are excluded. Font advances are
-approximations of sans-serif text, not exact glyph measurements. Identical
-overprinted labels are deduplicated. Custom path/circle symbols without body
-geometry are excluded from component-body checks to avoid flagging their empty
-bounding-box corners.
+`SchematicTextClearanceSolver` checks independent annotations and generated
+headings against wires, component bounds and other independent text. Component
+reference/value labels, symbol text and trace-owned labels are excluded: their
+owning objects must be moved instead. Issues identify the colliding objects and
+suggest a text-anchor position when one is clear in the modeled geometry.
+Text bounds approximate font size, anchors, rotation and line spacing; custom
+symbol ink geometry is outside this check. Apply a suggestion and reanalyze.
 
-Each issue identifies both objects and their bounds. When a clear position is
-found among the modeled objects, it includes a suggested text-anchor position.
-Apply one suggestion and reanalyze; suggestions from separate issues are not a
-simultaneous layout solution. Renderer-only pin labels, net-label glyphs, and
-symbol-template text are outside this solver's geometry. Existing net-label and
-internal pin-label collision solvers continue to handle their respective cases.
-
-`ResetNetworkGroupingSolver` reports `ResetNetworkNotGrouped` for a recognizable
-reset pin with one resistor to a known supply, one capacitor to ground, and optional
-test points. It uses electrical connectivity across wires and labels, never net
-names alone. It excludes ordinary filters, ambiguous/shared reset hosts, unsupported
-topologies, and networks split across schematic sheets, subcircuits, or groups.
-
-The distance heuristic measures from the reset pin to the nearest point of each
-resistor/capacitor body's bounds. It warns beyond the larger of 6 schematic units or three
-times the largest resistor/capacitor symbol dimension. A remote test point alone
-does not trigger a grouping issue. The result names the network to group;
-it does not prescribe component coordinates or change wiring. This is schematic
-readability guidance, not a PCB or electrical distance requirement.
+`ResetNetworkGroupingSolver` recognizes a reset pin with one resistor to a known
+supply and one capacitor to ground. It follows connectivity across labels and
+respects separate sheets/groups and ambiguous hosts. The distance heuristic is
+6 schematic units or three RC-symbol dimensions, measured from the reset pin.
+A remote test point alone does not trigger a warning. The issue suggests grouping
+the RC parts without changing connections or prescribing exact coordinates.
 
 ## Test
 

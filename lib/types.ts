@@ -221,7 +221,6 @@ export interface SchematicTextCollision {
   schematicSheetName?: string
   schematicTextId: string
   text: string
-  schematicComponentId?: string
   collidingObject: SchematicTextCollisionObject
   textBounds: { left: number; right: number; top: number; bottom: number }
   collidingObjectBounds: {

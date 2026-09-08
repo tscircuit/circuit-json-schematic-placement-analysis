@@ -46,9 +46,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
     super()
     const { ctx } = params
     this.sheetNames = getSchematicSheetNamesById(ctx.circuitJson)
-    const placementById = new Map(
-      ctx.componentPlacements.map((p) => [p.schematicComponentId, p]),
-    )
     const customSymbolIds = new Set(
       ctx.circuitJson.flatMap((element) =>
         element.type === "schematic_component" &&
@@ -61,20 +58,22 @@ export class SchematicTextClearanceSolver extends BaseSolver {
     const seenText = new Set<string>()
     this.texts = ctx.circuitJson.flatMap((element) => {
       if (element.type !== "schematic_text") return []
-      // Symbol templates use local coordinates; only inspect sheet-space text.
-      if (element.schematic_symbol_id && !element.schematic_component_id)
+      // Only independent sheet-space annotations can be repositioned directly.
+      // Reference/value labels move with their component, and legacy trace
+      // labels are also generated from an owning object.
+      if (
+        element.schematic_component_id ||
+        element.schematic_symbol_id ||
+        ("source_trace_id" in element && element.source_trace_id)
+      )
         return []
-      const owner = element.schematic_component_id
-        ? placementById.get(element.schematic_component_id)
-        : undefined
       const polygons = getSchematicTextPolygons(element)
       if (!polygons.length) return []
-      const sheetId = element.schematic_sheet_id ?? owner?.schematicSheetId
+      const sheetId = element.schematic_sheet_id
       // Some exports emit the same trace label twice. Identical overprinting
       // does not obscure another annotation and should not duplicate warnings.
       const fingerprint = JSON.stringify([
         sheetId,
-        element.schematic_component_id,
         element.text,
         element.position.x,
         element.position.y,
@@ -94,7 +93,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             type: "text" as const,
             id: element.schematic_text_id,
             text: element.text,
-            schematicComponentId: element.schematic_component_id,
           },
         },
       ]
@@ -157,7 +155,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             : undefined,
           schematicTextId: text.text.schematic_text_id,
           text: text.text.text,
-          schematicComponentId: text.text.schematic_component_id,
           collidingObject: target.object,
           textBounds: polygonBounds(text.polygons),
           collidingObjectBounds: polygonBounds(target.polygons),
@@ -172,13 +169,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
 
   private collides(text: TextGeometry, obstacle: Obstacle): boolean {
     if (text.sheetId !== obstacle.sheetId) return false
-    // Labels inside their own symbols are intentional. This does not exempt
-    // them from collisions with wires, other text, or unrelated symbol bodies.
-    if (
-      obstacle.object.type === "component" &&
-      obstacle.object.id === text.text.schematic_component_id
-    )
-      return false
     return text.polygons.some((a) =>
       obstacle.segments
         ? obstacle.segments.some((edge) =>
@@ -195,15 +185,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
       ...this.obstacles,
       ...this.texts.filter((t) => t !== text),
     ]
-    const owner = this.obstacles.find(
-      (obstacle) =>
-        obstacle.object.type === "component" &&
-        obstacle.object.id === text.text.schematic_component_id,
-    )
-    const originallyInsideOwner =
-      owner?.polygons.some((a) =>
-        text.polygons.some((b) => polygonsOverlap(a, b)),
-      ) ?? false
     const step = Math.max(0.1, text.text.font_size / 2)
     for (
       let distance = step;
@@ -225,16 +206,6 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             position: { x: newSchX, y: newSchY },
           }),
         }
-        // Do not turn an external reference/value into an internal label as a
-        // side effect of suggesting a move. Existing internal labels stay valid.
-        if (
-          owner &&
-          !originallyInsideOwner &&
-          owner.polygons.some((a) =>
-            moved.polygons.some((b) => polygonsOverlap(a, b)),
-          )
-        )
-          continue
         if (obstacles.every((obstacle) => !this.collides(moved, obstacle)))
           return { newSchX, newSchY }
       }
