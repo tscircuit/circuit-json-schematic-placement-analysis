@@ -43,6 +43,55 @@ export class SchematicPlacementAnalysis {
     return this.lineItems
   }
 
+  /** Filter emitted issues without rerunning or changing the solvers. */
+  getIssues(
+    filter: {
+      issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
+      schematicSheetId?: string
+    } = {},
+  ): SchematicPlacementIssue[] {
+    return this.lineItems
+      .flatMap((item) =>
+        item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
+      )
+      .filter(
+        (issue) =>
+          (filter.issueTypes === undefined ||
+            filter.issueTypes.includes(issue.lineItemType)) &&
+          (filter.schematicSheetId === undefined ||
+            (getIssueSchematicSheetContext(issue).schematicSheetId ?? "") ===
+              filter.schematicSheetId),
+      )
+  }
+
+  /** Counts emitted issue objects, including zero counts for known types. */
+  getIssueCounts(filter: { schematicSheetId?: string } = {}) {
+    const counts = {
+      ComponentOverlap: 0,
+      SchematicBoxHasALotOfSurroundingWhitespace: 0,
+      CapacitorSymbolHorizontal: 0,
+      VerboseSchematicNetLabel: 0,
+      PinHeaderSchematicBoxTooWide: 0,
+      GenericSchematicBoxTooWide: 0,
+      SchematicBoxInnerLabelCollision: 0,
+      SchematicPinPaddingToEdgeTooLarge: 0,
+      DiodeResistorNotAligned: 0,
+      ComponentPinsWouldAlignWithVerticalShift: 0,
+      TraceCanBeSimplifiedByMovingComponent: 0,
+      CrystalNotCenteredOverLoadCapacitors: 0,
+      ComponentNetLabelCollision: 0,
+      ComponentBoxNetLabelCollision: 0,
+      NetLabelCollision: 0,
+      FeedbackNetworkNotCompact: 0,
+      PullResistorOnWrongSide: 0,
+      SchematicTextCollision: 0,
+      ResetNetworkNotGrouped: 0,
+      TwoPinComponentCouldBeFlipped: 0,
+    } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
+    for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
+    return counts
+  }
+
   getString(): string {
     return this.toString()
   }

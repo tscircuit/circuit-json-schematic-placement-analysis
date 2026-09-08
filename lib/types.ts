@@ -241,10 +241,20 @@ export interface ComponentBoxNetLabelCollision {
   }
 }
 
+export interface SchematicIssueBounds {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
 export interface NetLabelCollision {
   lineItemType: "NetLabelCollision"
   schematicSheetId?: string
   schematicSheetName?: string
+  /** Actual intersection regions in schematic coordinates (Y up).
+   * Optional for compatibility with previously serialized reports. */
+  collisionBounds?: SchematicIssueBounds[]
   pairs: Array<{ comp1Name: string; comp2Name: string }>
   moves: Array<{
     componentName: string
