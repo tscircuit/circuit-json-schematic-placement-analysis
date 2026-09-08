@@ -70,6 +70,7 @@
     "schematic-symbols": "^0.0.224",
     "spicets": "^0.0.2",
     "spicey": "^0.0.14",
+    "svgson": "^5.3.1",
     "typescript": "^5.9.3",
     "vite": "^8.0.10"
   },

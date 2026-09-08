@@ -19,8 +19,9 @@ test("records the real sensor's three trace suggestions and isolates one exact t
   ).toEqual([
     ["TraceCanBeSimplifiedByMovingComponent", 3],
     ["TwoPinComponentCouldBeFlipped", 2],
+    ["TwoPinComponentShouldBeVertical", 2],
   ])
-  expect(analysis.getIssues()).toHaveLength(5)
+  expect(analysis.getIssues()).toHaveLength(7)
   const input = {
     circuitJson,
     analysis,

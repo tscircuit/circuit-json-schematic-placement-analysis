@@ -70,7 +70,12 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="POWER_LABELS_connectiv
     L 649.1906452148244,330.53561121249123
     L 635.4900646873656,330.53561121249123
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.505556477028px"/><text class="net-label-text sch-net-label-text" x="636.4000663460159" y="327.80560623654003" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="4.550008293252px" transform="">Label</text></svg><text class="stacked-sheet-label" x="193.589318" y="664.16" font-family="sans-serif" font-size="15.4px" fill="rgb(0, 100, 100)" data-schematic-sheet-id="schematic_sheet_1">Logic</text><svg class="tscircuit-schematic" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(25.2778238514,0,0,-25.2778238514,600,300)" data-software-used-string="@tscircuit/core@0.0.1382" x="0" y="672"><style>
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.505556477028px"/><text class="net-label-text sch-net-label-text" x="636.4000663460159" y="327.80560623654003" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="4.550008293252px" transform="">Label</text><g class="schematic-issue-highlights"><g data-issue-number="1" data-issue-type="NetLabelCollision" data-schematic-sheet-id="schematic_sheet_0"><title><![CDATA[<ComponentNetLabelCollision pair1="UP1/UP2">
+  <SuggestedFix note="Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.">
+    <Move componentName="UP1" newSchX="-2.57" newSchY="1" />
+    <Move componentName="UP2" newSchX="1.87" newSchY="1" />
+  </SuggestedFix>
+</ComponentNetLabelCollision>]]></title><rect data-highlight-component-id="schematic_component_0" x="520.37485486809" y="267.13882899318" width="48.02786531766003" height="15.166694310839944" fill="#ef4444" fill-opacity="0.16" stroke="#dc2626" stroke-width="1.5"/><rect data-highlight-component-id="schematic_component_1" x="613.90280311827" y="267.13882899318" width="48.02786531766003" height="15.166694310839944" fill="#ef4444" fill-opacity="0.16" stroke="#dc2626" stroke-width="1.5"/><g class="issue-marker"><circle cx="508.37485486809" cy="255.13882899318003" r="11" fill="#b91c1c"/><text x="508.37485486809" y="255.13882899318003" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g><g class="issue-marker"><circle cx="601.90280311827" cy="255.13882899318003" r="11" fill="#b91c1c"/><text x="601.90280311827" y="255.13882899318003" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g></g></g></svg><text class="stacked-sheet-label" x="193.589318" y="664.16" font-family="sans-serif" font-size="15.4px" fill="rgb(0, 100, 100)" data-schematic-sheet-id="schematic_sheet_1">Logic</text><svg class="tscircuit-schematic" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(25.2778238514,0,0,-25.2778238514,600,300)" data-software-used-string="@tscircuit/core@0.0.1382" x="0" y="672"><style>
               .boundary { fill: rgb(245, 241, 237); }
               .schematic-boundary { fill: none; stroke: #fff; }
               .component { fill: none; stroke: rgb(132, 0, 0); }
@@ -140,45 +145,52 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="LOGIC_LABELS_connectiv
     L 649.1906452148244,330.53561121249123
     L 635.4900646873656,330.53561121249123
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.505556477028px"/><text class="net-label-text sch-net-label-text" x="636.4000663460159" y="327.80560623654003" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="4.550008293252px" transform="">Label</text></svg>
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="0.505556477028px"/><text class="net-label-text sch-net-label-text" x="636.4000663460159" y="327.80560623654003" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="4.550008293252px" transform="">Label</text><g class="schematic-issue-highlights"><g data-issue-number="2" data-issue-type="NetLabelCollision" data-schematic-sheet-id="schematic_sheet_1"><title><![CDATA[<ComponentNetLabelCollision pair1="UL1/UL2">
+  <SuggestedFix note="Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.">
+    <Move componentName="UL1" newSchX="-2.57" newSchY="1" />
+    <Move componentName="UL2" newSchX="1.87" newSchY="1" />
+  </SuggestedFix>
+</ComponentNetLabelCollision>]]></title><rect data-highlight-component-id="schematic_component_3" x="520.37485486809" y="267.13882899318" width="48.02786531766003" height="15.166694310839944" fill="#ef4444" fill-opacity="0.16" stroke="#dc2626" stroke-width="1.5"/><rect data-highlight-component-id="schematic_component_4" x="613.90280311827" y="267.13882899318" width="48.02786531766003" height="15.166694310839944" fill="#ef4444" fill-opacity="0.16" stroke="#dc2626" stroke-width="1.5"/><g class="issue-marker"><circle cx="508.37485486809" cy="255.13882899318003" r="11" fill="#b91c1c"/><text x="508.37485486809" y="255.13882899318003" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g><g class="issue-marker"><circle cx="601.90280311827" cy="255.13882899318003" r="11" fill="#b91c1c"/><text x="601.90280311827" y="255.13882899318003" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g></g></g></svg>
   </g>
   <g transform="translate(0, 1272) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
-<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
-    <tspan x="18" dy="0">&lt;SchematicSheet name=&quot;Power&quot; id=&quot;schematic_sheet_0&quot;&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UP1&quot; positionAnchor=&quot;center&quot; schX=&quot;-2.2&quot; schY=&quot;1&quot;</tspan>
-    <tspan x="18" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UP2&quot; positionAnchor=&quot;center&quot; schX=&quot;1.5&quot; schY=&quot;1&quot;</tspan>
-    <tspan x="18" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;UP1/UP2&quot;&gt;</tspan>
-    <tspan x="18" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
-    <tspan x="18" dy="22">  circuit.&quot;&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;UP1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;UP2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">  &lt;/SuggestedFix&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicSheet&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicSheet name=&quot;Logic&quot; id=&quot;schematic_sheet_1&quot;&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UL1&quot; positionAnchor=&quot;center&quot; schX=&quot;-2.2&quot; schY=&quot;1&quot;</tspan>
-    <tspan x="18" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UL2&quot; positionAnchor=&quot;center&quot; schX=&quot;1.5&quot; schY=&quot;1&quot;</tspan>
-    <tspan x="18" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;UL1/UL2&quot;&gt;</tspan>
-    <tspan x="18" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
-    <tspan x="18" dy="22">  circuit.&quot;&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;UL1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;UL2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">  &lt;/SuggestedFix&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;/SchematicSheet&gt;</tspan>
+<text x="52" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+    <tspan x="52" dy="0">&lt;SchematicSheet name=&quot;Power&quot; id=&quot;schematic_sheet_0&quot;&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UP1&quot; positionAnchor=&quot;center&quot; schX=&quot;-2.2&quot; schY=&quot;1&quot;</tspan>
+    <tspan x="52" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UP2&quot; positionAnchor=&quot;center&quot; schX=&quot;1.5&quot; schY=&quot;1&quot;</tspan>
+    <tspan x="52" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="52" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;UP1/UP2&quot;&gt;</tspan>
+    <tspan x="52" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
+    <tspan x="52" dy="22">  circuit.&quot;&gt;</tspan>
+    <tspan x="52" dy="22">    &lt;Move componentName=&quot;UP1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">    &lt;Move componentName=&quot;UP2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">  &lt;/SuggestedFix&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicSheet&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicSheet name=&quot;Logic&quot; id=&quot;schematic_sheet_1&quot;&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UL1&quot; positionAnchor=&quot;center&quot; schX=&quot;-2.2&quot; schY=&quot;1&quot;</tspan>
+    <tspan x="52" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicBoxPlacement componentName=&quot;UL2&quot; positionAnchor=&quot;center&quot; schX=&quot;1.5&quot; schY=&quot;1&quot;</tspan>
+    <tspan x="52" dy="22">  width=&quot;1.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+    <tspan x="52" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="52" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;UL1/UL2&quot;&gt;</tspan>
+    <tspan x="52" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
+    <tspan x="52" dy="22">  circuit.&quot;&gt;</tspan>
+    <tspan x="52" dy="22">    &lt;Move componentName=&quot;UL1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">    &lt;Move componentName=&quot;UL2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">  &lt;/SuggestedFix&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
+    <tspan x="52" dy="22">&lt;/SchematicSheet&gt;</tspan>
 </text>
+<g data-listing-issue-number="1"><circle cx="24" cy="211" r="11" fill="#b91c1c" /><text x="24" y="211" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
+<g data-listing-issue-number="2"><circle cx="24" cy="585" r="11" fill="#b91c1c" /><text x="24" y="585" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>
   </g>
 </svg>

@@ -88,6 +88,7 @@ export class SchematicPlacementAnalysis {
       SchematicTextCollision: 0,
       ResetNetworkNotGrouped: 0,
       TwoPinComponentCouldBeFlipped: 0,
+      TwoPinComponentShouldBeVertical: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
