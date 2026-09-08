@@ -43,9 +43,15 @@ beforeAll(async () => {
     ),
   ).toBe(true)
   const analysis = analyzeSchematicPlacement(circuitJson)
-  await expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 300 }),
-  ).toMatchSvgSnapshot(import.meta.path)
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    height: 300,
+    highlightIssues: ["SchematicTextCollision"],
+  })
+  expect(svg).toContain('data-issue-type="SchematicTextCollision"')
+  expect(svg).toContain('stroke-opacity="0.55"')
+  await expect(svg).toMatchSvgSnapshot(import.meta.path)
   issueTypes = analysis
     .getLineItems()
     .flatMap((item) =>

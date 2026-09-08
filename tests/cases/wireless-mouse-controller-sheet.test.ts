@@ -40,6 +40,7 @@ test("reproduces the complete wireless mouse controller sheet layout", () => {
       analysis,
       width: 1800,
       height: 1100,
+      highlightIssues: ["CrystalNotCenteredOverLoadCapacitors"],
     }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

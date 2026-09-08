@@ -6,13 +6,7 @@
     "indentStyle": "space"
   },
   "files": {
-    "includes": [
-      "**",
-      "!dist",
-      "!cosmos-export",
-      "!package.json",
-      "!tests/assets/real-schematics/*.json"
-    ]
+    "includes": ["**", "!dist", "!package.json"]
   },
   "javascript": {
     "formatter": {
