@@ -27,7 +27,9 @@ export function createIssueReproSnapshot(
   ].join("\n")
   return stackSvgsVertically(
     [
-      createIssueOverlaySvg(input),
+      // Keep the cropped SVG nested: stack-svgs otherwise stretches its viewBox
+      // and lets off-frame schematic content spill into the analysis text.
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${input.width ?? 1400}" height="${input.height ?? 900}">${createIssueOverlaySvg(input)}</svg>`,
       createAnalyzerTextSvg(text, input.width ?? 1400),
     ],
     { normalizeSize: false, gap: 0 },

@@ -76,7 +76,6 @@ export function createIssueOverlaySvg(input: {
     width: input.width ?? 1400,
     height: input.height ?? 900,
   })
-  if (input.showOverlay === false) return svg
   const matrix = svg.match(/data-real-to-screen-transform="matrix\(([^)]+)\)"/)
   if (!matrix)
     throw new Error(
@@ -97,6 +96,13 @@ export function createIssueOverlaySvg(input: {
     x: a * x + c * y + e,
     y: b * x + d * y + f,
   })
+  const focusPoints: Array<{ x: number; y: number }> = []
+  const includeBounds = (bounds: SchematicIssueBounds) => {
+    for (const x of [bounds.left, bounds.right]) {
+      for (const y of [bounds.bottom, bounds.top])
+        focusPoints.push(screen(x, y))
+    }
+  }
   const placements = analysis
     .getLineItems()
     .filter((item) => item.lineItemType === "SchematicBoxPlacement")
@@ -117,9 +123,10 @@ export function createIssueOverlaySvg(input: {
     const geometry: string[] = []
     let anchor: { x: number; y: number } | undefined
     const rect = (bounds: SchematicIssueBounds, isContext = false) => {
+      includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
       geometry.push(
-        `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 1.5 : 3}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`,
+        `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`,
       )
     }
     for (const placement of context) rect(boxBounds(placement), true)
@@ -150,8 +157,11 @@ export function createIssueOverlaySvg(input: {
         break
       case "VerboseSchematicNetLabel": {
         anchor = { x: issue.schX, y: issue.schY }
+        includeBounds(
+          centeredRect(anchor.x, anchor.y, 18 / Math.abs(a), 18 / Math.abs(d)),
+        )
         geometry.push(
-          `<circle cx="${anchor.x}" cy="${anchor.y}" r="${9 / Math.abs(a)}" fill="#ef444433" stroke="#dc2626" stroke-width="2" vector-effect="non-scaling-stroke" />`,
+          `<circle cx="${anchor.x}" cy="${anchor.y}" r="${9 / Math.abs(a)}" fill="#ef444433" stroke="#dc2626" stroke-width="0.5" vector-effect="non-scaling-stroke" />`,
         )
         break
       }
@@ -163,9 +173,13 @@ export function createIssueOverlaySvg(input: {
         )
         if (trace?.type === "schematic_trace")
           for (const edge of trace.edges) {
+            focusPoints.push(
+              screen(edge.from.x, edge.from.y),
+              screen(edge.to.x, edge.to.y),
+            )
             anchor ??= edge.from
             geometry.push(
-              `<line x1="${edge.from.x}" y1="${edge.from.y}" x2="${edge.to.x}" y2="${edge.to.y}" stroke="#dc2626" stroke-width="3" vector-effect="non-scaling-stroke" />`,
+              `<line x1="${edge.from.x}" y1="${edge.from.y}" x2="${edge.to.x}" y2="${edge.to.y}" stroke="#dc2626" stroke-width="0.5" vector-effect="non-scaling-stroke" />`,
             )
           }
         break
@@ -177,15 +191,49 @@ export function createIssueOverlaySvg(input: {
       ? { x: context[0].schX, y: context[0].schY }
       : undefined
     const point = anchor && screen(anchor.x, anchor.y)
-    const badge = point
-      ? `<g transform="translate(${point.x} ${point.y - 12})"><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`
-      : ""
     return [
-      `<g data-issue-index="${index}" data-issue-type="${issue.lineItemType}"><title>${escapeXml(`#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`)}</title><g transform="matrix(${values.join(" ")})">${geometry.join("")}</g>${badge}</g>`,
+      {
+        index,
+        point,
+        geometry: `<title>${escapeXml(`#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`)}</title><g transform="matrix(${values.join(" ")})">${geometry.join("")}</g>`,
+        issueType: issue.lineItemType,
+      },
     ]
   })
-  return svg.replace(
+  let framedSvg = svg
+  let badgeScale = 1
+  if (focusPoints.length > 0) {
+    const minX = Math.min(...focusPoints.map((point) => point.x))
+    const maxX = Math.max(...focusPoints.map((point) => point.x))
+    const minY = Math.min(...focusPoints.map((point) => point.y))
+    const maxY = Math.max(...focusPoints.map((point) => point.y))
+    // One bounds-width/height of padding on each side. A small minimum also
+    // gives point-like or perfectly horizontal/vertical issues a useful frame.
+    const paddingX = Math.max(maxX - minX, 24)
+    const paddingY = Math.max(maxY - minY, 24)
+    const width = maxX - minX + paddingX * 2
+    const height = maxY - minY + paddingY * 2
+    const viewBox = `${minX - paddingX} ${minY - paddingY} ${width} ${height}`
+    framedSvg = svg.replace(/^<svg\b[^>]*>/, (root) =>
+      root
+        .replace(/\sviewBox="[^"]*"/, "")
+        .replace(/>$/, ` viewBox="${viewBox}">`),
+    )
+    // Keep numbered markers readable without magnifying them with the crop.
+    badgeScale = Math.max(
+      width / (input.width ?? 1400),
+      height / (input.height ?? 900),
+    )
+  }
+  if (input.showOverlay === false) return framedSvg
+  const markup = overlays.map(({ index, point, geometry, issueType }) => {
+    const badge = point
+      ? `<g transform="translate(${point.x} ${point.y}) scale(${badgeScale})"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`
+      : ""
+    return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}${badge}</g>`
+  })
+  return framedSvg.replace(
     /<\/svg>\s*$/,
-    `<g class="placement-issue-overlays">${overlays.join("\n")}</g></svg>`,
+    `<g class="placement-issue-overlays">${markup.join("\n")}</g></svg>`,
   )
 }

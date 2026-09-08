@@ -67,7 +67,9 @@ The table shows counts for every issue type, including zeros, both for the
 selected sheet and the entire export. Select a type to filter the issue list and
 its overlay, then isolate a numbered issue to inspect it. Red highlights mark
 reported component bounds, trace segments, label positions, or collision regions;
-dashed blue boxes provide component context. Zoom and scroll to inspect details,
+dashed blue boxes provide component context. The SVG viewBox frames the selected
+issue geometry with one bounds-width/height of padding on each side; thin overlay
+strokes stay thin when zooming. Zoom and scroll to inspect details,
 toggle the overlay to compare, and download the current SVG or JSON report.
 
 The built-in examples reuse the unchanged complete sheet imports from
