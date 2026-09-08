@@ -6,6 +6,7 @@ import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapaci
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
 import { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
+import { TwoPinComponentRailOrientationSolver } from "./solvers/TwoPinComponentRailOrientationSolver/TwoPinComponentRailOrientationSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
@@ -136,6 +137,8 @@ export class SchematicPlacementAnalysis {
         return TwoPinComponentOrientationSolver.issueToString(issue)
       case "FeedbackNetworkNotCompact":
         return FeedbackNetworkPlacementSolver.issueToString(issue)
+      case "TwoPinComponentShouldBeVertical":
+        return TwoPinComponentRailOrientationSolver.issueToString(issue)
       case "PullResistorOnWrongSide":
         return PullResistorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
