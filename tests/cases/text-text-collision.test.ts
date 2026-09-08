@@ -35,6 +35,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports two independent schematic annotations overlapping each other", () => {
+test("reports two independent schematic annotations overlapping each other", () => {
   expect(issueTypes).toContain("SchematicTextCollision")
 })

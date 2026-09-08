@@ -7,6 +7,8 @@ export { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCol
 export { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
 export { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 export { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+export { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
+export { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
 export { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 export { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 export { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
@@ -20,3 +22,5 @@ export {
   type SchematicPlacementIssueArtifact,
   type SchematicPlacementIssueArtifactOptions,
 } from "./create-schematic-placement-issue-artifacts"
+export { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+export { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"

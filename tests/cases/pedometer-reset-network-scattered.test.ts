@@ -61,10 +61,10 @@ beforeAll(async () => {
     await expect(
       createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
     ).toMatchSvgSnapshot(import.meta.path, compact ? "compact" : undefined)
-    hasGroupingIssue.push(issueTypes.includes("FunctionalBlockNotGrouped"))
+    hasGroupingIssue.push(issueTypes.includes("ResetNetworkNotGrouped"))
   }
 })
 
-test.failing("groups the pedometer reset support network even when auto labels hide its distance", () => {
+test("groups the pedometer reset support network even when auto labels hide its distance", () => {
   expect(hasGroupingIssue).toEqual([true, false])
 })

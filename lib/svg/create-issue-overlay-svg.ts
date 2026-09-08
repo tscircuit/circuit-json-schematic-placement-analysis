@@ -149,6 +149,10 @@ export function renderIssueOverlay(input: {
       case "NetLabelCollision":
         for (const bounds of issue.collisionBounds ?? []) rect(bounds)
         break
+      case "SchematicTextCollision":
+        rect(issue.textBounds)
+        rect(issue.collidingObjectBounds)
+        break
       case "ComponentNetLabelCollision":
         rect(issue.overlappingLabel1Bounds)
         rect(issue.overlappingLabel2Bounds)

@@ -120,3 +120,9 @@ SVG `content`. Filenames retain the original issue index when filtered. Options
 support `issueTypes`, `schematicSheetId`, and schematic-panel `width`/`height`;
 the XML panel adds to the height. No matching issues returns `[]`. Bounds are
 absent only if an issue has no locatable geometry or involved components.
+
+## Vercel previews
+
+The linked Vercel project builds the Cosmos fixture gallery for pull requests.
+`vercel.json` runs `bun run build:site` and serves `cosmos-export`; use the
+Vercel preview on the PR and select `real-schematics` to inspect the repros.

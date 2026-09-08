@@ -11,7 +11,7 @@ import {
 
 let issueTypes: string[]
 
-// Setup failures (including snapshot mismatches) must not be swallowed by test.failing.
+// Verify rendering and connectivity before asserting the diagnostic.
 beforeAll(async () => {
   const circuitJson = await createFunctionalBlockScatteredCircuitJson()
   expectReproRendered(circuitJson, 4)
@@ -48,6 +48,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a reset network separated from its host by unrelated circuitry", () => {
-  expect(issueTypes).toContain("FunctionalBlockNotGrouped")
+test("reports a reset network separated from its host by unrelated circuitry", () => {
+  expect(issueTypes).toContain("ResetNetworkNotGrouped")
 })

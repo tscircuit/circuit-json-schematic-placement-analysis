@@ -4,6 +4,8 @@ import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCol
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
 import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
+import { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
@@ -11,6 +13,8 @@ import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingTo
 import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 import { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/TraceSimplificationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -77,6 +81,10 @@ export class SchematicPlacementAnalysis {
       ComponentNetLabelCollision: 0,
       ComponentBoxNetLabelCollision: 0,
       NetLabelCollision: 0,
+      FeedbackNetworkNotCompact: 0,
+      PullResistorOnWrongSide: 0,
+      SchematicTextCollision: 0,
+      ResetNetworkNotGrouped: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -122,8 +130,16 @@ export class SchematicPlacementAnalysis {
         return TraceSimplificationSolver.issueToString(issue)
       case "CrystalNotCenteredOverLoadCapacitors":
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
+      case "FeedbackNetworkNotCompact":
+        return FeedbackNetworkPlacementSolver.issueToString(issue)
+      case "PullResistorOnWrongSide":
+        return PullResistorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
+      case "SchematicTextCollision":
+        return SchematicTextClearanceSolver.issueToString(issue)
+      case "ResetNetworkNotGrouped":
+        return ResetNetworkGroupingSolver.issueToString(issue)
       default:
         return ""
     }

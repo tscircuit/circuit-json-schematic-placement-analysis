@@ -1,4 +1,4 @@
-import { beforeAll, expect, test } from "bun:test"
+import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createFeedbackNetworkScatteredCircuitJson } from "../assets/feedback-network-scattered"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
@@ -8,10 +8,7 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-let issueTypes: string[]
-
-// Setup failures (including snapshot mismatches) must not be swallowed by test.failing.
-beforeAll(async () => {
+test("reports an op-amp feedback resistor far outside the amplifier stage", async () => {
   const circuitJson = await createFeedbackNetworkScatteredCircuitJson()
   expectReproRendered(circuitJson, 3)
   expectReproNets(circuitJson, [
@@ -30,15 +27,18 @@ beforeAll(async () => {
   expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)
-  issueTypes = analysis
+  const issues = analysis
     .getLineItems()
     .flatMap((item) =>
-      item.lineItemType === "SchematicPlacementIssues"
-        ? item.issues.map((issue) => issue.lineItemType)
-        : [],
+      item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
     )
-})
-
-test.failing("reports an op-amp feedback resistor far outside the amplifier stage", () => {
-  expect(issueTypes).toContain("FeedbackNetworkNotCompact")
+  const matching = issues.filter(
+    (issue) => issue.lineItemType === "FeedbackNetworkNotCompact",
+  )
+  expect(matching).toHaveLength(1)
+  expect(
+    matching[0]!.feedbackComponents.map((box) => box.sourceComponentName),
+  ).toEqual(["R1"])
+  expect(matching[0]!.distantComponents[0]!.bodyGap).toBeGreaterThan(6)
+  expect(analysis.toString()).toContain("<FeedbackNetworkNotCompact")
 })

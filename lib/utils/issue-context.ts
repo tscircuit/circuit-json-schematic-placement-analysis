@@ -66,6 +66,27 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "ResetNetworkNotGrouped":
+        addPlacement(issue.hostSchematicBox)
+        for (const placement of issue.supportNetworkComponents)
+          addPlacement(placement)
+        break
+      case "SchematicTextCollision":
+        if (issue.collidingObject.schematicComponentId)
+          addPlacement(
+            placementByComponentId.get(
+              issue.collidingObject.schematicComponentId,
+            ),
+          )
+        if (issue.collidingObject.type === "trace") {
+          for (const placement of getTraceEndpointPlacements({
+            schematicTraceId: issue.collidingObject.id,
+            circuitJson,
+            placementByComponentId,
+          }))
+            addPlacement(placement)
+        }
+        break
       case "ComponentOverlap":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)
@@ -106,6 +127,15 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.crystalSchematicBox)
         addPlacement(issue.firstLoadCapacitorSchematicBox)
         addPlacement(issue.secondLoadCapacitorSchematicBox)
+        break
+      case "FeedbackNetworkNotCompact":
+        addPlacement(issue.amplifierSchematicBox)
+        for (const component of issue.feedbackComponents)
+          addPlacement(component)
+        break
+      case "PullResistorOnWrongSide":
+        addPlacement(issue.resistorSchematicBox)
+        addPlacement(issue.hostSchematicBox)
         break
       case "ComponentNetLabelCollision":
         addPlacement(issue.firstComponent)
