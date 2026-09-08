@@ -1,0 +1,46 @@
+<svg width="1200" height="856" viewBox="0 0 1200 856" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+              svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"], g.trace-overlays[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"]):hover) :is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"], g.trace-overlays[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"]) { filter: invert(1); }
+svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"], g.trace-overlays[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"]):hover) g.trace-overlays[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"] .trace-crossing-outline { opacity: 0; }
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g class="trace sch-trace" data-layer="base" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_0" data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"><path d="M 341.27423822718004 311.08033241 L 956.2326869805152 311.08033241" class="trace-invisible-hover-outline sch-trace-hitbox" stroke="rgb(0, 150, 0)" fill="none" stroke-width="17.728531855952003px" stroke-linecap="round" opacity="0" stroke-linejoin="round"/><path class="sch-trace-path" d="M 341.27423822718004 311.08033241 L 956.2326869805152 311.08033241" stroke="rgb(0, 150, 0)" fill="none" stroke-width="2.2160664819940004px" stroke-linecap="round" stroke-linejoin="round"/></g><g class="trace-overlays sch-trace-overlays" data-layer="overlay" data-circuit-json-type="schematic_trace" data-schematic-trace-id="schematic_trace_0" data-subcircuit-connectivity-map-key="unnamedsubcircuitsubcircuit_source_group_0_connectivity_net0"/><g class="sch-component" data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component chip sch-component-body" x="75.34626038789997" y="288.91966759006" width="221.60664819940007" height="44.32132963987999" stroke-width="2.2160664819940004px" fill="rgb(255, 255, 194)" stroke="rgb(132, 0, 0)"/><rect class="component-overlay sch-component-overlay" x="75.34626038789997" y="288.91966759006" width="221.60664819940007" height="44.32132963987999" fill="transparent"/><text class="sch-text" x="75.34626038789997" y="347.645429362901" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="19.944598337946px" transform="rotate(0, 75.34626038789997, 347.645429362901)"></text><text class="sch-text" x="75.34626038789997" y="274.515235457099" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="19.944598337946px" transform="rotate(0, 75.34626038789997, 274.515235457099)">U1</text><line class="component-pin sch-component-pin sch-port-line" x1="296.95290858730004" y1="311.08033241" x2="341.27423822718004" y2="311.08033241" stroke-width="2.2160664819940004px"/><g class="sch-port" data-schematic-port-id="source_port_0"><rect x="339.05817174518603" y="308.864265928006" width="4.432132963988001" height="4.432132963988001" opacity="0"/></g><text class="pin-number sch-pin-number" x="319.11357340724" y="308.864265928006" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="16.620498614955px" transform="">1</text><text class="pin-number sch-pin-label" x="285.87257617733" y="311.08033241" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="end" dominant-baseline="middle" font-size="16.620498614955px" transform="">OUT</text></g><g class="sch-component" data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_1"><rect class="component chip sch-component-body" x="1000.554016620395" y="288.91966759006" width="144.04432132961006" height="44.32132963987999" stroke-width="2.2160664819940004px" fill="rgb(255, 255, 194)" stroke="rgb(132, 0, 0)"/><rect class="component-overlay sch-component-overlay" x="1000.554016620395" y="288.91966759006" width="144.04432132961006" height="44.32132963987999" fill="transparent"/><text class="sch-text" x="1000.554016620395" y="347.645429362901" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="19.944598337946px" transform="rotate(0, 1000.554016620395, 347.645429362901)"></text><text class="sch-text" x="1000.554016620395" y="274.515235457099" fill="#006464" text-anchor="start" dominant-baseline="middle" font-family="sans-serif" font-size="19.944598337946px" transform="rotate(0, 1000.554016620395, 274.515235457099)">U2</text><line class="component-pin sch-component-pin sch-port-line" x1="1000.554016620395" y1="311.08033241" x2="956.2326869805152" y2="311.08033241" stroke-width="2.2160664819940004px"/><g class="sch-port" data-schematic-port-id="source_port_1"><rect x="954.0166204985212" y="308.864265928006" width="4.432132963988001" height="4.432132963988001" opacity="0"/></g><text class="pin-number sch-pin-number" x="978.3933518004551" y="308.864265928006" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="middle" dominant-baseline="auto" font-size="16.620498614955px" transform="">1</text><text class="pin-number sch-pin-label" x="1011.634349030365" y="311.08033241" style="font-family: sans-serif;" fill="rgb(169, 0, 0)" text-anchor="start" dominant-baseline="middle" font-size="16.620498614955px" transform="">IN</text></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_0"><circle cx="341.27423822718004" cy="311.08033241" r="4.432132963988001" fill="red" opacity="0"/></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_1"><circle cx="956.2326869805152" cy="311.08033241" r="4.432132963988001" fill="red" opacity="0"/></g><text class="sch-text" x="208.31024930754" y="275.62326869809596" fill="#000000" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif" font-size="66.48199445982px" transform="rotate(0, 208.31024930754, 275.62326869809596)">NOTE</text>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+    <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;U1&quot; positionAnchor=&quot;center&quot; schX=&quot;-4&quot; schY=&quot;0&quot; width=&quot;2&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;0.4&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_4&quot; text=&quot;NOTE&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectType=&quot;component&quot; collidingObjectId=&quot;schematic_component_0&quot; newSchX=&quot;-3.8&quot;</tspan>
+    <tspan x="18" dy="22">  newSchY=&quot;0.62&quot; message=&quot;Text &amp;quot;NOTE&amp;quot; overlaps component U1; reposition the text to</tspan>
+    <tspan x="18" dy="22">  leave its visible area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
+</text>
+  </g>
+</svg>

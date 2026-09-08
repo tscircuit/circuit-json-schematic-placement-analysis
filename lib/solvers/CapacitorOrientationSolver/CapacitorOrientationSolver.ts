@@ -6,6 +6,7 @@ import type {
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr } from "../../utils/format"
+import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import {
   highlightPlacement,
   mergeGraphicsObjects,
@@ -40,6 +41,7 @@ export class CapacitorOrientationSolver extends BaseSolver {
   private readonly schematicComponentById: Map<string, SchematicComponent>
   private readonly sourceComponentById: Map<string, SourceComponentWithFtype>
   private readonly capacitorPlacements: Capacitor[]
+  private readonly feedbackCapacitorIds: Set<string>
   private currentPlacementIndex = 0
   private readonly horizontalSymbolNames = new Set([
     "capacitor_left",
@@ -61,6 +63,15 @@ export class CapacitorOrientationSolver extends BaseSolver {
     )
     this.sourceComponentById = this.buildSourceComponentById(ctx.circuitJson)
     this.capacitorPlacements = this.getCapacitorPlacements()
+    const networks = new PlacementNetworkIndex(ctx)
+    this.feedbackCapacitorIds = new Set(
+      this.capacitorPlacements.flatMap((capacitor) =>
+        capacitor.sourceComponentId &&
+        networks.isDirectOpAmpFeedback(capacitor.sourceComponentId)
+          ? [capacitor.sourceComponentId]
+          : [],
+      ),
+    )
     this.solved = this.capacitorPlacements.length === 0
   }
 
@@ -189,6 +200,10 @@ export class CapacitorOrientationSolver extends BaseSolver {
 
     if (!this.horizontalSymbolNames.has(schematicComponent.symbol_name ?? ""))
       return
+
+    // Horizontal feedback capacitors make the output-to-input return path readable.
+    // Their distance from the amplifier is assessed by the feedback placement solver.
+    if (this.feedbackCapacitorIds.has(placement.sourceComponentId)) return
 
     return {
       lineItemType: "CapacitorSymbolHorizontal",
