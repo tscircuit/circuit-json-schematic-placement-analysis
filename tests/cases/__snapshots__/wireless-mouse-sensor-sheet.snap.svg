@@ -104,12 +104,12 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  currentFacingDirection=&quot;right&quot; suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;2&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R_SPI_SCLK by 180° so pin2 faces</tspan>
     <tspan x="18" dy="22">  U_SENSOR and reduce this trace from 2 turns to 1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;RailResistorShouldBeVertical resistorName=&quot;R_SENSOR_LED&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot;</tspan>
+    <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R_SENSOR_LED&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R_SENSOR_LED by -90°</tspan>
-    <tspan x="18" dy="22">  so its power-connected pin faces up and the resistor forms a vertical branch&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;RailResistorShouldBeVertical resistorName=&quot;R_SENSOR_RESET&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot;</tspan>
+    <tspan x="18" dy="22">  so its power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R_SENSOR_RESET&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R_SENSOR_RESET by</tspan>
-    <tspan x="18" dy="22">  -90° so its power-connected pin faces up and the resistor forms a vertical branch&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  -90° so its power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

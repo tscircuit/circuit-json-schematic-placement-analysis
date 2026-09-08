@@ -203,9 +203,9 @@ export interface PullResistorOnWrongSide {
   message: string
 }
 
-export interface RailResistorShouldBeVertical {
-  lineItemType: "RailResistorShouldBeVertical"
-  resistorSchematicBox: SchematicBoxPlacement
+export interface TwoPinComponentShouldBeVertical {
+  lineItemType: "TwoPinComponentShouldBeVertical"
+  schematicBox: SchematicBoxPlacement
   railSourcePortId: string
   railPinName: string
   railType: "power" | "ground"
@@ -319,7 +319,7 @@ export type SchematicPlacementIssue =
   | TwoPinComponentCouldBeFlipped
   | FeedbackNetworkNotCompact
   | PullResistorOnWrongSide
-  | RailResistorShouldBeVertical
+  | TwoPinComponentShouldBeVertical
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision

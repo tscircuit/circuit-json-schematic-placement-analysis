@@ -1,19 +1,19 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
-  RailResistorShouldBeVertical,
+  TwoPinComponentShouldBeVertical,
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
-/** Prefer vertical branches between a signal and a declared supply/ground rail. */
-export class RailResistorOrientationSolver extends BaseSolver {
+/** Prefer vertical two-pin components with power above and ground below. */
+export class TwoPinComponentRailOrientationSolver extends BaseSolver {
   private static readonly EPSILON = 0.01
   private readonly index: PlacementNetworkIndex
   private readonly powerNets: Set<string>
   private readonly groundNets: Set<string>
-  private readonly resistorIds: string[]
+  private readonly componentIds: string[]
   private readonly issues: SchematicPlacementIssue[]
   private currentIndex = 0
 
@@ -35,76 +35,77 @@ export class RailResistorOrientationSolver extends BaseSolver {
       if (element.provides_ground || element.requires_ground)
         this.groundNets.add(net)
     }
-    this.resistorIds = [...this.index.components.values()]
-      .filter(
-        (component) =>
-          component.ftype === "simple_resistor" && component.resistance > 0,
-      )
-      .map((component) => component.source_component_id)
-    this.solved = this.resistorIds.length === 0
+    this.componentIds = [...this.index.components.keys()].filter(
+      (id) => this.index.portsByComponent.get(id)?.length === 2,
+    )
+    this.solved = this.componentIds.length === 0
   }
 
   override _step(): void {
-    const id = this.resistorIds[this.currentIndex++]
-    this.solved = this.currentIndex >= this.resistorIds.length
+    const id = this.componentIds[this.currentIndex++]
+    this.solved = this.currentIndex >= this.componentIds.length
     if (!id) return
     const index = this.index
-    const resistor = index.placement(id)
+    const component = index.placement(id)
     const nets = index.twoTerminalNets(id)
-    if (!resistor || !nets) return
-    const rails = nets.filter(
-      (net) => this.powerNets.has(net) || this.groundNets.has(net),
+    if (!component || !nets) return
+    // A net declared as both power and ground has no reliable direction.
+    if (nets.some((net) => this.powerNets.has(net) && this.groundNets.has(net)))
+      return
+    const railTypes = nets.map((net) =>
+      this.powerNets.has(net)
+        ? ("power" as const)
+        : this.groundNets.has(net)
+          ? ("ground" as const)
+          : undefined,
     )
-    // Two rail ends describe a supply feed or rail-to-rail network, not a signal branch.
-    if (rails.length !== 1) return
-    const rail = rails[0]!
-    if (this.powerNets.has(rail) && this.groundNets.has(rail)) return
+    // Same-kind rails (e.g. a series supply feed) cannot both face up/down.
+    // Opposite rails can: a bypass capacitor should have power above ground.
+    if (railTypes[0] === railTypes[1]) return
+    const railIndex = railTypes.includes("power")
+      ? railTypes.indexOf("power")
+      : railTypes.indexOf("ground")
+    const rail = nets[railIndex]!
+    const railType = railTypes[railIndex]!
     const sourcePorts = index.portsByComponent.get(id)!
     const railSourcePort = sourcePorts.find(
       (port) => index.connected(port.source_port_id) === rail,
     )!
-    const signalSourcePort = sourcePorts.find(
-      (port) => port !== railSourcePort,
-    )!
+    const otherSourcePort = sourcePorts.find((port) => port !== railSourcePort)!
     const railPort = index.port(railSourcePort)
-    const signalPort = index.port(signalSourcePort)
-    if (!railPort || !signalPort) return
+    const otherPort = index.port(otherSourcePort)
+    if (!railPort || !otherPort) return
 
     const horizontal =
-      Math.abs(railPort.center.y - signalPort.center.y) <=
-        RailResistorOrientationSolver.EPSILON &&
-      Math.abs(railPort.center.x - signalPort.center.x) >
-        RailResistorOrientationSolver.EPSILON &&
+      Math.abs(railPort.center.y - otherPort.center.y) <=
+        TwoPinComponentRailOrientationSolver.EPSILON &&
+      Math.abs(railPort.center.x - otherPort.center.x) >
+        TwoPinComponentRailOrientationSolver.EPSILON &&
       ((railPort.facing_direction === "left" &&
-        signalPort.facing_direction === "right") ||
+        otherPort.facing_direction === "right") ||
         (railPort.facing_direction === "right" &&
-          signalPort.facing_direction === "left"))
+          otherPort.facing_direction === "left"))
     if (!horizontal) return
-    const railType = this.groundNets.has(rail) ? "ground" : "power"
     const suggestedRailFacingDirection = railType === "power" ? "up" : "down"
     const deltaSchRotation =
       (railPort.facing_direction === "left") === (railType === "power")
         ? -90
         : 90
     this.issues.push({
-      lineItemType: "RailResistorShouldBeVertical",
-      resistorSchematicBox: resistor,
+      lineItemType: "TwoPinComponentShouldBeVertical",
+      schematicBox: component,
       railSourcePortId: railSourcePort.source_port_id,
       railPinName: railSourcePort.name,
       railType,
       deltaSchRotation,
       suggestedRailFacingDirection,
-      message: `rotate ${resistor.sourceComponentName ?? id} by ${deltaSchRotation}° so its ${railType}-connected pin faces ${suggestedRailFacingDirection} and the resistor forms a vertical branch`,
+      message: `rotate ${component.sourceComponentName ?? id} by ${deltaSchRotation}° so its ${railType}-connected pin faces ${suggestedRailFacingDirection} and the component is vertical`,
     })
   }
 
-  static issueToString(issue: RailResistorShouldBeVertical): string {
+  static issueToString(issue: TwoPinComponentShouldBeVertical): string {
     const attrs: string[] = []
-    addAttr(
-      attrs,
-      "resistorName",
-      issue.resistorSchematicBox.sourceComponentName,
-    )
+    addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
     addAttr(attrs, "railPin", issue.railPinName)
     addAttr(attrs, "railType", issue.railType)
     addAttr(attrs, "deltaSchRotation", issue.deltaSchRotation)
@@ -114,6 +115,6 @@ export class RailResistorOrientationSolver extends BaseSolver {
       issue.suggestedRailFacingDirection,
     )
     addAttr(attrs, "message", issue.message)
-    return `<RailResistorShouldBeVertical ${attrs.join(" ")} />`
+    return `<TwoPinComponentShouldBeVertical ${attrs.join(" ")} />`
   }
 }

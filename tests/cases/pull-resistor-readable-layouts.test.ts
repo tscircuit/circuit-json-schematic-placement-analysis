@@ -40,16 +40,16 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
       expect(issues).toHaveLength(2)
       expect(issues).toMatchObject([
         {
-          lineItemType: "RailResistorShouldBeVertical",
-          resistorSchematicBox: { sourceComponentName: "R1" },
+          lineItemType: "TwoPinComponentShouldBeVertical",
+          schematicBox: { sourceComponentName: "R1" },
           railPinName: "pin1",
           railType: "power",
           deltaSchRotation: -90,
           suggestedRailFacingDirection: "up",
         },
         {
-          lineItemType: "RailResistorShouldBeVertical",
-          resistorSchematicBox: { sourceComponentName: "R2" },
+          lineItemType: "TwoPinComponentShouldBeVertical",
+          schematicBox: { sourceComponentName: "R2" },
           railPinName: "pin2",
           railType: "ground",
           deltaSchRotation: -90,
@@ -64,7 +64,7 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
             (item.needs_external_pullup || item.needs_external_pulldown),
         ),
       ).toBe(false)
-      expect(analysis.toString()).toContain("<RailResistorShouldBeVertical")
+      expect(analysis.toString()).toContain("<TwoPinComponentShouldBeVertical")
     }
   }
 })

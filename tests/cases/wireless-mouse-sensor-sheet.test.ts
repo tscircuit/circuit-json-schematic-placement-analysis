@@ -55,10 +55,10 @@ test("reproduces the complete wireless mouse sensor sheet layout", () => {
     .flatMap((item) =>
       item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
     )
-    .filter((issue) => issue.lineItemType === "RailResistorShouldBeVertical")
+    .filter((issue) => issue.lineItemType === "TwoPinComponentShouldBeVertical")
   expect(
     railIssues.map((issue) => [
-      issue.resistorSchematicBox.sourceComponentName,
+      issue.schematicBox.sourceComponentName,
       issue.railType,
     ]),
   ).toEqual([
