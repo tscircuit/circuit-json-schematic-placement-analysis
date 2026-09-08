@@ -54,10 +54,10 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  width=&quot;0.53&quot; height=&quot;1.1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ResetNetworkNotGrouped hostComponentName=&quot;U1&quot; resetPin=&quot;RESET_N&quot; supportComponents=&quot;R1,C1&quot;</tspan>
-    <tspan x="18" dy="22">  maxDistanceFromResetPin=&quot;9.59&quot; maxRecommendedDistance=&quot;6&quot; message=&quot;Group R1, C1 near</tspan>
-    <tspan x="18" dy="22">  U1.RESET_N so the reset pull-up and capacitor can be read together. Preserve all net</tspan>
-    <tspan x="18" dy="22">  connections; associated test points may remain in a debug area.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ResetNetworkNotGrouped hostComponentName=&quot;U1&quot; resetPin=&quot;RESET_N&quot;</tspan>
+    <tspan x="18" dy="22">  supportNetworkComponents=&quot;R1,C1&quot; maxDistanceFromResetPin=&quot;9.59&quot; maxRecommendedDistance=&quot;6&quot;</tspan>
+    <tspan x="18" dy="22">  message=&quot;Group R1, C1 near U1.RESET_N so the reset pull-up and capacitor can be read together.</tspan>
+    <tspan x="18" dy="22">  Preserve all net connections; associated test points may remain in a debug area.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

@@ -236,10 +236,12 @@ export interface SchematicTextCollision {
 
 export interface ResetNetworkNotGrouped {
   lineItemType: "ResetNetworkNotGrouped"
+  /** The component whose reset pin is served by this network. */
   hostSchematicBox: SchematicBoxPlacement
   resetSourcePortId: string
   resetPinName: string
-  supportComponents: SchematicBoxPlacement[]
+  /** Reset pull-up, capacitor, and any associated test points; excludes the host. */
+  supportNetworkComponents: SchematicBoxPlacement[]
   maxDistanceFromResetPin: number
   maxRecommendedDistance: number
   message: string

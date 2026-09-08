@@ -68,7 +68,8 @@ export const getRelevantPlacementsForIssues = ({
     switch (issue.lineItemType) {
       case "ResetNetworkNotGrouped":
         addPlacement(issue.hostSchematicBox)
-        for (const placement of issue.supportComponents) addPlacement(placement)
+        for (const placement of issue.supportNetworkComponents)
+          addPlacement(placement)
         break
       case "SchematicTextCollision":
         if (issue.collidingObject.schematicComponentId)

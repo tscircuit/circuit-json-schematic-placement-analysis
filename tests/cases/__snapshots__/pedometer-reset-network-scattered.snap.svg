@@ -1,4 +1,4 @@
-<svg width="1200" height="1076" viewBox="0 0 1200 1076" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1098" viewBox="0 0 1200 1098" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -65,10 +65,11 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  width=&quot;0.325&quot; height=&quot;0.2&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ResetNetworkNotGrouped hostComponentName=&quot;U1&quot; resetPin=&quot;RSTN&quot; supportComponents=&quot;R8,C21,TP5&quot;</tspan>
-    <tspan x="18" dy="22">  maxDistanceFromResetPin=&quot;41.75&quot; maxRecommendedDistance=&quot;6&quot; message=&quot;Group R8, C21 near U1.RSTN</tspan>
-    <tspan x="18" dy="22">  so the reset pull-up and capacitor can be read together. Preserve all net connections;</tspan>
-    <tspan x="18" dy="22">  associated test points may remain in a debug area.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ResetNetworkNotGrouped hostComponentName=&quot;U1&quot; resetPin=&quot;RSTN&quot;</tspan>
+    <tspan x="18" dy="22">  supportNetworkComponents=&quot;R8,C21,TP5&quot; maxDistanceFromResetPin=&quot;41.75&quot;</tspan>
+    <tspan x="18" dy="22">  maxRecommendedDistance=&quot;6&quot; message=&quot;Group R8, C21 near U1.RSTN so the reset pull-up and</tspan>
+    <tspan x="18" dy="22">  capacitor can be read together. Preserve all net connections; associated test points may</tspan>
+    <tspan x="18" dy="22">  remain in a debug area.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;TraceCanBeSimplifiedByMovingComponent schematicTraceId=&quot;schematic_trace_0&quot;</tspan>
     <tspan x="18" dy="22">  targetComponentName=&quot;C21&quot; deltaSchX=&quot;+1.35&quot; deltaSchY=&quot;0&quot; newSchX=&quot;1.35&quot; newSchY=&quot;-28&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move C21 right by 1.35 (to schX=1.35,</tspan>

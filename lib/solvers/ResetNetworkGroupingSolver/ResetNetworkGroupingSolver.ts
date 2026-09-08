@@ -61,7 +61,7 @@ export class ResetNetworkGroupingSolver extends BaseSolver {
         hostSchematicBox: network.host,
         resetSourcePortId: network.pin.source_port_id,
         resetPinName: resetPin,
-        supportComponents: network.members,
+        supportNetworkComponents: network.members,
         maxDistanceFromResetPin: Math.round(Math.max(...distances) * 100) / 100,
         maxRecommendedDistance: threshold,
         message: `Group ${memberNames} near ${hostName}.${resetPin} so the reset pull-up and capacitor can be read together. Preserve all net connections; associated test points may remain in a debug area.`,
@@ -232,8 +232,8 @@ export class ResetNetworkGroupingSolver extends BaseSolver {
     addAttr(attrs, "resetPin", issue.resetPinName)
     addAttr(
       attrs,
-      "supportComponents",
-      issue.supportComponents
+      "supportNetworkComponents",
+      issue.supportNetworkComponents
         .map((p) => p.sourceComponentName ?? p.schematicComponentId)
         .join(","),
     )
