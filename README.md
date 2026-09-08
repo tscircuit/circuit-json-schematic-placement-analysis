@@ -56,3 +56,5 @@ bun test
 SVG snapshot tests use `bun-match-svg`, `circuit-to-svg`, and `stack-svgs`.
 The fixture helper renders the schematic SVG on top and the analyzer output in
 red text underneath so placement issues are easy to inspect visually.
+
+See [common schematic placement repros](tests/placement-repros.md) for TSX fixtures and expected-failure tests covering proposed analyzers.
