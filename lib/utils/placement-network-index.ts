@@ -94,6 +94,26 @@ export class PlacementNetworkIndex {
     return this.powerNets.has(net) || this.groundNets.has(net)
   }
 
+  /** Direct feedback may return to either input; grounded output loads do not count. */
+  isDirectOpAmpFeedback(componentId: string): boolean {
+    const nets = this.twoTerminalNets(componentId)
+    if (!nets || nets.some((net) => this.isRail(net))) return false
+    return nets.some((net) =>
+      (this.portsByNet.get(net) ?? []).some((port) => {
+        const hostId = port.source_component_id
+        if (this.components.get(hostId)?.ftype !== "simple_op_amp") return false
+        const output = this.namedPort(hostId, "output")
+        if (output?.source_port_id !== port.source_port_id) return false
+        return ["inverting_input", "non_inverting_input"].some((name) => {
+          const input = this.namedPort(hostId, name)
+          if (!input) return false
+          const inputNet = this.connected(input.source_port_id)
+          return inputNet !== net && nets.includes(inputNet)
+        })
+      }),
+    )
+  }
+
   sameLocalScope(
     first: SchematicBoxPlacement,
     second: SchematicBoxPlacement,

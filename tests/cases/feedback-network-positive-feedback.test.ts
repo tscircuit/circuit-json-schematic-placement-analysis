@@ -6,18 +6,19 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("does not mistake positive feedback or an input-to-ground resistor for negative feedback", async () => {
+test("accepts a compact positive-feedback layout with a horizontal feedback capacitor", async () => {
   const circuitJson = await createFeedbackNetworkScatteredCircuitJson({
     feedbackInput: "non_inverting_input",
+    feedbackY: 1.5,
+    capacitorY: 2.5,
   })
-  expectReproRendered(circuitJson, 3)
+  expectReproRendered(circuitJson, 4)
   expectReproNets(circuitJson, [
-    ["U1.output", "R1.pin2"],
-    ["U1.non_inverting_input", "R1.pin1"],
-    ["U1.inverting_input", "R2.pin2"],
+    ["U1.output", "R1.pin2", "C1.pin2"],
+    ["U1.non_inverting_input", "R1.pin1", "C1.pin1", "R2.pin2"],
+    ["U1.inverting_input", "net.IN"],
     ["R2.pin1", "net.GND"],
   ])
-  expect(inspectNetworkFixture(circuitJson, import.meta.path).feedback).toEqual(
-    [],
-  )
+  const { analysis } = inspectNetworkFixture(circuitJson, import.meta.path)
+  expect(analysis.toString()).toBe("")
 })

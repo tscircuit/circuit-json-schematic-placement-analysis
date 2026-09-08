@@ -6,10 +6,10 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("reports a distant parallel feedback capacitor once and includes its compact resistor as context", async () => {
+test("reports scattered parallel R/C feedback without rejecting the horizontal capacitor", async () => {
   const circuitJson = await createFeedbackNetworkScatteredCircuitJson({
-    feedbackY: 2,
-    capacitorY: 7,
+    feedbackY: 7,
+    capacitorY: 8.5,
   })
   expectReproRendered(circuitJson, 4)
   expectReproNets(circuitJson, [
@@ -30,7 +30,21 @@ test("reports a distant parallel feedback capacitor once and includes its compac
     feedback[0]!.distantComponents.map(
       ({ schematicBox }) => schematicBox.sourceComponentName,
     ),
-  ).toEqual(["C1"])
+  ).toEqual(["R1", "C1"])
+  expect(analysis.toString()).not.toContain("CapacitorSymbolHorizontal")
+  expect(
+    feedback[0]!.distantComponents.every(
+      ({ bodyGap, maxRecommendedBodyGap }) => bodyGap > maxRecommendedBodyGap,
+    ),
+  ).toBe(true)
+  const allIssues = analysis
+    .getLineItems()
+    .flatMap((item) =>
+      item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
+    )
+  expect(allIssues.map((issue) => issue.lineItemType)).toEqual([
+    "FeedbackNetworkNotCompact",
+  ])
   const context = analysis
     .getLineItems()
     .filter((item) => item.lineItemType === "SchematicBoxPlacement")

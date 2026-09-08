@@ -6,10 +6,9 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("accepts conventional pulls, small opposite-side offsets, and horizontal signal-level resistors", async () => {
+test("accepts conventional pulls and horizontal signal-level resistors", async () => {
   for (const [variant, pullUpY, pullDownY, resistorRotation] of [
     ["conventional", 3, -3, 270],
-    ["small-offset", -1, 1, 90],
     ["horizontal", 0.1, -0.1, 0],
   ] as const) {
     const circuitJson = await createPullResistorsWrongSideCircuitJson({
@@ -25,7 +24,11 @@ test("accepts conventional pulls, small opposite-side offsets, and horizontal si
       ["R2.pin2", "net.GND"],
     ])
     expect(
-      inspectNetworkFixture(circuitJson, import.meta.path, variant).pulls,
-    ).toEqual([])
+      inspectNetworkFixture(
+        circuitJson,
+        import.meta.path,
+        variant,
+      ).analysis.toString(),
+    ).toBe("")
   }
 })

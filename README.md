@@ -75,6 +75,11 @@ net display names. Suggestions do not move components or claim a collision-free
 replacement position. Structured results include the involved components and
 measured gaps; string output includes their names and the readability suggestion.
 
+The existing capacitor-orientation check accepts horizontal capacitors directly
+bridging a declared op-amp output and either input. Grounded output loads are
+excluded from that exception; feedback distance remains a separate placement
+check.
+
 ## Test
 
 ```sh
