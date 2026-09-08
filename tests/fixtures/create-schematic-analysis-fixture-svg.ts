@@ -1,31 +1,39 @@
 import type { AnyCircuitElement } from "circuit-json"
 import { convertCircuitJsonToStackedSchematicSheetsSvg } from "circuit-to-svg"
-import { analyzeSchematicPlacement } from "lib/index"
-import type { SchematicPlacementAnalysis } from "lib/index"
+import { analyzeSchematicPlacement } from "../../lib/index"
+import type { SchematicPlacementAnalysis } from "../../lib/index"
 import { stackSvgsVertically } from "stack-svgs"
+import { createSchematicReview, type ReviewOptions } from "./schematic-review"
 
 export function createSchematicAnalysisFixtureSvg(input: {
   circuitJson: AnyCircuitElement[]
   analysis?: SchematicPlacementAnalysis
   width?: number
   height?: number
+  /** Opt in to per-sheet, filtered, numbered highlights and issue counts. */
+  review?: ReviewOptions
 }): string {
   const width = input.width ?? 1200
   const height = input.height ?? 600
   const analysis =
     input.analysis ?? analyzeSchematicPlacement(input.circuitJson)
 
-  const circuitSvg = convertCircuitJsonToStackedSchematicSheetsSvg(
-    input.circuitJson,
-    {
+  const review = input.review
+    ? createSchematicReview({ ...input, analysis, ...input.review })
+    : undefined
+  const circuitSvg =
+    review?.circuitSvg ??
+    convertCircuitJsonToStackedSchematicSheetsSvg(input.circuitJson, {
       width,
       height,
-    },
-  )
+    })
 
   return formatFixtureSnapshotSvg(
     stackSvgsVertically(
-      [circuitSvg, createAnalyzerTextSvg(analysis.toString(), width)],
+      [
+        circuitSvg,
+        createAnalyzerTextSvg(review?.text ?? analysis.toString(), width),
+      ],
       {
         normalizeSize: false,
         gap: 0,
