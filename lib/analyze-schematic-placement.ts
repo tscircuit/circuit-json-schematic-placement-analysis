@@ -11,6 +11,8 @@ import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingTo
 import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 import { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/TraceSimplificationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -80,6 +82,10 @@ export class SchematicPlacementAnalysis {
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
+      case "SchematicTextCollision":
+        return SchematicTextClearanceSolver.issueToString(issue)
+      case "ResetNetworkNotGrouped":
+        return ResetNetworkGroupingSolver.issueToString(issue)
       default:
         return ""
     }

@@ -88,6 +88,7 @@ function wrapLine(line: string, maxLineLength: number): string[] {
 
 function formatFixtureSnapshotSvg(svg: string): string {
   return svg
+    .replace(/[ \t]+\n/g, "\n")
     .replaceAll("</tspan><tspan", "</tspan>\n    <tspan")
     .replaceAll("\n<tspan", "\n    <tspan")
 }
