@@ -53,6 +53,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports free schematic text overlapping an unrelated component body", () => {
+test("reports free schematic text overlapping an unrelated component body", () => {
   expect(issueTypes).toContain("SchematicTextCollision")
 })

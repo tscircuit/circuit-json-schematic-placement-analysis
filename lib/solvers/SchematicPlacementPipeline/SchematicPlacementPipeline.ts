@@ -20,6 +20,8 @@ import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSol
 import type { SolverContext } from "../SolverContext"
 import { TraceSimplificationSolver } from "../TraceSimplificationSolver/TraceSimplificationSolver"
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
@@ -28,6 +30,20 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "SchematicTextClearanceSolver",
+      SchematicTextClearanceSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ResetNetworkGroupingSolver",
+      ResetNetworkGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SchematicBoxOverlapSolver",
       SchematicBoxOverlapSolver,

@@ -9,7 +9,7 @@ import {
 
 const issueTypesByVariant: string[][] = []
 
-// Rendering and geometry failures must not be swallowed by test.failing.
+// Verify rendering and geometry before asserting the diagnostic.
 beforeAll(async () => {
   for (const [annotation, snapshotName] of [
     ["ANALOG INPUT", undefined],
@@ -56,7 +56,7 @@ beforeAll(async () => {
   }
 })
 
-test.failing("reports text/trace collisions independently of the annotation wording", () => {
+test("reports text/trace collisions independently of the annotation wording", () => {
   expect(
     issueTypesByVariant.map((types) =>
       types.includes("SchematicTextCollision"),

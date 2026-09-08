@@ -55,6 +55,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a generated section heading crossed by the pull-up supply bus", () => {
+test("reports a generated section heading crossed by the pull-up supply bus", () => {
   expect(issueTypes).toContain("SchematicTextCollision")
 })

@@ -237,6 +237,46 @@ export interface NetLabelCollision {
   }>
 }
 
+export interface SchematicTextCollisionObject {
+  type: "text" | "trace" | "component"
+  id: string
+  text?: string
+  componentName?: string
+  schematicComponentId?: string
+}
+
+export interface SchematicTextCollision {
+  lineItemType: "SchematicTextCollision"
+  schematicSheetId?: string
+  schematicSheetName?: string
+  schematicTextId: string
+  text: string
+  collidingObject: SchematicTextCollisionObject
+  textBounds: { left: number; right: number; top: number; bottom: number }
+  collidingObjectBounds: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+  }
+  /** A clear text-anchor position for this issue; reanalyze after applying it. */
+  suggestedMove?: { newSchX: number; newSchY: number }
+  message: string
+}
+
+export interface ResetNetworkNotGrouped {
+  lineItemType: "ResetNetworkNotGrouped"
+  /** The component whose reset pin is served by this network. */
+  hostSchematicBox: SchematicBoxPlacement
+  resetSourcePortId: string
+  resetPinName: string
+  /** Reset pull-up, capacitor, and any associated test points; excludes the host. */
+  supportNetworkComponents: SchematicBoxPlacement[]
+  maxDistanceFromResetPin: number
+  maxRecommendedDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -254,6 +294,8 @@ export type SchematicPlacementIssue =
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
+  | SchematicTextCollision
+  | ResetNetworkNotGrouped
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
