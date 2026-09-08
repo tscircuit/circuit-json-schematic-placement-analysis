@@ -1,4 +1,4 @@
-<svg width="1400" height="1596" viewBox="0 0 1400 1596" xmlns="http://www.w3.org/2000/svg">
+<svg width="1400" height="1618" viewBox="0 0 1400 1618" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="900" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(37.9167357771,0,0,-37.9167357771,700,450)" data-software-used-string="@tscircuit/core@0.0.1382" viewBox="474.395422126255 388.70824348977 424.66744070352 46.75004146626003"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -101,6 +101,7 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="LOGIC_LABELS_connectiv
 <tspan x="18" dy="22">PullResistorOnWrongSide: 0</tspan>
 <tspan x="18" dy="22">SchematicTextCollision: 0</tspan>
 <tspan x="18" dy="22">ResetNetworkNotGrouped: 0</tspan>
+<tspan x="18" dy="22">TwoPinComponentCouldBeFlipped: 0</tspan>
 <tspan x="18" dy="22">Selected type(s): NetLabelCollision</tspan>
 <tspan x="18" dy="22">Matching issues: 1</tspan>
 <tspan x="18" dy="22">#2</tspan>

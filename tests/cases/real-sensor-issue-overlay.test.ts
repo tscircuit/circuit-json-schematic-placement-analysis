@@ -16,8 +16,11 @@ test("records the real sensor's three trace suggestions and isolates one exact t
   const analysis = analyzeSchematicPlacement(imported)
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
-  ).toEqual([["TraceCanBeSimplifiedByMovingComponent", 3]])
-  expect(analysis.getIssues()).toHaveLength(3)
+  ).toEqual([
+    ["TraceCanBeSimplifiedByMovingComponent", 3],
+    ["TwoPinComponentCouldBeFlipped", 2],
+  ])
+  expect(analysis.getIssues()).toHaveLength(5)
   const input = {
     circuitJson,
     analysis,

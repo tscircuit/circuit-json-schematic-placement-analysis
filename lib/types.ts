@@ -91,6 +91,8 @@ export interface SchematicBoxInnerLabelCollision {
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"
 
+export type SchematicPortFacingDirection = "left" | "right" | "up" | "down"
+
 export interface SchematicPinPaddingToEdgeTooLarge {
   lineItemType: "SchematicPinPaddingToEdgeTooLarge"
   pinSide: SchematicSide
@@ -154,6 +156,20 @@ export interface CrystalNotCenteredOverLoadCapacitors {
   deltaSchY: number
   newSchX: number
   newSchY: number
+  message: string
+}
+
+export interface TwoPinComponentCouldBeFlipped {
+  lineItemType: "TwoPinComponentCouldBeFlipped"
+  schematicTraceId: string
+  targetComponent: SchematicBoxPlacement
+  connectedComponent: SchematicBoxPlacement
+  targetPin?: string
+  currentFacingDirection: SchematicPortFacingDirection
+  suggestedFacingDirection: SchematicPortFacingDirection
+  deltaSchRotation: 180
+  currentTurnCount: number
+  suggestedTurnCount: number
   message: string
 }
 
@@ -299,6 +315,7 @@ export type SchematicPlacementIssue =
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors
+  | TwoPinComponentCouldBeFlipped
   | FeedbackNetworkNotCompact
   | PullResistorOnWrongSide
   | ComponentNetLabelCollision

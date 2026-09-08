@@ -76,6 +76,7 @@ The built-in examples reuse the unchanged complete sheet imports from
 `MustafaMulla29/wireless-mouse-pcb` in `tests/assets/wireless-mouse-*-sheet.ts`.
 Current regression baselines are one `CrystalNotCenteredOverLoadCapacitors` issue
 on the controller sheet and three `TraceCanBeSimplifiedByMovingComponent` issues
+and two `TwoPinComponentCouldBeFlipped` issues
 on the sensor sheet; all other counts are zero. Counts record analyzer behavior,
 not whether a report is a true positive. `NetLabelCollision` counts grouped issue
 objects; its `collisionBounds` retains the individual intersection regions.
