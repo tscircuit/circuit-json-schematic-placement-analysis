@@ -1,10 +1,10 @@
 # Common schematic placement repros
 
 These TSX fixtures cover seven proposed placement analyzers before their solvers
-are implemented. Each fixture uses `Circuit`, JSX components and `<trace />`
-connections. PCB rendering is disabled; no Circuit JSON elements are inserted or
-modified after rendering. `schMaxTraceDistance` keeps long connections visible so
-the layout problem can be reviewed in the schematic.
+are implemented. Each fixture uses `Circuit`, JSX components and native traces
+or `connections` props. PCB rendering is disabled; no Circuit JSON elements are
+inserted or modified after rendering. The synthetic fixtures keep long traces
+visible; the real pedometer reduction preserves its original auto-label settings.
 
 Each case has one `test.failing` assertion for the proposed diagnostic below.
 Rendering, connectivity checks, geometry preconditions and the stacked SVG
@@ -29,6 +29,8 @@ valid-layout and exception coverage.
 | [Text crossing a component](assets/schematic-text-collisions.tsx) | `SchematicTextCollision` | Move the free NOTE annotation clear of U1's body. This is not a label belonging to the symbol. |
 | [Text crossing other text](assets/schematic-text-collisions.tsx) | `SchematicTextCollision` | Separate the independent TEST POINTS and SERVICE ONLY annotations. |
 | [Scattered functional block](assets/functional-block-scattered.tsx) | `FunctionalBlockNotGrouped` | Bring the compact R1/C1 reset network toward U1. U2 is unrelated despite lying between the network and its host. |
+| [RP2040 generated heading](assets/rp2040-section-heading-wire-collision.tsx) | `SchematicTextCollision` | Keep the generated section title clear of the supply bus joining the real circuit's three pull-ups. |
+| [Pedometer reset network](assets/pedometer-reset-network-scattered.tsx) | `FunctionalBlockNotGrouped` | Bring R8/C21/TP5 toward U1; the existing sideways move of C21 leaves it 28 schematic units below its host. Includes a compact control with identical connectivity. |
 
 Tests and snapshots use the same basename under `cases/` and
 `cases/__snapshots__/`. For example:
@@ -41,11 +43,18 @@ The divider and series-chain repros already receive generic
 must demonstrate useful grouping or alignment improvements beyond those existing
 moves; merely emitting a new diagnostic name is not sufficient justification.
 
-There are nine expected-failure tests for seven analyzer proposals. Text clearance
-has three tests and four stacked snapshots, including two annotation wordings in
-the wire case. These are initial repros, not complete solver acceptance suites.
+There are eleven expected-failure tests and thirteen stacked snapshots for seven
+analyzer proposals. Text clearance has four tests and five stacked snapshots,
+including two annotation wordings in the wire case. These are initial repros,
+not complete solver acceptance suites.
 Schematic grouping distances are readability heuristics, not PCB placement
 constraints.
+
+The [real-circuit audit](real-circuit-audit.md) records all 21 inspected sheets,
+source fingerprints, published references, existing-analyzer overlap and the two
+new reductions. Only text clearance and support-network grouping gained concrete
+new repro evidence in that audit; the remaining synthetic proposals still need
+further validation.
 
 ## General schematic text clearance
 
