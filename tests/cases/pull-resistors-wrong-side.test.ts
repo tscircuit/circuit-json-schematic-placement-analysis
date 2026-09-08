@@ -1,4 +1,4 @@
-import { beforeAll, expect, test } from "bun:test"
+import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createPullResistorsWrongSideCircuitJson } from "../assets/pull-resistors-wrong-side"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
@@ -9,10 +9,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-let issueTypes: string[]
-
-// Setup failures (including snapshot mismatches) must not be swallowed by test.failing.
-beforeAll(async () => {
+test("reports a pull-up below and a pull-down above their signal pins", async () => {
   const circuitJson = await createPullResistorsWrongSideCircuitJson()
   expectReproRendered(circuitJson, 3)
   expectReproNets(circuitJson, [
@@ -40,15 +37,24 @@ beforeAll(async () => {
   expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)
-  issueTypes = analysis
+  const issues = analysis
     .getLineItems()
     .flatMap((item) =>
-      item.lineItemType === "SchematicPlacementIssues"
-        ? item.issues.map((issue) => issue.lineItemType)
-        : [],
+      item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
     )
-})
-
-test.failing("reports a pull-up below and a pull-down above their signal pins", () => {
-  expect(issueTypes).toContain("PullResistorOnWrongSide")
+  const matching = issues.filter(
+    (issue) => issue.lineItemType === "PullResistorOnWrongSide",
+  )
+  expect(
+    matching.map((issue) => [
+      issue.resistorSchematicBox.sourceComponentName,
+      issue.pullDirection,
+      issue.preferredSide,
+    ]),
+  ).toEqual([
+    ["R1", "up", "above"],
+    ["R2", "down", "below"],
+  ])
+  expect(matching.map((issue) => issue.signalSchY)).toEqual([0.1, -0.1])
+  expect(analysis.toString()).toContain("<PullResistorOnWrongSide")
 })

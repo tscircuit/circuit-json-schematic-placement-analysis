@@ -4,6 +4,8 @@ import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCol
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
 import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
+import { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
@@ -78,6 +80,10 @@ export class SchematicPlacementAnalysis {
         return TraceSimplificationSolver.issueToString(issue)
       case "CrystalNotCenteredOverLoadCapacitors":
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
+      case "FeedbackNetworkNotCompact":
+        return FeedbackNetworkPlacementSolver.issueToString(issue)
+      case "PullResistorOnWrongSide":
+        return PullResistorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
       default:

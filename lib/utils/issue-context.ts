@@ -107,6 +107,15 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstLoadCapacitorSchematicBox)
         addPlacement(issue.secondLoadCapacitorSchematicBox)
         break
+      case "FeedbackNetworkNotCompact":
+        addPlacement(issue.amplifierSchematicBox)
+        for (const component of issue.feedbackComponents)
+          addPlacement(component)
+        break
+      case "PullResistorOnWrongSide":
+        addPlacement(issue.resistorSchematicBox)
+        addPlacement(issue.hostSchematicBox)
+        break
       case "ComponentNetLabelCollision":
         addPlacement(issue.firstComponent)
         addPlacement(issue.secondComponent)
