@@ -47,39 +47,6 @@ console.log(analysis.toString())
 </SchematicPlacementIssues>
 ```
 
-## Feedback and pull-resistor placement
-
-Two advisory diagnostics recognize electrical roles before checking placement:
-
-- `FeedbackNetworkNotCompact`: finds two-terminal resistors and capacitors
-  directly connecting a `simple_op_amp` output to its inverting input, including
-  parallel R/C feedback. It suggests grouping a distant member with the amplifier
-  when their shortest bounding-box gap exceeds both 4 schematic units and three
-  times that member's largest dimension. Compact loops above or below the
-  amplifier are accepted. Generic chips, positive feedback, series feedback
-  networks, and shared summing nodes are outside this initial scope.
-- `PullResistorOnWrongSide`: requires a nonzero resistor between a declared
-  power/ground net and a pin marked `needs_external_pullup` or
-  `needs_external_pulldown`. It suggests the conventional above/below placement
-  only when the entire resistor is more than 1.5 schematic units on the opposite
-  side of the actual signal pin. Small offsets and signal-level horizontal
-  resistors are accepted. Shared buses, conflicting or missing role metadata,
-  and additional resistor/device branches are skipped; a local shunt capacitor
-  to ground is allowed.
-
-These thresholds are schematic readability heuristics, not electrical errors or
-PCB placement constraints. Both checks respect sheet, subcircuit, and explicit
-component-group boundaries and skip ambiguous symbol representations. They
-resolve connectivity from source IDs, traces, and connectivity keys rather than
-net display names. Suggestions do not move components or claim a collision-free
-replacement position. Structured results include the involved components and
-measured gaps; string output includes their names and the readability suggestion.
-
-The existing capacitor-orientation check accepts horizontal capacitors directly
-bridging a declared op-amp output and either input. Grounded output loads are
-excluded from that exception; feedback distance remains a separate placement
-check.
-
 ## Test
 
 ```sh
