@@ -133,7 +133,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
 
   static issueToString(issue: SchematicPinPaddingToEdgeTooLarge): string {
     const attrs: string[] = []
-    addAttr(attrs, "message", issue.message, { escape: false })
+    addAttr(attrs, "message", issue.message)
     addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
     addAttr(attrs, "pinSide", issue.pinSide)
     addAttr(attrs, "edgeSide", issue.edgeSide)

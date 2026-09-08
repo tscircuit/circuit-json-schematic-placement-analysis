@@ -73,7 +73,7 @@ export class VerboseNetLabelSolver extends BaseSolver {
 
   static issueToString(issue: VerboseSchematicNetLabel): string {
     const attrs: string[] = []
-    addAttr(attrs, "message", issue.message, { escape: false })
+    addAttr(attrs, "message", issue.message)
     addAttr(attrs, "text", issue.text)
     addAttr(attrs, "involvedPins", issue.involvedPins.join(","))
     addAttr(attrs, "schSheetName", issue.schematicSheetName)

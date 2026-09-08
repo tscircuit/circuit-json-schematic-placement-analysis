@@ -204,7 +204,7 @@ export class CapacitorOrientationSolver extends BaseSolver {
     addAttr(attrs, "schY", issue.schematicBox.schY)
     addAttr(attrs, "width", issue.schematicBox.width)
     addAttr(attrs, "height", issue.schematicBox.height)
-    addAttr(attrs, "message", issue.message, { escape: false })
+    addAttr(attrs, "message", issue.message)
     return `<CapacitorSymbolHorizontal ${attrs.join(" ")} />`
   }
 }

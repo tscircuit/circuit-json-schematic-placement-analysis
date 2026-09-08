@@ -22,7 +22,7 @@ export const addAttr = (
   attrs: string[],
   key: string,
   value: string | number | undefined,
-  options?: { formatDelta?: boolean; escape?: boolean },
+  options?: { formatDelta?: boolean },
 ): void => {
   if (value === undefined) return
   const stringValue =
@@ -30,8 +30,6 @@ export const addAttr = (
       ? options?.formatDelta
         ? fmtDelta(value)
         : fmtNumber(value)
-      : options?.escape === false
-        ? value
-        : escapeAttr(value)
+      : escapeAttr(value)
   attrs.push(`${key}="${stringValue}"`)
 }
