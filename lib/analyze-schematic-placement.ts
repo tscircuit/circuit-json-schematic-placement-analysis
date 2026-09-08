@@ -2,6 +2,7 @@ import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DecouplingCapacitorGroupingSolver } from "./solvers/DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
@@ -78,6 +79,8 @@ export class SchematicPlacementAnalysis {
         return ComponentPinAlignmentSolver.issueToString(issue)
       case "TraceCanBeSimplifiedByMovingComponent":
         return TraceSimplificationSolver.issueToString(issue)
+      case "CrystalNotCenteredOverLoadCapacitors":
+        return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
       default:
