@@ -29,6 +29,7 @@ interface RawLabelLabelCollision {
   leftId: string
   rightId: string
   xSeparation: number
+  bounds: RectBounds
 }
 
 interface RawBoxLabelCollision {
@@ -38,6 +39,7 @@ interface RawBoxLabelCollision {
   boxId: string
   labelId: string
   xSeparation: number
+  bounds: RectBounds
 }
 
 type RawCollision = RawLabelLabelCollision | RawBoxLabelCollision
@@ -120,6 +122,12 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         if (rectOverlap(leftBounds, rightBounds)) {
           hits.push({
             type: "label-label",
+            bounds: {
+              left: Math.max(leftBounds.left, rightBounds.left),
+              right: Math.min(leftBounds.right, rightBounds.right),
+              top: Math.min(leftBounds.top, rightBounds.top),
+              bottom: Math.max(leftBounds.bottom, rightBounds.bottom),
+            },
             leftComp,
             rightComp,
             leftId,
@@ -163,6 +171,12 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       }
       hits.push({
         type: "box-label",
+        bounds: {
+          left: Math.max(boxBounds.left, labelBounds.left),
+          right: Math.min(boxBounds.right, labelBounds.right),
+          top: Math.min(boxBounds.top, labelBounds.top),
+          bottom: Math.max(boxBounds.bottom, labelBounds.bottom),
+        },
         boxComp,
         labelComp,
         boxId,
@@ -226,6 +240,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       schematicSheetId: firstPlacement.schematicSheetId,
       schematicSheetName: firstPlacement.schematicSheetName,
       pairs,
+      collisionBounds: collisions.map((collision) => collision.bounds),
       moves: Array.from(globalFixes.values()),
     })
   }

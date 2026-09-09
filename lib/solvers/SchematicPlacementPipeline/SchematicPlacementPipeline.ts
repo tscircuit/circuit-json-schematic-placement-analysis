@@ -10,14 +10,21 @@ import { buildSolverContext } from "../../utils/placements"
 import { CapacitorOrientationSolver } from "../CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "../ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "../ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { CrystalLoadCapacitorPlacementSolver } from "../CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { FeedbackNetworkPlacementSolver } from "../FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
+import { PullResistorPlacementSolver } from "../PullResistorPlacementSolver/PullResistorPlacementSolver"
+import { TwoPinComponentRailOrientationSolver } from "../TwoPinComponentRailOrientationSolver/TwoPinComponentRailOrientationSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "../SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
 import { SchematicPinPaddingToEdgeSolver } from "../SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import type { SolverContext } from "../SolverContext"
 import { TraceSimplificationSolver } from "../TraceSimplificationSolver/TraceSimplificationSolver"
+import { TwoPinComponentOrientationSolver } from "../TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
@@ -26,6 +33,20 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "SchematicTextClearanceSolver",
+      SchematicTextClearanceSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ResetNetworkGroupingSolver",
+      ResetNetworkGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SchematicBoxOverlapSolver",
       SchematicBoxOverlapSolver,
@@ -97,6 +118,41 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ],
     ),
     definePipelineStep(
+      "CrystalLoadCapacitorPlacementSolver",
+      CrystalLoadCapacitorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "TwoPinComponentOrientationSolver",
+      TwoPinComponentOrientationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "FeedbackNetworkPlacementSolver",
+      FeedbackNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "TwoPinComponentRailOrientationSolver",
+      TwoPinComponentRailOrientationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "PullResistorPlacementSolver",
+      PullResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
       "ComponentNetLabelCollisionSolver",
       ComponentNetLabelCollisionSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
@@ -110,8 +166,24 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   }
 
   override getOutput() {
+    // Prefer the rail-aware rotation over a duplicate generic capacitor warning.
+    // The capacitor solver still reports horizontal capacitors outside this rule.
+    const railOrientationComponentIds = new Set(
+      this.issues.flatMap((issue) =>
+        issue.lineItemType === "TwoPinComponentShouldBeVertical" &&
+        issue.schematicBox.schematicComponentId
+          ? [issue.schematicBox.schematicComponentId]
+          : [],
+      ),
+    )
     return {
-      issues: this.issues,
+      issues: this.issues.filter(
+        (issue) =>
+          issue.lineItemType !== "CapacitorSymbolHorizontal" ||
+          !railOrientationComponentIds.has(
+            issue.schematicBox.schematicComponentId ?? "",
+          ),
+      ),
       componentPlacements: this.ctx.componentPlacements,
     }
   }

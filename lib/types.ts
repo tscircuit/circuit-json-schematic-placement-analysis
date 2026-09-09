@@ -91,6 +91,8 @@ export interface SchematicBoxInnerLabelCollision {
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"
 
+export type SchematicPortFacingDirection = "left" | "right" | "up" | "down"
+
 export interface SchematicPinPaddingToEdgeTooLarge {
   lineItemType: "SchematicPinPaddingToEdgeTooLarge"
   pinSide: SchematicSide
@@ -145,6 +147,73 @@ export interface TraceCanBeSimplifiedByMovingComponent {
   message: string
 }
 
+export interface CrystalNotCenteredOverLoadCapacitors {
+  lineItemType: "CrystalNotCenteredOverLoadCapacitors"
+  crystalSchematicBox: SchematicBoxPlacement
+  firstLoadCapacitorSchematicBox: SchematicBoxPlacement
+  secondLoadCapacitorSchematicBox: SchematicBoxPlacement
+  deltaSchX: number
+  deltaSchY: number
+  newSchX: number
+  newSchY: number
+  message: string
+}
+
+export interface TwoPinComponentCouldBeFlipped {
+  lineItemType: "TwoPinComponentCouldBeFlipped"
+  schematicTraceId: string
+  targetComponent: SchematicBoxPlacement
+  connectedComponent: SchematicBoxPlacement
+  targetPin?: string
+  currentFacingDirection: SchematicPortFacingDirection
+  suggestedFacingDirection: SchematicPortFacingDirection
+  deltaSchRotation: 180
+  currentTurnCount: number
+  suggestedTurnCount: number
+  message: string
+}
+
+/** Advisory: a direct negative-feedback R/C network is far from its amplifier. */
+export interface FeedbackNetworkNotCompact {
+  lineItemType: "FeedbackNetworkNotCompact"
+  amplifierSchematicBox: SchematicBoxPlacement
+  feedbackComponents: SchematicBoxPlacement[]
+  distantComponents: Array<{
+    schematicBox: SchematicBoxPlacement
+    bodyGap: number
+    maxRecommendedBodyGap: number
+  }>
+  outputSourcePortId: string
+  invertingInputSourcePortId: string
+  message: string
+}
+
+/** Advisory: an explicitly identified pull resistor is far on the unconventional side. */
+export interface PullResistorOnWrongSide {
+  lineItemType: "PullResistorOnWrongSide"
+  resistorSchematicBox: SchematicBoxPlacement
+  hostSchematicBox: SchematicBoxPlacement
+  signalSourcePortId: string
+  signalPinName: string
+  signalSchY: number
+  pullDirection: "up" | "down"
+  preferredSide: "above" | "below"
+  wrongSideGap: number
+  maxRecommendedWrongSideGap: number
+  message: string
+}
+
+export interface TwoPinComponentShouldBeVertical {
+  lineItemType: "TwoPinComponentShouldBeVertical"
+  schematicBox: SchematicBoxPlacement
+  railSourcePortId: string
+  railPinName: string
+  railType: "power" | "ground"
+  deltaSchRotation: -90 | 90
+  suggestedRailFacingDirection: "up" | "down"
+  message: string
+}
+
 export interface ComponentNetLabelCollision {
   lineItemType: "ComponentNetLabelCollision"
   firstComponent: SchematicBoxPlacement
@@ -183,10 +252,20 @@ export interface ComponentBoxNetLabelCollision {
   }
 }
 
+export interface SchematicIssueBounds {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
 export interface NetLabelCollision {
   lineItemType: "NetLabelCollision"
   schematicSheetId?: string
   schematicSheetName?: string
+  /** Actual intersection regions in schematic coordinates (Y up).
+   * Optional for compatibility with previously serialized reports. */
+  collisionBounds?: SchematicIssueBounds[]
   pairs: Array<{ comp1Name: string; comp2Name: string }>
   moves: Array<{
     componentName: string
@@ -203,6 +282,46 @@ export interface DecouplingCapacitorsNotCloseTogether {
   message: string
 }
 
+export interface SchematicTextCollisionObject {
+  type: "text" | "trace" | "component"
+  id: string
+  text?: string
+  componentName?: string
+  schematicComponentId?: string
+}
+
+export interface SchematicTextCollision {
+  lineItemType: "SchematicTextCollision"
+  schematicSheetId?: string
+  schematicSheetName?: string
+  schematicTextId: string
+  text: string
+  collidingObject: SchematicTextCollisionObject
+  textBounds: { left: number; right: number; top: number; bottom: number }
+  collidingObjectBounds: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+  }
+  /** A clear text-anchor position for this issue; reanalyze after applying it. */
+  suggestedMove?: { newSchX: number; newSchY: number }
+  message: string
+}
+
+export interface ResetNetworkNotGrouped {
+  lineItemType: "ResetNetworkNotGrouped"
+  /** The component whose reset pin is served by this network. */
+  hostSchematicBox: SchematicBoxPlacement
+  resetSourcePortId: string
+  resetPinName: string
+  /** Reset pull-up, capacitor, and any associated test points; excludes the host. */
+  supportNetworkComponents: SchematicBoxPlacement[]
+  maxDistanceFromResetPin: number
+  maxRecommendedDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -214,10 +333,17 @@ export type SchematicPlacementIssue =
   | DiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
+  | CrystalNotCenteredOverLoadCapacitors
+  | TwoPinComponentCouldBeFlipped
+  | FeedbackNetworkNotCompact
+  | PullResistorOnWrongSide
+  | TwoPinComponentShouldBeVertical
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
   | DecouplingCapacitorsNotCloseTogether
+  | SchematicTextCollision
+  | ResetNetworkNotGrouped
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"

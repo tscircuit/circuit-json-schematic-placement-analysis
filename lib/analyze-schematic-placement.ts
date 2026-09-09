@@ -3,14 +3,21 @@ import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
+import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
 import { DiodeResistorAlignmentSolver } from "./solvers/DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
+import { FeedbackNetworkPlacementSolver } from "./solvers/FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
+import { PullResistorPlacementSolver } from "./solvers/PullResistorPlacementSolver/PullResistorPlacementSolver"
+import { TwoPinComponentRailOrientationSolver } from "./solvers/TwoPinComponentRailOrientationSolver/TwoPinComponentRailOrientationSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "./solvers/SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "./solvers/SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
 import { SchematicBoxTooWideSolver } from "./solvers/SchematicBoxTooWideSolver/SchematicBoxTooWideSolver"
 import { SchematicPinPaddingToEdgeSolver } from "./solvers/SchematicPinPaddingToEdgeSolver/SchematicPinPaddingToEdgeSolver"
 import { SchematicPlacementPipeline } from "./solvers/SchematicPlacementPipeline/SchematicPlacementPipeline"
 import { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/TraceSimplificationSolver"
+import { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
+import { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
+import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -36,6 +43,57 @@ export class SchematicPlacementAnalysis {
 
   getLineItems(): SchematicPlacementLineItem[] {
     return this.lineItems
+  }
+
+  /** Filter emitted issues without rerunning or changing the solvers. */
+  getIssues(
+    filter: {
+      issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
+      schematicSheetId?: string
+    } = {},
+  ): SchematicPlacementIssue[] {
+    return this.lineItems
+      .flatMap((item) =>
+        item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
+      )
+      .filter(
+        (issue) =>
+          (filter.issueTypes === undefined ||
+            filter.issueTypes.includes(issue.lineItemType)) &&
+          (filter.schematicSheetId === undefined ||
+            (getIssueSchematicSheetContext(issue).schematicSheetId ?? "") ===
+              filter.schematicSheetId),
+      )
+  }
+
+  /** Counts emitted issue objects, including zero counts for known types. */
+  getIssueCounts(filter: { schematicSheetId?: string } = {}) {
+    const counts = {
+      ComponentOverlap: 0,
+      SchematicBoxHasALotOfSurroundingWhitespace: 0,
+      CapacitorSymbolHorizontal: 0,
+      VerboseSchematicNetLabel: 0,
+      PinHeaderSchematicBoxTooWide: 0,
+      GenericSchematicBoxTooWide: 0,
+      SchematicBoxInnerLabelCollision: 0,
+      SchematicPinPaddingToEdgeTooLarge: 0,
+      DiodeResistorNotAligned: 0,
+      ComponentPinsWouldAlignWithVerticalShift: 0,
+      TraceCanBeSimplifiedByMovingComponent: 0,
+      CrystalNotCenteredOverLoadCapacitors: 0,
+      ComponentNetLabelCollision: 0,
+      ComponentBoxNetLabelCollision: 0,
+      NetLabelCollision: 0,
+      DecouplingCapacitorsNotCloseTogether: 0,
+      FeedbackNetworkNotCompact: 0,
+      PullResistorOnWrongSide: 0,
+      SchematicTextCollision: 0,
+      ResetNetworkNotGrouped: 0,
+      TwoPinComponentCouldBeFlipped: 0,
+      TwoPinComponentShouldBeVertical: 0,
+    } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
+    for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
+    return counts
   }
 
   getString(): string {
@@ -76,10 +134,24 @@ export class SchematicPlacementAnalysis {
         return ComponentPinAlignmentSolver.issueToString(issue)
       case "TraceCanBeSimplifiedByMovingComponent":
         return TraceSimplificationSolver.issueToString(issue)
+      case "CrystalNotCenteredOverLoadCapacitors":
+        return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
+      case "TwoPinComponentCouldBeFlipped":
+        return TwoPinComponentOrientationSolver.issueToString(issue)
+      case "FeedbackNetworkNotCompact":
+        return FeedbackNetworkPlacementSolver.issueToString(issue)
+      case "TwoPinComponentShouldBeVertical":
+        return TwoPinComponentRailOrientationSolver.issueToString(issue)
+      case "PullResistorOnWrongSide":
+        return PullResistorPlacementSolver.issueToString(issue)
       case "NetLabelCollision":
         return ComponentNetLabelCollisionSolver.netLabelCollisionToString(issue)
       case "DecouplingCapacitorsNotCloseTogether":
         return DecouplingCapacitorsDistanceSolver.issueToString(issue)
+      case "SchematicTextCollision":
+        return SchematicTextClearanceSolver.issueToString(issue)
+      case "ResetNetworkNotGrouped":
+        return ResetNetworkGroupingSolver.issueToString(issue)
       default:
         return ""
     }

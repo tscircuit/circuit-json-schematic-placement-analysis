@@ -15,6 +15,7 @@ test("detects decoupling capacitors on the same rail placed far apart", async ()
   expect(analysis.toString()).toContain('rail="VCC"')
   expect(analysis.toString()).toContain('firstCapacitorName="C1"')
   expect(analysis.toString()).toContain('secondCapacitorName="C2"')
+  expect(analysis.getIssueCounts().DecouplingCapacitorsNotCloseTogether).toBe(1)
 
   const issuesLineItem = analysis
     .getLineItems()

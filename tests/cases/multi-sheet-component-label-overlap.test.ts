@@ -30,7 +30,45 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
   expect(output.slice(powerSheetStart, logicSheetStart)).not.toContain("UL")
   expect(output.slice(logicSheetStart)).not.toContain("UP")
 
+  const original = createSchematicAnalysisFixtureSvg({ circuitJson, analysis })
+  const highlighted = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    highlightIssues: true,
+  })
+  const listing = (svg: string) =>
+    svg
+      .match(/<text[^>]*fill="#d00"[^>]*>[\s\S]*?<\/text>/)?.[0]
+      .replaceAll('x="52"', 'x="18"')
+  expect(listing(original)).toBeDefined()
+  expect(listing(highlighted)).toBe(listing(original))
+  const highlightedSheetIds = [
+    ...highlighted.matchAll(
+      /data-issue-number="\d+"[^>]*data-schematic-sheet-id="([^"]+)"/g,
+    ),
+  ].map((match) => match[1])
+  expect(highlightedSheetIds).toEqual(
+    collisionIssues.map((issue) => issue.schematicSheetId),
+  )
   expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
-  ).toMatchSvgSnapshot(import.meta.path)
+    [...highlighted.matchAll(/data-listing-issue-number="(\d+)"/g)].map(
+      (match) => Number(match[1]),
+    ),
+  ).toEqual([1, 2])
+  expect(
+    createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      highlightIssues: [],
+    }),
+  ).toBe(original)
+  expect(
+    createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      highlightIssues: ["SchematicTextCollision"],
+    }),
+  ).toBe(original)
+  expect(analysis.toString()).toBe(output)
+  expect(highlighted).toMatchSvgSnapshot(import.meta.path)
 })
