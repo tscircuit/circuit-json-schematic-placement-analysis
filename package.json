@@ -71,6 +71,7 @@
     "spicets": "^0.0.2",
     "spicey": "^0.0.14",
     "svgson": "^5.3.1",
+    "tscircuit": "0.0.2474",
     "typescript": "^5.9.3",
     "vite": "^8.0.10"
   },
