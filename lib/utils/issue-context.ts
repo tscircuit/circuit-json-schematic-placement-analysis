@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "DecouplingCapacitorsNotCloseTogether":
+        for (const placement of issue.capacitorSchematicBoxes)
+          addPlacement(placement)
+        break
       case "ResetNetworkNotGrouped":
         addPlacement(issue.hostSchematicBox)
         for (const placement of issue.supportNetworkComponents)
@@ -187,7 +191,8 @@ export const getIssueSchematicSheetContext = (
     }
   }
 
-  for (const value of Object.values(issue)) {
+  // Group diagnostics carry their placements in an array instead of a pair.
+  for (const value of Object.values(issue).flat()) {
     if (isSchematicBoxPlacement(value)) {
       return {
         schematicSheetId: value.schematicSheetId,

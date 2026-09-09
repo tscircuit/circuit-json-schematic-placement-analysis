@@ -49,6 +49,19 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
+/** A power-to-ground capacitor bank is spread out within one schematic block. */
+export interface DecouplingCapacitorsNotCloseTogether {
+  lineItemType: "DecouplingCapacitorsNotCloseTogether"
+  railName: string
+  groundName: string
+  /** All capacitors in this bank, sharing supply, return, and schematic scope. */
+  capacitorSchematicBoxes: SchematicBoxPlacement[]
+  /** Largest gap between any two component bounds in the bank. */
+  maxBodyGap: number
+  maxRecommendedBodyGap: number
+  message: string
+}
+
 export interface VerboseSchematicNetLabel {
   lineItemType: "VerboseSchematicNetLabel"
   schematicNetLabelId?: string
@@ -318,6 +331,7 @@ export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
+  | DecouplingCapacitorsNotCloseTogether
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision

@@ -1,4 +1,4 @@
-<svg width="1800" height="6758" viewBox="0 0 1800 6758" xmlns="http://www.w3.org/2000/svg">
+<svg width="1800" height="6780" viewBox="0 0 1800 6780" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1800" height="1200" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(50.5265067558,0,0,-50.5265067558,900.5438199796,600.345847971)"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -349,6 +349,7 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
 <tspan x="18" dy="22">ResetNetworkNotGrouped: 0</tspan>
 <tspan x="18" dy="22">TwoPinComponentCouldBeFlipped: 0</tspan>
 <tspan x="18" dy="22">TwoPinComponentShouldBeVertical: 7</tspan>
+<tspan x="18" dy="22">DecouplingCapacitorsNotCloseTogether: 0</tspan>
 <tspan x="18" dy="22">Selected type(s): all</tspan>
 <tspan x="18" dy="22">Matching issues: 48</tspan>
 <tspan x="18" dy="22">#1</tspan>

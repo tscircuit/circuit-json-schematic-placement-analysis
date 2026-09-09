@@ -1,5 +1,8 @@
 import { expect, test } from "bun:test"
-import { analyzeSchematicPlacement } from "lib/index"
+import {
+  analyzeSchematicPlacement,
+  createSchematicPlacementIssueArtifacts,
+} from "lib/index"
 import {
   getTrellisCoreSheetCircuitJson,
   trellisCoreCircuitJson,
@@ -11,7 +14,7 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("reproduces Trellis Core's published CPU decoupling layout before grouping fixes", () => {
+test("reports the four scattered decoupling banks in Trellis Core's CPU sheet", () => {
   const original = JSON.stringify(trellisCoreCircuitJson)
   expectReproRendered(trellisCoreCircuitJson, 92)
   expect(
@@ -52,21 +55,81 @@ test("reproduces Trellis Core's published CPU decoupling layout before grouping 
   }
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  // These are current reports, not the desired grouping behavior. The analyzer
-  // does not implement DecouplingCapacitorsNotCloseTogether yet.
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
     ["TraceCanBeSimplifiedByMovingComponent", 3],
     ["CrystalNotCenteredOverLoadCapacitors", 1],
     ["TwoPinComponentShouldBeVertical", 5],
+    ["DecouplingCapacitorsNotCloseTogether", 4],
   ])
+  const banks = analysis.getIssues({
+    issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+  })
+  expect(
+    banks
+      .map((issue) => {
+        if (issue.lineItemType !== "DecouplingCapacitorsNotCloseTogether")
+          throw new Error("Expected capacitor grouping issue")
+        expect(issue.maxBodyGap).toBeGreaterThan(issue.maxRecommendedBodyGap)
+        return [
+          issue.railName,
+          issue.capacitorSchematicBoxes
+            .map((box) => box.sourceComponentName)
+            .sort(),
+        ]
+      })
+      .sort(([a], [b]) => String(a).localeCompare(String(b))),
+  ).toEqual([
+    ["P0V9", ["C22", "C23", "C24", "C25", "C26", "C27"]],
+    ["P1V5", ["C28", "C29", "C30", "C31"]],
+    ["P1V8", ["C16", "C17", "C18", "C19", "C20", "C21", "C34", "C35"]],
+    ["P3V3", ["C10", "C11", "C12", "C13", "C14", "C15", "C9"]],
+  ])
+  // Shared supply nets on other sheets must not change the CPU banks.
+  const fullAnalysis = analyzeSchematicPlacement(trellisCoreCircuitJson)
+  expect(
+    fullAnalysis.getIssues({
+      issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+      schematicSheetId: "schematic_sheet_1",
+    }),
+  ).toEqual(banks)
+  const artifacts = createSchematicPlacementIssueArtifacts(
+    trellisCoreCircuitJson,
+    {
+      analysis: fullAnalysis,
+      schematicSheetId: "schematic_sheet_1",
+      issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+      height: 450,
+    },
+  )
+  expect(artifacts).toHaveLength(4)
+  for (const artifact of artifacts) {
+    const issue = artifact.issue
+    if (issue.lineItemType !== "DecouplingCapacitorsNotCloseTogether")
+      throw new Error("Expected capacitor grouping artifact")
+    expect(artifact.schematicSheetId).toBe("schematic_sheet_1")
+    expect(artifact.bounds).toBeDefined()
+    expect(artifact.content.match(/data-issue-index=/g)).toHaveLength(1)
+    expect(artifact.descriptionXml).toContain(
+      "<DecouplingCapacitorsNotCloseTogether",
+    )
+    expect(artifact.descriptionXml).toContain('capacitorNames="')
+    expect(artifact.descriptionXml).not.toContain("firstCapacitorName")
+    expect(artifact.descriptionXml).not.toContain("secondCapacitorName")
+    // Each real rail gets its own cropped schematic and diagnostic underneath.
+    expect(artifact.content).toMatchSvgSnapshot(
+      import.meta.path,
+      issue.railName,
+    )
+  }
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,
       analysis,
       width: 1800,
       height: 1200,
+      highlightIssues: ["DecouplingCapacitorsNotCloseTogether"],
     }).replace(/[ \t]+$/gm, ""),
   ).toMatchSvgSnapshot(import.meta.path)
   expect(JSON.stringify(trellisCoreCircuitJson)).toBe(original)
