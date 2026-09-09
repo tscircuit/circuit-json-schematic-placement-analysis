@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "DecouplingCapacitorsNotCloseTogether":
+        for (const placement of issue.capacitorSchematicBoxes)
+          addPlacement(placement)
+        break
       case "ResetNetworkNotGrouped":
         addPlacement(issue.hostSchematicBox)
         for (const placement of issue.supportNetworkComponents)

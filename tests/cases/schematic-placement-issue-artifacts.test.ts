@@ -4,7 +4,7 @@ import { wirelessMouseSensorSheetCircuitJson as circuitJson } from "../assets/wi
 
 test("exports a standalone cropped SVG per issue with only that issue's XML", () => {
   const original = JSON.stringify(circuitJson)
-  expect(createSchematicPlacementIssueArtifacts(circuitJson)).toHaveLength(7)
+  expect(createSchematicPlacementIssueArtifacts(circuitJson)).toHaveLength(9)
   const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
     issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
   })
