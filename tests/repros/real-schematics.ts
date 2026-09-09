@@ -7,7 +7,7 @@ import { wirelessMouseSensorSheetCircuitJson } from "../assets/wireless-mouse-se
 export const realSchematics: {
   name: string
   circuitJson: CircuitJson
-  cropToIssues?: boolean
+  showFullSchematic?: boolean
 }[] = [
   {
     name: "Wireless mouse — controller",
@@ -20,6 +20,6 @@ export const realSchematics: {
   {
     name: "RP2040 BLDC controller — five full sheets",
     circuitJson: rp2040BldcCircuitJson,
-    cropToIssues: false,
+    showFullSchematic: true,
   },
 ]

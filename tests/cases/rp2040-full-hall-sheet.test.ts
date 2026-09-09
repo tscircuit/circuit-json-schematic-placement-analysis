@@ -24,7 +24,7 @@ test("records no trace or orientation suggestions for the full Hall sheet's conn
   const input = {
     circuitJson,
     analysis,
-    cropToIssues: false,
+    showFullSchematic: true,
     width: 1800,
     height: 1200,
   }

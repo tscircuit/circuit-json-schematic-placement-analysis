@@ -47,7 +47,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
     createIssueReproSnapshot({
       circuitJson,
       analysis,
-      cropToIssues: false,
+      showFullSchematic: true,
       width: 1800,
       height: 1200,
     }),

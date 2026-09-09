@@ -50,7 +50,7 @@ export default function RealSchematicRepros() {
           ...filter,
           issueIndex,
           showOverlay,
-          cropToIssues: repro.cropToIssues,
+          showFullSchematic: repro.showFullSchematic,
         }),
         error: "",
       }

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { parseSync, type INode } from "svgson"
 import { analyzeSchematicPlacement } from "lib/index"
 import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
@@ -41,32 +42,103 @@ test("records the full input sheet's local trace suggestions without rearranging
   const input = {
     circuitJson,
     analysis,
-    cropToIssues: false,
+    showFullSchematic: true,
     width: 1800,
     height: 1200,
   }
   const svg = createIssueOverlaySvg(input)
-  const markers = [
-    ...svg.matchAll(
-      /data-issue-number="(\d+)" transform="translate\(([^ ]+) ([^)]+)\)/g,
-    ),
-  ]
-  expect(markers.map((match) => Number(match[1]))).toEqual(
-    Array.from({ length: 48 }, (_, index) => index + 1),
-  )
-  // Multiple padding issues on one IC must remain individually readable.
+  const diagnosticRects = (svg: string) =>
+    descendants(parseSync(svg)).filter(
+      (node) => node.name === "rect" && node.attributes.fill === "#ef444433",
+    )
+  const rectangles = diagnosticRects(svg)
+  expect(rectangles.length).toBeGreaterThan(0)
   expect(
-    markers.every((marker, index) =>
-      markers
-        .slice(index + 1)
-        .every(
-          (other) =>
-            Math.hypot(
-              Number(marker[2]) - Number(other[2]),
-              Number(marker[3]) - Number(other[3]),
-            ) >= 22,
-        ),
+    new Set(
+      rectangles.map(({ attributes: a }) =>
+        [a.x, a.y, a.width, a.height].join(":"),
+      ),
+    ).size,
+  ).toBe(rectangles.length)
+  const paddingIndex = analysis
+    .getIssues()
+    .findLastIndex(
+      (issue) =>
+        issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge" &&
+        issue.schematicBox.sourceComponentName === "U_PD",
+    )
+  expect(paddingIndex).toBeGreaterThan(-1)
+  expect(
+    diagnosticRects(
+      createIssueOverlaySvg({ ...input, issueIndex: paddingIndex }),
     ),
-  ).toBe(true)
+  ).toHaveLength(1)
+
+  // Check full, focused, and wide panels in their final display coordinates.
+  for (const panel of [
+    { showFullSchematic: true, width: 320, height: 240 },
+    { showFullSchematic: false, width: 320, height: 240 },
+    { showFullSchematic: false, width: 1800, height: 120 },
+  ]) {
+    const rendered = createIssueOverlaySvg({ ...input, ...panel })
+    const root = parseSync(rendered)
+    const [left, top, width, height] = (root.attributes.viewBox
+      ?.split(" ")
+      .map(Number) ?? [0, 0, panel.width, panel.height]) as [
+      number,
+      number,
+      number,
+      number,
+    ]
+    const displayScale = Math.min(panel.width / width, panel.height / height)
+    const offsetX = (panel.width - width * displayScale) / 2
+    const offsetY = (panel.height - height * displayScale) / 2
+    const markers = descendants(root)
+      .filter((node) => node.attributes["data-issue-number"])
+      .map((node) => {
+        const transform = node.attributes.transform!.match(
+          /^translate\(([^ ]+) ([^)]+)\) scale\(([^)]+)\)$/,
+        )!
+        return {
+          number: Number(node.attributes["data-issue-number"]),
+          x: (Number(transform[1]) - left) * displayScale + offsetX,
+          y: (Number(transform[2]) - top) * displayScale + offsetY,
+          radius:
+            Number(
+              node.children.find((child) => child.name === "circle")!.attributes
+                .r,
+            ) *
+            Number(transform[3]) *
+            displayScale,
+        }
+      })
+    expect(markers.map((marker) => marker.number)).toEqual(
+      Array.from({ length: 48 }, (_, index) => index + 1),
+    )
+    expect(
+      markers.every(
+        ({ x, y, radius }) =>
+          x - radius >= 0 &&
+          x + radius <= panel.width &&
+          y - radius >= 0 &&
+          y + radius <= panel.height,
+      ),
+    ).toBe(true)
+    expect(
+      markers.every((marker, index) =>
+        markers
+          .slice(index + 1)
+          .every(
+            (other) =>
+              Math.hypot(marker.x - other.x, marker.y - other.y) >=
+              marker.radius + other.radius,
+          ),
+      ),
+    ).toBe(true)
+  }
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })
+
+function descendants(node: INode): INode[] {
+  return [node, ...node.children.flatMap(descendants)]
+}

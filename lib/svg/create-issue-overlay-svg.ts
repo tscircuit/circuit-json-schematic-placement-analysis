@@ -11,6 +11,11 @@ import {
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
 import { centeredRect } from "../utils/geometry"
+import {
+  createIssueMarkerPlacer,
+  ISSUE_MARKER_RADIUS,
+  type SvgViewport,
+} from "./place-issue-markers"
 
 export type IssueType = SchematicPlacementIssue["lineItemType"]
 
@@ -68,8 +73,8 @@ export function renderIssueOverlay(input: {
   issueTypes?: readonly IssueType[]
   issueIndex?: number
   showOverlay?: boolean
-  /** Set false to retain the complete sheet instead of framing the selected issues. */
-  cropToIssues?: boolean
+  /** Show the complete sheet. By default, frame only the selected issues. */
+  showFullSchematic?: boolean
   width?: number
   height?: number
 }) {
@@ -121,7 +126,7 @@ export function renderIssueOverlay(input: {
     .getLineItems()
     .filter((item) => item.lineItemType === "SchematicBoxPlacement")
   // Several issue types can target the same box. Draw its fill only once.
-  const drawnRects = new Set<string>()
+  const drawnRectangles = new Set<string>()
   const overlays = analysis.getIssues().flatMap((issue, index) => {
     if (
       (getIssueSchematicSheetContext(issue).schematicSheetId ?? "") !==
@@ -141,9 +146,17 @@ export function renderIssueOverlay(input: {
     const rect = (bounds: SchematicIssueBounds, isContext = false) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
+      const key = [
+        isContext ? "context" : "issue",
+        bounds.left,
+        bounds.bottom,
+        bounds.right,
+        bounds.top,
+      ].join(":")
+      if (drawnRectangles.has(key)) return
+      drawnRectangles.add(key)
       const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
-      if (!drawnRects.has(markup)) geometry.push(markup)
-      drawnRects.add(markup)
+      geometry.push(markup)
     }
     for (const placement of context) rect(boxBounds(placement), true)
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
@@ -213,18 +226,28 @@ export function renderIssueOverlay(input: {
       ? { x: context[0].schX, y: context[0].schY }
       : undefined
     const point = anchor && screen(anchor.x, anchor.y)
+    const title = escapeXml(
+      `#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`,
+    )
     return [
       {
         index,
         point,
-        geometry: `<title>${escapeXml(`#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`)}</title><g transform="matrix(${values.join(" ")})">${geometry.join("")}</g>`,
+        title,
+        geometry: `<title>${title}</title><g transform="matrix(${values.join(" ")})">${geometry.join("")}</g>`,
         issueType: issue.lineItemType,
       },
     ]
   })
   let framedSvg = svg
-  let badgeScale = 1
-  if (input.cropToIssues !== false && focusPoints.length > 0) {
+  let markerScale = 1
+  let viewport: SvgViewport = {
+    left: 0,
+    top: 0,
+    right: input.width ?? 1400,
+    bottom: input.height ?? 900,
+  }
+  if (!input.showFullSchematic && focusPoints.length > 0) {
     const minX = Math.min(...focusPoints.map((point) => point.x))
     const maxX = Math.max(...focusPoints.map((point) => point.x))
     const minY = Math.min(...focusPoints.map((point) => point.y))
@@ -235,17 +258,32 @@ export function renderIssueOverlay(input: {
     const paddingY = Math.max((maxY - minY) / 2, 12)
     const width = maxX - minX + paddingX * 2
     const height = maxY - minY + paddingY * 2
-    const viewBox = `${minX - paddingX} ${minY - paddingY} ${width} ${height}`
+    viewport = {
+      left: minX - paddingX,
+      top: minY - paddingY,
+      right: maxX + paddingX,
+      bottom: maxY + paddingY,
+    }
+    const viewBox = `${viewport.left} ${viewport.top} ${width} ${height}`
     framedSvg = svg.replace(/^<svg\b[^>]*>/, (root) =>
       root
         .replace(/\sviewBox="[^"]*"/, "")
         .replace(/>$/, ` viewBox="${viewBox}">`),
     )
     // Keep numbered markers readable without magnifying them with the crop.
-    badgeScale = Math.max(
+    markerScale = Math.max(
       width / (input.width ?? 1400),
       height / (input.height ?? 900),
     )
+    // SVG's default aspect-ratio fitting can leave visible space outside the viewBox.
+    const visibleWidth = (input.width ?? 1400) * markerScale
+    const visibleHeight = (input.height ?? 900) * markerScale
+    viewport = {
+      left: (minX + maxX - visibleWidth) / 2,
+      right: (minX + maxX + visibleWidth) / 2,
+      top: (minY + maxY - visibleHeight) / 2,
+      bottom: (minY + maxY + visibleHeight) / 2,
+    }
   }
   const bounds = issueBounds.length
     ? {
@@ -256,46 +294,33 @@ export function renderIssueOverlay(input: {
       }
     : undefined
   if (input.showOverlay === false) return { svg: framedSvg, bounds }
-  const badgePositions: Array<{ x: number; y: number }> = []
-  const badges: string[] = []
-  const markup = overlays.map(({ index, point, geometry, issueType }) => {
-    if (point) {
-      let badge = { x: point.x, y: point.y }
-      const step = 26 * badgeScale
-      const available = (candidate: typeof badge) =>
-        badgePositions.every(
-          (other) =>
-            Math.hypot(other.x - candidate.x, other.y - candidate.y) >= step,
-        )
-      // Keep the original anchor when possible, then search outward on a grid.
-      search: for (let ring = 0; ring <= overlays.length; ring++) {
-        for (let dy = -ring; dy <= ring; dy++) {
-          for (let dx = -ring; dx <= ring; dx++) {
-            if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue
-            const candidate = { x: point.x + dx * step, y: point.y + dy * step }
-            if (available(candidate)) {
-              badge = candidate
-              break search
-            }
-          }
+  const placeMarker = createIssueMarkerPlacer(viewport, markerScale)
+  const leaders: string[] = []
+  const markers: string[] = []
+  const markup = overlays.map(
+    ({ index, point, title, geometry, issueType }) => {
+      if (point) {
+        const preferredCenter = {
+          x: point.x,
+          y: point.y - (ISSUE_MARKER_RADIUS + 1) * markerScale,
         }
+        const center = placeMarker(preferredCenter)
+        if (center.x !== preferredCenter.x || center.y !== preferredCenter.y)
+          leaders.push(
+            `<line x1="${point.x}" y1="${point.y}" x2="${center.x}" y2="${center.y}" stroke="#b91c1c" stroke-width="0.5" />`,
+          )
+        markers.push(
+          `<g data-issue-number="${index + 1}" data-issue-type="${issueType}" transform="translate(${center.x} ${center.y}) scale(${markerScale})"><title>${title}</title><circle r="${ISSUE_MARKER_RADIUS}" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`,
+        )
       }
-      badgePositions.push(badge)
-      const leader =
-        badge.x !== point.x || badge.y !== point.y
-          ? `<line x1="${point.x}" y1="${point.y}" x2="${badge.x}" y2="${badge.y - 12 * badgeScale}" stroke="#b91c1c" stroke-width="0.5" />`
-          : ""
-      badges.push(
-        `${leader}<g data-issue-number="${index + 1}" transform="translate(${badge.x} ${badge.y}) scale(${badgeScale})"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`,
-      )
-    }
-    return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}</g>`
-  })
+      return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}</g>`
+    },
+  )
   return {
     bounds,
     svg: framedSvg.replace(
       /<\/svg>\s*$/,
-      `<g class="placement-issue-overlays">${markup.join("\n")}${badges.join("\n")}</g></svg>`,
+      `<g class="placement-issue-overlays">${markup.join("\n")}${leaders.join("\n")}${markers.join("\n")}</g></svg>`,
     ),
   }
 }

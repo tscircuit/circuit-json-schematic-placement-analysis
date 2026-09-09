@@ -45,7 +45,7 @@ test("records the full controller sheet's current findings around the unreported
   const input = {
     circuitJson,
     analysis,
-    cropToIssues: false,
+    showFullSchematic: true,
     width: 1800,
     height: 1200,
   }

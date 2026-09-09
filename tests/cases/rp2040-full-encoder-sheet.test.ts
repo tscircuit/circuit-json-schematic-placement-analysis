@@ -23,7 +23,7 @@ test("records no trace or orientation suggestions for the full encoder sheet's c
   const input = {
     circuitJson,
     analysis,
-    cropToIssues: false,
+    showFullSchematic: true,
     width: 1800,
     height: 1200,
   }
