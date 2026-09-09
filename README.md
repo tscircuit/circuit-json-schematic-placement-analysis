@@ -82,10 +82,7 @@ on the sensor sheet; all other counts are zero. Counts record analyzer behavior,
 not whether a report is a true positive. `NetLabelCollision` counts grouped issue
 objects; its `collisionBounds` retains the individual intersection regions.
 
-The Trellis Core example preserves the source and schematic records from
-`techmannih/trellis-core@0.2.9`. Its CPU Core and Power sheet repros capture the
-reviewed decoupling-capacitor grouping proximity concerns before
-fixes. See [fixture provenance and repro commands](tests/assets/trellis-core.md).
+
 
 Programmatically, use `analysis.getIssueCounts()` and
 `analysis.getIssues({ issueTypes: ["ComponentOverlap"], schematicSheetId })`.
