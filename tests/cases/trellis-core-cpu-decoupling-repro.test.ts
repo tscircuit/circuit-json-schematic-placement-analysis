@@ -1,8 +1,5 @@
 import { expect, test } from "bun:test"
-import type { SchematicPort } from "circuit-json"
-import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 import { analyzeSchematicPlacement } from "lib/index"
-import { parseSync, type INode } from "svgson"
 import {
   getTrellisCoreSheetCircuitJson,
   trellisCoreCircuitJson,
@@ -64,72 +61,13 @@ test("reproduces Trellis Core's published CPU decoupling layout before grouping 
     ["CrystalNotCenteredOverLoadCapacitors", 1],
     ["TwoPinComponentShouldBeVertical", 5],
   ])
-  const svg = createSchematicAnalysisFixtureSvg({
-    circuitJson,
-    analysis,
-    width: 1800,
-    height: 1200,
-  }).replace(/[ \t]+$/gm, "")
-
-  const descendants = (node: INode): INode[] => [
-    node,
-    ...node.children.flatMap(descendants),
-  ]
-  const schematicSvg = convertCircuitJsonToSchematicSvg(circuitJson)
-  const nodes = descendants(parseSync(schematicSvg))
-  const pathPoints = (path: INode) =>
-    [
-      ...(path.attributes.d ?? "").matchAll(
-        /[ML]\s*([\d.e+-]+)[ ,]+([\d.e+-]+)/gi,
-      ),
-    ].map((match) => ({ x: Number(match[1]), y: Number(match[2]) }))
-  const tracePoints = nodes
-    .filter((node) => node.attributes.class === "sch-trace-path")
-    .flatMap(pathPoints)
-  const matrix = schematicSvg.match(
-    /data-real-to-screen-transform="matrix\(([^)]+)\)"/,
-  )
-  expect(matrix).not.toBeNull()
-  const [a, b, c, d, e, f] = matrix![1]!.split(",").map(Number) as [
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-  ]
-
-  // Both visible symbol leads and traces must meet the
-  // actual ports. A snapshot alone can accidentally accept disconnected leads.
-  for (const name of ["C28", "C29"]) {
-    const component = getReproSchematicComponent(circuitJson, name)
-    const symbol = nodes.find(
-      (node) =>
-        node.attributes["data-schematic-component-id"] ===
-        component.schematic_component_id,
-    )
-    expect(symbol).toBeDefined()
-    const symbolPoints = descendants(symbol!)
-      .filter((node) => node.attributes.class === "sch-component-symbol-path")
-      .flatMap(pathPoints)
-    const ports = circuitJson.filter(
-      (element): element is SchematicPort =>
-        element.type === "schematic_port" &&
-        element.schematic_component_id === component.schematic_component_id,
-    )
-    expect(ports).toHaveLength(2)
-    for (const port of ports) {
-      const x = a * port.center.x + c * port.center.y + e
-      const y = b * port.center.x + d * port.center.y + f
-      for (const points of [tracePoints, symbolPoints]) {
-        expect(
-          Math.min(
-            ...points.map((point) => Math.hypot(point.x - x, point.y - y)),
-          ),
-        ).toBeLessThan(1e-6)
-      }
-    }
-  }
-  expect(svg).toMatchSvgSnapshot(import.meta.path)
+  expect(
+    createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      width: 1800,
+      height: 1200,
+    }).replace(/[ \t]+$/gm, ""),
+  ).toMatchSvgSnapshot(import.meta.path)
   expect(JSON.stringify(trellisCoreCircuitJson)).toBe(original)
 })

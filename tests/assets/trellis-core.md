@@ -14,8 +14,8 @@ Tests and the gallery use this checked-in data without network requests or
 rebuilding against a newer layout engine.
 
 The reviewer requested grouping decoupling capacitors on the same supply rail
-and keeping LEDs near their paired resistors. The placement checks remain
-**repros**; the snapshots record current behavior before analyzer or layout fixes:
+and keeping LEDs near their paired resistors. This is a **repro only**; the
+snapshots record current behavior before analyzer or layout fixes:
 
 - CPU Core: C9–C15 share P3V3/GND and span 12 schematic units. C16–C21 share
   P1V8/GND; C34/C35 are on that same rail in a separate cluster. C22–C27 share
@@ -33,10 +33,13 @@ and keeping LEDs near their paired resistors. The placement checks remain
 Reported issue counts are baselines, not endorsements of each diagnosis.
 The snapshots show each complete sheet with the analysis text below it.
 
-The CPU repro also checks that C28/C29's rendered symbol leads and traces meet
-their exported ports. A [renderer dependency patch](../../patches/README.md)
-corrects symbol scaling that previously left visible gaps at those connections.
-The original fixture and placement analyzer are unchanged.
+The visible C28/C29 symbol-to-trace gaps are an upstream rendering issue in
+[`circuit-to-svg`'s `pointPairsToMatrix`](https://github.com/tscircuit/circuit-to-svg/blob/main/lib/utils/point-pairs-to-matrix.ts).
+When symbol terminal spacing differs from exported port spacing, the transform
+scales the symbol but calculates translation from the unscaled source point.
+This calculation is still present in release 0.0.413. The repro preserves the
+current output; the correction belongs in `circuit-to-svg`, followed by a
+dependency update here once a corrected release is available.
 
 Run the repros:
 
