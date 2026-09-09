@@ -3,6 +3,10 @@ import type { SchematicPlacementAnalysis } from "lib/index"
 import type { SchematicPlacementIssue } from "lib/types"
 import { escapeAttr } from "lib/utils/format"
 import {
+  createIssueMarkerPlacer,
+  ISSUE_MARKER_RADIUS,
+} from "lib/svg/place-issue-markers"
+import {
   getIssueSchematicSheetContext,
   getRelevantPlacementsForIssues,
 } from "lib/utils/issue-context"
@@ -236,33 +240,12 @@ function createHighlightLayer(
   }
   const width = Number(node.attributes.width)
   const height = Number(node.attributes.height)
-  const badges: Point[] = []
-  const placeBadge = (anchor: Point): Point => {
-    for (let ring = 0; ring <= badges.length + 1; ring++) {
-      for (let dx = -ring; dx <= ring; dx++) {
-        for (let dy = -ring; dy <= ring; dy++) {
-          if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue
-          const candidate = { x: anchor.x + dx * 25, y: anchor.y + dy * 25 }
-          if (
-            candidate.x < 12 ||
-            candidate.x > width - 12 ||
-            candidate.y < 12 ||
-            candidate.y > height - 12
-          )
-            continue
-          if (
-            badges.some(
-              (p) => Math.hypot(p.x - candidate.x, p.y - candidate.y) < 24,
-            )
-          )
-            continue
-          badges.push(candidate)
-          return candidate
-        }
-      }
-    }
-    return anchor
-  }
+  const placeBadge = createIssueMarkerPlacer({
+    left: 0,
+    top: 0,
+    right: width,
+    bottom: height,
+  })
   const markup = entries
     .map((entry) => {
       const seen = new Set<string>()
@@ -289,15 +272,15 @@ function createHighlightLayer(
         .map((shape) => {
           const bounds = screenBounds(shape)
           const anchor = {
-            x: Math.max(12, Math.min(width - 12, bounds.left - 12)),
-            y: Math.max(12, Math.min(height - 12, bounds.top - 12)),
+            x: bounds.left - ISSUE_MARKER_RADIUS - 1,
+            y: bounds.top - ISSUE_MARKER_RADIUS - 1,
           }
           const badge = placeBadge(anchor)
           const leader =
             badge.x === anchor.x && badge.y === anchor.y
               ? ""
               : `<line x1="${badge.x}" y1="${badge.y}" x2="${bounds.left}" y2="${bounds.top}" stroke="#b91c1c" />`
-          return `${leader}<g class="issue-marker"><circle cx="${badge.x}" cy="${badge.y}" r="11" fill="#b91c1c" /><text x="${badge.x}" y="${badge.y}" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">${entry.number}</text></g>`
+          return `${leader}<g class="issue-marker"><circle cx="${badge.x}" cy="${badge.y}" r="${ISSUE_MARKER_RADIUS}" fill="#b91c1c" /><text x="${badge.x}" y="${badge.y}" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">${entry.number}</text></g>`
         })
         .join("")
       const title =
