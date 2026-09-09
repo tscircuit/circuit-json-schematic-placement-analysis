@@ -17,7 +17,14 @@ export type IssueType = SchematicPlacementIssue["lineItemType"]
 export function getReproSheets(circuitJson: CircuitJson) {
   const ids = new Set(
     circuitJson.flatMap((element) =>
-      element.type.startsWith("schematic_")
+      element.type.startsWith("schematic_") &&
+      // Shared definitions and invisible subcircuit groups don't create a sheet.
+      element.type !== "schematic_symbol" &&
+      !(
+        element.type === "schematic_group" &&
+        element.is_subcircuit &&
+        !element.show_as_schematic_box
+      )
         ? [
             ("schematic_sheet_id" in element
               ? element.schematic_sheet_id

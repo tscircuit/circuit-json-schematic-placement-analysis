@@ -1,12 +1,21 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
-import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
+import {
+  getRp2040BldcSheet,
+  rp2040BldcCircuitJson,
+} from "../assets/rp2040-bldc-controller"
+import {
+  createIssueOverlaySvg,
+  getReproSheets,
+} from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 // USB reference: RP2040 hardware design guide, Figure 9 (PDF page 12).
 // https://datasheets.raspberrypi.com/rp2040/hardware-design-with-rp2040.pdf#page=12
 test("records the full controller sheet's current findings around the unreported USB layout", () => {
+  expect(
+    getReproSheets(rp2040BldcCircuitJson).map((sheet) => sheet.name),
+  ).toEqual(["controller", "hall", "encoder", "power_input", "power"])
   const circuitJson = getRp2040BldcSheet("controller")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
