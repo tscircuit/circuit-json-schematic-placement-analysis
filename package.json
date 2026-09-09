@@ -78,5 +78,8 @@
   "peerDependencies": {
     "circuit-json": "*",
     "typescript": "^5"
+  },
+  "patchedDependencies": {
+    "circuit-to-svg@0.0.370": "patches/circuit-to-svg@0.0.370.patch"
   }
 }
