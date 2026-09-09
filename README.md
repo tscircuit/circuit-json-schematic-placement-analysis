@@ -84,7 +84,7 @@ objects; its `collisionBounds` retains the individual intersection regions.
 
 The Trellis Core example preserves the source and schematic records from
 `techmannih/trellis-core@0.2.9`. Its CPU Core and Power sheet repros capture the
-reviewed decoupling-capacitor grouping and LED/resistor proximity concerns before
+reviewed decoupling-capacitor grouping proximity concerns before
 fixes. See [fixture provenance and repro commands](tests/assets/trellis-core.md).
 
 Programmatically, use `analysis.getIssueCounts()` and
