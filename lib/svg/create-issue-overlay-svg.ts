@@ -59,6 +59,8 @@ export function renderIssueOverlay(input: {
   issueTypes?: readonly IssueType[]
   issueIndex?: number
   showOverlay?: boolean
+  /** Set false to retain the complete sheet instead of framing the selected issues. */
+  cropToIssues?: boolean
   width?: number
   height?: number
 }) {
@@ -210,7 +212,7 @@ export function renderIssueOverlay(input: {
   })
   let framedSvg = svg
   let badgeScale = 1
-  if (focusPoints.length > 0) {
+  if (input.cropToIssues !== false && focusPoints.length > 0) {
     const minX = Math.min(...focusPoints.map((point) => point.x))
     const maxX = Math.max(...focusPoints.map((point) => point.x))
     const minY = Math.min(...focusPoints.map((point) => point.y))
