@@ -128,7 +128,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
 
   static issueToString(issue: SchematicBoxTooWideIssue): string {
     const attrs: string[] = []
-    addAttr(attrs, "message", issue.message, { escape: false })
+    addAttr(attrs, "message", issue.message)
     addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
     addAttr(attrs, "currentSchWidth", issue.schematicBox.width)
     addAttr(
