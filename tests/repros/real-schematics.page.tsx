@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import {
   createIssueOverlaySvg,
@@ -51,6 +50,7 @@ export default function RealSchematicRepros() {
           ...filter,
           issueIndex,
           showOverlay,
+          showFullSchematic: repro.showFullSchematic,
         }),
         error: "",
       }
@@ -62,7 +62,7 @@ export default function RealSchematicRepros() {
     }
   }, [repro, analysis, sheetId, issueType, issueIndex, showOverlay])
 
-  const selectRepro = (next: { name: string; circuitJson: CircuitJson }) => {
+  const selectRepro = (next: (typeof realSchematics)[number]) => {
     setRepro(next)
     setSheetId(getReproSheets(next.circuitJson)[0]?.id ?? "")
     setIssueType("all")
