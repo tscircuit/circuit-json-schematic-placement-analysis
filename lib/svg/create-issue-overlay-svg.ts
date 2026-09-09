@@ -18,6 +18,8 @@ export function getReproSheets(circuitJson: CircuitJson) {
   const ids = new Set(
     circuitJson.flatMap((element) =>
       element.type.startsWith("schematic_") &&
+      !element.type.endsWith("_warning") &&
+      !element.type.endsWith("_error") &&
       // Shared definitions and invisible subcircuit groups don't create a sheet.
       element.type !== "schematic_symbol" &&
       !(
@@ -70,6 +72,8 @@ export function renderIssueOverlay(input: {
   cropToIssues?: boolean
   width?: number
   height?: number
+  /** Original rendered sheet, when importing an export from another toolchain version. */
+  schematicSvg?: string
 }) {
   const { circuitJson, analysis } = input
   const sheetId =
@@ -77,14 +81,17 @@ export function renderIssueOverlay(input: {
   const sheetJson = circuitJson.filter(
     (element) =>
       !element.type.startsWith("schematic_") ||
+      element.type === "schematic_symbol" ||
       (("schematic_sheet_id" in element
         ? element.schematic_sheet_id
         : undefined) ?? "") === sheetId,
   )
-  const svg = convertCircuitJsonToSchematicSvg(sheetJson, {
-    width: input.width ?? 1400,
-    height: input.height ?? 900,
-  })
+  const svg =
+    input.schematicSvg ??
+    convertCircuitJsonToSchematicSvg(sheetJson, {
+      width: input.width ?? 1400,
+      height: input.height ?? 900,
+    })
   const matrix = svg.match(/data-real-to-screen-transform="matrix\(([^)]+)\)"/)
   if (!matrix)
     throw new Error(
@@ -117,6 +124,8 @@ export function renderIssueOverlay(input: {
   const placements = analysis
     .getLineItems()
     .filter((item) => item.lineItemType === "SchematicBoxPlacement")
+  // Several issue types can target the same box. Draw its fill only once.
+  const drawnRects = new Set<string>()
   const overlays = analysis.getIssues().flatMap((issue, index) => {
     if (
       (getIssueSchematicSheetContext(issue).schematicSheetId ?? "") !==
@@ -136,9 +145,9 @@ export function renderIssueOverlay(input: {
     const rect = (bounds: SchematicIssueBounds, isContext = false) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
-      geometry.push(
-        `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`,
-      )
+      const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
+      if (!drawnRects.has(markup)) geometry.push(markup)
+      drawnRects.add(markup)
     }
     for (const placement of context) rect(boxBounds(placement), true)
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
@@ -251,17 +260,46 @@ export function renderIssueOverlay(input: {
       }
     : undefined
   if (input.showOverlay === false) return { svg: framedSvg, bounds }
+  const badgePositions: Array<{ x: number; y: number }> = []
+  const badges: string[] = []
   const markup = overlays.map(({ index, point, geometry, issueType }) => {
-    const badge = point
-      ? `<g transform="translate(${point.x} ${point.y}) scale(${badgeScale})"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`
-      : ""
-    return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}${badge}</g>`
+    if (point) {
+      let badge = { x: point.x, y: point.y }
+      const step = 26 * badgeScale
+      const available = (candidate: typeof badge) =>
+        badgePositions.every(
+          (other) =>
+            Math.hypot(other.x - candidate.x, other.y - candidate.y) >= step,
+        )
+      // Keep the original anchor when possible, then search outward on a grid.
+      search: for (let ring = 0; ring <= overlays.length; ring++) {
+        for (let dy = -ring; dy <= ring; dy++) {
+          for (let dx = -ring; dx <= ring; dx++) {
+            if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue
+            const candidate = { x: point.x + dx * step, y: point.y + dy * step }
+            if (available(candidate)) {
+              badge = candidate
+              break search
+            }
+          }
+        }
+      }
+      badgePositions.push(badge)
+      const leader =
+        badge.x !== point.x || badge.y !== point.y
+          ? `<line x1="${point.x}" y1="${point.y}" x2="${badge.x}" y2="${badge.y - 12 * badgeScale}" stroke="#b91c1c" stroke-width="0.5" />`
+          : ""
+      badges.push(
+        `${leader}<g data-issue-number="${index + 1}" transform="translate(${badge.x} ${badge.y}) scale(${badgeScale})"><circle cy="-12" r="11" fill="#b91c1c" /><text y="-8" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`,
+      )
+    }
+    return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}</g>`
   })
   return {
     bounds,
     svg: framedSvg.replace(
       /<\/svg>\s*$/,
-      `<g class="placement-issue-overlays">${markup.join("\n")}</g></svg>`,
+      `<g class="placement-issue-overlays">${markup.join("\n")}${badges.join("\n")}</g></svg>`,
     ),
   }
 }

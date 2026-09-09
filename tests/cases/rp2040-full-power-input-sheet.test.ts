@@ -1,7 +1,11 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
+import {
+  getRp2040BldcSheet,
+  getRp2040BldcSheetSvg,
+} from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 
 // Compare the ORing power paths with LM74700-Q1 Figure 10-1.
 // https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf#page=16
@@ -22,10 +26,9 @@ test("records the full input sheet's local trace suggestions without rearranging
     SchematicBoxInnerLabelCollision: 6,
     SchematicPinPaddingToEdgeTooLarge: 26,
     DiodeResistorNotAligned: 1,
-    TraceCanBeSimplifiedByMovingComponent: 4,
+    TraceCanBeSimplifiedByMovingComponent: 5,
     NetLabelCollision: 1,
-    SchematicTextCollision: 1,
-    TwoPinComponentShouldBeVertical: 6,
+    TwoPinComponentShouldBeVertical: 7,
   })
   // The two ORing suggestions straighten local wires; they don't expose the
   // complete input -> MOSFET -> VIN_SELECTED paths as in the reference.
@@ -37,18 +40,37 @@ test("records the full input sheet's local trace suggestions without rearranging
           ? [issue.targetComponent.sourceComponentName]
           : [],
       ),
-  ).toEqual(["D_PD_VBUS", "R_PD_RESET", "U_PD_OR", "U_BARREL_OR"])
+  ).toEqual(["D_PD_VBUS", "R_PD_RESET", "J_BARREL", "U_PD_OR", "U_BARREL_OR"])
+  const input = {
+    circuitJson,
+    analysis,
+    cropToIssues: false,
+    schematicSvg: getRp2040BldcSheetSvg("power_input"),
+    width: 1800,
+    height: 1200,
+  }
+  const svg = createIssueOverlaySvg(input)
+  const markers = [
+    ...svg.matchAll(
+      /data-issue-number="(\d+)" transform="translate\(([^ ]+) ([^)]+)\)/g,
+    ),
+  ]
+  expect(markers.map((match) => Number(match[1]))).toEqual(
+    Array.from({ length: 48 }, (_, index) => index + 1),
+  )
+  // Multiple padding issues on one IC must remain individually readable.
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      issueTypes: [
-        "TraceCanBeSimplifiedByMovingComponent",
-        "NetLabelCollision",
-      ],
-      cropToIssues: false,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path)
+    markers.every((marker, index) =>
+      markers
+        .slice(index + 1)
+        .every(
+          (other) =>
+            Math.hypot(
+              Number(marker[2]) - Number(other[2]),
+              Number(marker[3]) - Number(other[3]),
+            ) >= 22,
+        ),
+    ),
+  ).toBe(true)
+  expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })

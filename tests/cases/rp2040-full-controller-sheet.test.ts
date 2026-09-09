@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import {
   getRp2040BldcSheet,
+  getRp2040BldcSheetSvg,
   rp2040BldcCircuitJson,
 } from "../assets/rp2040-bldc-controller"
 import {
@@ -29,6 +30,7 @@ test("records the full controller sheet's current findings around the unreported
     ),
   ).toEqual({
     TraceCanBeSimplifiedByMovingComponent: 3,
+    NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 1,
   })
   // None of these three suggestions addresses J_USB or R_USB1/R_USB2.
@@ -44,17 +46,18 @@ test("records the full controller sheet's current findings around the unreported
   const input = {
     circuitJson,
     analysis,
-    issueTypes: [
-      "TraceCanBeSimplifiedByMovingComponent",
-      "NetLabelCollision",
-      "TwoPinComponentCouldBeFlipped",
-    ] as const,
     cropToIssues: false,
+    schematicSvg: getRp2040BldcSheetSvg("controller"),
     width: 1800,
     height: 1200,
   }
   const svg = createIssueOverlaySvg(input)
+  expect(createIssueOverlaySvg({ ...input, showOverlay: false })).toBe(
+    getRp2040BldcSheetSvg("controller"),
+  )
   expect(svg.match(/^<svg\b[^>]*>/)![0]).not.toContain("viewBox=")
-  expect(svg.match(/data-issue-index=/g)).toHaveLength(3)
+  expect(svg.match(/data-issue-index=/g)).toHaveLength(
+    analysis.getIssues().length,
+  )
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })

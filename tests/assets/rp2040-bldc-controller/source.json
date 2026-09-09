@@ -132,8 +132,8 @@
     "name": "PD_VBUS_SENSE",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_1",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_1_connectivity_net33"
   },
@@ -176,8 +176,8 @@
     "name": "PD_VSYS_3V3",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_1",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_1_connectivity_net25"
   },
@@ -198,8 +198,8 @@
     "name": "PHASE_V",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_1",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_1_connectivity_net80"
   },
@@ -2382,8 +2382,8 @@
     "name": "ADC_VREF",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_0",
     "subcircuit_connectivity_map_key": "MCU_connectivity_net8"
   },
@@ -4508,7 +4508,8 @@
     "pin_number": 3,
     "port_hints": ["pin3", "3", "SWITCH"],
     "source_component_id": "source_component_80",
-    "subcircuit_id": "subcircuit_source_group_1"
+    "subcircuit_id": "subcircuit_source_group_1",
+    "do_not_connect": true
   },
   {
     "type": "source_port",
@@ -13374,6 +13375,190 @@
     "warning_type": "source_pin_missing_trace_warning"
   },
   {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_0",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_TEMP_SCL\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_12", "source_net_43"],
+    "net_name": "MCU_TEMP_SCL"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_1",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_TEMP_SDA\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_13", "source_net_42"],
+    "net_name": "MCU_TEMP_SDA"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_2",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INHA\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_26", "source_net_58"],
+    "net_name": "MCU_PWM_INHA"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_3",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INLA\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_27", "source_net_59"],
+    "net_name": "MCU_PWM_INLA"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_4",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INHB\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_28", "source_net_60"],
+    "net_name": "MCU_PWM_INHB"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_5",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INLB\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_29", "source_net_61"],
+    "net_name": "MCU_PWM_INLB"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_6",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INHC\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_30", "source_net_62"],
+    "net_name": "MCU_PWM_INHC"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_7",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_PWM_INLC\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_31", "source_net_63"],
+    "net_name": "MCU_PWM_INLC"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_8",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_GATE_ENABLE_CMD\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_32", "source_net_67"],
+    "net_name": "MCU_GATE_ENABLE_CMD"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_9",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_GATE_FAULT\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_33", "source_net_64"],
+    "net_name": "MCU_GATE_FAULT"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_10",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_GATE_CAL\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_34", "source_net_65"],
+    "net_name": "MCU_GATE_CAL"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_11",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_HALL_A_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_35", "source_net_50"],
+    "net_name": "MCU_HALL_A_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_12",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_HALL_B_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_36", "source_net_51"],
+    "net_name": "MCU_HALL_B_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_13",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_HALL_C_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_37", "source_net_52"],
+    "net_name": "MCU_HALL_C_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_14",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_POWER_GOOD\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_38", "source_net_57"],
+    "net_name": "MCU_POWER_GOOD"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_15",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_ENC_A_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_39", "source_net_53"],
+    "net_name": "MCU_ENC_A_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_16",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_ENC_B_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_40", "source_net_54"],
+    "net_name": "MCU_ENC_B_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_17",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_ENC_Z_GPIO\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_41", "source_net_55"],
+    "net_name": "MCU_ENC_Z_GPIO"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_18",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_TEMP_ALERT_n\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_44", "source_net_66"],
+    "net_name": "MCU_TEMP_ALERT_n"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_19",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_A_CURRENT_ADC\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_45", "source_net_68"],
+    "net_name": "MCU_A_CURRENT_ADC"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_20",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_B_CURRENT_ADC\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_46", "source_net_69"],
+    "net_name": "MCU_B_CURRENT_ADC"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_21",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_C_CURRENT_ADC\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_47", "source_net_70"],
+    "net_name": "MCU_C_CURRENT_ADC"
+  },
+  {
+    "type": "source_confusing_net_name_warning",
+    "source_confusing_net_name_warning_id": "source_confusing_net_name_warning_22",
+    "warning_type": "source_confusing_net_name_warning",
+    "message": "Nets named \"MCU_BUS_CURRENT\" are not all connected (2 separate electrical networks). Connect them or use distinct names to avoid confusion.",
+    "source_net_ids": ["source_net_48", "source_net_56"],
+    "net_name": "MCU_BUS_CURRENT"
+  },
+  {
     "type": "source_component_pins_underspecified_warning",
     "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_0",
     "warning_type": "source_component_pins_underspecified_warning",
@@ -13526,19 +13711,6 @@
     "type": "source_component_pins_underspecified_warning",
     "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_7",
     "warning_type": "source_component_pins_underspecified_warning",
-    "message": "All pins on J_BARREL are underspecified (no pinAttributes set)",
-    "source_component_id": "source_component_80",
-    "source_port_ids": [
-      "source_port_293",
-      "source_port_294",
-      "source_port_295"
-    ],
-    "subcircuit_id": "subcircuit_source_group_1"
-  },
-  {
-    "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_8",
-    "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on U_PD_OR are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_81",
     "source_port_ids": [
@@ -13553,7 +13725,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_9",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_8",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_PD_OR are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_82",
@@ -13566,7 +13738,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_10",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_9",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on U_BARREL_OR are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_85",
@@ -13582,7 +13754,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_11",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_10",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_BARREL_OR are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_86",
@@ -13595,7 +13767,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_12",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_11",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on F_INPUT are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_90",
@@ -13604,7 +13776,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_13",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_12",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on D_TVS are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_92",
@@ -13613,7 +13785,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_14",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_13",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on U_GATE are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_109",
@@ -13664,7 +13836,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_15",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_14",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on U_TEMP are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_125",
@@ -13680,7 +13852,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_16",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_15",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on U_ENABLE_AND are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_130",
@@ -13695,7 +13867,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_17",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_16",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_HA are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_133",
@@ -13713,7 +13885,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_18",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_17",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_LA are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_134",
@@ -13731,7 +13903,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_19",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_18",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_HB are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_143",
@@ -13749,7 +13921,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_20",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_19",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_LB are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_144",
@@ -13767,7 +13939,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_21",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_20",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_HC are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_153",
@@ -13785,7 +13957,7 @@
   },
   {
     "type": "source_component_pins_underspecified_warning",
-    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_22",
+    "source_component_pins_underspecified_warning_id": "source_component_pins_underspecified_warning_21",
     "warning_type": "source_component_pins_underspecified_warning",
     "message": "All pins on Q_LC are underspecified (no pinAttributes set)",
     "source_component_id": "source_component_154",
@@ -14854,17 +15026,7 @@
     "subcircuit_id": "subcircuit_source_group_1"
   },
   {
-    "type": "source_part_not_found_warning",
-    "source_part_not_found_warning_id": "source_part_not_found_warning_5MFSZvEse5",
-    "warning_type": "source_part_not_found_warning",
-    "message": "Failed to fetch supplier footprint for <inductor#789(.MCU>.L_AVDD) /> (jlcpcb:C1002): No exact EasyEDA component match for \"C1002\"",
-    "source_component_id": "source_component_34",
-    "subcircuit_id": "subcircuit_source_group_0",
-    "supplier_name": "jlcpcb",
-    "supplier_part_number": "C1002"
-  },
-  {
     "type": "source_project_metadata",
-    "source_filesystem_md5_hash": "9f4f8f20f63d6f4111c0658066b4a680"
+    "source_filesystem_md5_hash": "80845ac0c151e3e51f54bf7753cbe9be"
   }
 ]

@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
+import {
+  getRp2040BldcSheet,
+  getRp2040BldcSheetSvg,
+} from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 // Buck reference: LMR16020 Figure 22. Its output inductor is horizontal.
@@ -21,7 +24,6 @@ test("records the full power sheet's missing buck grouping and questionable indu
     GenericSchematicBoxTooWide: 1,
     SchematicBoxInnerLabelCollision: 1,
     SchematicPinPaddingToEdgeTooLarge: 12,
-    TraceCanBeSimplifiedByMovingComponent: 1,
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 9,
   })
@@ -33,7 +35,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
           ? [issue.targetComponent.sourceComponentName]
           : [],
       ),
-  ).toEqual(["D_TVS"])
+  ).toEqual([])
   // Capture today's output for review, not an endorsement of rotating L_BUCK.
   expect(
     analysis
@@ -48,12 +50,8 @@ test("records the full power sheet's missing buck grouping and questionable indu
     createIssueReproSnapshot({
       circuitJson,
       analysis,
-      issueTypes: [
-        "TraceCanBeSimplifiedByMovingComponent",
-        "TwoPinComponentShouldBeVertical",
-        "FeedbackNetworkNotCompact",
-      ],
       cropToIssues: false,
+      schematicSvg: getRp2040BldcSheetSvg("power"),
       width: 1800,
       height: 1200,
     }),

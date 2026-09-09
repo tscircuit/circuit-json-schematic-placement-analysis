@@ -51,6 +51,7 @@ export default function RealSchematicRepros() {
           issueIndex,
           showOverlay,
           cropToIssues: repro.cropToIssues,
+          schematicSvg: repro.sheetSvgs?.[sheetId],
         }),
         error: "",
       }

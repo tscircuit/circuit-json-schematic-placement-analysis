@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
+import {
+  getRp2040BldcSheet,
+  getRp2040BldcSheetSvg,
+} from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 // Compare connector/filter arrangement with TI's Hall interface, Figure 21.
@@ -24,15 +27,19 @@ test("records no trace or orientation suggestions for the full Hall sheet's conn
   const input = {
     circuitJson,
     analysis,
-    issueTypes: [
-      "TraceCanBeSimplifiedByMovingComponent",
-      "TwoPinComponentCouldBeFlipped",
-    ] as const,
     cropToIssues: false,
+    schematicSvg: getRp2040BldcSheetSvg("hall"),
     width: 1800,
     height: 1200,
   }
   // Preserve the missing detection explicitly; don't invent an overlay for it.
-  expect(analysis.getIssues(input)).toEqual([])
+  expect(
+    analysis.getIssues({
+      issueTypes: [
+        "TraceCanBeSimplifiedByMovingComponent",
+        "TwoPinComponentCouldBeFlipped",
+      ],
+    }),
+  ).toEqual([])
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })
