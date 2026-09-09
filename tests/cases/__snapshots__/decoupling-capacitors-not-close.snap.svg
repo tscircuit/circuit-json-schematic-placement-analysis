@@ -1,4 +1,4 @@
-<svg width="1200" height="1032" viewBox="0 0 1200 1032" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1010" viewBox="0 0 1200 1010" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -46,10 +46,9 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  targetComponentName=&quot;U1&quot; deltaSchX=&quot;0&quot; deltaSchY=&quot;+8.45&quot; newSchX=&quot;0&quot; newSchY=&quot;8.45&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move U1 up by 8.45 (to schX=0, schY=8.45)</tspan>
     <tspan x="18" dy="22">  to reduce this trace from 3 turns to 1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VCC&quot; ground=&quot;GND&quot; firstCapacitorName=&quot;C1&quot;</tspan>
-    <tspan x="18" dy="22">  secondCapacitorName=&quot;C2&quot; capacitorNames=&quot;C1, C2&quot; maxBodyGap=&quot;24.517&quot; maxRecommendedBodyGap=&quot;4&quot;</tspan>
-    <tspan x="18" dy="22">  message=&quot;Group the decoupling capacitors between VCC and GND closer together in this schematic</tspan>
-    <tspan x="18" dy="22">  block. Preserve their net connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VCC&quot; ground=&quot;GND&quot; capacitorNames=&quot;C1, C2&quot;</tspan>
+    <tspan x="18" dy="22">  maxBodyGap=&quot;24.517&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling capacitors between</tspan>
+    <tspan x="18" dy="22">  VCC and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

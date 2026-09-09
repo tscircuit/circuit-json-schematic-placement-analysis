@@ -101,8 +101,6 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
       ...bank.capacitors.map((box) => 3 * Math.max(box.width, box.height)),
     )
     let maxBodyGap = 0
-    let first = bank.capacitors[0]!
-    let second = bank.capacitors[1]!
     for (let i = 0; i < bank.capacitors.length; i++) {
       for (const b of bank.capacitors.slice(i + 1)) {
         const a = bank.capacitors[i]!
@@ -110,24 +108,17 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
           Math.max(0, Math.abs(a.schX - b.schX) - (a.width + b.width) / 2),
           Math.max(0, Math.abs(a.schY - b.schY) - (a.height + b.height) / 2),
         )
-        if (gap > maxBodyGap) {
-          maxBodyGap = gap
-          first = a
-          second = b
-        }
+        maxBodyGap = Math.max(maxBodyGap, gap)
       }
     }
     if (maxBodyGap <= maxRecommendedBodyGap + 1e-6) return
     const railName = this.netNames.get(bank.power) ?? bank.power
     const groundName = this.netNames.get(bank.ground) ?? bank.ground
-    // One report per bank, with the farthest pair as evidence and all members
-    // as context. This avoids a separate warning for every distant pair.
+    // Report the entire bank once, including long rows of nearby neighbors.
     this.params.issues.push({
       lineItemType: "DecouplingCapacitorsNotCloseTogether",
       railName,
       groundName,
-      firstCapacitorSchematicBox: first,
-      secondCapacitorSchematicBox: second,
       capacitorSchematicBoxes: bank.capacitors,
       maxBodyGap,
       maxRecommendedBodyGap,
@@ -139,16 +130,6 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
     const attrs: string[] = []
     addAttr(attrs, "rail", issue.railName)
     addAttr(attrs, "ground", issue.groundName)
-    addAttr(
-      attrs,
-      "firstCapacitorName",
-      issue.firstCapacitorSchematicBox.sourceComponentName,
-    )
-    addAttr(
-      attrs,
-      "secondCapacitorName",
-      issue.secondCapacitorSchematicBox.sourceComponentName,
-    )
     addAttr(
       attrs,
       "capacitorNames",

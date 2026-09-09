@@ -191,7 +191,8 @@ export const getIssueSchematicSheetContext = (
     }
   }
 
-  for (const value of Object.values(issue)) {
+  // Group diagnostics carry their placements in an array instead of a pair.
+  for (const value of Object.values(issue).flat()) {
     if (isSchematicBoxPlacement(value)) {
       return {
         schematicSheetId: value.schematicSheetId,

@@ -1,4 +1,4 @@
-<svg width="1200" height="1230" viewBox="0 0 1200 1230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1208" viewBox="0 0 1200 1208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -83,10 +83,9 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;U1&quot; railPin=&quot;SUPPLY&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate U1 by -90° so its</tspan>
     <tspan x="18" dy="22">  power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;SUPPLY&quot; ground=&quot;RETURN&quot; firstCapacitorName=&quot;C1&quot;</tspan>
-    <tspan x="18" dy="22">  secondCapacitorName=&quot;C2&quot; capacitorNames=&quot;C1, C2&quot; maxBodyGap=&quot;15.47&quot; maxRecommendedBodyGap=&quot;4&quot;</tspan>
-    <tspan x="18" dy="22">  message=&quot;Group the decoupling capacitors between SUPPLY and RETURN closer together in this</tspan>
-    <tspan x="18" dy="22">  schematic block. Preserve their net connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;SUPPLY&quot; ground=&quot;RETURN&quot; capacitorNames=&quot;C1, C2&quot;</tspan>
+    <tspan x="18" dy="22">  maxBodyGap=&quot;15.47&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling capacitors between</tspan>
+    <tspan x="18" dy="22">  SUPPLY and RETURN closer together in this schematic block. Preserve their net connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

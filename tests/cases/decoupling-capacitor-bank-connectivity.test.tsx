@@ -52,8 +52,12 @@ test("reports one bank regardless of pin order and excludes other rails, returns
   expect(
     issue.capacitorSchematicBoxes.map((box) => box.sourceComponentName),
   ).toEqual(["C1", "C2", "C3"])
-  expect(issue.firstCapacitorSchematicBox.sourceComponentName).toBe("C1")
-  expect(issue.secondCapacitorSchematicBox.sourceComponentName).toBe("C3")
+  expect(issue).not.toHaveProperty("firstCapacitorSchematicBox")
+  expect(issue).not.toHaveProperty("secondCapacitorSchematicBox")
+  const xml = analysis.schematicIssuesToString(issue)
+  expect(xml).toContain('capacitorNames="C1, C2, C3"')
+  expect(xml).not.toContain("firstCapacitorName")
+  expect(xml).not.toContain("secondCapacitorName")
   expect(issue.railName).toBe("VCC")
   expect(issue.groundName).toBe("GND")
   // New diagnostic attributes must use the same XML escaping as other issues.

@@ -1,4 +1,4 @@
-<svg width="1800" height="2544" viewBox="0 0 1800 2544" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="2500" viewBox="0 0 1800 2500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -116,16 +116,14 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R_SENSOR_RESET&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R_SENSOR_RESET by</tspan>
     <tspan x="18" dy="22">  -90° so its power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot;</tspan>
-    <tspan x="18" dy="22">  firstCapacitorName=&quot;C_SENSOR_LDO_IN&quot; secondCapacitorName=&quot;C_SENSOR_VDDIO&quot;</tspan>
-    <tspan x="18" dy="22">  capacitorNames=&quot;C_SENSOR_LDO_IN, C_SENSOR_VDDIO&quot; maxBodyGap=&quot;14.524&quot; maxRecommendedBodyGap=&quot;4&quot;</tspan>
-    <tspan x="18" dy="22">  message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this</tspan>
-    <tspan x="18" dy="22">  schematic block. Preserve their net connections.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V1V9&quot; ground=&quot;GND&quot;</tspan>
-    <tspan x="18" dy="22">  firstCapacitorName=&quot;C_SENSOR_LDO_OUT&quot; secondCapacitorName=&quot;C_SENSOR_VDD_BULK&quot;</tspan>
-    <tspan x="18" dy="22">  capacitorNames=&quot;C_SENSOR_LDO_OUT, C_SENSOR_VDD_BULK, C_SENSOR_VDD&quot; maxBodyGap=&quot;12.322&quot;</tspan>
-    <tspan x="18" dy="22">  maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling capacitors between V1V9 and GND closer</tspan>
-    <tspan x="18" dy="22">  together in this schematic block. Preserve their net connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_SENSOR_LDO_IN,</tspan>
+    <tspan x="18" dy="22">  C_SENSOR_VDDIO&quot; maxBodyGap=&quot;14.524&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling</tspan>
+    <tspan x="18" dy="22">  capacitors between V3V3 and GND closer together in this schematic block. Preserve their net</tspan>
+    <tspan x="18" dy="22">  connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V1V9&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_SENSOR_LDO_OUT,</tspan>
+    <tspan x="18" dy="22">  C_SENSOR_VDD_BULK, C_SENSOR_VDD&quot; maxBodyGap=&quot;12.322&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group</tspan>
+    <tspan x="18" dy="22">  the decoupling capacitors between V1V9 and GND closer together in this schematic block.</tspan>
+    <tspan x="18" dy="22">  Preserve their net connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

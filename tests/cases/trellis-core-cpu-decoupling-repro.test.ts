@@ -94,16 +94,33 @@ test("reports the four scattered decoupling banks in Trellis Core's CPU sheet", 
       schematicSheetId: "schematic_sheet_1",
     }),
   ).toEqual(banks)
-  const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
-    analysis,
-    issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
-  })
+  const artifacts = createSchematicPlacementIssueArtifacts(
+    trellisCoreCircuitJson,
+    {
+      analysis: fullAnalysis,
+      schematicSheetId: "schematic_sheet_1",
+      issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+      height: 450,
+    },
+  )
   expect(artifacts).toHaveLength(4)
   for (const artifact of artifacts) {
+    const issue = artifact.issue
+    if (issue.lineItemType !== "DecouplingCapacitorsNotCloseTogether")
+      throw new Error("Expected capacitor grouping artifact")
+    expect(artifact.schematicSheetId).toBe("schematic_sheet_1")
     expect(artifact.bounds).toBeDefined()
     expect(artifact.content.match(/data-issue-index=/g)).toHaveLength(1)
     expect(artifact.descriptionXml).toContain(
       "<DecouplingCapacitorsNotCloseTogether",
+    )
+    expect(artifact.descriptionXml).toContain('capacitorNames="')
+    expect(artifact.descriptionXml).not.toContain("firstCapacitorName")
+    expect(artifact.descriptionXml).not.toContain("secondCapacitorName")
+    // Each real rail gets its own cropped schematic and diagnostic underneath.
+    expect(artifact.content).toMatchSvgSnapshot(
+      import.meta.path,
+      issue.railName,
     )
   }
   expect(

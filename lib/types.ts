@@ -54,10 +54,9 @@ export interface DecouplingCapacitorsNotCloseTogether {
   lineItemType: "DecouplingCapacitorsNotCloseTogether"
   railName: string
   groundName: string
-  /** Farthest pair, measured between the component bounds. */
-  firstCapacitorSchematicBox: SchematicBoxPlacement
-  secondCapacitorSchematicBox: SchematicBoxPlacement
+  /** All capacitors in this bank, sharing supply, return, and schematic scope. */
   capacitorSchematicBoxes: SchematicBoxPlacement[]
+  /** Largest gap between any two component bounds in the bank. */
   maxBodyGap: number
   maxRecommendedBodyGap: number
   message: string
