@@ -60,7 +60,8 @@ red text underneath so placement issues are easy to inspect visually.
 ## Inspect real schematic repros
 
 Run `bun start` and open the `real-schematics` Cosmos fixture. Select a complete
-wireless-mouse controller or sensor sheet, or import a Circuit JSON `.json` array
+wireless-mouse controller or sensor sheet, the five-sheet Trellis Core circuit,
+or import a Circuit JSON `.json` array
 from another project. Imports are analyzed locally in the browser.
 
 The table shows counts for every issue type, including zeros, both for the
@@ -80,6 +81,8 @@ and two `TwoPinComponentCouldBeFlipped` issues
 on the sensor sheet; all other counts are zero. Counts record analyzer behavior,
 not whether a report is a true positive. `NetLabelCollision` counts grouped issue
 objects; its `collisionBounds` retains the individual intersection regions.
+
+
 
 Programmatically, use `analysis.getIssueCounts()` and
 `analysis.getIssues({ issueTypes: ["ComponentOverlap"], schematicSheetId })`.
