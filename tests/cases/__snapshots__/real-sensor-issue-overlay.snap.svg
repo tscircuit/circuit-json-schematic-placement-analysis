@@ -1,4 +1,4 @@
-<svg width="1400" height="1618" viewBox="0 0 1400 1618" xmlns="http://www.w3.org/2000/svg">
+<svg width="1400" height="1178" viewBox="0 0 1400 1178" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="900" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(37.9167357771,0,0,-37.9167357771,700,450)" viewBox="155.2312987225158 665.3670592139281 404.57157074165696 66.73345496769593"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -66,29 +66,9 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <rect width="100%" height="100%" fill="#fff" />
 <text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
 <tspan x="18" dy="0">Emitted issue counts (all sheets):</tspan>
-<tspan x="18" dy="22">ComponentOverlap: 0</tspan>
-<tspan x="18" dy="22">SchematicBoxHasALotOfSurroundingWhitespace: 0</tspan>
-<tspan x="18" dy="22">CapacitorSymbolHorizontal: 0</tspan>
-<tspan x="18" dy="22">VerboseSchematicNetLabel: 0</tspan>
-<tspan x="18" dy="22">PinHeaderSchematicBoxTooWide: 0</tspan>
-<tspan x="18" dy="22">GenericSchematicBoxTooWide: 0</tspan>
-<tspan x="18" dy="22">SchematicBoxInnerLabelCollision: 0</tspan>
-<tspan x="18" dy="22">SchematicPinPaddingToEdgeTooLarge: 0</tspan>
-<tspan x="18" dy="22">DiodeResistorNotAligned: 0</tspan>
-<tspan x="18" dy="22">ComponentPinsWouldAlignWithVerticalShift: 0</tspan>
 <tspan x="18" dy="22">TraceCanBeSimplifiedByMovingComponent: 3</tspan>
-<tspan x="18" dy="22">CrystalNotCenteredOverLoadCapacitors: 0</tspan>
-<tspan x="18" dy="22">ComponentNetLabelCollision: 0</tspan>
-<tspan x="18" dy="22">ComponentBoxNetLabelCollision: 0</tspan>
-<tspan x="18" dy="22">NetLabelCollision: 0</tspan>
-<tspan x="18" dy="22">FeedbackNetworkNotCompact: 0</tspan>
-<tspan x="18" dy="22">PullResistorOnWrongSide: 0</tspan>
-<tspan x="18" dy="22">SchematicTextCollision: 0</tspan>
-<tspan x="18" dy="22">ResetNetworkNotGrouped: 0</tspan>
 <tspan x="18" dy="22">TwoPinComponentCouldBeFlipped: 2</tspan>
 <tspan x="18" dy="22">TwoPinComponentShouldBeVertical: 2</tspan>
-<tspan x="18" dy="22">BuckConverterNetworkNotGrouped: 0</tspan>
-<tspan x="18" dy="22">ConnectorPositionCausesTraceDetours: 0</tspan>
 <tspan x="18" dy="22">Selected type(s): TraceCanBeSimplifiedByMovingComponent</tspan>
 <tspan x="18" dy="22">Matching issues: 1</tspan>
 <tspan x="18" dy="22">#2</tspan>

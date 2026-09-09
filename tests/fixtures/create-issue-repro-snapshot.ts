@@ -2,7 +2,7 @@ import { stackSvgsVertically } from "stack-svgs"
 import { createIssueOverlaySvg } from "./create-issue-overlay-svg"
 import { createAnalyzerTextSvg } from "./create-schematic-analysis-fixture-svg"
 
-/** Keep diagnostic text below the schematic, including counts for zero-issue types. */
+/** Keep reported issue counts and diagnostic text below the schematic. */
 export function createIssueReproSnapshot(
   input: Parameters<typeof createIssueOverlaySvg>[0],
 ) {
@@ -15,9 +15,9 @@ export function createIssueReproSnapshot(
     )
   const text = [
     "Emitted issue counts (all sheets):",
-    ...Object.entries(input.analysis.getIssueCounts()).map(
-      ([type, count]) => `${type}: ${count}`,
-    ),
+    ...Object.entries(input.analysis.getIssueCounts())
+      .filter(([, count]) => count > 0)
+      .map(([type, count]) => `${type}: ${count}`),
     `Selected type(s): ${input.issueTypes?.join(", ") ?? "all"}`,
     `Matching issues: ${issues.length}`,
     ...issues.flatMap((issue) => [
