@@ -5,7 +5,7 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 
 // Buck reference: LMR16020 Figure 22. Its output inductor is horizontal.
 // https://www.ti.com/lit/ds/symlink/lmr16020.pdf#page=19
-test("records the full power sheet's missing buck grouping and questionable inductor rotation", () => {
+test("identifies the full power sheet's scattered buck feedback network", () => {
   const circuitJson = getRp2040BldcSheet("power")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
@@ -23,6 +23,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
     SchematicPinPaddingToEdgeTooLarge: 12,
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 9,
+    BuckConverterNetworkNotGrouped: 1,
   })
   expect(
     analysis
@@ -43,10 +44,24 @@ test("records the full power sheet's missing buck grouping and questionable indu
           issue.schematicBox.sourceComponentName === "L_BUCK",
       ),
   ).toBe(true)
+  const issues = analysis
+    .getIssues()
+    .filter((issue) => issue.lineItemType === "BuckConverterNetworkNotGrouped")
+  expect(issues).toHaveLength(1)
+  expect(issues[0]!.regulatorSchematicBox.sourceComponentName).toBe("U_BUCK")
+  expect(
+    issues[0]!.distantComponents.map(
+      (part) => part.schematicBox.sourceComponentName,
+    ),
+  ).toEqual(["R_FB_TOP", "R_FB_BOT"])
+  expect(
+    issues[0]!.supportNetworkComponents.map((part) => part.sourceComponentName),
+  ).toEqual(["L_BUCK", "R_FB_TOP", "R_FB_BOT", "C_BOOT_BUCK", "D_BUCK"])
   expect(
     createIssueReproSnapshot({
       circuitJson,
       analysis,
+      issueTypes: ["BuckConverterNetworkNotGrouped"],
       showFullSchematic: true,
       width: 1800,
       height: 1200,

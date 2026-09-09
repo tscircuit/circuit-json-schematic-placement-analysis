@@ -1,3 +1,5 @@
+import { BuckConverterNetworkPlacementSolver } from "./solvers/BuckConverterNetworkPlacementSolver/BuckConverterNetworkPlacementSolver"
+import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
@@ -89,6 +91,8 @@ export class SchematicPlacementAnalysis {
       ResetNetworkNotGrouped: 0,
       TwoPinComponentCouldBeFlipped: 0,
       TwoPinComponentShouldBeVertical: 0,
+      BuckConverterNetworkNotGrouped: 0,
+      ConnectorPositionCausesTraceDetours: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -148,6 +152,10 @@ export class SchematicPlacementAnalysis {
         return SchematicTextClearanceSolver.issueToString(issue)
       case "ResetNetworkNotGrouped":
         return ResetNetworkGroupingSolver.issueToString(issue)
+      case "BuckConverterNetworkNotGrouped":
+        return BuckConverterNetworkPlacementSolver.issueToString(issue)
+      case "ConnectorPositionCausesTraceDetours":
+        return ConnectorPlacementSolver.issueToString(issue)
       default:
         return ""
     }

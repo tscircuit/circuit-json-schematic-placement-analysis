@@ -1,3 +1,5 @@
+import { BuckConverterNetworkPlacementSolver } from "../BuckConverterNetworkPlacementSolver/BuckConverterNetworkPlacementSolver"
+import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -147,6 +149,20 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ComponentNetLabelCollisionSolver",
       ComponentNetLabelCollisionSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "BuckConverterNetworkPlacementSolver",
+      BuckConverterNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ConnectorPlacementSolver",
+      ConnectorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

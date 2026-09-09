@@ -314,6 +314,44 @@ export interface ResetNetworkNotGrouped {
   message: string
 }
 
+export interface BuckConverterNetworkNotGrouped {
+  lineItemType: "BuckConverterNetworkNotGrouped"
+  regulatorSchematicBox: SchematicBoxPlacement
+  /** Inductor, feedback divider and any local bootstrap capacitor/catch diode. */
+  supportNetworkComponents: SchematicBoxPlacement[]
+  distantComponents: Array<{
+    schematicBox: SchematicBoxPlacement
+    role:
+      | "output_inductor"
+      | "feedback_resistor"
+      | "bootstrap_capacitor"
+      | "catch_diode"
+    regulatorSourcePortId: string
+    regulatorPinName: string
+    distanceFromRegulatorPin: number
+    maxRecommendedDistance: number
+  }>
+  message: string
+}
+
+export interface ConnectorPositionCausesTraceDetours {
+  lineItemType: "ConnectorPositionCausesTraceDetours"
+  connectorSchematicBox: SchematicBoxPlacement
+  connectedComponents: SchematicBoxPlacement[]
+  /** Existing routed signal connections that demonstrate the detours. */
+  schematicTraceIds: string[]
+  evaluatedSignalCount: number
+  newSchX: number
+  newSchY: number
+  deltaSchX: number
+  deltaSchY: number
+  /** Sum of Manhattan distances between the evaluated signal pins. */
+  currentTotalSignalDistance: number
+  /** Sum of Manhattan pin distances after moving; not a promised routed length. */
+  suggestedTotalSignalDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -335,6 +373,8 @@ export type SchematicPlacementIssue =
   | NetLabelCollision
   | SchematicTextCollision
   | ResetNetworkNotGrouped
+  | BuckConverterNetworkNotGrouped
+  | ConnectorPositionCausesTraceDetours
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
