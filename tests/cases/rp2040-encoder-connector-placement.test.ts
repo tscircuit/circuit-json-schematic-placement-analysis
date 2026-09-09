@@ -34,5 +34,9 @@ test("highlights the connector detours on the complete encoder sheet", () => {
       [...svg.matchAll(/data-issue-type="([^"]+)"/g)].map((match) => match[1]),
     ),
   ).toEqual(new Set(["ConnectorPositionCausesTraceDetours"]))
+  const issueNumber = String(analysis.getIssues().indexOf(issues[0]!) + 1)
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) => match[1]),
+  ).toEqual(Array(4).fill(issueNumber))
   expect(svg).toMatchSvgSnapshot(import.meta.path)
 })
