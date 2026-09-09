@@ -72,8 +72,6 @@ export function renderIssueOverlay(input: {
   cropToIssues?: boolean
   width?: number
   height?: number
-  /** Original rendered sheet, when importing an export from another toolchain version. */
-  schematicSvg?: string
 }) {
   const { circuitJson, analysis } = input
   const sheetId =
@@ -86,12 +84,10 @@ export function renderIssueOverlay(input: {
         ? element.schematic_sheet_id
         : undefined) ?? "") === sheetId,
   )
-  const svg =
-    input.schematicSvg ??
-    convertCircuitJsonToSchematicSvg(sheetJson, {
-      width: input.width ?? 1400,
-      height: input.height ?? 900,
-    })
+  const svg = convertCircuitJsonToSchematicSvg(sheetJson, {
+    width: input.width ?? 1400,
+    height: input.height ?? 900,
+  })
   const matrix = svg.match(/data-real-to-screen-transform="matrix\(([^)]+)\)"/)
   if (!matrix)
     throw new Error(

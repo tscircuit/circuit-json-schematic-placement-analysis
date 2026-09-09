@@ -1,9 +1,6 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import {
-  getRp2040BldcSheet,
-  getRp2040BldcSheetSvg,
-} from "../assets/rp2040-bldc-controller"
+import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 
@@ -45,7 +42,6 @@ test("records the full input sheet's local trace suggestions without rearranging
     circuitJson,
     analysis,
     cropToIssues: false,
-    schematicSvg: getRp2040BldcSheetSvg("power_input"),
     width: 1800,
     height: 1200,
   }

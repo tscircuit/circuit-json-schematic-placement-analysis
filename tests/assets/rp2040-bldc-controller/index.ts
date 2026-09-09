@@ -1,9 +1,3 @@
-/// <reference types="vite/client" />
-import controllerSvg from "./controller.svg?raw"
-import hallSvg from "./hall.svg?raw"
-import encoderSvg from "./encoder.svg?raw"
-import powerInputSvg from "./power-input.svg?raw"
-import powerSvg from "./power.svg?raw"
 import type { CircuitJson } from "circuit-json"
 import source from "./source.json"
 import schematic from "./schematic.json"
@@ -12,9 +6,7 @@ import schematic from "./schematic.json"
 // v1.0.55 in Desktop/tscircuit-repos/cli-repos/rp2040-bldc-controller on 2026-09-09.
 // Toolchain: tscircuit 0.0.2474 (npm latest), core 0.0.1874, CLI 0.1.2033;
 // @tscircuit/common 0.0.64 as declared by the source project.
-// Per-sheet SVGs: circuit-to-svg 0.0.413 with schematic-symbols 0.0.244,
-// matching the rebuild. Preserve these renders so older test dependencies cannot
-// change the symbol geometry or labels when reproducing this version.
+// Render snapshots with this repository's existing renderer dependencies.
 // Command: tsci build index.circuit.tsx --disable-pcb --schematic-svgs --ignore-errors
 // Generated dist/index/circuit.json SHA-256:
 // 5e4bed8e558d3a3374cad7be5e69a7071fc76cc667695f0837883f4c425b24ee
@@ -44,16 +36,4 @@ export function getRp2040BldcSheet(name: keyof typeof sheetIds): CircuitJson {
       !element.schematic_sheet_id ||
       element.schematic_sheet_id === sheetIds[name],
   )
-}
-
-export const rp2040BldcSheetSvgs = {
-  schematic_sheet_0: controllerSvg,
-  schematic_sheet_1: hallSvg,
-  schematic_sheet_2: encoderSvg,
-  schematic_sheet_3: powerInputSvg,
-  schematic_sheet_4: powerSvg,
-}
-
-export function getRp2040BldcSheetSvg(name: keyof typeof sheetIds) {
-  return rp2040BldcSheetSvgs[sheetIds[name]]
 }

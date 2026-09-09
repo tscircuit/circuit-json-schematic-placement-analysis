@@ -1,9 +1,6 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import {
-  getRp2040BldcSheet,
-  getRp2040BldcSheetSvg,
-} from "../assets/rp2040-bldc-controller"
+import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 // Buck reference: LMR16020 Figure 22. Its output inductor is horizontal.
@@ -51,7 +48,6 @@ test("records the full power sheet's missing buck grouping and questionable indu
       circuitJson,
       analysis,
       cropToIssues: false,
-      schematicSvg: getRp2040BldcSheetSvg("power"),
       width: 1800,
       height: 1200,
     }),
