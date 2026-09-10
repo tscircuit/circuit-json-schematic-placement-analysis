@@ -58,9 +58,9 @@ test("records buck orientation findings on the complete published Allwinner sche
     createIssueReproSnapshot({
       circuitJson,
       analysis,
-      issueTypes: ["TwoPinComponentShouldBeVertical"],
+      issueTypes: ["TwoPinComponentHasInvertedRails"],
       showFullSchematic: true,
-      showOverlay: false,
+      showOverlay: true,
       width: 2400,
       height: 1800,
     }),
