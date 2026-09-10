@@ -1,3 +1,4 @@
+import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -155,6 +156,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "DecouplingCapacitorGroupingSolver",
       DecouplingCapacitorGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ConnectorPlacementSolver",
+      ConnectorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

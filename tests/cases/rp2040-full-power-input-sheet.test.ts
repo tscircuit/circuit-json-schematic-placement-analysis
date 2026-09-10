@@ -112,7 +112,7 @@ test("records the full input sheet's local trace suggestions without rearranging
             displayScale,
         }
       })
-    expect(markers.map((marker) => marker.number)).toEqual(
+    expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
       Array.from({ length: 48 }, (_, index) => index + 1),
     )
     expect(

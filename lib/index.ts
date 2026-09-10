@@ -27,3 +27,4 @@ export {
 } from "./create-schematic-placement-issue-artifacts"
 export { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 export { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
+export { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"

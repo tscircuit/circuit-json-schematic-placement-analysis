@@ -1,0 +1,54 @@
+import { expect, test } from "bun:test"
+import { analyzeSchematicPlacement } from "lib/index"
+import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
+import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+
+test("highlights the connector detours on the complete encoder sheet", () => {
+  const circuitJson = getRp2040BldcSheet("encoder")
+  const analysis = analyzeSchematicPlacement(circuitJson)
+  const issues = analysis
+    .getIssues()
+    .filter(
+      (issue) => issue.lineItemType === "ConnectorPositionCausesTraceDetours",
+    )
+  expect(issues).toHaveLength(1)
+  expect(issues[0]).toMatchObject({
+    connectorSchematicBox: { sourceComponentName: "J_ENCODER" },
+    evaluatedSignalCount: 3,
+    newSchX: -13.3,
+    newSchY: 0.2,
+    currentTotalSignalDistance: 64.7,
+    suggestedTotalSignalDistance: 15.6,
+  })
+  expect(issues[0]!.schematicTraceIds).toHaveLength(2)
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes: ["ConnectorPositionCausesTraceDetours"],
+    showFullSchematic: true,
+    width: 1800,
+    height: 1200,
+  })
+  expect(
+    new Set(
+      [...svg.matchAll(/data-issue-type="([^"]+)"/g)].map((match) => match[1]),
+    ),
+  ).toEqual(new Set(["ConnectorPositionCausesTraceDetours"]))
+  const issueNumber = String(analysis.getIssues().indexOf(issues[0]!) + 1)
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) => match[1]),
+  ).toEqual(Array(4).fill(issueNumber))
+  // J_ENCODER is also highlighted by its sizing issue; both issues number it.
+  const allIssuesSvg = createIssueOverlaySvg({
+    circuitJson,
+    analysis,
+    showFullSchematic: true,
+  })
+  expect(
+    [...allIssuesSvg.matchAll(/data-issue-number="(\d+)"/g)].filter(
+      (match) => match[1] === issueNumber,
+    ),
+  ).toHaveLength(4)
+  expect(svg).toMatchSvgSnapshot(import.meta.path)
+})

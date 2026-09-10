@@ -143,6 +143,7 @@ export function renderIssueOverlay(input: {
     })
     const geometry: string[] = []
     let anchor: { x: number; y: number } | undefined
+    const markerAnchors = new Map<string, { x: number; y: number }>()
     const rect = (bounds: SchematicIssueBounds, isContext = false) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
@@ -153,6 +154,9 @@ export function renderIssueOverlay(input: {
         bounds.right,
         bounds.top,
       ].join(":")
+      // Shared boxes need a marker for each issue, even when their fill is
+      // already drawn. Repeated bounds within this issue get only one marker.
+      if (!isContext) markerAnchors.set(key, { x: bounds.left, y: bounds.top })
       if (drawnRectangles.has(key)) return
       drawnRectangles.add(key)
       const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
@@ -225,14 +229,16 @@ export function renderIssueOverlay(input: {
     anchor ??= context[0]
       ? { x: context[0].schX, y: context[0].schY }
       : undefined
-    const point = anchor && screen(anchor.x, anchor.y)
+    const points = (
+      markerAnchors.size ? [...markerAnchors.values()] : anchor ? [anchor] : []
+    ).map((point) => screen(point.x, point.y))
     const title = escapeXml(
       `#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`,
     )
     return [
       {
         index,
-        point,
+        points,
         title,
         geometry: `<title>${title}</title><g transform="matrix(${values.join(" ")})">${geometry.join("")}</g>`,
         issueType: issue.lineItemType,
@@ -298,8 +304,8 @@ export function renderIssueOverlay(input: {
   const leaders: string[] = []
   const markers: string[] = []
   const markup = overlays.map(
-    ({ index, point, title, geometry, issueType }) => {
-      if (point) {
+    ({ index, points, title, geometry, issueType }) => {
+      for (const point of points) {
         const preferredCenter = {
           x: point.x,
           y: point.y - (ISSUE_MARKER_RADIUS + 1) * markerScale,

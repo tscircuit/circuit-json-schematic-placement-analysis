@@ -70,6 +70,11 @@ export const getRelevantPlacementsForIssues = ({
         for (const placement of issue.capacitorSchematicBoxes)
           addPlacement(placement)
         break
+      case "ConnectorPositionCausesTraceDetours":
+        addPlacement(issue.connectorSchematicBox)
+        for (const placement of issue.connectedComponents)
+          addPlacement(placement)
+        break
       case "ResetNetworkNotGrouped":
         addPlacement(issue.hostSchematicBox)
         for (const placement of issue.supportNetworkComponents)

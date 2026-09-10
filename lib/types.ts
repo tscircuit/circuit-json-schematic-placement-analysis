@@ -327,6 +327,24 @@ export interface ResetNetworkNotGrouped {
   message: string
 }
 
+export interface ConnectorPositionCausesTraceDetours {
+  lineItemType: "ConnectorPositionCausesTraceDetours"
+  connectorSchematicBox: SchematicBoxPlacement
+  connectedComponents: SchematicBoxPlacement[]
+  /** Existing routed signal connections that demonstrate the detours. */
+  schematicTraceIds: string[]
+  evaluatedSignalCount: number
+  newSchX: number
+  newSchY: number
+  deltaSchX: number
+  deltaSchY: number
+  /** Sum of Manhattan distances between the evaluated signal pins. */
+  currentTotalSignalDistance: number
+  /** Sum of Manhattan pin distances after moving; not a promised routed length. */
+  suggestedTotalSignalDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
@@ -349,6 +367,7 @@ export type SchematicPlacementIssue =
   | NetLabelCollision
   | SchematicTextCollision
   | ResetNetworkNotGrouped
+  | ConnectorPositionCausesTraceDetours
 
 export interface SchematicPlacementIssues {
   lineItemType: "SchematicPlacementIssues"
