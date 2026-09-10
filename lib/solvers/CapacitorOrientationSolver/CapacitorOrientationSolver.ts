@@ -1,5 +1,10 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicComponent } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicComponent,
+  SchematicPort,
+  SchematicTrace,
+} from "circuit-json"
 import type { GraphicsObject } from "graphics-debug"
 import type {
   CapacitorSymbolHorizontal,
@@ -33,6 +38,7 @@ interface SourceComponentWithFtype {
 }
 
 export class CapacitorOrientationSolver extends BaseSolver {
+  private static readonly EPSILON = 0.01
   private static readonly ORIENTATION_MESSAGE =
     'Use schOrientation="vertical" on this capacitor to fix the symbol orientation'
 
@@ -205,11 +211,77 @@ export class CapacitorOrientationSolver extends BaseSolver {
     // Their distance from the amplifier is assessed by the feedback placement solver.
     if (this.feedbackCapacitorIds.has(placement.sourceComponentId)) return
 
+    // Keep capacitors inline when both traces leave outward and at least one
+    // side continues as a straight horizontal run.
+    if (this.isInlineWithHorizontalTraces(placement.schematicComponentId))
+      return
+
     return {
       lineItemType: "CapacitorSymbolHorizontal",
       schematicBox: this.createIssuePlacement(placement),
       message: CapacitorOrientationSolver.ORIENTATION_MESSAGE,
     }
+  }
+
+  private isInlineWithHorizontalTraces(schematicComponentId: string): boolean {
+    const ports = this.ctx.circuitJson.filter(
+      (element): element is SchematicPort =>
+        element.type === "schematic_port" &&
+        element.schematic_component_id === schematicComponentId,
+    )
+    if (ports.length !== 2) return false
+
+    const traces = ports.map((port) => this.getOutwardHorizontalTrace(port))
+    return (
+      traces.every((trace) => trace !== undefined) &&
+      traces.some(
+        (trace) =>
+          trace !== undefined &&
+          trace.edges.every(
+            (edge) =>
+              Math.abs(edge.from.y - edge.to.y) <=
+              CapacitorOrientationSolver.EPSILON,
+          ),
+      )
+    )
+  }
+
+  private getOutwardHorizontalTrace(
+    port: SchematicPort,
+  ): SchematicTrace | undefined {
+    if (port.facing_direction !== "left" && port.facing_direction !== "right")
+      return
+
+    return this.ctx.circuitJson.find(
+      (element): element is SchematicTrace =>
+        element.type === "schematic_trace" &&
+        element.schematic_sheet_id === port.schematic_sheet_id &&
+        element.edges.some((edge) => {
+          const other = this.pointsEqual(edge.from, port.center)
+            ? edge.to
+            : this.pointsEqual(edge.to, port.center)
+              ? edge.from
+              : undefined
+          return (
+            other !== undefined &&
+            Math.abs(other.y - port.center.y) <=
+              CapacitorOrientationSolver.EPSILON &&
+            (port.facing_direction === "left"
+              ? other.x < port.center.x - CapacitorOrientationSolver.EPSILON
+              : other.x > port.center.x + CapacitorOrientationSolver.EPSILON)
+          )
+        }),
+    )
+  }
+
+  private pointsEqual(
+    first: { x: number; y: number },
+    second: { x: number; y: number },
+  ): boolean {
+    return (
+      Math.abs(first.x - second.x) <= CapacitorOrientationSolver.EPSILON &&
+      Math.abs(first.y - second.y) <= CapacitorOrientationSolver.EPSILON
+    )
   }
 
   static issueToString(issue: CapacitorSymbolHorizontal): string {

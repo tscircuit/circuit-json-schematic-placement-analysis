@@ -1,9 +1,14 @@
 import { Circuit } from "@tscircuit/core"
 import type { CircuitJson } from "circuit-json"
 
-export async function createHorizontalSignalCapacitorCircuitJson(): Promise<CircuitJson> {
+export async function createHorizontalSignalCapacitorCircuitJson({
+  bent = false,
+}: {
+  bent?: boolean
+} = {}): Promise<CircuitJson> {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
+  const outputY = bent ? 2 : 0
   circuit.add(
     <board schTraceAutoLabelEnabled={false} schMaxTraceDistance={100}>
       <chip
@@ -23,11 +28,11 @@ export async function createHorizontalSignalCapacitorCircuitJson(): Promise<Circ
         schY={0}
         schOrientation="horizontal"
       />
-      <resistor name="R2" resistance="1k" schX={3.5} schY={0} />
+      <resistor name="R2" resistance="1k" schX={3.5} schY={outputY} />
       <chip
         name="U2"
         schX={6}
-        schY={0}
+        schY={outputY}
         pinLabels={{ pin1: "IN" }}
         schPinArrangement={{
           leftSide: { pins: ["pin1"], direction: "top-to-bottom" },

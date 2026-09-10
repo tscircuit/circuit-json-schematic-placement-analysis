@@ -5,11 +5,12 @@ import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-
 import {
   expectReproNets,
   expectReproRendered,
-  getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("accepts a horizontal capacitor aligned with a signal path", async () => {
-  const circuitJson = await createHorizontalSignalCapacitorCircuitJson()
+test("accepts a horizontal capacitor when a downstream trace bends", async () => {
+  const circuitJson = await createHorizontalSignalCapacitorCircuitJson({
+    bent: true,
+  })
   expectReproRendered(circuitJson, 5)
   expectReproNets(circuitJson, [
     ["U1.OUT", "R1.pin1"],
@@ -17,13 +18,15 @@ test("accepts a horizontal capacitor aligned with a signal path", async () => {
     ["C1.pin2", "R2.pin1"],
     ["R2.pin2", "U2.IN"],
   ])
-
-  const componentNames = ["U1", "R1", "C1", "R2", "U2"]
-  const componentCenters = componentNames.map(
-    (name) => getReproSchematicComponent(circuitJson, name).center,
-  )
-  expect(componentCenters.every(({ y }) => y === 0)).toBe(true)
-  expect(componentCenters.map(({ x }) => x)).toEqual([-6, -3.5, 0, 3.5, 6])
+  expect(
+    circuitJson.some(
+      (element) =>
+        element.type === "schematic_trace" &&
+        element.edges.some(
+          (edge) => edge.from.x === edge.to.x && edge.from.y !== edge.to.y,
+        ),
+    ),
+  ).toBe(true)
 
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issues = analysis
@@ -31,7 +34,11 @@ test("accepts a horizontal capacitor aligned with a signal path", async () => {
     .flatMap((item) =>
       item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
     )
-  expect(issues).toEqual([])
+  expect(
+    issues.filter(
+      (issue) => issue.lineItemType === "CapacitorSymbolHorizontal",
+    ),
+  ).toEqual([])
 
   expect(
     createSchematicAnalysisFixtureSvg({
