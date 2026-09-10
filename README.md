@@ -57,39 +57,6 @@ SVG snapshot tests use `bun-match-svg`, `circuit-to-svg`, and `stack-svgs`.
 The fixture helper renders the schematic SVG on top and the analyzer output in
 red text underneath so placement issues are easy to inspect visually.
 
-## Inspect real schematic repros
-
-Run `bun start` and open the `real-schematics` Cosmos fixture. Select a complete
-wireless-mouse controller or sensor sheet, the five-sheet Trellis Core circuit,
-or import a Circuit JSON `.json` array
-from another project. Imports are analyzed locally in the browser.
-
-The table shows counts for every issue type, including zeros, both for the
-selected sheet and the entire export. Select a type to filter the issue list and
-its overlay, then isolate a numbered issue to inspect it. Red highlights mark
-reported component bounds, trace segments, label positions, or collision regions;
-dashed blue boxes provide component context. The SVG viewBox frames the selected
-issue geometry with half a bounds-width/height of padding on each side; thin overlay
-strokes stay thin when zooming. Zoom and scroll to inspect details,
-toggle the overlay to compare, and download the current SVG or JSON report.
-
-The built-in examples reuse the unchanged complete sheet imports from
-`MustafaMulla29/wireless-mouse-pcb` in `tests/assets/wireless-mouse-*-sheet.ts`.
-Current regression baselines are one `CrystalNotCenteredOverLoadCapacitors` issue
-on the controller sheet and three `TraceCanBeSimplifiedByMovingComponent` issues
-and two `TwoPinComponentCouldBeFlipped` issues
-on the sensor sheet; all other counts are zero. Counts record analyzer behavior,
-not whether a report is a true positive. `NetLabelCollision` counts grouped issue
-objects; its `collisionBounds` retains the individual intersection regions.
-
-
-
-Programmatically, use `analysis.getIssueCounts()` and
-`analysis.getIssues({ issueTypes: ["ComponentOverlap"], schematicSheetId })`.
-Omit `issueTypes` for all types, or pass `[]` for none. Omit `schematicSheetId`
-for all sheets, or pass `""` for unassigned elements. These methods filter the
-existing results without rerunning solvers.
-
 ## Per-issue SVG artifacts for CLI checks
 
 `createSchematicPlacementIssueArtifacts(circuitJson, options?)` returns one
@@ -124,9 +91,3 @@ SVG `content`. Filenames retain the original issue index when filtered. Options
 support `issueTypes`, `schematicSheetId`, and schematic-panel `width`/`height`;
 the XML panel adds to the height. No matching issues returns `[]`. Bounds are
 absent only if an issue has no locatable geometry or involved components.
-
-## Vercel previews
-
-The linked Vercel project builds the Cosmos fixture gallery for pull requests.
-`vercel.json` runs `bun run build:site` and serves `cosmos-export`; use the
-Vercel preview on the PR and select `real-schematics` to inspect the repros.

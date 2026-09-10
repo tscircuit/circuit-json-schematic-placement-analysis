@@ -1,4 +1,3 @@
-import { parseReproCircuitJson } from "../repros/import-circuit-json"
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { wirelessMouseSensorSheetCircuitJson as circuitJson } from "../assets/wireless-mouse-sensor-sheet"
@@ -6,14 +5,7 @@ import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("records the real sensor's three trace suggestions and isolates one exact trace", () => {
-  const imported = parseReproCircuitJson(JSON.stringify(circuitJson))
-  expect(imported).toEqual(circuitJson)
-  expect(() => parseReproCircuitJson("{}")).toThrow(
-    "Expected a Circuit JSON array",
-  )
-  expect(() => parseReproCircuitJson("[null]")).toThrow("index 0")
-  expect(() => parseReproCircuitJson("[]")).toThrow("No schematic components")
-  const analysis = analyzeSchematicPlacement(imported)
+  const analysis = analyzeSchematicPlacement(circuitJson)
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
