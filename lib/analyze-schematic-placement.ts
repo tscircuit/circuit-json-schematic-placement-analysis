@@ -2,6 +2,7 @@ import { BuckConverterNetworkPlacementSolver } from "./solvers/BuckConverterNetw
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
+import { DecouplingCapacitorGroupingSolver } from "./solvers/DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
 import { ComponentNetLabelCollisionSolver } from "./solvers/ComponentNetLabelCollisionSolver/ComponentNetLabelCollisionSolver"
 import { ComponentPinAlignmentSolver } from "./solvers/ComponentPinAlignmentSolver/ComponentPinAlignmentSolver"
 import { CrystalLoadCapacitorPlacementSolver } from "./solvers/CrystalLoadCapacitorPlacementSolver/CrystalLoadCapacitorPlacementSolver"
@@ -91,6 +92,7 @@ export class SchematicPlacementAnalysis {
       ResetNetworkNotGrouped: 0,
       TwoPinComponentCouldBeFlipped: 0,
       TwoPinComponentShouldBeVertical: 0,
+      DecouplingCapacitorsNotCloseTogether: 0,
       BuckConverterNetworkNotGrouped: 0,
       ConnectorPositionCausesTraceDetours: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
@@ -121,6 +123,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxOverlapSolver.issueToString(issue)
       case "CapacitorSymbolHorizontal":
         return CapacitorOrientationSolver.issueToString(issue)
+      case "DecouplingCapacitorsNotCloseTogether":
+        return DecouplingCapacitorGroupingSolver.issueToString(issue)
       case "VerboseSchematicNetLabel":
         return VerboseNetLabelSolver.issueToString(issue)
       case "PinHeaderSchematicBoxTooWide":
