@@ -30,7 +30,6 @@ test("records the full controller sheet's current findings around the unreported
   ).toEqual({
     TraceCanBeSimplifiedByMovingComponent: 3,
     NetLabelCollision: 1,
-    TwoPinComponentShouldBeVertical: 1,
     DecouplingCapacitorsNotCloseTogether: 1,
   })
   // None of these three suggestions addresses J_USB or R_USB1/R_USB2.

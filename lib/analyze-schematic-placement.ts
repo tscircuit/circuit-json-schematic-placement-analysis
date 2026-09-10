@@ -91,6 +91,7 @@ export class SchematicPlacementAnalysis {
       ResetNetworkNotGrouped: 0,
       TwoPinComponentCouldBeFlipped: 0,
       TwoPinComponentShouldBeVertical: 0,
+      TwoPinComponentHasInvertedRails: 0,
       DecouplingCapacitorsNotCloseTogether: 0,
       ConnectorPositionCausesTraceDetours: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
@@ -145,6 +146,7 @@ export class SchematicPlacementAnalysis {
       case "FeedbackNetworkNotCompact":
         return FeedbackNetworkPlacementSolver.issueToString(issue)
       case "TwoPinComponentShouldBeVertical":
+      case "TwoPinComponentHasInvertedRails":
         return TwoPinComponentRailOrientationSolver.issueToString(issue)
       case "PullResistorOnWrongSide":
         return PullResistorPlacementSolver.issueToString(issue)

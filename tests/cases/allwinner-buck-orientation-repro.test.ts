@@ -28,15 +28,14 @@ test("records buck orientation findings on the complete published Allwinner sche
       [`U${id}.GND`, `C${firstCap}.pin2`, `C${firstCap + 1}.pin2`, "net.GND"],
       [`U${id}.VIN`, `C${firstCap}.pin1`, "net.V5"],
     ])
-    // Baseline false positive: a horizontal series inductor is told to turn vertical.
-    expect(orientation).toContainEqual(
-      expect.objectContaining({
-        schematicBox: expect.objectContaining({
-          sourceComponentName: `L${id}`,
-        }),
-        deltaSchRotation: 90,
-      }),
-    )
+    // A series inductor should not be turned vertical just because it feeds a rail.
+    expect(
+      orientation.some(
+        (issue) =>
+          issue.lineItemType === "TwoPinComponentShouldBeVertical" &&
+          issue.schematicBox.sourceComponentName === `L${id}`,
+      ),
+    ).toBe(false)
     for (const cap of [firstCap, firstCap + 1]) {
       const ground = getReproSourcePort(circuitJson, `C${cap}`, "pin2")
       const port = circuitJson.find(
@@ -45,7 +44,7 @@ test("records buck orientation findings on the complete published Allwinner sche
           e.source_port_id === ground.source_port_id,
       )
       expect(port).toMatchObject({ facing_direction: "up" })
-      // The current rule does not inspect already-vertical components.
+      // Already-vertical capacitors need a rail-facing diagnostic, not a 90° turn.
       expect(
         orientation.some(
           (issue) =>

@@ -216,15 +216,28 @@ export interface PullResistorOnWrongSide {
   message: string
 }
 
-export interface TwoPinComponentShouldBeVertical {
-  lineItemType: "TwoPinComponentShouldBeVertical"
+interface TwoPinComponentRailOrientation {
   schematicBox: SchematicBoxPlacement
   railSourcePortId: string
   railPinName: string
   railType: "power" | "ground"
-  deltaSchRotation: -90 | 90
   suggestedRailFacingDirection: "up" | "down"
   message: string
+}
+
+export interface TwoPinComponentShouldBeVertical
+  extends TwoPinComponentRailOrientation {
+  lineItemType: "TwoPinComponentShouldBeVertical"
+  deltaSchRotation: -90 | 90
+}
+
+/** A vertical component has an explicitly positive supply below its ground pin. */
+export interface TwoPinComponentHasInvertedRails
+  extends TwoPinComponentRailOrientation {
+  lineItemType: "TwoPinComponentHasInvertedRails"
+  railType: "power"
+  deltaSchRotation: 180
+  suggestedRailFacingDirection: "up"
 }
 
 export interface ComponentNetLabelCollision {
@@ -362,6 +375,7 @@ export type SchematicPlacementIssue =
   | FeedbackNetworkNotCompact
   | PullResistorOnWrongSide
   | TwoPinComponentShouldBeVertical
+  | TwoPinComponentHasInvertedRails
   | ComponentNetLabelCollision
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
