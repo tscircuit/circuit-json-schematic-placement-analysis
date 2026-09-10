@@ -70,11 +70,6 @@ export const getRelevantPlacementsForIssues = ({
         for (const placement of issue.capacitorSchematicBoxes)
           addPlacement(placement)
         break
-      case "BuckConverterNetworkNotGrouped":
-        addPlacement(issue.regulatorSchematicBox)
-        for (const placement of issue.supportNetworkComponents)
-          addPlacement(placement)
-        break
       case "ConnectorPositionCausesTraceDetours":
         addPlacement(issue.connectorSchematicBox)
         for (const placement of issue.connectedComponents)

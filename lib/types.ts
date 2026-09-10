@@ -327,26 +327,6 @@ export interface ResetNetworkNotGrouped {
   message: string
 }
 
-export interface BuckConverterNetworkNotGrouped {
-  lineItemType: "BuckConverterNetworkNotGrouped"
-  regulatorSchematicBox: SchematicBoxPlacement
-  /** Inductor, feedback divider and any local bootstrap capacitor/catch diode. */
-  supportNetworkComponents: SchematicBoxPlacement[]
-  distantComponents: Array<{
-    schematicBox: SchematicBoxPlacement
-    role:
-      | "output_inductor"
-      | "feedback_resistor"
-      | "bootstrap_capacitor"
-      | "catch_diode"
-    regulatorSourcePortId: string
-    regulatorPinName: string
-    distanceFromRegulatorPin: number
-    maxRecommendedDistance: number
-  }>
-  message: string
-}
-
 export interface ConnectorPositionCausesTraceDetours {
   lineItemType: "ConnectorPositionCausesTraceDetours"
   connectorSchematicBox: SchematicBoxPlacement
@@ -387,7 +367,6 @@ export type SchematicPlacementIssue =
   | NetLabelCollision
   | SchematicTextCollision
   | ResetNetworkNotGrouped
-  | BuckConverterNetworkNotGrouped
   | ConnectorPositionCausesTraceDetours
 
 export interface SchematicPlacementIssues {

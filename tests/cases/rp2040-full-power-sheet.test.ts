@@ -24,7 +24,6 @@ test("records the full power sheet's missing buck grouping and questionable indu
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 9,
     DecouplingCapacitorsNotCloseTogether: 1,
-    BuckConverterNetworkNotGrouped: 1,
   })
   expect(
     analysis

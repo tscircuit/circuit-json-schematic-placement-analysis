@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
+import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("highlights the connector detours on the complete encoder sheet", () => {
@@ -38,5 +39,16 @@ test("highlights the connector detours on the complete encoder sheet", () => {
   expect(
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) => match[1]),
   ).toEqual(Array(4).fill(issueNumber))
+  // J_ENCODER is also highlighted by its sizing issue; both issues number it.
+  const allIssuesSvg = createIssueOverlaySvg({
+    circuitJson,
+    analysis,
+    showFullSchematic: true,
+  })
+  expect(
+    [...allIssuesSvg.matchAll(/data-issue-number="(\d+)"/g)].filter(
+      (match) => match[1] === issueNumber,
+    ),
+  ).toHaveLength(4)
   expect(svg).toMatchSvgSnapshot(import.meta.path)
 })

@@ -1,4 +1,3 @@
-import { BuckConverterNetworkPlacementSolver } from "../BuckConverterNetworkPlacementSolver/BuckConverterNetworkPlacementSolver"
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import {
   BasePipelineSolver,
@@ -157,13 +156,6 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "DecouplingCapacitorGroupingSolver",
       DecouplingCapacitorGroupingSolver,
-      (p: SchematicPlacementPipeline): [SolverParams] => [
-        { ctx: p.ctx, issues: p.issues },
-      ],
-    ),
-    definePipelineStep(
-      "BuckConverterNetworkPlacementSolver",
-      BuckConverterNetworkPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
