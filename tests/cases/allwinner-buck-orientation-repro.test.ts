@@ -54,16 +54,27 @@ test("records buck orientation findings on the complete published Allwinner sche
       ).toBe(false)
     }
   }
-  expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      issueTypes: ["TwoPinComponentHasInvertedRails"],
-      showFullSchematic: true,
-      showOverlay: true,
-      width: 2400,
-      height: 1800,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path)
+  const snapshot = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes: ["TwoPinComponentHasInvertedRails"],
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2400,
+    height: 1800,
+  })
+  const listingNumbers = Array.from(
+    snapshot.matchAll(/data-listing-issue-number="(\d+)"/g),
+    (match) => match[1],
+  )
+  expect(listingNumbers).toHaveLength(47)
+  expect(listingNumbers).toEqual(
+    Array.from(
+      snapshot.matchAll(/data-issue-number="(\d+)"/g),
+      (match) => match[1],
+    ),
+  )
+  expect(snapshot).toMatchSvgSnapshot(import.meta.path)
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
