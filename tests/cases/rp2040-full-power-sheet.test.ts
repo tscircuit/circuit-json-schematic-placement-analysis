@@ -5,7 +5,7 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 
 // Buck reference: LMR16020 Figure 22. Its output inductor is horizontal.
 // https://www.ti.com/lit/ds/symlink/lmr16020.pdf#page=19
-test("records the full power sheet's missing buck grouping and questionable inductor rotation", () => {
+test("records the full power sheet's findings without rotating its series inductor", () => {
   const circuitJson = getRp2040BldcSheet("power")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
@@ -22,7 +22,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
     SchematicBoxInnerLabelCollision: 1,
     SchematicPinPaddingToEdgeTooLarge: 12,
     SchematicTextCollision: 1,
-    TwoPinComponentShouldBeVertical: 9,
+    TwoPinComponentShouldBeVertical: 8,
     DecouplingCapacitorsNotCloseTogether: 1,
   })
   expect(
@@ -34,7 +34,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
           : [],
       ),
   ).toEqual([])
-  // Capture today's output for review, not an endorsement of rotating L_BUCK.
+  // The output inductor belongs in the series power path.
   expect(
     analysis
       .getIssues()
@@ -43,7 +43,7 @@ test("records the full power sheet's missing buck grouping and questionable indu
           issue.lineItemType === "TwoPinComponentShouldBeVertical" &&
           issue.schematicBox.sourceComponentName === "L_BUCK",
       ),
-  ).toBe(true)
+  ).toBe(false)
   expect(
     createIssueReproSnapshot({
       circuitJson,

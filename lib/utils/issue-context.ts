@@ -147,6 +147,7 @@ export const getRelevantPlacementsForIssues = ({
           addPlacement(component)
         break
       case "TwoPinComponentShouldBeVertical":
+      case "TwoPinComponentHasInvertedRails":
         addPlacement(issue.schematicBox)
         break
       case "PullResistorOnWrongSide":

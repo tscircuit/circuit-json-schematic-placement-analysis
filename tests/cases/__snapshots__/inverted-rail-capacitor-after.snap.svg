@@ -1,0 +1,42 @@
+<svg width="1200" height="636" viewBox="0 0 1200 636" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+  <g transform="translate(0, 0)">
+    <style>
+              .boundary { fill: rgb(245, 241, 237); }
+              .schematic-boundary { fill: none; stroke: #fff; }
+              .component { fill: none; stroke: rgb(132, 0, 0); }
+              .chip { fill: rgb(255, 255, 194); stroke: rgb(132, 0, 0); }
+              .component-pin { fill: none; stroke: rgb(132, 0, 0); }
+              /* Basic per-trace hover fallback */
+              .trace:hover {
+                filter: invert(1);
+              }
+              .trace:hover .trace-crossing-outline {
+                opacity: 0;
+              }
+              .trace:hover .trace-junction {
+                filter: invert(1);
+              }
+              /* Net-hover highlighting: when a trace or its overlays are hovered,
+                 invert color for all traces (base + overlays) sharing the same
+                 subcircuit connectivity key. Also hide crossing outline during hover. */
+
+              .text { font-family: sans-serif; fill: rgb(0, 150, 0); }
+              .pin-number { fill: rgb(169, 0, 0); }
+              .port-label { fill: rgb(0, 100, 100); }
+              .component-name { fill: rgb(0, 100, 100); }
+
+            </style><rect class="boundary" x="0" y="0" width="1200" height="600"/><g class="sch-component" data-circuit-json-type="schematic_component" data-schematic-component-id="schematic_component_0"><rect class="component-overlay sch-component-overlay" x="553.730149662963" y="231.943333714095" width="90.82600251344309" height="188.50679766941" fill="transparent"/><path class="sch-component-symbol-path" d="M 600 420.450131383505 L 600 338.192619673217" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><path class="sch-component-symbol-path" d="M 600 310.77344910312104 L 600 231.943333714095" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><path class="sch-component-symbol-path" d="M 644.556152176406 338.192619673217 L 553.730149662963 338.192619673217" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><path class="sch-component-symbol-path" d="M 644.556152176406 310.773449103121 L 553.730149662963 310.77344910312104" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><text class="sch-component-name sch-component-text" x="616.2801325259945" y="291.92276933618" stroke="rgb(245, 241, 237)" stroke-width="3.427396321262px" paint-order="stroke" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="start" dominant-baseline="ideographic" font-size="30.846566891358px">C1</text><text class="sch-component-text" x="616.2801325259945" y="360.47069576142" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="start" dominant-baseline="hanging" font-size="30.846566891358px">10uF</text></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_0"><circle cx="600" cy="231.94333371409502" r="6.854792642524" fill="red" opacity="0"/></g><g class="schematic-port-hover sch-port-hover" data-schematic-port-id="source_port_1"><circle cx="600" cy="420.450131383505" r="6.854792642524" fill="red" opacity="0"/></g><path class="net-label sch-net-label" d="
+    M 600,231.94333371409502
+    L 581.4920598651852,222.6893636466876
+    L 581.4920598651852,85.6849080314413
+    L 618.5079401348148,85.6849080314413
+    L 618.5079401348148,222.6893636466876
+    Z
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="3.427396321262px"/><text class="net-label-text sch-net-label-text" x="600" y="216.520050268416" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="30.846566891358px" transform="rotate(-90 600 216.520050268416)">SUPPLY</text><rect class="component-overlay sch-component-overlay sch-net-label-overlay" x="579.435622072428" y="420.45013138350504" width="41.128755855143936" height="30.846566891357952" fill="transparent"/><path class="sch-net-label-symbol-path" d="M 579.435622072428 451.296698274863 L 620.564377927572 451.296698274863" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><path class="sch-net-label-symbol-path" d="M 600 451.296698274863 L 600 420.45013138350504" stroke="rgb(132, 0, 0)" fill="none" stroke-width="3.427396321262px" stroke-linecap="round"/><text class="sch-net-label-symbol-text" x="600" y="459.86518907801803" fill="rgb(15, 15, 15)" font-family="sans-serif" text-anchor="middle" dominant-baseline="hanging" font-size="30.846566891358px">GND</text>
+  </g>
+  <g transform="translate(0, 600) scale(1, 1) translate(0, 0)">
+    <rect width="100%" height="100%" fill="#fff" />
+<text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
+</text>
+  </g>
+</svg>
