@@ -1,6 +1,6 @@
 {
   "name": "@tscircuit/circuit-json-schematic-placement-analysis",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "lib/index.ts",
   "module": "lib/index.ts",
@@ -11,7 +11,10 @@
       "import": "./lib/index.ts"
     }
   },
-  "files": ["lib", "dist"],
+  "files": [
+    "lib",
+    "dist"
+  ],
   "scripts": {
     "format": "biome format --write .",
     "format:check": "biome format .",
