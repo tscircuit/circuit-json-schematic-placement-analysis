@@ -130,3 +130,25 @@ absent only if an issue has no locatable geometry or involved components.
 The linked Vercel project builds the Cosmos fixture gallery for pull requests.
 `vercel.json` runs `bun run build:site` and serves `cosmos-export`; use the
 Vercel preview on the PR and select `real-schematics` to inspect the repros.
+
+## Load directly in a browser
+
+The release workflow builds `dist/browser.js` as a self-contained ES module and
+publishes the package to GitHub Packages, following the handbook's built-package
+workflow. jscdn serves the published file without a separate CDN upload:
+
+```js
+const { createSchematicPlacementIssueArtifacts } = await import(
+  "https://jscdn.tscircuit.com/@tscircuit/circuit-json-schematic-placement-analysis/latest/dist/browser.js"
+)
+const artifacts = createSchematicPlacementIssueArtifacts(circuitJson)
+```
+
+No npm dependencies, TypeScript transpilation, or import map are needed in the
+browser. The module runs locally on the supplied Circuit JSON. `latest` follows
+the latest published release (jscdn caches it for up to ten minutes); replace it
+with a version for a fixed release. Browsers cache imported modules for the life
+of the page. The URL becomes available after the first successful publication.
+
+Run `bun run build` to create the browser bundle locally. Source-based package
+imports remain available through the existing root export.
