@@ -11,14 +11,16 @@
       "import": "./lib/index.ts"
     }
   },
-  "files": ["lib"],
+  "files": ["lib", "dist"],
   "scripts": {
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test": "bun test",
     "typecheck": "bunx tsc --noEmit",
     "start": "cosmos",
-    "build:site": "cosmos-export"
+    "build:site": "cosmos-export",
+    "build": "bun build ./lib/browser.ts --target browser --format esm --minify --outfile dist/browser.js",
+    "prepack": "bun run build"
   },
   "dependencies": {
     "@tscircuit/circuit-json-util": "^0.0.94",
@@ -77,5 +79,12 @@
   "peerDependencies": {
     "circuit-json": "*",
     "typescript": "^5"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tscircuit/circuit-json-schematic-placement-analysis.git"
   }
 }

@@ -24,3 +24,6 @@ jobs:
 
       - name: Run type check
         run: bunx tsc --noEmit
+
+      - name: Build standalone browser module
+        run: bun run build
