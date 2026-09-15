@@ -1,3 +1,4 @@
+import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
 import type {
@@ -54,17 +55,10 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     this.placementById =
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.sourcePortById = this.getSourcePortById(circuitJson)
-    this.entries = Array.from(this.getPortsBySchematicComponentId(circuitJson))
-    const passiveComponentIds = new Set(
-      circuitJson
-        .filter(
-          (el): el is Extract<typeof el, { type: "schematic_component" }> =>
-            el.type === "schematic_component",
-        )
-        .filter((el) => el.symbol_name)
-        .map((el) => el.schematic_component_id),
-    )
-    this.entries = this.entries.filter(([id]) => !passiveComponentIds.has(id))
+    const boxIds = getSchematicBoxComponentIds(circuitJson)
+    this.entries = Array.from(
+      this.getPortsBySchematicComponentId(circuitJson),
+    ).filter(([id]) => boxIds.has(id))
     this.solved = this.entries.length === 0
   }
 

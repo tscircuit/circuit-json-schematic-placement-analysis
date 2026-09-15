@@ -1,4 +1,4 @@
-<svg width="1800" height="3326" viewBox="0 0 1800 3326" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="3128" viewBox="0 0 1800 3128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -328,20 +328,11 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="PedometerBoard_connect
     <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;C20_DISPLAY_BULK&quot; newSchY=&quot;-3.92&quot; deltaSchY=&quot;-0.51&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/ComponentOverlap&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
-    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;J4_SWD&quot; pinSide=&quot;right&quot; edgeSide=&quot;top&quot; pinName=&quot;pin7&quot;</tspan>
-    <tspan x="18" dy="22">  measuredPadding=&quot;0.3&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;0.1&quot; suggestedSchHeight=&quot;0.8&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
-    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;J4_SWD&quot; pinSide=&quot;right&quot; edgeSide=&quot;bottom&quot;</tspan>
-    <tspan x="18" dy="22">  pinName=&quot;pin5&quot; measuredPadding=&quot;0.3&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;0.1&quot;</tspan>
+    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;J4_SWD&quot; pinSides=&quot;right&quot; edgeSides=&quot;top,bottom&quot;</tspan>
     <tspan x="18" dy="22">  suggestedSchHeight=&quot;0.8&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
-    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;Q1_DISPLAY_SWITCH&quot; pinSide=&quot;right&quot; edgeSide=&quot;top&quot;</tspan>
-    <tspan x="18" dy="22">  pinName=&quot;D&quot; measuredPadding=&quot;0.3&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;0.1&quot;</tspan>
-    <tspan x="18" dy="22">  suggestedSchHeight=&quot;0.4&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
-    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;Q1_DISPLAY_SWITCH&quot; pinSide=&quot;right&quot; edgeSide=&quot;bottom&quot;</tspan>
-    <tspan x="18" dy="22">  pinName=&quot;D&quot; measuredPadding=&quot;0.3&quot; maxAllowedPadding=&quot;0.2&quot; excessPadding=&quot;0.1&quot;</tspan>
-    <tspan x="18" dy="22">  suggestedSchHeight=&quot;0.4&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;Q1_DISPLAY_SWITCH&quot; pinSides=&quot;right&quot;</tspan>
+    <tspan x="18" dy="22">  edgeSides=&quot;top,bottom&quot; suggestedSchHeight=&quot;0.4&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R12_I2C_SCL&quot; railPin=&quot;pin2&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R12_I2C_SCL by 90° so</tspan>
     <tspan x="18" dy="22">  its power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>

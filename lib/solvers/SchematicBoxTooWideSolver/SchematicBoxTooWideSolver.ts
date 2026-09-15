@@ -1,3 +1,4 @@
+import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
 import type {
@@ -56,7 +57,10 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.sourcePortById = this.getSourcePortById(circuitJson)
     this.sourceComponentById = this.getSourceComponentById(circuitJson)
-    this.entries = Array.from(this.getPortsBySchematicComponentId(circuitJson))
+    const boxIds = getSchematicBoxComponentIds(circuitJson)
+    this.entries = Array.from(
+      this.getPortsBySchematicComponentId(circuitJson),
+    ).filter(([id]) => boxIds.has(id))
     this.solved = this.entries.length === 0
   }
 

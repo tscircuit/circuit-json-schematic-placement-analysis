@@ -19,53 +19,24 @@ test("generates a schematic pin padding to edge issue", async () => {
         )
       : []
 
-  expect(pinPaddingIssues).toHaveLength(2)
-  expect(pinPaddingIssues).toMatchObject([
-    {
-      lineItemType: "SchematicPinPaddingToEdgeTooLarge",
-      pinSide: "right",
-      edgeSide: "top",
-      pinName: "RUN",
-      schematicBox: {
-        sourceComponentName: "U3",
-        width: 1,
-      },
-      measuredPadding: 1.2,
-      maxAllowedPadding: 0.2,
-      excessPadding: 1,
-      suggestedSchHeight: 1,
-      message:
-        "Move schematic pins closer to the box edge or change the schematic box height",
-    },
-    {
-      lineItemType: "SchematicPinPaddingToEdgeTooLarge",
-      pinSide: "right",
-      edgeSide: "bottom",
-      pinName: "DVDD",
-      schematicBox: {
-        sourceComponentName: "U3",
-        width: 1,
-      },
-      measuredPadding: 1.2,
-      maxAllowedPadding: 0.2,
-      excessPadding: 1,
-      suggestedSchHeight: 1,
-      message:
-        "Move schematic pins closer to the box edge or change the schematic box height",
-    },
-  ])
-
-  expect(analysis.toString()).toContain(
-    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="top" pinName="RUN" measuredPadding="1.2" maxAllowedPadding="0.2" excessPadding="1" suggestedSchHeight="1" />',
-  )
-  expect(analysis.toString()).toContain(
-    '<SchematicPinPaddingToEdgeTooLarge message="Move schematic pins closer to the box edge or change the schematic box height" componentName="U3" pinSide="right" edgeSide="bottom" pinName="DVDD" measuredPadding="1.2" maxAllowedPadding="0.2" excessPadding="1" suggestedSchHeight="1" />',
-  )
+  expect(pinPaddingIssues).toHaveLength(1)
+  const issue = pinPaddingIssues[0]!
+  expect(issue.schematicBox.sourceComponentName).toBe("U3")
+  expect(issue.suggestedSchHeight).toBeCloseTo(1, 10)
+  expect(issue.paddingDetails).toHaveLength(2)
+  for (const detail of issue.paddingDetails!) {
+    expect(detail.excessPadding).toBeCloseTo(1, 10)
+    expect(detail.maxAllowedPadding).toBeCloseTo(0.2, 10)
+  }
+  expect(
+    analysis.toString().match(/<SchematicPinPaddingToEdgeTooLarge /g),
+  ).toHaveLength(1)
 
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: schematicPinPaddingToEdgeCircuitJson,
       analysis,
+      highlightIssues: ["SchematicPinPaddingToEdgeTooLarge"],
     }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

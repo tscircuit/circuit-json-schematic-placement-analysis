@@ -21,12 +21,60 @@ test("records the full input sheet's local trace suggestions without rearranging
     ),
   ).toEqual({
     GenericSchematicBoxTooWide: 2,
-    SchematicBoxInnerLabelCollision: 6,
-    SchematicPinPaddingToEdgeTooLarge: 26,
+    SchematicPinPaddingToEdgeTooLarge: 4,
     DiodeResistorNotAligned: 1,
     NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 7,
   })
+  const padding = analysis.getIssues({
+    issueTypes: ["SchematicPinPaddingToEdgeTooLarge"],
+  })
+  expect(
+    padding.map((issue) =>
+      issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge"
+        ? issue.schematicBox.sourceComponentName
+        : "",
+    ),
+  ).toEqual(["J_PD", "U_PD", "U_PD_OR", "U_BARREL_OR"])
+  // These custom symbols have no symbol_name: the explicit box flag is decisive.
+  for (const name of [
+    "D_PD_CC1",
+    "D_PD_CC2",
+    "D_PD_VBUS",
+    "Q_PD_SWITCH",
+    "Q_PD_OR",
+    "Q_BARREL_OR",
+  ]) {
+    const source = circuitJson.find(
+      (e) => e.type === "source_component" && e.name === name,
+    )!
+    if (source.type !== "source_component") throw new Error("Missing source")
+    const component = circuitJson.find(
+      (e) =>
+        e.type === "schematic_component" &&
+        e.source_component_id === source.source_component_id,
+    )!
+    expect(component).toMatchObject({ is_box_with_pins: false })
+    if (component.type !== "schematic_component")
+      throw new Error("Missing symbol")
+    expect(component.symbol_name).toBeUndefined()
+    expect(
+      analysis
+        .getIssues({
+          issueTypes: [
+            "SchematicBoxInnerLabelCollision",
+            "SchematicPinPaddingToEdgeTooLarge",
+            "GenericSchematicBoxTooWide",
+          ],
+        })
+        .some(
+          (issue) =>
+            "schematicBox" in issue &&
+            issue.schematicBox.schematicComponentId ===
+              component.schematic_component_id,
+        ),
+    ).toBe(false)
+  }
   // None of the old suggestions preserves all routes and anchored labels.
   expect(
     analysis
@@ -111,7 +159,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 43 }, (_, index) => index + 1),
+      Array.from({ length: 15 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

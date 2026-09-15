@@ -115,6 +115,15 @@ export interface SchematicPinPaddingToEdgeTooLarge {
   measuredPadding: number
   maxAllowedPadding: number
   excessPadding: number
+  /** All excessive gaps for this box; scalar gap fields identify the worst gap. */
+  paddingDetails?: Array<{
+    pinSide: SchematicSide
+    edgeSide: SchematicSide
+    pinName?: string
+    measuredPadding: number
+    maxAllowedPadding: number
+    excessPadding: number
+  }>
   suggestedSchWidth?: number
   suggestedSchHeight?: number
   message: string

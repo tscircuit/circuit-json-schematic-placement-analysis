@@ -19,8 +19,7 @@ test("records the full power sheet's findings without rotating its series induct
     ),
   ).toEqual({
     GenericSchematicBoxTooWide: 1,
-    SchematicBoxInnerLabelCollision: 1,
-    SchematicPinPaddingToEdgeTooLarge: 12,
+    SchematicPinPaddingToEdgeTooLarge: 2,
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 8,
     DecouplingCapacitorsNotCloseTogether: 1,

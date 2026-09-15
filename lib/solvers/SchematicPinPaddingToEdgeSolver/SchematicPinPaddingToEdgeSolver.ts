@@ -1,3 +1,4 @@
+import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -60,7 +61,10 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.schematicComponentById = this.getSchematicComponentById(circuitJson)
     this.sourcePortById = this.getSourcePortById(circuitJson)
-    this.entries = Array.from(this.getPortsBySchematicComponentId(circuitJson))
+    const boxIds = getSchematicBoxComponentIds(circuitJson)
+    this.entries = Array.from(
+      this.getPortsBySchematicComponentId(circuitJson),
+    ).filter(([id]) => boxIds.has(id))
     this.solved = this.entries.length === 0
   }
 
@@ -96,6 +100,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
 
     const useLabelAwareMaxPadding = this.hasPinsOnAllSides(portsBySide)
 
+    const candidates: PinPaddingCandidate[] = []
     for (const [pinSide, sidePorts] of portsBySide) {
       for (const edgeSide of this.getBoxEdgeSidesForPinSide(pinSide)) {
         const outerPin = this.getOuterPinBySide(edgeSide, sidePorts)
@@ -117,30 +122,88 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         if (!this.exceedsMaxAllowedGap(measuredPadding, maxAllowedPadding))
           continue
 
-        this.params.issues.push(
-          this.createIssue({
-            schematicBox,
-            pinSide,
-            edgeSide,
-            pinName: this.getPinName(outerPin, this.sourcePortById),
-            measuredPadding,
-            maxAllowedPadding,
-          }),
-        )
+        candidates.push({
+          schematicBox,
+          pinSide,
+          edgeSide,
+          pinName: this.getPinName(outerPin, this.sourcePortById),
+          measuredPadding,
+          maxAllowedPadding,
+        })
       }
     }
+    if (!candidates.length) return
+    const details = candidates.map((candidate) => this.createIssue(candidate))
+    const representative = details.reduce((a, b) =>
+      b.excessPadding > a.excessPadding ? b : a,
+    )
+    // Use the least aggressive dimension across the affected pin rows/columns.
+    const widths = details.flatMap((detail) =>
+      detail.suggestedSchWidth === undefined ? [] : [detail.suggestedSchWidth],
+    )
+    const heights = details.flatMap((detail) =>
+      detail.suggestedSchHeight === undefined
+        ? []
+        : [detail.suggestedSchHeight],
+    )
+    const dimensions = [
+      widths.length ? "width" : "",
+      heights.length ? "height" : "",
+    ]
+      .filter(Boolean)
+      .join(" and ")
+    this.params.issues.push({
+      ...representative,
+      paddingDetails: details.map(
+        ({
+          pinSide,
+          edgeSide,
+          pinName,
+          measuredPadding,
+          maxAllowedPadding,
+          excessPadding,
+        }) => ({
+          pinSide,
+          edgeSide,
+          pinName,
+          measuredPadding,
+          maxAllowedPadding,
+          excessPadding,
+        }),
+      ),
+      suggestedSchWidth: widths.length ? Math.max(...widths) : undefined,
+      suggestedSchHeight: heights.length ? Math.max(...heights) : undefined,
+      message: `${this.MESSAGE} ${dimensions}`,
+    })
   }
 
   static issueToString(issue: SchematicPinPaddingToEdgeTooLarge): string {
     const attrs: string[] = []
     addAttr(attrs, "message", issue.message)
     addAttr(attrs, "componentName", issue.schematicBox.sourceComponentName)
-    addAttr(attrs, "pinSide", issue.pinSide)
-    addAttr(attrs, "edgeSide", issue.edgeSide)
-    addAttr(attrs, "pinName", issue.pinName)
-    addAttr(attrs, "measuredPadding", issue.measuredPadding)
-    addAttr(attrs, "maxAllowedPadding", issue.maxAllowedPadding)
-    addAttr(attrs, "excessPadding", issue.excessPadding)
+    if (issue.paddingDetails) {
+      addAttr(
+        attrs,
+        "pinSides",
+        [...new Set(issue.paddingDetails.map((detail) => detail.pinSide))].join(
+          ",",
+        ),
+      )
+      addAttr(
+        attrs,
+        "edgeSides",
+        [
+          ...new Set(issue.paddingDetails.map((detail) => detail.edgeSide)),
+        ].join(","),
+      )
+    } else {
+      addAttr(attrs, "pinSide", issue.pinSide)
+      addAttr(attrs, "edgeSide", issue.edgeSide)
+      addAttr(attrs, "pinName", issue.pinName)
+      addAttr(attrs, "measuredPadding", issue.measuredPadding)
+      addAttr(attrs, "maxAllowedPadding", issue.maxAllowedPadding)
+      addAttr(attrs, "excessPadding", issue.excessPadding)
+    }
     addAttr(attrs, "suggestedSchWidth", issue.suggestedSchWidth)
     addAttr(attrs, "suggestedSchHeight", issue.suggestedSchHeight)
     return `<SchematicPinPaddingToEdgeTooLarge ${attrs.join(" ")} />`

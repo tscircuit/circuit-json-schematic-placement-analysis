@@ -165,3 +165,12 @@ of the page. The URL becomes available after the first successful publication.
 
 Run `bun run build` to create the browser bundle locally. Source-based package
 imports remain available through the existing root export.
+
+## Schematic box diagnostics
+
+Pin-padding warnings are grouped into one `SchematicPinPaddingToEdgeTooLarge`
+issue per component, with combined affected sides and width/height guidance.
+`paddingDetails` retains each measured gap; the scalar gap fields describe the
+largest excess. Box width, pin padding and inner-label checks skip built-in
+symbols and custom components with `is_box_with_pins: false`. Older box exports
+that omit the flag remain supported.
