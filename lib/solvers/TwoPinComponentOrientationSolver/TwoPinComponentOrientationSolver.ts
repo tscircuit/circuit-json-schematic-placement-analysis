@@ -1,3 +1,4 @@
+import { getTraceName } from "../../utils/trace-name"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { SchematicPort, SchematicTrace } from "circuit-json"
 import type {
@@ -386,6 +387,7 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
     return {
       lineItemType: "TwoPinComponentCouldBeFlipped",
       schematicTraceId: candidate.trace.schematic_trace_id,
+      traceName: getTraceName(this.ctx.circuitJson, candidate.trace),
       targetComponent: candidate.targetPlacement,
       connectedComponent: candidate.connectedPlacement,
       targetPin,
@@ -400,7 +402,7 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
 
   static issueToString(issue: TwoPinComponentCouldBeFlipped): string {
     const attrs: string[] = []
-    addAttr(attrs, "schematicTraceId", issue.schematicTraceId)
+    addAttr(attrs, "traceName", issue.traceName)
     addAttr(
       attrs,
       "targetComponentName",

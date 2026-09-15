@@ -150,6 +150,7 @@ export interface ComponentPinsWouldAlignWithVerticalShift {
 export interface TraceCanBeSimplifiedByMovingComponent {
   lineItemType: "TraceCanBeSimplifiedByMovingComponent"
   schematicTraceId: string
+  traceName?: string
   targetComponent: SchematicBoxPlacement
   deltaSchX: number
   deltaSchY: number
@@ -180,6 +181,7 @@ export interface CrystalNotCenteredOverLoadCapacitors {
 export interface TwoPinComponentCouldBeFlipped {
   lineItemType: "TwoPinComponentCouldBeFlipped"
   schematicTraceId: string
+  traceName?: string
   targetComponent: SchematicBoxPlacement
   connectedComponent: SchematicBoxPlacement
   targetPin?: string

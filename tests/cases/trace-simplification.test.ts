@@ -19,6 +19,7 @@ test("suggests moving R11 right to remove two avoidable trace turns", async () =
 
   expect(simplificationIssue).toMatchObject({
     schematicTraceId: "schematic_trace_0",
+    traceName: "U3.pin1 to R11.pin1",
     targetComponent: { sourceComponentName: "R11" },
     deltaSchX: 0.8,
     deltaSchY: 0,
@@ -27,6 +28,8 @@ test("suggests moving R11 right to remove two avoidable trace turns", async () =
     currentTurnCount: 3,
     suggestedTurnCount: 1,
   })
+  expect(analysis.toString()).toContain('traceName="U3.pin1 to R11.pin1"')
+  expect(analysis.toString()).not.toContain("schematicTraceId")
   expect(simplificationIssue?.message).toContain("move R11 right by 0.8")
   expect(
     analysis

@@ -18,6 +18,8 @@ test("suggests flipping a two-pin capacitor that faces away from a connected com
     .filter((issue) => issue.lineItemType === "TwoPinComponentCouldBeFlipped")
 
   expect(flipIssues).toHaveLength(1)
+  expect(analysis.toString()).toContain("traceName=")
+  expect(analysis.toString()).not.toContain("schematicTraceId")
   expect(flipIssues[0]).toMatchObject({
     schematicTraceId: "schematic_trace_capacitor_to_chip",
     targetPin: "pin1",

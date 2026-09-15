@@ -1,3 +1,4 @@
+import { getTraceName } from "../../utils/trace-name"
 import { getNetLabelBounds } from "../../utils/net-label-bounds"
 import { calculateElbow, type ElbowPoint } from "calculate-elbow/lib"
 import {
@@ -624,6 +625,7 @@ export class TraceSimplificationSolver extends BaseSolver {
     return {
       lineItemType: "TraceCanBeSimplifiedByMovingComponent",
       schematicTraceId: trace.schematic_trace_id,
+      traceName: getTraceName(this.ctx.circuitJson, trace),
       targetComponent: candidate.target,
       deltaSchX: candidate.deltaSchX,
       deltaSchY: candidate.deltaSchY,
@@ -645,7 +647,7 @@ export class TraceSimplificationSolver extends BaseSolver {
 
   static issueToString(issue: TraceCanBeSimplifiedByMovingComponent): string {
     const attrs: string[] = []
-    addAttr(attrs, "schematicTraceId", issue.schematicTraceId)
+    addAttr(attrs, "traceName", issue.traceName)
     addAttr(
       attrs,
       "targetComponentName",

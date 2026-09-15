@@ -86,12 +86,12 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped schematicTraceId=&quot;schematic_trace_88&quot;</tspan>
+    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;R_SPI_MOSI.pin2 to U_SENSOR.MOSI&quot;</tspan>
     <tspan x="18" dy="22">  targetComponentName=&quot;R_SPI_MOSI&quot; connectedComponentName=&quot;U_SENSOR&quot; targetPin=&quot;pin2&quot;</tspan>
     <tspan x="18" dy="22">  currentFacingDirection=&quot;right&quot; suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;2&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R_SPI_MOSI by 180° so pin2 faces</tspan>
     <tspan x="18" dy="22">  U_SENSOR and reduce this trace from 2 turns to 1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped schematicTraceId=&quot;schematic_trace_98&quot;</tspan>
+    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;R_SPI_SCLK.pin2 to U_SENSOR.SCLK&quot;</tspan>
     <tspan x="18" dy="22">  targetComponentName=&quot;R_SPI_SCLK&quot; connectedComponentName=&quot;U_SENSOR&quot; targetPin=&quot;pin2&quot;</tspan>
     <tspan x="18" dy="22">  currentFacingDirection=&quot;right&quot; suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot;</tspan>
     <tspan x="18" dy="22">  currentTurnCount=&quot;2&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R_SPI_SCLK by 180° so pin2 faces</tspan>

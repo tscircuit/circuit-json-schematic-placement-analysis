@@ -38,11 +38,11 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="undefined"], g.trace-o
     <tspan x="18" dy="22">  height=&quot;1.1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped schematicTraceId=&quot;schematic_trace_capacitor_to_chip&quot;</tspan>
-    <tspan x="18" dy="22">  targetComponentName=&quot;C1&quot; connectedComponentName=&quot;U1&quot; targetPin=&quot;pin1&quot;</tspan>
-    <tspan x="18" dy="22">  currentFacingDirection=&quot;up&quot; suggestedFacingDirection=&quot;down&quot; deltaSchRotation=&quot;180&quot;</tspan>
-    <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;0&quot; message=&quot;rotate C1 by 180° so pin1 faces U1 and</tspan>
-    <tspan x="18" dy="22">  reduce this trace from 3 turns to 0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;C1.pin1 to U1.pin1&quot; targetComponentName=&quot;C1&quot;</tspan>
+    <tspan x="18" dy="22">  connectedComponentName=&quot;U1&quot; targetPin=&quot;pin1&quot; currentFacingDirection=&quot;up&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedFacingDirection=&quot;down&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;3&quot;</tspan>
+    <tspan x="18" dy="22">  suggestedTurnCount=&quot;0&quot; message=&quot;rotate C1 by 180° so pin1 faces U1 and reduce this trace from</tspan>
+    <tspan x="18" dy="22">  3 turns to 0&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
