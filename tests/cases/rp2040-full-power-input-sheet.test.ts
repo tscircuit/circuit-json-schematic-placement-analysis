@@ -24,12 +24,10 @@ test("records the full input sheet's local trace suggestions without rearranging
     SchematicBoxInnerLabelCollision: 6,
     SchematicPinPaddingToEdgeTooLarge: 26,
     DiodeResistorNotAligned: 1,
-    TraceCanBeSimplifiedByMovingComponent: 5,
     NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 7,
   })
-  // The two ORing suggestions straighten local wires; they don't expose the
-  // complete input -> MOSFET -> VIN_SELECTED paths as in the reference.
+  // None of the old suggestions preserves all routes and anchored labels.
   expect(
     analysis
       .getIssues()
@@ -38,7 +36,7 @@ test("records the full input sheet's local trace suggestions without rearranging
           ? [issue.targetComponent.sourceComponentName]
           : [],
       ),
-  ).toEqual(["D_PD_VBUS", "R_PD_RESET", "J_BARREL", "U_PD_OR", "U_BARREL_OR"])
+  ).toEqual([])
   const input = {
     circuitJson,
     analysis,
@@ -113,7 +111,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 48 }, (_, index) => index + 1),
+      Array.from({ length: 43 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

@@ -203,6 +203,33 @@ export function renderIssueOverlay(input: {
         break
       }
       case "TraceCanBeSimplifiedByMovingComponent": {
+        if (issue.suggestedTraces) {
+          const bounds = centeredRect(
+            issue.newSchX,
+            issue.newSchY,
+            issue.targetComponent.width,
+            issue.targetComponent.height,
+          )
+          includeBounds(bounds)
+          geometry.push(
+            `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="#16a34a22" stroke="#16a34a" stroke-width="1.5" vector-effect="non-scaling-stroke" />`,
+          )
+          for (const route of issue.suggestedTraces) {
+            for (const [i, to] of route.points.slice(1).entries()) {
+              const from = route.points[i]!
+              includeBounds({
+                left: Math.min(from.x, to.x),
+                right: Math.max(from.x, to.x),
+                bottom: Math.min(from.y, to.y),
+                top: Math.max(from.y, to.y),
+              })
+              geometry.push(
+                `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#16a34a" stroke-width="1.5" vector-effect="non-scaling-stroke" />`,
+              )
+            }
+          }
+        }
+
         const trace = sheetJson.find(
           (element) =>
             element.type === "schematic_trace" &&

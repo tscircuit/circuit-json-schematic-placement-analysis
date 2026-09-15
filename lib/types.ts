@@ -157,6 +157,11 @@ export interface TraceCanBeSimplifiedByMovingComponent {
   newSchY: number
   currentTurnCount: number
   suggestedTurnCount: number
+  /** Collision-checked calculate-elbow routes after applying this move. */
+  suggestedTraces?: Array<{
+    schematicTraceId: string
+    points: Array<{ x: number; y: number }>
+  }>
   message: string
 }
 

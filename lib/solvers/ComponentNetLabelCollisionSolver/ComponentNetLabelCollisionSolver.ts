@@ -1,3 +1,4 @@
+import { getNetLabelBounds } from "../../utils/net-label-bounds"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -45,9 +46,6 @@ interface RawBoxLabelCollision {
 type RawCollision = RawLabelLabelCollision | RawBoxLabelCollision
 
 export class ComponentNetLabelCollisionSolver extends BaseSolver {
-  private readonly LABEL_HALF_HEIGHT = 0.1
-  private readonly LABEL_BOUNDS_SLACK = 0.1
-  private readonly SCH_CHAR_WIDTH = 0.13
   private readonly placements: SchematicBoxPlacement[]
   private readonly netLabelsByComponentId: Map<string, SchematicNetLabel[]>
   private rawCollisions: RawCollision[] = []
@@ -117,8 +115,8 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const hits: RawLabelLabelCollision[] = []
     for (const leftLabel of leftLabels) {
       for (const rightLabel of rightLabels) {
-        const leftBounds = this.getNetLabelBounds(leftLabel)
-        const rightBounds = this.getNetLabelBounds(rightLabel)
+        const leftBounds = getNetLabelBounds(leftLabel)
+        const rightBounds = getNetLabelBounds(rightLabel)
         if (rectOverlap(leftBounds, rightBounds)) {
           hits.push({
             type: "label-label",
@@ -161,7 +159,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const hits: RawBoxLabelCollision[] = []
 
     for (const label of labels) {
-      const labelBounds = this.getNetLabelBounds(label)
+      const labelBounds = getNetLabelBounds(label)
       if (!rectOverlap(boxBounds, labelBounds)) continue
       let xSeparation: number
       if (boxIsLeft) {
@@ -441,44 +439,6 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       result.set(componentId, labels)
     }
     return result
-  }
-
-  private getNetLabelBounds(label: SchematicNetLabel): RectBounds {
-    const anchorSide = label.anchor_side
-    const isVertical = anchorSide === "top" || anchorSide === "bottom"
-
-    if (isVertical) {
-      const anchorY = label.anchor_position?.y ?? label.center.y
-      const textHalfExtent =
-        ((label.text?.length ?? 8) * this.SCH_CHAR_WIDTH) / 2 +
-        this.LABEL_BOUNDS_SLACK
-      const left = label.center.x - this.LABEL_HALF_HEIGHT
-      const right = label.center.x + this.LABEL_HALF_HEIGHT
-      if (anchorSide === "top") {
-        return {
-          left,
-          right,
-          top: anchorY,
-          bottom: anchorY - textHalfExtent * 2,
-        }
-      }
-      return { left, right, top: anchorY + textHalfExtent * 2, bottom: anchorY }
-    }
-
-    const anchorX = label.anchor_position?.x ?? label.center.x
-    const halfWidth = Math.abs(label.center.x - anchorX)
-    const farHalfWidth = halfWidth + this.LABEL_BOUNDS_SLACK
-    const top = label.center.y + this.LABEL_HALF_HEIGHT
-    const bottom = label.center.y - this.LABEL_HALF_HEIGHT
-    if (label.center.x >= anchorX) {
-      return {
-        left: anchorX,
-        right: label.center.x + farHalfWidth,
-        top,
-        bottom,
-      }
-    }
-    return { left: label.center.x - farHalfWidth, right: anchorX, top, bottom }
   }
 
   static netLabelCollisionToString(issue: NetLabelCollision): string {

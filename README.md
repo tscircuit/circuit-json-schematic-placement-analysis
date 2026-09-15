@@ -75,14 +75,23 @@ toggle the overlay to compare, and download the current SVG or JSON report.
 
 The built-in examples reuse the unchanged complete sheet imports from
 `MustafaMulla29/wireless-mouse-pcb` in `tests/assets/wireless-mouse-*-sheet.ts`.
-Current regression baselines are one `CrystalNotCenteredOverLoadCapacitors` issue
-on the controller sheet and three `TraceCanBeSimplifiedByMovingComponent` issues
-and two `TwoPinComponentCouldBeFlipped` issues
-on the sensor sheet; all other counts are zero. Counts record analyzer behavior,
-not whether a report is a true positive. `NetLabelCollision` counts grouped issue
-objects; its `collisionBounds` retains the individual intersection regions.
+The regression tests record each sheet's current issue counts. The sensor sheet's
+three former `TraceCanBeSimplifiedByMovingComponent` warnings are suppressed
+because their proposed moves cannot be verified safely. `NetLabelCollision`
+counts grouped issue objects; its `collisionBounds` retains the individual
+intersection regions.
 
-
+Trace movement warnings reroute every attached, unbranched port-to-port trace
+with `calculate-elbow`, respecting both port directions. The target trace must
+have fewer turns than both its existing route and a reroute without moving;
+no attached trace may gain turns or length. Proposed bodies and routes are
+checked against same-sheet components, wires, text and net labels. Ambiguous
+endpoints, junctions and attached labels are skipped rather than guessed.
+This is a conservative check of specific elbow routes, not a complete autorouter.
+The issue's `suggestedTraces` contains the verified route points. Green overlays
+show those routes and the proposed component bounds; red shows the original.
+Reanalyze after applying a suggestion: separate suggestions are evaluated against
+the original schematic, not as a combined move plan.
 
 Programmatically, use `analysis.getIssueCounts()` and
 `analysis.getIssues({ issueTypes: ["ComponentOverlap"], schematicSheetId })`.

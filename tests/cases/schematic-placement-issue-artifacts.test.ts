@@ -1,17 +1,19 @@
 import { expect, test } from "bun:test"
 import { createSchematicPlacementIssueArtifacts } from "lib/index"
-import { wirelessMouseSensorSheetCircuitJson as circuitJson } from "../assets/wireless-mouse-sensor-sheet"
+import { createTraceSimplificationCircuitJson } from "../assets/trace-simplification"
 
-test("exports a standalone cropped SVG per issue with only that issue's XML", () => {
+test("exports a standalone cropped SVG per issue with only that issue's XML", async () => {
+  const circuitJson = await createTraceSimplificationCircuitJson()
   const original = JSON.stringify(circuitJson)
-  expect(createSchematicPlacementIssueArtifacts(circuitJson)).toHaveLength(9)
+  expect(createSchematicPlacementIssueArtifacts(circuitJson)).toHaveLength(1)
   const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
     issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
   })
-  expect(artifacts).toHaveLength(3)
-  expect(new Set(artifacts.map((artifact) => artifact.fileName)).size).toBe(3)
+  expect(artifacts).toHaveLength(1)
+  expect(new Set(artifacts.map((artifact) => artifact.fileName)).size).toBe(1)
   for (const [index, artifact] of artifacts.entries()) {
     expect(artifact.issueIndex).toBe(index)
+    expect(artifact.content).toContain('stroke="#16a34a"')
     expect(artifact.contentType).toBe("image/svg+xml")
     expect(artifact.content.match(/data-issue-index=/g)).toHaveLength(1)
     expect(artifact.content).toContain(`data-issue-index="${index}"`)
@@ -50,5 +52,5 @@ test("exports a standalone cropped SVG per issue with only that issue's XML", ()
     }),
   ).toEqual([])
   expect(JSON.stringify(circuitJson)).toBe(original)
-  expect(artifacts[1]!.content).toMatchSvgSnapshot(import.meta.path)
+  expect(artifacts[0]!.content).toMatchSvgSnapshot(import.meta.path)
 })

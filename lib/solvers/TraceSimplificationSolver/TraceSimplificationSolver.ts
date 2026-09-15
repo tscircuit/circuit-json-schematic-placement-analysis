@@ -1,3 +1,12 @@
+import { getNetLabelBounds } from "../../utils/net-label-bounds"
+import { calculateElbow, type ElbowPoint } from "calculate-elbow/lib"
+import {
+  getSchematicTextPolygons,
+  rectPolygon,
+  segmentCrossesPolygon,
+  traceSegmentPolygon,
+  polygonsOverlap,
+} from "../../utils/schematic-text-geometry"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { SchematicPort, SchematicTrace } from "circuit-json"
 import type {
@@ -18,6 +27,7 @@ interface MoveCandidate {
   deltaSchY: number
   currentTurnCount: number
   suggestedTurnCount: number
+  suggestedTraces?: { schematicTraceId: string; points: Point[] }[]
 }
 
 export class TraceSimplificationSolver extends BaseSolver {
@@ -85,6 +95,7 @@ export class TraceSimplificationSolver extends BaseSolver {
 
       for (const candidate of candidates) {
         if (this.wouldOverlapAnotherComponent(candidate)) continue
+        if (!this.validateMove(trace, candidate, ports)) continue
 
         const moveKey = [
           candidate.target.schematicComponentId,
@@ -201,6 +212,266 @@ export class TraceSimplificationSolver extends BaseSolver {
       currentTurnCount,
       suggestedTurnCount,
     }
+  }
+
+  /** calculate-elbow proposes geometry, not obstacle avoidance. Only report a
+   * move when every attached route can be preserved or improved and the exact
+   * proposed geometry is clear. Unsupported junctions are deliberately skipped. */
+  private validateMove(
+    targetTrace: SchematicTrace,
+    candidate: MoveCandidate,
+    ports: SchematicPort[],
+  ): boolean {
+    const componentId = candidate.target.schematicComponentId
+    const sheetId = candidate.target.schematicSheetId
+    const sheetPorts = ports.filter((p) => p.schematic_sheet_id === sheetId)
+    const movingPorts = sheetPorts.filter(
+      (p) => p.schematic_component_id === componentId,
+    )
+    const traces = this.ctx.circuitJson.filter(
+      (e): e is SchematicTrace =>
+        e.type === "schematic_trace" && e.schematic_sheet_id === sheetId,
+    )
+    const touchesPort = (trace: SchematicTrace, port: SchematicPort) =>
+      trace.edges.some(
+        (edge) =>
+          edge.from_schematic_port_id === port.schematic_port_id ||
+          edge.to_schematic_port_id === port.schematic_port_id ||
+          this.pointsEqual(edge.from, port.center) ||
+          this.pointsEqual(edge.to, port.center),
+      )
+    const affected = traces.filter((trace) =>
+      movingPorts.some((port) => touchesPort(trace, port)),
+    )
+    if (!affected.includes(targetTrace)) return false
+    // A label directly attached to a moving port needs its own placement validation.
+    if (
+      this.ctx.circuitJson.some(
+        (e) =>
+          e.type === "schematic_net_label" &&
+          e.schematic_sheet_id === sheetId &&
+          movingPorts.some((p) =>
+            this.pointsEqual(e.anchor_position ?? e.center, p.center),
+          ),
+      )
+    )
+      return false
+    const shift = (point: Point): Point => ({
+      x: point.x + candidate.deltaSchX,
+      y: point.y + candidate.deltaSchY,
+    })
+    const directions = {
+      left: "x-",
+      right: "x+",
+      up: "y+",
+      down: "y-",
+    } as const
+    const endpoint = (port: SchematicPort, moved: boolean): ElbowPoint => ({
+      ...(moved && port.schematic_component_id === componentId
+        ? shift(port.center)
+        : port.center),
+      facingDirection: directions[port.facing_direction!],
+    })
+    const length = (points: Point[]) =>
+      points
+        .slice(1)
+        .reduce(
+          (sum, p, i) =>
+            sum + Math.abs(p.x - points[i]!.x) + Math.abs(p.y - points[i]!.y),
+          0,
+        )
+    const segments = (points: Point[]) =>
+      points.slice(1).map((to, i) => ({ from: points[i]!, to }))
+    const movedBounds = centeredRect(
+      candidate.target.schX + candidate.deltaSchX,
+      candidate.target.schY + candidate.deltaSchY,
+      candidate.target.width,
+      candidate.target.height,
+    )
+    const unaffected = traces.filter((trace) => !affected.includes(trace))
+    if (
+      unaffected.some((trace) =>
+        trace.edges.some((edge) =>
+          segmentCrossesPolygon(edge.from, edge.to, rectPolygon(movedBounds)),
+        ),
+      )
+    )
+      return false
+    const textPolygons = this.ctx.circuitJson.flatMap((e) => {
+      if (e.type === "schematic_net_label" && e.schematic_sheet_id === sheetId)
+        return [rectPolygon(getNetLabelBounds(e))]
+      if (e.type !== "schematic_text" || e.schematic_sheet_id !== sheetId)
+        return []
+      return getSchematicTextPolygons(
+        e.schematic_component_id === componentId
+          ? { ...e, position: shift(e.position) }
+          : e,
+      )
+    })
+    if (
+      textPolygons.some((polygon) =>
+        polygonsOverlap(polygon, rectPolygon(movedBounds)),
+      )
+    )
+      return false
+    const proposed: NonNullable<MoveCandidate["suggestedTraces"]> = []
+    for (const trace of affected) {
+      const oldPoints = this.getTracePoints(trace)
+      if (oldPoints.length < 2 || trace.junctions?.length) return false
+      const resolve = (point: Point, id?: string) => {
+        const matches = sheetPorts.filter((p) =>
+          id ? p.schematic_port_id === id : this.pointsEqual(p.center, point),
+        )
+        return matches.length === 1 &&
+          this.pointsEqual(matches[0]!.center, point)
+          ? matches[0]
+          : undefined
+      }
+      const start = resolve(
+        oldPoints[0]!,
+        trace.edges[0]!.from_schematic_port_id,
+      )
+      const end = resolve(
+        oldPoints.at(-1)!,
+        trace.edges.at(-1)!.to_schematic_port_id,
+      )
+      if (!start?.facing_direction || !end?.facing_direction) return false
+      if (
+        movingPorts.some(
+          (p) => touchesPort(trace, p) && p !== start && p !== end,
+        )
+      )
+        return false
+      // Preserve wire junctions and labels anchored anywhere on the old route.
+      const isInteriorConnection = (point: Point) =>
+        !this.pointsEqual(point, start.center) &&
+        !this.pointsEqual(point, end.center) &&
+        segments(oldPoints).some(
+          ({ from, to }) =>
+            Math.abs(
+              Math.hypot(point.x - from.x, point.y - from.y) +
+                Math.hypot(point.x - to.x, point.y - to.y) -
+                Math.hypot(to.x - from.x, to.y - from.y),
+            ) < 1e-6,
+        )
+      if (
+        traces.some(
+          (other) =>
+            other !== trace &&
+            other.edges.some(
+              (edge) =>
+                isInteriorConnection(edge.from) ||
+                isInteriorConnection(edge.to),
+            ),
+        )
+      )
+        return false
+      if (
+        this.ctx.circuitJson.some(
+          (e) =>
+            e.type === "schematic_net_label" &&
+            e.schematic_sheet_id === sheetId &&
+            isInteriorConnection(e.anchor_position ?? e.center),
+        )
+      )
+        return false
+      const points = calculateElbow(
+        endpoint(start, true),
+        endpoint(end, true),
+      ).filter(
+        (point, i, all) => i === 0 || !this.pointsEqual(point, all[i - 1]!),
+      )
+      const turns = this.countTurns(points)
+      const oldTurns = this.countTurns(oldPoints)
+      if (
+        points.length < 2 ||
+        turns === undefined ||
+        oldTurns === undefined ||
+        turns > oldTurns ||
+        length(points) > length(oldPoints) + 1e-6
+      )
+        return false
+      if (
+        !this.isPointInFacingDirection(
+          points[0]!,
+          points[1]!,
+          start.facing_direction,
+        ) ||
+        !this.isPointInFacingDirection(
+          points.at(-1)!,
+          points.at(-2)!,
+          end.facing_direction,
+        )
+      )
+        return false
+      if (trace === targetTrace) {
+        const baselineTurns = this.countTurns(
+          calculateElbow(endpoint(start, false), endpoint(end, false)),
+        )
+        if (
+          turns >= oldTurns ||
+          baselineTurns === undefined ||
+          turns >= baselineTurns
+        )
+          return false
+        candidate.suggestedTurnCount = turns
+      }
+      for (const segment of segments(points)) {
+        if (
+          textPolygons.some((polygon) =>
+            segmentCrossesPolygon(segment.from, segment.to, polygon),
+          )
+        )
+          return false
+        if (
+          this.ctx.componentPlacements.some((p) => {
+            if (p.schematicSheetId !== sheetId) return false
+            const bounds =
+              p.schematicComponentId === componentId
+                ? movedBounds
+                : centeredRect(p.schX, p.schY, p.width, p.height)
+            return segmentCrossesPolygon(
+              segment.from,
+              segment.to,
+              rectPolygon(bounds),
+            )
+          })
+        )
+          return false
+        const polygon = traceSegmentPolygon(segment.from, segment.to)
+        if (!polygon) continue
+        // Reject new crossings/overlaps, including ambiguous same-net joins.
+        const otherSegments = [
+          ...unaffected.flatMap((t) => t.edges),
+          ...proposed.flatMap((t) => segments(t.points)),
+        ]
+        if (
+          otherSegments.some((edge) => {
+            if (
+              [start, end].some(
+                (port) =>
+                  port.schematic_component_id !== componentId &&
+                  [segment.from, segment.to].some((p) =>
+                    this.pointsEqual(p, port.center),
+                  ) &&
+                  [edge.from, edge.to].some((p) =>
+                    this.pointsEqual(p, port.center),
+                  ),
+              ) &&
+              this.getAxis(segment.from, segment.to) !==
+                this.getAxis(edge.from, edge.to)
+            )
+              return false
+            const other = traceSegmentPolygon(edge.from, edge.to)
+            return other && polygonsOverlap(polygon, other)
+          })
+        )
+          return false
+      }
+      proposed.push({ schematicTraceId: trace.schematic_trace_id, points })
+    }
+    candidate.suggestedTraces = proposed
+    return true
   }
 
   private getTracePoints(trace: SchematicTrace): Point[] {
@@ -326,6 +597,7 @@ export class TraceSimplificationSolver extends BaseSolver {
       newSchY,
       currentTurnCount: candidate.currentTurnCount,
       suggestedTurnCount: candidate.suggestedTurnCount,
+      suggestedTraces: candidate.suggestedTraces,
       message: `move ${targetName} ${direction} by ${fmtNumber(distance)} (to schX=${fmtNumber(newSchX)}, schY=${fmtNumber(newSchY)}) to reduce this trace from ${candidate.currentTurnCount} turns to ${candidate.suggestedTurnCount}`,
     }
   }

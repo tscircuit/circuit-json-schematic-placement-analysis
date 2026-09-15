@@ -1,4 +1,4 @@
-<svg width="1200" height="1076" viewBox="0 0 1200 1076" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="988" viewBox="0 0 1200 988" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -76,10 +76,6 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">&lt;VerboseSchematicNetLabel message=&quot;Create trace with schDisplayLabel&quot;</tspan>
     <tspan x="18" dy="22">  text=&quot;U1_RETURN/C1_pin2/C2_pin2&quot; involvedPins=&quot;U1.RETURN,C1.pin2,C2.pin2&quot; schX=&quot;-8&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;2.36&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;TraceCanBeSimplifiedByMovingComponent schematicTraceId=&quot;schematic_trace_0&quot;</tspan>
-    <tspan x="18" dy="22">  targetComponentName=&quot;U1&quot; deltaSchX=&quot;0&quot; deltaSchY=&quot;+3.75&quot; newSchX=&quot;0&quot; newSchY=&quot;3.75&quot;</tspan>
-    <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move U1 up by 3.75 (to schX=0, schY=3.75)</tspan>
-    <tspan x="18" dy="22">  to reduce this trace from 3 turns to 1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

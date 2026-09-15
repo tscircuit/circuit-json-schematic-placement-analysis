@@ -1,4 +1,4 @@
-<svg width="1200" height="1164" viewBox="0 0 1200 1164" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1076" viewBox="0 0 1200 1076" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -70,10 +70,6 @@ svg:has(:is(g.trace[data-subcircuit-connectivity-map-key="unnamedsubcircuitsubci
     <tspan x="18" dy="22">  maxRecommendedDistance=&quot;6&quot; message=&quot;Group R8, C21 near U1.RSTN so the reset pull-up and</tspan>
     <tspan x="18" dy="22">  capacitor can be read together. Preserve all net connections; associated test points may</tspan>
     <tspan x="18" dy="22">  remain in a debug area.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;TraceCanBeSimplifiedByMovingComponent schematicTraceId=&quot;schematic_trace_0&quot;</tspan>
-    <tspan x="18" dy="22">  targetComponentName=&quot;C21&quot; deltaSchX=&quot;+1.35&quot; deltaSchY=&quot;0&quot; newSchX=&quot;1.35&quot; newSchY=&quot;-28&quot;</tspan>
-    <tspan x="18" dy="22">  currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;move C21 right by 1.35 (to schX=1.35,</tspan>
-    <tspan x="18" dy="22">  schY=-28) to reduce this trace from 3 turns to 1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R8&quot; railPin=&quot;pin2&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R8 by 90° so its</tspan>
     <tspan x="18" dy="22">  power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>

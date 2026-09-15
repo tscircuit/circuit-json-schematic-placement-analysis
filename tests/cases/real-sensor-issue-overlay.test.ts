@@ -5,7 +5,7 @@ import { wirelessMouseSensorSheetCircuitJson as circuitJson } from "../assets/wi
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("records the real sensor's three trace suggestions and isolates one exact trace", () => {
+test("suppresses the real sensor's unverified trace movement suggestions", () => {
   const imported = parseReproCircuitJson(JSON.stringify(circuitJson))
   expect(imported).toEqual(circuitJson)
   expect(() => parseReproCircuitJson("{}")).toThrow(
@@ -17,34 +17,21 @@ test("records the real sensor's three trace suggestions and isolates one exact t
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
-    ["TraceCanBeSimplifiedByMovingComponent", 3],
     ["TwoPinComponentCouldBeFlipped", 2],
     ["TwoPinComponentShouldBeVertical", 2],
     ["DecouplingCapacitorsNotCloseTogether", 2],
   ])
-  expect(analysis.getIssues()).toHaveLength(9)
+  expect(analysis.getIssues()).toHaveLength(6)
   const input = {
     circuitJson,
     analysis,
     issueTypes: ["TraceCanBeSimplifiedByMovingComponent" as const],
-    issueIndex: 1,
+    showFullSchematic: true,
   }
   const svg = createIssueOverlaySvg(input)
-  expect(svg.match(/data-issue-index=/g)).toHaveLength(1)
-  expect(svg).toContain('data-issue-index="1"')
-  const issue = analysis.getIssues()[1]!
-  if (issue.lineItemType !== "TraceCanBeSimplifiedByMovingComponent")
-    throw new Error("Expected trace issue")
-  const trace = circuitJson.find(
-    (element) =>
-      element.type === "schematic_trace" &&
-      element.schematic_trace_id === issue.schematicTraceId,
+  expect(analysis.getIssueCounts().TraceCanBeSimplifiedByMovingComponent).toBe(
+    0,
   )
-  if (trace?.type !== "schematic_trace")
-    throw new Error("Missing reported trace")
-  for (const edge of trace.edges)
-    expect(svg).toContain(
-      `<line x1="${edge.from.x}" y1="${edge.from.y}" x2="${edge.to.x}" y2="${edge.to.y}" stroke="#dc2626"`,
-    )
+  expect(svg).not.toContain("data-issue-index=")
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(import.meta.path)
 })

@@ -28,11 +28,10 @@ test("records the full controller sheet's current findings around the unreported
       ),
     ),
   ).toEqual({
-    TraceCanBeSimplifiedByMovingComponent: 3,
     NetLabelCollision: 1,
     DecouplingCapacitorsNotCloseTogether: 1,
   })
-  // None of these three suggestions addresses J_USB or R_USB1/R_USB2.
+  // The previous U3, TP_3V3 and U1 moves cannot be safely rerouted.
   expect(
     analysis
       .getIssues()
@@ -41,7 +40,7 @@ test("records the full controller sheet's current findings around the unreported
           ? [issue.targetComponent.sourceComponentName]
           : [],
       ),
-  ).toEqual(["U3", "TP_3V3", "U1"])
+  ).toEqual([])
   const input = {
     circuitJson,
     analysis,

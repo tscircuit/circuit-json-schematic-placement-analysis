@@ -37,8 +37,7 @@ beforeAll(async () => {
           ? item.issues.map((issue) => issue.lineItemType)
           : [],
       )
-    // Trace simplification only shifts C21 horizontally: it stays 28 units below
-    // its host. This documents the additional grouping problem explicitly.
+    // The old horizontal C21 move cannot safely preserve its attached routes.
     if (!compact) {
       const moves = analysis
         .getLineItems()
@@ -51,12 +50,7 @@ beforeAll(async () => {
               )
             : [],
         )
-      expect(moves).toHaveLength(1)
-      expect(moves[0]!.targetComponent.sourceComponentName).toBe("C21")
-      expect(moves[0]!.newSchY).toBe(-28)
-      expect(Math.hypot(moves[0]!.newSchX, moves[0]!.newSchY)).toBeGreaterThan(
-        25,
-      )
+      expect(moves).toHaveLength(0)
     }
     await expect(
       createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),

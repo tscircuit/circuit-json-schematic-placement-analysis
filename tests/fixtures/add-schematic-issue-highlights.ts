@@ -15,9 +15,10 @@ import { parseSync, stringify, type INode } from "svgson"
 
 type Bounds = { left: number; right: number; top: number; bottom: number }
 type Point = { x: number; y: number }
-type Shape =
+type Shape = { suggested?: boolean } & (
   | { type: "box"; bounds: Bounds; componentId?: string }
   | { type: "line"; from: Point; to: Point }
+)
 interface IssueHighlight {
   number: number
   issue: SchematicPlacementIssue
@@ -142,6 +143,29 @@ function getIssueHighlights(
           issue.lineItemType === "TwoPinComponentCouldBeFlipped"
         )
           trace(issue.schematicTraceId)
+        if (
+          issue.lineItemType === "TraceCanBeSimplifiedByMovingComponent" &&
+          issue.suggestedTraces
+        ) {
+          shapes.push({
+            type: "box",
+            suggested: true,
+            bounds: {
+              left: issue.newSchX - issue.targetComponent.width / 2,
+              right: issue.newSchX + issue.targetComponent.width / 2,
+              top: issue.newSchY + issue.targetComponent.height / 2,
+              bottom: issue.newSchY - issue.targetComponent.height / 2,
+            },
+          })
+          for (const route of issue.suggestedTraces)
+            for (const [i, to] of route.points.slice(1).entries())
+              shapes.push({
+                type: "line",
+                suggested: true,
+                from: route.points[i]!,
+                to,
+              })
+        }
         if (issue.lineItemType === "VerboseSchematicNetLabel")
           point(issue.schX, issue.schY)
         if (issue.lineItemType === "ComponentNetLabelCollision") {
@@ -260,10 +284,10 @@ function createHighlightLayer(
           if (shape.type === "line") {
             const p = screen(shape.from)
             const q = screen(shape.to)
-            return `<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="#e11d48" stroke-width="5" stroke-opacity="0.55" />`
+            return `<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${shape.suggested ? "#16a34a" : "#e11d48"}" stroke-width="5" stroke-opacity="0.55" />`
           }
           const r = screenBounds(shape)
-          return `<rect${shape.componentId ? ` data-highlight-component-id="${escapeAttr(shape.componentId)}"` : ""} x="${r.left}" y="${r.top}" width="${Math.max(r.right - r.left, 2)}" height="${Math.max(r.bottom - r.top, 2)}" fill="#ef4444" fill-opacity="0.16" stroke="#dc2626" stroke-width="1.5" />`
+          return `<rect${shape.componentId ? ` data-highlight-component-id="${escapeAttr(shape.componentId)}"` : ""} x="${r.left}" y="${r.top}" width="${Math.max(r.right - r.left, 2)}" height="${Math.max(r.bottom - r.top, 2)}" fill="${shape.suggested ? "#16a34a" : "#ef4444"}" fill-opacity="0.16" stroke="${shape.suggested ? "#16a34a" : "#dc2626"}" stroke-width="1.5" />`
         })
         .join("")
       // Repeat the issue number on every box. A trace-only issue gets one marker.

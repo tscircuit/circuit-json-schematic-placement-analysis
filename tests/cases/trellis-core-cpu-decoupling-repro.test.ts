@@ -58,7 +58,6 @@ test("reports the four scattered decoupling banks in Trellis Core's CPU sheet", 
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
-    ["TraceCanBeSimplifiedByMovingComponent", 3],
     ["CrystalNotCenteredOverLoadCapacitors", 1],
     ["TwoPinComponentShouldBeVertical", 5],
     ["DecouplingCapacitorsNotCloseTogether", 4],

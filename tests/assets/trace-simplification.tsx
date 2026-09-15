@@ -3,8 +3,10 @@ import type { CircuitJson } from "circuit-json"
 
 export async function createTraceSimplificationCircuitJson({
   addBlockingComponent = false,
+  resistorSchX = 0,
 }: {
   addBlockingComponent?: boolean
+  resistorSchX?: number
 } = {}): Promise<CircuitJson> {
   const circuit = new Circuit()
 
@@ -23,7 +25,7 @@ export async function createTraceSimplificationCircuitJson({
         name="R11"
         resistance="100k"
         footprint="0603"
-        schX={0}
+        schX={resistorSchX}
         schY={2}
         schRotation={90}
       />
