@@ -49,9 +49,30 @@ test("uses supply-pin metadata and does not infer rails from signal pin names", 
         railName: "SUPPLY",
         groundName: "RETURN",
       })
-    expect(
-      createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
-    ).toMatchSvgSnapshot(
+    const svg = createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      highlightIssues: ["DecouplingCapacitorsNotCloseTogether"],
+    })
+    if (hasSupplyMetadata) {
+      expect(svg).toContain(
+        'data-issue-type="DecouplingCapacitorsNotCloseTogether"',
+      )
+      for (const component of circuitJson.filter(
+        (e) =>
+          e.type === "schematic_component" &&
+          issues[0]!.lineItemType === "DecouplingCapacitorsNotCloseTogether" &&
+          issues[0]!.capacitorSchematicBoxes.some(
+            (box) => box.schematicComponentId === e.schematic_component_id,
+          ),
+      )) {
+        if (component.type === "schematic_component")
+          expect(svg).toContain(
+            `data-highlight-component-id="${component.schematic_component_id}"`,
+          )
+      }
+    }
+    expect(svg).toMatchSvgSnapshot(
       import.meta.path,
       hasSupplyMetadata ? "supplies" : "signals",
     )

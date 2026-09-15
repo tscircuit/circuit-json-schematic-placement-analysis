@@ -93,6 +93,39 @@ export class TraceSimplificationSolver extends BaseSolver {
         }),
       ].filter((candidate): candidate is MoveCandidate => Boolean(candidate))
 
+      // The same relative pin displacement can be achieved by moving the
+      // opposite endpoint instead. Try that when it lets a passive move in
+      // place of an IC, then validate its own obstacles and attached routes.
+      for (const candidate of [...candidates]) {
+        if (!candidate.target.sourceComponentName?.startsWith("U")) continue
+        for (const point of [points[0]!, points.at(-1)!]) {
+          const port = this.findPortAtPoint(
+            ports,
+            point,
+            trace.schematic_sheet_id,
+          )
+          const target = port?.schematic_component_id
+            ? placementsByComponentId.get(port.schematic_component_id)
+            : undefined
+          if (!target || !/^[CR]/.test(target.sourceComponentName ?? ""))
+            continue
+          candidates.push({
+            target,
+            deltaSchX: -candidate.deltaSchX,
+            deltaSchY: -candidate.deltaSchY,
+            currentTurnCount,
+            suggestedTurnCount: candidate.suggestedTurnCount,
+          })
+        }
+      }
+      const priority = (candidate: MoveCandidate) =>
+        /^[CR]/.test(candidate.target.sourceComponentName ?? "")
+          ? 0
+          : candidate.target.sourceComponentName?.startsWith("U")
+            ? 2
+            : 1
+      candidates.sort((a, b) => priority(a) - priority(b))
+
       for (const candidate of candidates) {
         if (this.wouldOverlapAnotherComponent(candidate)) continue
         if (!this.validateMove(trace, candidate, ports)) continue
@@ -102,9 +135,10 @@ export class TraceSimplificationSolver extends BaseSolver {
           candidate.deltaSchX.toFixed(3),
           candidate.deltaSchY.toFixed(3),
         ].join("\0")
-        if (emittedMoves.has(moveKey)) continue
+        if (emittedMoves.has(moveKey)) break
         emittedMoves.add(moveKey)
         this.out.push(this.makeIssue(trace, candidate))
+        break
       }
     }
 

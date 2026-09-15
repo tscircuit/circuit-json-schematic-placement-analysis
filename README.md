@@ -88,6 +88,8 @@ no attached trace may gain turns or length. Proposed bodies and routes are
 checked against same-sheet components, wires, text and net labels. Ambiguous
 endpoints, junctions and attached labels are skipped rather than guessed.
 This is a conservative check of specific elbow routes, not a complete autorouter.
+When a valid C* or R* move can replace a U* move, the passive is preferred.
+Only one verified alternative is suggested for each trace.
 The issue's `suggestedTraces` contains the verified route points. Green overlays
 show those routes and the proposed component bounds; red shows the original.
 Reanalyze after applying a suggestion: separate suggestions are evaluated against
