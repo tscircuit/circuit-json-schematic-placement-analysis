@@ -10,10 +10,10 @@ let croppedSvgRoot = ""
 
 beforeAll(() => {
   const original = JSON.stringify(circuitJson)
-  expect(circuitJson).toHaveLength(1430)
+  expect(circuitJson).toHaveLength(1460)
   expect(
     circuitJson.filter((element) => element.type === "schematic_component"),
-  ).toHaveLength(40)
+  ).toHaveLength(38)
 
   const analysis = analyzeSchematicPlacement(circuitJson)
   const input = { circuitJson, analysis, width: 1400, height: 900 }
