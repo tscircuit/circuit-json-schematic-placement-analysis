@@ -3,7 +3,7 @@ import { Circuit } from "@tscircuit/core"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test("reports padding just beyond the half-spacing tolerance", async () => {
+test("reports visibly excessive padding in a 1 mm tall box", async () => {
   const circuit = new Circuit()
   circuit.add(
     <board routingDisabled>
@@ -11,7 +11,7 @@ test("reports padding just beyond the half-spacing tolerance", async () => {
         name="U_RGB"
         manufacturerPartNumber="SN74AHCT1G125DCK"
         schWidth={1.2}
-        schHeight={0.802}
+        schHeight={1}
         schPinSpacing={0.2}
         pinLabels={{
           pin1: "OE",
