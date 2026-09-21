@@ -25,6 +25,17 @@ test("records the clock board series power diode orientation finding", () => {
   }
 
   const analysis = analyzeSchematicPlacement(circuitJson)
+  const powerSheetOrientationIssues = analysis.getIssues({
+    issueTypes: ["TwoPinComponentShouldBeVertical"],
+    schematicSheetId: "schematic_sheet_0",
+  })
+  expect(
+    powerSheetOrientationIssues.map((issue) =>
+      issue.lineItemType === "TwoPinComponentShouldBeVertical"
+        ? issue.schematicBox.sourceComponentName
+        : null,
+    ),
+  ).toEqual(["D_REVERSE", "C_BUCK_IN", "C_BUCK_OUT1", "C_BUCK_OUT2"])
   const issue = analysis
     .getIssues({ issueTypes: ["TwoPinComponentShouldBeVertical"] })
     .find(
@@ -57,7 +68,7 @@ test("records the clock board series power diode orientation finding", () => {
       circuitJson,
       analysis,
       issueTypes: ["TwoPinComponentShouldBeVertical"],
-      issueIndex: analysis.getIssues().indexOf(issue),
+      schematicSheetId: "schematic_sheet_0",
       showOverlay: true,
       showFullSchematic: true,
       width: 1800,
