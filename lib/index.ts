@@ -20,6 +20,7 @@ export { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/T
 export { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 export { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 export * from "./types"
+export { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 export {
   createSchematicPlacementIssueArtifacts,
   type SchematicPlacementIssueArtifact,

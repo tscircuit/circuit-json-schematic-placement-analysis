@@ -374,7 +374,25 @@ export interface ConnectorPositionCausesTraceDetours {
   message: string
 }
 
+/** Advisory for a grounded-emitter NPN switch; no automatic move is implied. */
+export interface LowSideTransistorNotAlignedWithLoad {
+  lineItemType: "LowSideTransistorNotAlignedWithLoad"
+  transistorSchematicBox: SchematicBoxPlacement
+  loadSchematicBox: SchematicBoxPlacement
+  baseResistorSchematicBox: SchematicBoxPlacement
+  clampDiodeSchematicBox: SchematicBoxPlacement
+  collectorSourcePortId: string
+  emitterSourcePortId: string
+  collectorFacingDirection: SchematicPortFacingDirection
+  emitterFacingDirection: SchematicPortFacingDirection
+  placementProblems: Array<
+    "transistor_not_below_load" | "collector_not_up" | "emitter_not_down"
+  >
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | LowSideTransistorNotAlignedWithLoad
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace
   | CapacitorSymbolHorizontal
