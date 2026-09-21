@@ -174,7 +174,3 @@ issue per component, with combined affected sides and width/height guidance.
 largest excess. Box width, pin padding and inner-label checks skip built-in
 symbols and custom components with `is_box_with_pins: false`. Older box exports
 that omit the flag remain supported.
-
-Pin-padding warnings allow half a pin spacing beyond the ideal edge padding
-before reporting an issue, accommodating centered banks with unequal pin counts.
-Reported padding limits and resize suggestions still use the ideal padding.
