@@ -43,14 +43,7 @@ test("still detects side label collisions with singleton supply pins", async () 
     (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
   )
 
-  expect(pinPaddingIssues).toHaveLength(1)
-  expect(pinPaddingIssues[0]!.suggestedSchHeight).toBeCloseTo(1.17)
-  for (const issue of pinPaddingIssues) {
-    expect(issue.paddingDetails).toHaveLength(4)
-    for (const detail of issue.paddingDetails!) {
-      expect(["left", "right"]).toContain(detail.pinSide)
-    }
-  }
+  expect(pinPaddingIssues).toHaveLength(0)
   const collisionIssues = issuesLineItem.issues.filter(
     (issue) => issue.lineItemType === "SchematicBoxInnerLabelCollision",
   )

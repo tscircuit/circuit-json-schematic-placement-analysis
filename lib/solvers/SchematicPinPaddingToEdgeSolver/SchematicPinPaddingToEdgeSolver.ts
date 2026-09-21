@@ -122,13 +122,13 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
             )
           : pinSpacing
 
-        // Centered banks with unequal pin counts naturally differ by half a
-        // pin spacing at each end. Allow that slack before recommending a
-        // resize, while keeping the suggested size based on the ideal padding.
+        // Allow one extra pin spacing at each end so moderately roomy boxes
+        // and centered banks with unequal pin counts are not flagged. Keep
+        // resize suggestions based on the ideal padding for excessive gaps.
         if (
           !this.exceedsMaxAllowedGap(
             measuredPadding,
-            maxAllowedPadding + pinSpacing / 2,
+            maxAllowedPadding + pinSpacing,
           )
         )
           continue

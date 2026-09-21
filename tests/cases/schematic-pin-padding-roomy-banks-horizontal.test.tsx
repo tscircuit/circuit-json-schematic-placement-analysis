@@ -3,14 +3,14 @@ import { Circuit } from "@tscircuit/core"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test("reports visibly excessive padding in a 1.2 mm tall box", async () => {
+test("accepts horizontal centered unequal banks in a 1 mm wide box", async () => {
   const circuit = new Circuit()
   circuit.add(
     <board routingDisabled>
       <chip
         name="U_RGB"
         manufacturerPartNumber="SN74AHCT1G125DCK"
-        schWidth={1.2}
+        schWidth={1}
         schHeight={1.2}
         schPinSpacing={0.2}
         pinLabels={{
@@ -21,8 +21,8 @@ test("reports visibly excessive padding in a 1.2 mm tall box", async () => {
           pin5: "VCC",
         }}
         schPinArrangement={{
-          leftSide: ["pin1", "pin2", "pin3"],
-          rightSide: ["pin5", "pin4"],
+          topSide: ["pin1", "pin2", "pin3"],
+          bottomSide: ["pin5", "pin4"],
         }}
       />
     </board>,
@@ -30,7 +30,9 @@ test("reports visibly excessive padding in a 1.2 mm tall box", async () => {
   await circuit.renderUntilSettled()
   const circuitJson = circuit.getCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.toString()).toContain("<SchematicPinPaddingToEdgeTooLarge ")
+  expect(analysis.toString()).not.toContain(
+    "<SchematicPinPaddingToEdgeTooLarge ",
+  )
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,
