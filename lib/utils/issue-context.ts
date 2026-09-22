@@ -66,6 +66,12 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "LowSideTransistorNotAlignedWithLoad":
+        addPlacement(issue.transistorSchematicBox)
+        addPlacement(issue.loadSchematicBox)
+        addPlacement(issue.baseResistorSchematicBox)
+        addPlacement(issue.clampDiodeSchematicBox)
+        break
       case "DecouplingCapacitorsNotCloseTogether":
         for (const placement of issue.capacitorSchematicBoxes)
           addPlacement(placement)
