@@ -122,7 +122,15 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
             )
           : pinSpacing
 
-        if (!this.exceedsMaxAllowedGap(measuredPadding, maxAllowedPadding))
+        // Allow one extra pin spacing at each end so moderately roomy boxes
+        // and centered banks with unequal pin counts are not flagged. Keep
+        // resize suggestions based on the ideal padding for excessive gaps.
+        if (
+          !this.exceedsMaxAllowedGap(
+            measuredPadding,
+            maxAllowedPadding + pinSpacing,
+          )
+        )
           continue
 
         candidates.push({
