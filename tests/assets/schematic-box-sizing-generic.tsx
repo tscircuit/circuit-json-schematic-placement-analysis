@@ -8,7 +8,6 @@ export async function createSchematicBoxSizingGenericCircuitJson(): Promise<Circ
     <board>
       <connector
         name="U3"
-        standard="usb_c"
         footprint="pinrow8"
         schX={8.1}
         schY={8.4}
