@@ -37,15 +37,32 @@ test("records the separated USB resistor pair on the complete NEMA23 programming
       ],
     }),
   ).toEqual([])
+  const pair = analysis.getIssues({
+    issueTypes: ["UsbSeriesResistorsNotAligned"],
+  })
+  expect(pair).toMatchObject([
+    {
+      positiveResistorSchematicBox: { sourceComponentName: "R_USB2" },
+      negativeResistorSchematicBox: { sourceComponentName: "R_USB1" },
+      signalAxis: "horizontal",
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes: ["UsbSeriesResistorsNotAligned"],
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 1800,
+    height: 1200,
+  })
+  const number = analysis.getIssues().indexOf(pair[0]!) + 1
+  // Both resistors and the diagnostic share the same issue number.
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([number, number])
+  expect(svg).toContain(`data-listing-issue-number="${number}"`)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

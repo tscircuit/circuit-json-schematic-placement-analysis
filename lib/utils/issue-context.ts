@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "UsbSeriesResistorsNotAligned":
+        addPlacement(issue.positiveResistorSchematicBox)
+        addPlacement(issue.negativeResistorSchematicBox)
+        break
       case "LowSideTransistorNotAlignedWithLoad":
         addPlacement(issue.transistorSchematicBox)
         addPlacement(issue.loadSchematicBox)
