@@ -1,4 +1,5 @@
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
+import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -163,6 +164,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ConnectorPlacementSolver",
       ConnectorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "LowSideTransistorPlacementSolver",
+      LowSideTransistorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
