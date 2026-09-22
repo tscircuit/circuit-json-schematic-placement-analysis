@@ -1,6 +1,6 @@
 {
   "name": "@tscircuit/circuit-json-schematic-placement-analysis",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "main": "lib/index.ts",
   "module": "lib/index.ts",
@@ -30,7 +30,7 @@
     "@tscircuit/solver-utils": "^0.0.19",
     "calculate-elbow": "^0.0.13",
     "circuit-json-to-connectivity-map": "^0.0.23",
-    "circuit-to-svg": "^0.0.370",
+    "circuit-to-svg": "^0.0.427",
     "graphics-debug": "^0.0.94",
     "schematic-symbols": "^0.0.224",
     "stack-svgs": "^0.0.1"
