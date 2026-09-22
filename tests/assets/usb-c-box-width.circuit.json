@@ -1,0 +1,856 @@
+[
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_24",
+    "name": "EH1",
+    "pin_number": 13,
+    "port_hints": ["EH1", "SHELL1", "pin13", "13"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_25",
+    "name": "EH2",
+    "pin_number": 14,
+    "port_hints": ["EH2", "SHELL2", "pin14", "14"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_26",
+    "name": "pin13_alt1",
+    "pin_number": 15,
+    "port_hints": ["pin13_alt1", "SHELL3", "pin15", "15"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_27",
+    "name": "pin14_alt1",
+    "pin_number": 16,
+    "port_hints": ["pin14_alt1", "SHELL4", "pin16", "16"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_28",
+    "name": "A1B12",
+    "pin_number": 17,
+    "port_hints": ["A1B12", "GND1", "pin17", "17"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_29",
+    "name": "A4B9",
+    "pin_number": 18,
+    "port_hints": ["A4B9", "VBUS1", "pin18", "18"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net3"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_30",
+    "name": "B8",
+    "pin_number": 19,
+    "port_hints": ["B8", "SBU2", "pin19", "19"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "do_not_connect": true
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_31",
+    "name": "A5",
+    "pin_number": 20,
+    "port_hints": ["A5", "CC1", "pin20", "20"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net21"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_32",
+    "name": "B7",
+    "pin_number": 21,
+    "port_hints": ["B7", "DM2", "pin21", "21"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net1"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_33",
+    "name": "A6",
+    "pin_number": 22,
+    "port_hints": ["A6", "DP1", "pin22", "22"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net2"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_34",
+    "name": "A7",
+    "pin_number": 23,
+    "port_hints": ["A7", "DM1", "pin23", "23"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net1"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_35",
+    "name": "B6",
+    "pin_number": 24,
+    "port_hints": ["B6", "DP2", "pin24", "24"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net2"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_36",
+    "name": "A8",
+    "pin_number": 25,
+    "port_hints": ["A8", "SBU1", "pin25", "25"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "do_not_connect": true
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_37",
+    "name": "B5",
+    "pin_number": 26,
+    "port_hints": ["B5", "CC2", "pin26", "26"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net22"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_38",
+    "name": "B4A9",
+    "pin_number": 27,
+    "port_hints": ["B4A9", "VBUS2", "pin27", "27"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net3"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_39",
+    "name": "B1A12",
+    "pin_number": 28,
+    "port_hints": ["B1A12", "GND2", "pin28", "28"],
+    "source_component_id": "source_component_12",
+    "subcircuit_id": "subcircuit_source_group_7",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_7_connectivity_net23"
+  },
+  {
+    "type": "source_component",
+    "source_component_id": "source_component_12",
+    "ftype": "simple_connector",
+    "name": "J_USB",
+    "manufacturer_part_number": "TYPE_C_16PIN_2MD_073_",
+    "supplier_part_numbers": {
+      "jlcpcb": ["C2765186"]
+    },
+    "standard": "usb_c"
+  },
+  {
+    "type": "schematic_component",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 1.9999999999999996,
+      "y": 0.5
+    },
+    "rotation": 0,
+    "size": {
+      "width": 2.1,
+      "height": 5.4
+    },
+    "port_arrangement": {
+      "right_side": {
+        "pins": [18, 27, 20, 26, 22, 24, 23, 21, 25, 19, 17, 28],
+        "direction": "top-to-bottom"
+      },
+      "bottom_side": {
+        "pins": [13, 14, 15, 16],
+        "direction": "left-to-right"
+      }
+    },
+    "pin_spacing": 0.2,
+    "port_labels": {
+      "pin13": "EH1",
+      "pin14": "EH2",
+      "pin15": "pin13_alt1",
+      "pin16": "pin14_alt1",
+      "pin17": "A1B12",
+      "pin18": "A4B9",
+      "pin19": "B8",
+      "pin20": "A5",
+      "pin21": "B7",
+      "pin22": "A6",
+      "pin23": "A7",
+      "pin24": "B6",
+      "pin25": "A8",
+      "pin26": "B5",
+      "pin27": "B4A9",
+      "pin28": "B1A12"
+    },
+    "source_component_id": "source_component_12"
+  },
+  {
+    "type": "schematic_text",
+    "schematic_text_id": "schematic_text_0",
+    "text": "TYPE_C_16PIN_2MD_073_",
+    "schematic_component_id": "schematic_component_12",
+    "anchor": "left",
+    "rotation": 0,
+    "position": {
+      "x": 0.9499999999999995,
+      "y": 3.5500000000000003
+    },
+    "color": "#006464",
+    "font_size": 0.18
+  },
+  {
+    "type": "schematic_text",
+    "schematic_text_id": "schematic_text_1",
+    "text": "J_USB",
+    "schematic_component_id": "schematic_component_12",
+    "anchor": "left",
+    "rotation": 0,
+    "position": {
+      "x": 0.9499999999999995,
+      "y": 3.75
+    },
+    "color": "#006464",
+    "font_size": 0.18
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_0",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 1.4278571428571425,
+        "y": 0.7785714285714286
+      },
+      {
+        "x": 1.4171428571428568,
+        "y": 0.8321428571428571
+      },
+      {
+        "x": 1.4064285714285711,
+        "y": 0.8642857142857143
+      },
+      {
+        "x": 1.3742857142857139,
+        "y": 0.8857142857142857
+      },
+      {
+        "x": 1.3421428571428566,
+        "y": 0.9071428571428571
+      },
+      {
+        "x": 1.299285714285714,
+        "y": 0.9071428571428571
+      },
+      {
+        "x": 1.256428571428571,
+        "y": 0.9071428571428571
+      },
+      {
+        "x": 1.224285714285714,
+        "y": 0.8857142857142857
+      },
+      {
+        "x": 1.2028571428571424,
+        "y": 0.8642857142857143
+      },
+      {
+        "x": 1.181428571428571,
+        "y": 0.8321428571428571
+      },
+      {
+        "x": 1.1707142857142854,
+        "y": 0.7785714285714286
+      },
+      {
+        "x": 1.1707142857142854,
+        "y": 0.04999999999999999
+      },
+      {
+        "x": 1.181428571428571,
+        "y": -0.0035714285714285587
+      },
+      {
+        "x": 1.2028571428571424,
+        "y": -0.0357142857142857
+      },
+      {
+        "x": 1.224285714285714,
+        "y": -0.05714285714285716
+      },
+      {
+        "x": 1.256428571428571,
+        "y": -0.06785714285714284
+      },
+      {
+        "x": 1.299285714285714,
+        "y": -0.07857142857142863
+      },
+      {
+        "x": 1.3421428571428566,
+        "y": -0.06785714285714284
+      },
+      {
+        "x": 1.3742857142857139,
+        "y": -0.05714285714285716
+      },
+      {
+        "x": 1.4064285714285711,
+        "y": -0.0357142857142857
+      },
+      {
+        "x": 1.4171428571428568,
+        "y": -0.0035714285714285587
+      },
+      {
+        "x": 1.4278571428571425,
+        "y": 0.04999999999999999
+      },
+      {
+        "x": 1.4278571428571425,
+        "y": 0.7785714285714286
+      }
+    ],
+    "is_filled": false,
+    "is_dashed": false,
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_1",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 1.3528571428571425,
+        "y": 0.7142857142857143
+      },
+      {
+        "x": 1.3421428571428566,
+        "y": 0.7571428571428571
+      },
+      {
+        "x": 1.331428571428571,
+        "y": 0.7785714285714286
+      },
+      {
+        "x": 1.299285714285714,
+        "y": 0.7892857142857143
+      },
+      {
+        "x": 1.2885714285714283,
+        "y": 0.7892857142857143
+      },
+      {
+        "x": 1.2778571428571426,
+        "y": 0.7785714285714286
+      },
+      {
+        "x": 1.256428571428571,
+        "y": 0.7571428571428571
+      },
+      {
+        "x": 1.2457142857142853,
+        "y": 0.7142857142857143
+      },
+      {
+        "x": 1.2457142857142853,
+        "y": 0.11428571428571427
+      },
+      {
+        "x": 1.256428571428571,
+        "y": 0.0714285714285714
+      },
+      {
+        "x": 1.2778571428571426,
+        "y": 0.04999999999999999
+      },
+      {
+        "x": 1.2885714285714283,
+        "y": 0.03928571428571431
+      },
+      {
+        "x": 1.299285714285714,
+        "y": 0.03928571428571431
+      },
+      {
+        "x": 1.331428571428571,
+        "y": 0.04999999999999999
+      },
+      {
+        "x": 1.3421428571428566,
+        "y": 0.0714285714285714
+      },
+      {
+        "x": 1.3528571428571425,
+        "y": 0.11428571428571427
+      },
+      {
+        "x": 1.3528571428571425,
+        "y": 0.7142857142857143
+      }
+    ],
+    "is_filled": true,
+    "is_dashed": false,
+    "fill_color": "rgba(132, 0, 0)",
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_2",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 2.0064285714285712,
+        "y": -0.014285714285714346
+      },
+      {
+        "x": 2.0064285714285712,
+        "y": 0.8428571428571429
+      }
+    ],
+    "is_filled": false,
+    "is_dashed": false,
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_3",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 2.0064285714285712,
+        "y": 0.30714285714285716
+      },
+      {
+        "x": 1.8671428571428568,
+        "y": 0.46785714285714286
+      },
+      {
+        "x": 1.8671428571428568,
+        "y": 0.575
+      }
+    ],
+    "is_filled": false,
+    "is_dashed": false,
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_4",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 2.0064285714285712,
+        "y": 0.41428571428571426
+      },
+      {
+        "x": 2.167142857142857,
+        "y": 0.575
+      },
+      {
+        "x": 2.167142857142857,
+        "y": 0.6821428571428572
+      }
+    ],
+    "is_filled": false,
+    "is_dashed": false,
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_5",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 1.9528571428571424,
+        "y": 0.8428571428571429
+      },
+      {
+        "x": 2.0064285714285712,
+        "y": 0.95
+      },
+      {
+        "x": 2.0599999999999996,
+        "y": 0.8428571428571429
+      },
+      {
+        "x": 1.9528571428571424,
+        "y": 0.8428571428571429
+      }
+    ],
+    "is_filled": true,
+    "is_dashed": false,
+    "fill_color": "rgba(132, 0, 0)",
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_path",
+    "schematic_path_id": "schematic_path_6",
+    "schematic_component_id": "schematic_component_12",
+    "points": [
+      {
+        "x": 2.1135714285714284,
+        "y": 0.6821428571428572
+      },
+      {
+        "x": 2.220714285714285,
+        "y": 0.6821428571428572
+      },
+      {
+        "x": 2.220714285714285,
+        "y": 0.7892857142857143
+      },
+      {
+        "x": 2.1135714285714284,
+        "y": 0.7892857142857143
+      },
+      {
+        "x": 2.1135714285714284,
+        "y": 0.6821428571428572
+      }
+    ],
+    "is_filled": true,
+    "is_dashed": false,
+    "fill_color": "rgba(132, 0, 0)",
+    "stroke_width": 0.02,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_circle",
+    "schematic_circle_id": "schematic_circle_0",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 2.0064285714285712,
+      "y": -0.014285714285714346
+    },
+    "radius": 0.07500000000000001,
+    "stroke_width": 0.02,
+    "color": "rgba(132, 0, 0)",
+    "is_filled": true,
+    "fill_color": "rgba(132, 0, 0)",
+    "is_dashed": false,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_circle",
+    "schematic_circle_id": "schematic_circle_1",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 1.8671428571428568,
+      "y": 0.575
+    },
+    "radius": 0.04285714285714286,
+    "stroke_width": 0.02,
+    "color": "rgba(132, 0, 0)",
+    "is_filled": true,
+    "fill_color": "rgba(132, 0, 0)",
+    "is_dashed": false,
+    "subcircuit_id": "subcircuit_source_group_7"
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_24",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 1.6249999999999996,
+      "y": -2.6
+    },
+    "source_port_id": "source_port_24",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "bottom",
+    "pin_number": 13,
+    "true_ccw_index": 12,
+    "display_pin_label": "EH1",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_25",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 1.8249999999999995,
+      "y": -2.6
+    },
+    "source_port_id": "source_port_25",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "bottom",
+    "pin_number": 14,
+    "true_ccw_index": 13,
+    "display_pin_label": "EH2",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_26",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 2.0249999999999995,
+      "y": -2.6
+    },
+    "source_port_id": "source_port_26",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "bottom",
+    "pin_number": 15,
+    "true_ccw_index": 14,
+    "display_pin_label": "pin13_alt1",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_27",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 2.2249999999999996,
+      "y": -2.6
+    },
+    "source_port_id": "source_port_27",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "bottom",
+    "pin_number": 16,
+    "true_ccw_index": 15,
+    "display_pin_label": "pin14_alt1",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_28",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": -0.7000000000000002
+    },
+    "source_port_id": "source_port_28",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 17,
+    "true_ccw_index": 16,
+    "display_pin_label": "A1B12",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_29",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 1.9000000000000001
+    },
+    "source_port_id": "source_port_29",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 18,
+    "true_ccw_index": 17,
+    "display_pin_label": "A4B9",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_30",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": -0.3500000000000001
+    },
+    "source_port_id": "source_port_30",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 19,
+    "true_ccw_index": 18,
+    "display_pin_label": "B8",
+    "is_connected": false
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_31",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 1.3499999999999999
+    },
+    "source_port_id": "source_port_31",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 20,
+    "true_ccw_index": 19,
+    "display_pin_label": "A5",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_32",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 0.19999999999999996
+    },
+    "source_port_id": "source_port_32",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 21,
+    "true_ccw_index": 20,
+    "display_pin_label": "B7",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_33",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 0.7999999999999998
+    },
+    "source_port_id": "source_port_33",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 22,
+    "true_ccw_index": 21,
+    "display_pin_label": "A6",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_34",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 0.3999999999999999
+    },
+    "source_port_id": "source_port_34",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 23,
+    "true_ccw_index": 22,
+    "display_pin_label": "A7",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_35",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 0.5999999999999999
+    },
+    "source_port_id": "source_port_35",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 24,
+    "true_ccw_index": 23,
+    "display_pin_label": "B6",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_36",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": -0.15000000000000013
+    },
+    "source_port_id": "source_port_36",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 25,
+    "true_ccw_index": 24,
+    "display_pin_label": "A8",
+    "is_connected": false
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_37",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 1.1499999999999997
+    },
+    "source_port_id": "source_port_37",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 26,
+    "true_ccw_index": 25,
+    "display_pin_label": "B5",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_38",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": 1.7
+    },
+    "source_port_id": "source_port_38",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 27,
+    "true_ccw_index": 26,
+    "display_pin_label": "B4A9",
+    "is_connected": true
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_39",
+    "schematic_component_id": "schematic_component_12",
+    "center": {
+      "x": 3.4499999999999997,
+      "y": -0.9000000000000001
+    },
+    "source_port_id": "source_port_39",
+    "facing_direction": "right",
+    "distance_from_component_edge": 0.4,
+    "side_of_component": "right",
+    "pin_number": 28,
+    "true_ccw_index": 27,
+    "display_pin_label": "B1A12",
+    "is_connected": true
+  }
+]
