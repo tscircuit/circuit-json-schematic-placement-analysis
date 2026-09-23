@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test"
-import {
-  analyzeSchematicPlacement,
-  createSchematicPlacementIssueArtifacts,
-} from "lib/index"
+import { analyzeSchematicPlacement } from "lib/index"
+import { stackSvgsVertically } from "stack-svgs"
 import { allwinnerT113CircuitJson as circuitJson } from "../assets/allwinner-t113"
+import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
+import { createAnalyzerTextSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 
 test("identifies inverted positive-supply capacitors in the unchanged Allwinner schematic", () => {
@@ -50,26 +50,37 @@ test("identifies inverted positive-supply capacitors in the unchanged Allwinner 
       }),
     )
   }
-  // Use the complete source data; only the new issue's viewport is cropped.
-  for (const artifact of createSchematicPlacementIssueArtifacts(circuitJson, {
-    analysis,
-    issueTypes: ["TwoPinComponentHasInvertedRails"],
-    width: 900,
-    height: 400,
-  })) {
-    const issue = artifact.issue
-    if (issue.lineItemType !== "TwoPinComponentHasInvertedRails")
-      throw new Error("Expected rail-facing artifact")
-    if (
-      !["C101", "C102"].includes(issue.schematicBox.sourceComponentName ?? "")
+  // Render only the two reviewed views, retaining the complete source data and
+  // original issue numbers. The other 45 findings are checked above.
+  const allIssues = analysis.getIssues()
+  for (const name of ["C101", "C102"]) {
+    const issueIndex = allIssues.findIndex(
+      (issue) =>
+        issue.lineItemType === "TwoPinComponentHasInvertedRails" &&
+        issue.schematicBox.sourceComponentName === name,
     )
-      continue
-    expect(artifact.content).toContain("data-issue-index=")
-    expect(artifact.descriptionXml).toContain('deltaSchRotation="180"')
-    expect(artifact.content).toMatchSvgSnapshot(
-      import.meta.path,
-      issue.schematicBox.sourceComponentName,
+    expect(issueIndex).toBeGreaterThanOrEqual(0)
+    const schematicSvg = createIssueOverlaySvg({
+      circuitJson,
+      analysis,
+      issueIndex,
+      width: 900,
+      height: 400,
+    })
+    const descriptionXml = analysis.schematicIssuesToString(
+      allIssues[issueIndex]!,
     )
+    expect(schematicSvg).toContain(`data-issue-index="${issueIndex}"`)
+    expect(descriptionXml).toContain('deltaSchRotation="180"')
+    const snapshot = stackSvgsVertically(
+      [
+        // Nest the cropped SVG so stacking preserves its viewport.
+        `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="400">${schematicSvg}</svg>`,
+        createAnalyzerTextSvg(descriptionXml, 900),
+      ],
+      { normalizeSize: false, gap: 0 },
+    ).replace(/[ \t]+$/gm, "")
+    expect(snapshot).toMatchSvgSnapshot(import.meta.path, name)
   }
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

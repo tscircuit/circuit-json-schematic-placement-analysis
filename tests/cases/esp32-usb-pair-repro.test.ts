@@ -44,15 +44,32 @@ test("records the USB resistor pair and existing R3 flip on the complete ESP32 d
       deltaSchRotation: 180,
     },
   ])
+  const pair = analysis.getIssues({
+    issueTypes: ["UsbSeriesResistorsNotAligned"],
+  })
+  expect(pair).toMatchObject([
+    {
+      positiveResistorSchematicBox: { sourceComponentName: "R3" },
+      negativeResistorSchematicBox: { sourceComponentName: "R4" },
+      signalAxis: "horizontal",
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes: ["UsbSeriesResistorsNotAligned"],
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 1800,
+    height: 1200,
+  })
+  const number = analysis.getIssues().indexOf(pair[0]!) + 1
+  // Both resistors and the diagnostic share the same issue number.
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([number, number])
+  expect(svg).toContain(`data-listing-issue-number="${number}"`)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

@@ -1,5 +1,6 @@
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
+import { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
 import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { DecouplingCapacitorGroupingSolver } from "./solvers/DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
@@ -96,6 +97,7 @@ export class SchematicPlacementAnalysis {
       DecouplingCapacitorsNotCloseTogether: 0,
       ConnectorPositionCausesTraceDetours: 0,
       LowSideTransistorNotAlignedWithLoad: 0,
+      UsbSeriesResistorsNotAligned: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -162,6 +164,8 @@ export class SchematicPlacementAnalysis {
         return ConnectorPlacementSolver.issueToString(issue)
       case "LowSideTransistorNotAlignedWithLoad":
         return LowSideTransistorPlacementSolver.issueToString(issue)
+      case "UsbSeriesResistorsNotAligned":
+        return UsbSeriesResistorPlacementSolver.issueToString(issue)
       default:
         return ""
     }

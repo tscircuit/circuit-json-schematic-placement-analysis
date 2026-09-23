@@ -391,7 +391,20 @@ export interface LowSideTransistorNotAlignedWithLoad {
   message: string
 }
 
+/** Advisory for an electrically identified USB series pair drawn end-to-end. */
+export interface UsbSeriesResistorsNotAligned {
+  lineItemType: "UsbSeriesResistorsNotAligned"
+  positiveResistorSchematicBox: SchematicBoxPlacement
+  negativeResistorSchematicBox: SchematicBoxPlacement
+  hostSourceComponentId: string
+  positiveSourcePortId: string
+  negativeSourcePortId: string
+  signalAxis: "horizontal" | "vertical"
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | UsbSeriesResistorsNotAligned
   | LowSideTransistorNotAlignedWithLoad
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace

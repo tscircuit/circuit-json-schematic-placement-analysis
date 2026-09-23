@@ -1,5 +1,6 @@
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
+import { UsbSeriesResistorPlacementSolver } from "../UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -171,6 +172,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "LowSideTransistorPlacementSolver",
       LowSideTransistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "UsbSeriesResistorPlacementSolver",
+      UsbSeriesResistorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

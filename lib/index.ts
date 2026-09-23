@@ -21,6 +21,7 @@ export { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrien
 export { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 export * from "./types"
 export { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
+export { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
 export {
   createSchematicPlacementIssueArtifacts,
   type SchematicPlacementIssueArtifact,
