@@ -29,6 +29,8 @@ export interface SchematicPlacementIssueArtifactOptions {
   analysis?: SchematicPlacementAnalysis
   issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
   schematicSheetId?: string
+  /** Render only this index from analysis.getIssues(), preserving its issue number. */
+  issueIndex?: number
   /** Width and height of the schematic panel; the XML panel adds to total height. */
   width?: number
   height?: number
@@ -55,7 +57,14 @@ export function createSchematicPlacementIssueArtifacts(
   }
   const analysis = options.analysis ?? analyzeSchematicPlacement(circuitJson)
   const allIssues = analysis.getIssues()
-  return analysis.getIssues(options).map((issue) => {
+  const issues = analysis
+    .getIssues(options)
+    .filter(
+      (issue) =>
+        options.issueIndex === undefined ||
+        allIssues.indexOf(issue) === options.issueIndex,
+    )
+  return issues.map((issue) => {
     const issueIndex = allIssues.indexOf(issue)
     const { schematicSheetId } = getIssueSchematicSheetContext(issue)
     const { svg, bounds } = renderIssueOverlay({

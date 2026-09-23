@@ -44,6 +44,9 @@ test("exports a standalone cropped SVG per issue with only that issue's XML", as
   }
   expect(createSchematicPlacementIssueArtifacts([])).toEqual([])
   expect(
+    createSchematicPlacementIssueArtifacts(circuitJson, { issueIndex: 1 }),
+  ).toEqual([])
+  expect(
     createSchematicPlacementIssueArtifacts(circuitJson, { issueTypes: [] }),
   ).toEqual([])
   expect(

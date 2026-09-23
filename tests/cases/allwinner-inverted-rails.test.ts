@@ -6,7 +6,6 @@ import {
 import { allwinnerT113CircuitJson as circuitJson } from "../assets/allwinner-t113"
 import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 
-// Rendering all 47 issue views from the 175-component export can exceed 5s on CI.
 test("identifies inverted positive-supply capacitors in the unchanged Allwinner schematic", () => {
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
@@ -51,26 +50,30 @@ test("identifies inverted positive-supply capacitors in the unchanged Allwinner 
       }),
     )
   }
-  // Use the complete source data; only the new issue's viewport is cropped.
-  for (const artifact of createSchematicPlacementIssueArtifacts(circuitJson, {
-    analysis,
-    issueTypes: ["TwoPinComponentHasInvertedRails"],
-    width: 900,
-    height: 400,
-  })) {
-    const issue = artifact.issue
-    if (issue.lineItemType !== "TwoPinComponentHasInvertedRails")
-      throw new Error("Expected rail-facing artifact")
-    if (
-      !["C101", "C102"].includes(issue.schematicBox.sourceComponentName ?? "")
-    )
-      continue
+  // Render only the two reviewed views, retaining the complete source data and
+  // original issue numbers. The other 45 findings are checked above.
+  for (const name of ["C101", "C102"]) {
+    const issueIndex = analysis
+      .getIssues()
+      .findIndex(
+        (issue) =>
+          issue.lineItemType === "TwoPinComponentHasInvertedRails" &&
+          issue.schematicBox.sourceComponentName === name,
+      )
+    expect(issueIndex).toBeGreaterThanOrEqual(0)
+    const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
+      analysis,
+      issueTypes: ["TwoPinComponentHasInvertedRails"],
+      issueIndex,
+      width: 900,
+      height: 400,
+    })
+    expect(artifacts).toHaveLength(1)
+    const artifact = artifacts[0]!
+    expect(artifact.issueIndex).toBe(issueIndex)
     expect(artifact.content).toContain("data-issue-index=")
     expect(artifact.descriptionXml).toContain('deltaSchRotation="180"')
-    expect(artifact.content).toMatchSvgSnapshot(
-      import.meta.path,
-      issue.schematicBox.sourceComponentName,
-    )
+    expect(artifact.content).toMatchSvgSnapshot(import.meta.path, name)
   }
   expect(JSON.stringify(circuitJson)).toBe(original)
-}, 15_000)
+})
