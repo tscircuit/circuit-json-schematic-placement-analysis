@@ -99,7 +99,7 @@ export class UsbSeriesResistorPlacementSolver extends BaseSolver {
       positiveSourcePortId: positivePort.source_port_id,
       negativeSourcePortId: negativePort.source_port_id,
       signalAxis: positive.axis,
-      message: `Arrange ${positiveName} (D+) and ${negativeName} (D−) in adjacent parallel ${horizontal ? "rows with the same schX and different schY" : "columns with the same schY and different schX"}. Keep each USB signal on its original pins, leave room for labels, and reroute affected traces.`,
+      message: `Place ${positiveName} (D+) and ${negativeName} (D−) near each other and draw clear traces to their corresponding USB ports. Exact alignment is not required; preserve pin assignments and leave space for labels.`,
     })
   }
 

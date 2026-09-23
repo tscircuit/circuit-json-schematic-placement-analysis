@@ -2,7 +2,7 @@ import { Circuit } from "@tscircuit/core"
 import type { CircuitJson } from "circuit-json"
 
 export async function createUsbSeriesResistorPair(
-  aligned = false,
+  nearby = false,
 ): Promise<CircuitJson> {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
@@ -33,14 +33,14 @@ export async function createUsbSeriesResistorPair(
       <resistor
         name="RP"
         resistance="27"
-        schX={aligned ? 0 : -3}
-        schY={aligned ? 1.2 : 0}
+        schX={nearby ? 0 : -3}
+        schY={nearby ? 1.2 : 0}
       />
       <resistor
         name="RN"
         resistance="27"
-        schX={aligned ? 0 : 3}
-        schY={aligned ? -1.2 : 0}
+        schX={nearby ? 0.8 : 3}
+        schY={nearby ? -1.2 : 0}
       />
       <trace from=".U1 > .USB_DP" to=".RP > .pin1" />
       <trace from=".U1 > .USB_DM" to=".RN > .pin1" />

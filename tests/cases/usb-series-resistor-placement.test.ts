@@ -11,7 +11,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-test("recognizes separated USB series pairs and accepts parallel paths without changing connectivity", async () => {
+test("recognizes separated USB series pairs and accepts nearby offset paths without changing connectivity", async () => {
   const before = await createUsbSeriesResistorPair()
   const after = await createUsbSeriesResistorPair(true)
   const issues = (json: CircuitJson) =>
@@ -19,6 +19,10 @@ test("recognizes separated USB series pairs and accepts parallel paths without c
       issueTypes: ["UsbSeriesResistorsNotAligned"],
     })
   expect(issues(before)).toHaveLength(1) // Both ends recognize the pair: report once.
+  // Readable USB paths do not require the resistors to share an exact axis.
+  expect(getReproSchematicComponent(after, "RP").center.x).not.toBe(
+    getReproSchematicComponent(after, "RN").center.x,
+  )
   expect(issues(after)).toEqual([])
   const sources = (json: CircuitJson) =>
     json.filter(
