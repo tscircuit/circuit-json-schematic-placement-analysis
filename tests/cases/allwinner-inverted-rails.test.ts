@@ -6,6 +6,7 @@ import {
 import { allwinnerT113CircuitJson as circuitJson } from "../assets/allwinner-t113"
 import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 
+// Rendering all 47 issue views from the 175-component export can exceed 5s on CI.
 test("identifies inverted positive-supply capacitors in the unchanged Allwinner schematic", () => {
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
@@ -72,4 +73,4 @@ test("identifies inverted positive-supply capacitors in the unchanged Allwinner 
     )
   }
   expect(JSON.stringify(circuitJson)).toBe(original)
-})
+}, 15_000)
