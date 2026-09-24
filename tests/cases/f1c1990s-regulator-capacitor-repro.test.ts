@@ -44,15 +44,37 @@ test("records reversed regulator capacitor placement on the complete F1C1990S sh
       issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
     }),
   ).toEqual([])
+  const issues = analysis.getIssues({
+    issueTypes: ["RegulatorCapacitorsOnWrongSides"],
+  })
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2200,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    issues.map(
+      (issue) =>
+        issue.lineItemType === "RegulatorCapacitorsOnWrongSides" &&
+        issue.regulatorSchematicBox.sourceComponentName,
+    ),
+  ).toEqual(["U_1V8", "U_1V2"])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes: ["RegulatorCapacitorsOnWrongSides"],
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2200,
+    height: 1600,
+  })
+  const numbers = issues.map((issue) => analysis.getIssues().indexOf(issue) + 1)
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)]
+      .map((match) => Number(match[1]))
+      .sort((a, b) => a - b),
+  ).toEqual(numbers.flatMap((number) => [number, number, number]))
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
+      Number(match[1]),
+    ),
+  ).toEqual(numbers)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
