@@ -29,6 +29,11 @@ test("reports reversed regulator capacitors while accepting offset correct-side 
     ["after", after],
   ] as const) {
     const original = JSON.stringify(json)
+    expect(
+      analyzeSchematicPlacement(json, {
+        issueTypes: ["RegulatorCapacitorsOnWrongSides"],
+      }).getIssues(),
+    ).toEqual(issues(json))
     expectReproNets(json, [
       ["U1.IN", "CIN.pin1", "net.V5"],
       ["U1.OUT", "COUT.pin1", "net.V3V3"],

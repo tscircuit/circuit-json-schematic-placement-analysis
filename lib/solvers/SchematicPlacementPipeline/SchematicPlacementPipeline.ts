@@ -67,6 +67,9 @@ const solversByIssueType = {
   ConnectorPositionCausesTraceDetours: [ConnectorPlacementSolver],
   LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
   UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
+  RegulatorCapacitorsOnWrongSides: [
+    RegulatorInputOutputCapacitorPlacementSolver,
+  ],
 } satisfies Record<
   SchematicPlacementIssue["lineItemType"],
   readonly PipelineStep<any>["solverClass"][]
