@@ -438,3 +438,8 @@ export interface SchematicPlacementIssues {
 export type SchematicPlacementLineItem =
   | SchematicBoxPlacementLineItem
   | SchematicPlacementIssues
+
+/** Select issue types to execute; omitted runs all checks, [] runs none. */
+export interface SchematicPlacementAnalysisOptions {
+  issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
+}
