@@ -53,13 +53,21 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
     if (!id) return
     const index = this.index
     const component = index.placement(id)
+    const sourceComponent = index.components.get(id)
     const nets = index.twoTerminalNets(id)
     if (!component || !nets) return
     // An inductor between two non-ground nodes is a series-path element;
     // touching an output supply does not make it a vertical shunt branch.
     if (
-      index.components.get(id)?.ftype === "simple_inductor" &&
+      sourceComponent?.ftype === "simple_inductor" &&
       !nets.some((net) => this.groundNets.has(net))
+    )
+      return
+    // A diode between two power rails continues a series power path; either
+    // orientation may match that path, so it is not a vertical shunt branch.
+    if (
+      sourceComponent?.ftype === "simple_diode" &&
+      nets.every((net) => this.powerNets.has(net))
     )
       return
     // A net declared as both power and ground has no reliable direction.
