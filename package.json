@@ -9,6 +9,10 @@
     ".": {
       "types": "./lib/index.ts",
       "import": "./lib/index.ts"
+    },
+    "./analysis": {
+      "types": "./lib/analyze-schematic-placement.ts",
+      "import": "./lib/analyze-schematic-placement.ts"
     }
   },
   "files": [

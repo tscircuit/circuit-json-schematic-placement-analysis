@@ -32,6 +32,24 @@ console.log(analysis.getLineItems())
 console.log(analysis.toString())
 ```
 
+To execute only selected checks, pass `issueTypes`:
+
+```ts
+const analysis = analyzeSchematicPlacement(circuitJson, {
+  issueTypes: ["TwoPinComponentHasInvertedRails", "ComponentOverlap"],
+})
+```
+
+Omit `issueTypes` to run all checks, or pass `[]` to run none. Shared solvers
+run once, with any prerequisites needed to preserve diagnostic deduplication;
+only requested findings are returned. `analysis.getIssues({ issueTypes })`
+filters already-computed results instead. Counts describe emitted findings;
+zero counts for unselected types do not mean those checks ran.
+
+Consumers that do not generate SVGs can import `analyzeSchematicPlacement` from
+`@tscircuit/circuit-json-schematic-placement-analysis/analysis`. This source
+entry point excludes the SVG artifact exports and requires TypeScript bundling.
+
 ## Sample Output
 
 ```xml

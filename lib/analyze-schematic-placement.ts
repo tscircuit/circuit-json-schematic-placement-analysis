@@ -25,6 +25,7 @@ import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
+  SchematicPlacementAnalysisOptions,
   SchematicPlacementLineItem,
 } from "./types"
 import { addAttr } from "./utils/format"
@@ -248,8 +249,9 @@ export class SchematicPlacementAnalysis {
 
 export const analyzeSchematicPlacement = (
   circuitJson: CircuitJson,
+  options: SchematicPlacementAnalysisOptions = {},
 ): SchematicPlacementAnalysis => {
-  const pipeline = new SchematicPlacementPipeline(circuitJson)
+  const pipeline = new SchematicPlacementPipeline(circuitJson, options)
   pipeline.solve()
   const { issues, componentPlacements } = pipeline.getOutput()
 
