@@ -37,7 +37,7 @@ beforeAll(async () => {
             Math.abs(from.y - to.y) < 0.001 &&
             from.y < heading.position.y &&
             from.y > heading.position.y - heading.font_size &&
-            Math.min(from.x, to.x) <= heading.position.x + 0.5 &&
+            Math.min(from.x, to.x) <= heading.position.x + 1 &&
             Math.max(from.x, to.x) >= heading.position.x + 2,
         ),
     ),
