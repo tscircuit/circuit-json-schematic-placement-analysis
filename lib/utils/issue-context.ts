@@ -66,6 +66,11 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "RegulatorCapacitorsOnWrongSides":
+        addPlacement(issue.regulatorSchematicBox)
+        addPlacement(issue.inputCapacitorSchematicBox)
+        addPlacement(issue.outputCapacitorSchematicBox)
+        break
       case "UsbSeriesResistorsNotAligned":
         addPlacement(issue.positiveResistorSchematicBox)
         addPlacement(issue.negativeResistorSchematicBox)

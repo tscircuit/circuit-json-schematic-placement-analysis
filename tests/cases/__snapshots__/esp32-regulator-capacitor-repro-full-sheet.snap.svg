@@ -1,4 +1,4 @@
-<svg width="1800" height="2776" viewBox="0 0 1800 2776" xmlns="http://www.w3.org/2000/svg">
+<svg width="1800" height="2908" viewBox="0 0 1800 2908" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1800" height="1200" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(27.6720857835,0,0,-27.6720857835,791.8021445866,512.7637495676)"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -28,8 +28,9 @@
 <tspan x="18" dy="22">TwoPinComponentShouldBeVertical: 12</tspan>
 <tspan x="18" dy="22">DecouplingCapacitorsNotCloseTogether: 1</tspan>
 <tspan x="18" dy="22">UsbSeriesResistorsNotAligned: 1</tspan>
+<tspan x="18" dy="22">RegulatorCapacitorsOnWrongSides: 1</tspan>
 <tspan x="18" dy="22">Selected type(s): all</tspan>
-<tspan x="18" dy="22">Matching issues: 15</tspan>
+<tspan x="18" dy="22">Matching issues: 16</tspan>
 <tspan x="18" dy="22">#1</tspan>
 <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;U3.IO1 to R3.pin1&quot; targetComponentName=&quot;R3&quot;</tspan>
 <tspan x="18" dy="22">  connectedComponentName=&quot;U3&quot; targetPin=&quot;pin1&quot; currentFacingDirection=&quot;left&quot;</tspan>
@@ -93,6 +94,11 @@
 <tspan x="18" dy="22">  signalAxis=&quot;horizontal&quot; message=&quot;Place R3 (D+) and R4 (D−) near each other and draw clear</tspan>
 <tspan x="18" dy="22">  traces to their corresponding USB ports. Exact alignment is not required; preserve pin</tspan>
 <tspan x="18" dy="22">  assignments and leave space for labels.&quot; /&gt;</tspan>
+<tspan x="18" dy="22">#16</tspan>
+<tspan x="18" dy="22">&lt;RegulatorCapacitorsOnWrongSides regulatorName=&quot;U2&quot; inputCapacitorName=&quot;C1&quot;</tspan>
+<tspan x="18" dy="22">  outputCapacitorName=&quot;C2&quot; message=&quot;Place C1 near U2.IN on the right side and C2 near U2.OUT on</tspan>
+<tspan x="18" dy="22">  the left side. Preserve all connections and leave room for labels; exact alignment is not</tspan>
+<tspan x="18" dy="22">  required.&quot; /&gt;</tspan>
 </text>
   </g>
 </svg>
