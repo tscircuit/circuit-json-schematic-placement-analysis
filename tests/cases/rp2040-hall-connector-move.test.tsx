@@ -1,5 +1,9 @@
 import { expect, test } from "bun:test"
-import type { CircuitJson, SchematicTrace } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicNetLabel,
+  SchematicTrace,
+} from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
 import { renderRp2040HallSheet } from "../assets/rp2040-bldc-controller/hall-sheet"
@@ -46,7 +50,7 @@ function signalRoute(json: CircuitJson, signal: (typeof signals)[number]) {
   return traces[0]!
 }
 
-test("rerenders the complete Hall sheet after moving only J_HALL", async () => {
+test("rerenders the complete Hall sheet after moving only J_HALL, preserving wired and labeled signals", async () => {
   const frozen = getRp2040BldcSheet("hall")
   const unchangedFrozen = JSON.stringify(frozen)
   const suggestion = connectorIssues(frozen)[0]!
@@ -131,11 +135,45 @@ test("rerenders the complete Hall sheet after moving only J_HALL", async () => {
   }
 
   for (const signal of signals) {
-    const route = signalRoute(after, signal)
     const start = schematicPort(after, "J_HALL", `HALL_${signal}`)
     const end = schematicPort(after, `R_HALL_${signal}_TOP`, "pin1")
     if (start.type !== "schematic_port" || end.type !== "schematic_port")
       throw new Error("Missing signal endpoint")
+    // With the updated symbol bounds, core draws A and C as paired net labels.
+    // Verify both labels still terminate at the original electrical endpoints.
+    if (signal !== "B") {
+      const key = getReproSourcePort(
+        after,
+        "J_HALL",
+        `HALL_${signal}`,
+      ).subcircuit_connectivity_map_key
+      expect(
+        after.filter(
+          (e) =>
+            e.type === "schematic_trace" &&
+            e.subcircuit_connectivity_map_key === key,
+        ),
+      ).toHaveLength(0)
+      const labels = after.filter(
+        (e): e is SchematicNetLabel =>
+          e.type === "schematic_net_label" && e.source_net_id === key,
+      )
+      expect(labels).toHaveLength(2)
+      for (const label of labels) {
+        expect(label.text).toBe(`HALL_${signal}_INPUT`)
+        expect(label.schematic_sheet_id).toBe(start.schematic_sheet_id)
+      }
+      for (const port of [start, end]) {
+        expect(
+          labels.some(
+            (label) =>
+              label.anchor_position && near(label.anchor_position, port.center),
+          ),
+        ).toBe(true)
+      }
+      continue
+    }
+    const route = signalRoute(after, signal)
     expect(
       (near(route.edges[0]!.from, start.center) &&
         near(route.edges.at(-1)!.to, end.center)) ||
@@ -144,15 +182,13 @@ test("rerenders the complete Hall sheet after moving only J_HALL", async () => {
     ).toBe(true)
     for (let i = 1; i < route.edges.length; i++)
       expect(near(route.edges[i - 1]!.to, route.edges[i]!.from)).toBe(true)
-    // Actual rerouted wires attain the orthogonal shortest-path distance.
+    // B remains wired, with two 0.4-unit vertical legs around the labels.
     expect(length(route)).toBeCloseTo(
       Math.abs(start.center.x - end.center.x) +
-        Math.abs(start.center.y - end.center.y),
+        Math.abs(start.center.y - end.center.y) +
+        0.8,
     )
-    if (signal !== "B")
-      expect(length(route)).toBeLessThan(
-        length(signalRoute(before, signal)) / 2,
-      )
+    expect(length(route)).toBeLessThan(length(signalRoute(before, signal)) / 2)
   }
 
   // Both rail symbols must remain visibly connected to the moved connector.
@@ -175,7 +211,18 @@ test("rerenders the complete Hall sheet after moving only J_HALL", async () => {
               label.type === "schematic_net_label" &&
               label.source_net_id === net.source_net_id &&
               label.anchor_position &&
-              ends.some((p) => near(p, label.anchor_position!)),
+              // A rail label can join the middle of a routed segment.
+              e.edges.some(({ from, to }) => {
+                const point = label.anchor_position!
+                const viaPoint =
+                  Math.hypot(point.x - from.x, point.y - from.y) +
+                  Math.hypot(to.x - point.x, to.y - point.y)
+                return (
+                  Math.abs(
+                    viaPoint - Math.hypot(to.x - from.x, to.y - from.y),
+                  ) < 0.00001
+                )
+              }),
           )
         )
       }),

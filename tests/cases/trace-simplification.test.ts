@@ -49,7 +49,7 @@ test("suggests moving R11 right to remove two avoidable trace turns", async () =
   const route = simplificationIssue.suggestedTraces![0]!
   expect(route.points).toHaveLength(3)
   expect(route.points[1]).toEqual({ x: 0.8, y: 0 })
-  expect(route.points[2]).toEqual({ x: 0.8, y: 1.45 })
+  expect(route.points[2]).toEqual({ x: 0.8, y: 1.7 })
   // Independently render the actual component at the recommended position.
   const movedJson = await createTraceSimplificationCircuitJson({
     resistorSchX: simplificationIssue.newSchX,

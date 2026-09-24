@@ -4,12 +4,12 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 test("accepts compact decouplers and reports spacing just beyond the body-gap limit", async () => {
-  // The installed vertical capacitor is 0.53 units wide: 4.53 center spacing
+  // The installed vertical capacitor is 0.9 units wide: 4.9 center spacing
   // leaves exactly the four-unit recommended gap between its bounds.
   for (const [name, spacing, count] of [
     ["compact", 2, 0],
-    ["boundary", 4.53, 0],
-    ["beyond-boundary", 4.54, 1],
+    ["boundary", 4.9, 0],
+    ["beyond-boundary", 4.91, 1],
   ] as const) {
     const circuit = new Circuit()
     circuit.pcbDisabled = true
@@ -32,6 +32,11 @@ test("accepts compact decouplers and reports spacing just beyond the body-gap li
     )
     await circuit.renderUntilSettled()
     const circuitJson = circuit.getCircuitJson()
+    expect(
+      circuitJson
+        .filter((element) => element.type === "schematic_component")
+        .map((component) => component.size.width),
+    ).toEqual([0.9, 0.9])
     const before = JSON.stringify(circuitJson)
     const analysis = analyzeSchematicPlacement(circuitJson)
     expect(
