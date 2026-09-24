@@ -1,3 +1,4 @@
+import { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
@@ -98,6 +99,7 @@ export class SchematicPlacementAnalysis {
       ConnectorPositionCausesTraceDetours: 0,
       LowSideTransistorNotAlignedWithLoad: 0,
       UsbSeriesResistorsNotAligned: 0,
+      RegulatorCapacitorsOnWrongSides: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -164,6 +166,8 @@ export class SchematicPlacementAnalysis {
         return ConnectorPlacementSolver.issueToString(issue)
       case "LowSideTransistorNotAlignedWithLoad":
         return LowSideTransistorPlacementSolver.issueToString(issue)
+      case "RegulatorCapacitorsOnWrongSides":
+        return RegulatorInputOutputCapacitorPlacementSolver.issueToString(issue)
       case "UsbSeriesResistorsNotAligned":
         return UsbSeriesResistorPlacementSolver.issueToString(issue)
       default:

@@ -1,3 +1,4 @@
+import { RegulatorInputOutputCapacitorPlacementSolver } from "../RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import { UsbSeriesResistorPlacementSolver } from "../UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
@@ -179,6 +180,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "UsbSeriesResistorPlacementSolver",
       UsbSeriesResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RegulatorInputOutputCapacitorPlacementSolver",
+      RegulatorInputOutputCapacitorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
