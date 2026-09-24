@@ -8,7 +8,7 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("records the clock board series power diode orientation finding", () => {
+test("preserves the clock board horizontal series power diode", () => {
   const circuitJson = clockBoardJson as CircuitJson
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 80)
@@ -35,28 +35,17 @@ test("records the clock board series power diode orientation finding", () => {
         ? issue.schematicBox.sourceComponentName
         : null,
     ),
-  ).toEqual(["D_REVERSE", "C_BUCK_IN", "C_BUCK_OUT1", "C_BUCK_OUT2"])
-  const issue = analysis
-    .getIssues({ issueTypes: ["TwoPinComponentShouldBeVertical"] })
-    .find(
+  ).toEqual(["C_BUCK_IN", "C_BUCK_OUT1", "C_BUCK_OUT2"])
+  expect(
+    powerSheetOrientationIssues.some(
       (issue) =>
         issue.lineItemType === "TwoPinComponentShouldBeVertical" &&
         issue.schematicBox.sourceComponentName === "D_REVERSE",
-    )
-  expect(issue).toMatchObject({
-    lineItemType: "TwoPinComponentShouldBeVertical",
-    railPinName: "pin1",
-    railType: "power",
-    deltaSchRotation: -90,
-    suggestedRailFacingDirection: "up",
-  })
-  if (issue?.lineItemType !== "TwoPinComponentShouldBeVertical") {
-    throw new Error("Missing D_REVERSE orientation finding")
-  }
+    ),
+  ).toBe(false)
   const source = circuitJson.find(
     (element) =>
-      element.type === "source_component" &&
-      element.source_component_id === issue.schematicBox.sourceComponentId,
+      element.type === "source_component" && element.name === "D_REVERSE",
   )
   expect(source).toMatchObject({
     ftype: "simple_diode",
