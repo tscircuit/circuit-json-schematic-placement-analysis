@@ -1,6 +1,6 @@
 {
   "name": "@tscircuit/circuit-json-schematic-placement-analysis",
-  "version": "0.0.15",
+  "version": "0.0.18",
   "type": "module",
   "main": "lib/index.ts",
   "module": "lib/index.ts",
@@ -9,6 +9,10 @@
     ".": {
       "types": "./lib/index.ts",
       "import": "./lib/index.ts"
+    },
+    "./analysis": {
+      "types": "./lib/analyze-schematic-placement.ts",
+      "import": "./lib/analyze-schematic-placement.ts"
     }
   },
   "files": [
@@ -32,7 +36,7 @@
     "circuit-json-to-connectivity-map": "^0.0.23",
     "circuit-to-svg": "^0.0.427",
     "graphics-debug": "^0.0.94",
-    "schematic-symbols": "^0.0.224",
+    "schematic-symbols": "^0.0.244",
     "stack-svgs": "^0.0.1"
   },
   "devDependencies": {

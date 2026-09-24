@@ -403,7 +403,19 @@ export interface UsbSeriesResistorsNotAligned {
   message: string
 }
 
+/** Advisory for a regulator's local input/output capacitor pair on reversed sides. */
+export interface RegulatorCapacitorsOnWrongSides {
+  lineItemType: "RegulatorCapacitorsOnWrongSides"
+  regulatorSchematicBox: SchematicBoxPlacement
+  inputCapacitorSchematicBox: SchematicBoxPlacement
+  outputCapacitorSchematicBox: SchematicBoxPlacement
+  inputSourcePortId: string
+  outputSourcePortId: string
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned
   | LowSideTransistorNotAlignedWithLoad
   | ComponentOverlap
@@ -438,3 +450,8 @@ export interface SchematicPlacementIssues {
 export type SchematicPlacementLineItem =
   | SchematicBoxPlacementLineItem
   | SchematicPlacementIssues
+
+/** Select issue types to execute; omitted runs all checks, [] runs none. */
+export interface SchematicPlacementAnalysisOptions {
+  issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
+}

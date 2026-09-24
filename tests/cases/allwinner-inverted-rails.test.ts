@@ -14,6 +14,11 @@ test("identifies inverted positive-supply capacitors in the unchanged Allwinner 
   })
   // Review the full design's count, not just the six buck capacitors.
   expect(issues).toHaveLength(47)
+  expect(
+    analyzeSchematicPlacement(circuitJson, {
+      issueTypes: ["TwoPinComponentHasInvertedRails"],
+    }).getIssues(),
+  ).toEqual(issues)
   for (const issue of issues) {
     if (issue.lineItemType !== "TwoPinComponentHasInvertedRails")
       throw new Error("Expected rail-facing issue")

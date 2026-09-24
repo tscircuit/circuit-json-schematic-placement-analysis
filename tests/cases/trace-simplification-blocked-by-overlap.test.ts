@@ -21,8 +21,15 @@ test("does not suggest a trace-simplifying move that overlaps another component"
       (issue) => issue.lineItemType === "TraceCanBeSimplifiedByMovingComponent",
     ),
   ).toBe(false)
-  expect(analysis.getLineItems()).toEqual([])
-  expect(analysis.toString()).toBe("")
+  // The wider resistor bounds now overlap before any movement. Keep reporting
+  // that overlap while rejecting the trace-simplifying move into R12.
+  expect(issues).toHaveLength(1)
+  expect(issues[0]).toMatchObject({
+    lineItemType: "ComponentOverlap",
+    firstComponent: { sourceComponentName: "R11", width: 0.9 },
+    secondComponent: { sourceComponentName: "R12", width: 0.9 },
+  })
+  expect(analysis.toString()).toContain("<ComponentOverlap")
   expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)

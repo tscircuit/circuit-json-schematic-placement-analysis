@@ -1,3 +1,4 @@
+import { RegulatorInputOutputCapacitorPlacementSolver } from "../RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import { UsbSeriesResistorPlacementSolver } from "../UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
@@ -7,7 +8,10 @@ import {
   type PipelineStep,
 } from "@tscircuit/solver-utils"
 import type { CircuitJson } from "circuit-json"
-import type { SchematicPlacementIssue } from "../../types"
+import type {
+  SchematicPlacementIssue,
+  SchematicPlacementAnalysisOptions,
+} from "../../types"
 import { buildSolverContext } from "../../utils/placements"
 import { CapacitorOrientationSolver } from "../CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { DecouplingCapacitorGroupingSolver } from "../DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
@@ -30,6 +34,46 @@ import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/Sc
 import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
+
+// Include prerequisites used when deduplicating findings in getOutput().
+const solversByIssueType = {
+  ComponentOverlap: [SchematicBoxOverlapSolver],
+  // Retained in the issue union, but no solver currently emits this type.
+  SchematicBoxHasALotOfSurroundingWhitespace: [],
+  CapacitorSymbolHorizontal: [
+    CapacitorOrientationSolver,
+    TwoPinComponentRailOrientationSolver,
+  ],
+  VerboseSchematicNetLabel: [VerboseNetLabelSolver],
+  PinHeaderSchematicBoxTooWide: [SchematicBoxTooWideSolver],
+  GenericSchematicBoxTooWide: [SchematicBoxTooWideSolver],
+  SchematicBoxInnerLabelCollision: [SchematicBoxInnerLabelCollisionSolver],
+  SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
+  DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
+  TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
+  CrystalNotCenteredOverLoadCapacitors: [CrystalLoadCapacitorPlacementSolver],
+  ComponentNetLabelCollision: [ComponentNetLabelCollisionSolver],
+  ComponentBoxNetLabelCollision: [ComponentNetLabelCollisionSolver],
+  NetLabelCollision: [ComponentNetLabelCollisionSolver],
+  FeedbackNetworkNotCompact: [FeedbackNetworkPlacementSolver],
+  PullResistorOnWrongSide: [PullResistorPlacementSolver],
+  SchematicTextCollision: [SchematicTextClearanceSolver],
+  ResetNetworkNotGrouped: [ResetNetworkGroupingSolver],
+  TwoPinComponentCouldBeFlipped: [TwoPinComponentOrientationSolver],
+  TwoPinComponentShouldBeVertical: [TwoPinComponentRailOrientationSolver],
+  TwoPinComponentHasInvertedRails: [TwoPinComponentRailOrientationSolver],
+  DecouplingCapacitorsNotCloseTogether: [DecouplingCapacitorGroupingSolver],
+  ConnectorPositionCausesTraceDetours: [ConnectorPlacementSolver],
+  LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
+  UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
+  RegulatorCapacitorsOnWrongSides: [
+    RegulatorInputOutputCapacitorPlacementSolver,
+  ],
+} satisfies Record<
+  SchematicPlacementIssue["lineItemType"],
+  readonly PipelineStep<any>["solverClass"][]
+>
 
 export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> {
   ctx!: SolverContext
@@ -183,7 +227,36 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
         { ctx: p.ctx, issues: p.issues },
       ],
     ),
+    definePipelineStep(
+      "RegulatorInputOutputCapacitorPlacementSolver",
+      RegulatorInputOutputCapacitorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
   ]
+
+  private readonly selectedIssueTypes?: Set<
+    SchematicPlacementIssue["lineItemType"]
+  >
+
+  constructor(
+    circuitJson: CircuitJson,
+    options: SchematicPlacementAnalysisOptions = {},
+  ) {
+    super(circuitJson)
+    if (options.issueTypes !== undefined) {
+      this.selectedIssueTypes = new Set(options.issueTypes)
+      const selectedSolvers = new Set<PipelineStep<any>["solverClass"]>(
+        options.issueTypes.flatMap<PipelineStep<any>["solverClass"]>(
+          (type) => solversByIssueType[type],
+        ),
+      )
+      this.pipelineDef = this.pipelineDef.filter((step) =>
+        selectedSolvers.has(step.solverClass),
+      )
+    }
+  }
 
   override _setup(): void {
     this.ctx = buildSolverContext(this.inputProblem)
@@ -201,13 +274,19 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ),
     )
     return {
-      issues: this.issues.filter(
-        (issue) =>
-          issue.lineItemType !== "CapacitorSymbolHorizontal" ||
-          !railOrientationComponentIds.has(
-            issue.schematicBox.schematicComponentId ?? "",
-          ),
-      ),
+      issues: this.issues
+        .filter(
+          (issue) =>
+            issue.lineItemType !== "CapacitorSymbolHorizontal" ||
+            !railOrientationComponentIds.has(
+              issue.schematicBox.schematicComponentId ?? "",
+            ),
+        )
+        .filter(
+          (issue) =>
+            this.selectedIssueTypes === undefined ||
+            this.selectedIssueTypes.has(issue.lineItemType),
+        ),
       componentPlacements: this.ctx.componentPlacements,
     }
   }
