@@ -66,7 +66,7 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
-      case "VoltageDividerResistorsReversed":
+      case "VoltageDividerSupplyResistorBelowGroundResistor":
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)
         break
