@@ -32,15 +32,42 @@ test("records reversed divider halves on the complete grow cabinet controller sh
       issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
     }),
   ).toEqual([])
+  const issues = analysis.getIssues({
+    issueTypes: ["VoltageDividerResistorsReversed"],
+  })
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 1800,
-      height: 1300,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    issues.map(
+      (issue) =>
+        issue.lineItemType === "VoltageDividerResistorsReversed" && [
+          issue.supplyResistorSchematicBox.sourceComponentName,
+          issue.groundResistorSchematicBox.sourceComponentName,
+        ],
+    ),
+  ).toEqual([
+    ["R_DU1", "R_DL1"],
+    ["R_DU2", "R_DL2"],
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    showFullSchematic: true,
+    issueTypes: ["VoltageDividerResistorsReversed"],
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 1800,
+    height: 1300,
+  })
+  const numbers = issues.map((issue) => analysis.getIssues().indexOf(issue) + 1)
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) =>
+      Number(match[1]),
+    ),
+  ).toEqual(numbers.flatMap((number) => [number, number]))
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
+      Number(match[1]),
+    ),
+  ).toEqual(numbers)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
