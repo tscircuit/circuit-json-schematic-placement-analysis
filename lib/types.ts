@@ -414,7 +414,19 @@ export interface RegulatorCapacitorsOnWrongSides {
   message: string
 }
 
+/** Advisory: a vertical divider's supply resistor lies clearly below its ground resistor. */
+export interface VoltageDividerResistorsReversed {
+  lineItemType: "VoltageDividerResistorsReversed"
+  supplyResistorSchematicBox: SchematicBoxPlacement
+  groundResistorSchematicBox: SchematicBoxPlacement
+  supplyTapSourcePortId: string
+  groundTapSourcePortId: string
+  reversedBodyGap: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | VoltageDividerResistorsReversed
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned
   | LowSideTransistorNotAlignedWithLoad
