@@ -1,3 +1,4 @@
+import { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
 import { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
@@ -101,6 +102,7 @@ export class SchematicPlacementAnalysis {
       LowSideTransistorNotAlignedWithLoad: 0,
       UsbSeriesResistorsNotAligned: 0,
       RegulatorCapacitorsOnWrongSides: 0,
+      VoltageDividerSupplyResistorBelowGroundResistor: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -167,6 +169,8 @@ export class SchematicPlacementAnalysis {
         return ConnectorPlacementSolver.issueToString(issue)
       case "LowSideTransistorNotAlignedWithLoad":
         return LowSideTransistorPlacementSolver.issueToString(issue)
+      case "VoltageDividerSupplyResistorBelowGroundResistor":
+        return VoltageDividerPlacementSolver.issueToString(issue)
       case "RegulatorCapacitorsOnWrongSides":
         return RegulatorInputOutputCapacitorPlacementSolver.issueToString(issue)
       case "UsbSeriesResistorsNotAligned":
