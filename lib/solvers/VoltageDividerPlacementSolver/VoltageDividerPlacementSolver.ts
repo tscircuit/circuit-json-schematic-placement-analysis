@@ -1,7 +1,7 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   SchematicPlacementIssue,
-  VoltageDividerResistorsReversed,
+  VoltageDividerSupplyResistorBelowGroundResistor,
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
@@ -84,7 +84,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     if (reversedBodyGap <= 1.5) return
 
     this.params.issues.push({
-      lineItemType: "VoltageDividerResistorsReversed",
+      lineItemType: "VoltageDividerSupplyResistorBelowGroundResistor",
       supplyResistorSchematicBox: supply,
       groundResistorSchematicBox: ground,
       supplyTapSourcePortId: supplyTap.bottom.source_port_id,
@@ -134,7 +134,9 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     return { top, bottom }
   }
 
-  static issueToString(issue: VoltageDividerResistorsReversed): string {
+  static issueToString(
+    issue: VoltageDividerSupplyResistorBelowGroundResistor,
+  ): string {
     const attrs: string[] = []
     addAttr(
       attrs,
@@ -148,6 +150,6 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     )
     addAttr(attrs, "reversedBodyGap", issue.reversedBodyGap)
     addAttr(attrs, "message", issue.message)
-    return `<VoltageDividerResistorsReversed ${attrs.join(" ")} />`
+    return `<VoltageDividerSupplyResistorBelowGroundResistor ${attrs.join(" ")} />`
   }
 }

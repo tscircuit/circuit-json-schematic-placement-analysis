@@ -68,7 +68,9 @@ const solversByIssueType = {
   ConnectorPositionCausesTraceDetours: [ConnectorPlacementSolver],
   LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
   UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
-  VoltageDividerResistorsReversed: [VoltageDividerPlacementSolver],
+  VoltageDividerSupplyResistorBelowGroundResistor: [
+    VoltageDividerPlacementSolver,
+  ],
   RegulatorCapacitorsOnWrongSides: [
     RegulatorInputOutputCapacitorPlacementSolver,
   ],

@@ -15,7 +15,7 @@ test("reports reversed divider halves while accepting conventional placement and
   const after = await createVoltageDividerPlacement(true)
   const issues = (json: CircuitJson) =>
     analyzeSchematicPlacement(json).getIssues({
-      issueTypes: ["VoltageDividerResistorsReversed"],
+      issueTypes: ["VoltageDividerSupplyResistorBelowGroundResistor"],
     })
   expect(issues(before)).toHaveLength(1)
   expect(issues(after)).toEqual([])
@@ -39,13 +39,13 @@ test("reports reversed divider halves while accepting conventional placement and
     ])
     expect(
       analyzeSchematicPlacement(json, {
-        issueTypes: ["VoltageDividerResistorsReversed"],
+        issueTypes: ["VoltageDividerSupplyResistorBelowGroundResistor"],
       }).getIssues(),
     ).toEqual(issues(json))
     expect(
       createSchematicAnalysisFixtureSvg({
         circuitJson: json,
-        highlightIssues: ["VoltageDividerResistorsReversed"],
+        highlightIssues: ["VoltageDividerSupplyResistorBelowGroundResistor"],
       }),
     ).toMatchSvgSnapshot(import.meta.path, variant)
     expect(JSON.stringify(json)).toBe(original)

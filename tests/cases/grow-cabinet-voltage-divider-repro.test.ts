@@ -33,12 +33,13 @@ test("records reversed divider halves on the complete grow cabinet controller sh
     }),
   ).toEqual([])
   const issues = analysis.getIssues({
-    issueTypes: ["VoltageDividerResistorsReversed"],
+    issueTypes: ["VoltageDividerSupplyResistorBelowGroundResistor"],
   })
   expect(
     issues.map(
       (issue) =>
-        issue.lineItemType === "VoltageDividerResistorsReversed" && [
+        issue.lineItemType ===
+          "VoltageDividerSupplyResistorBelowGroundResistor" && [
           issue.supplyResistorSchematicBox.sourceComponentName,
           issue.groundResistorSchematicBox.sourceComponentName,
         ],
@@ -51,7 +52,7 @@ test("records reversed divider halves on the complete grow cabinet controller sh
     circuitJson,
     analysis,
     showFullSchematic: true,
-    issueTypes: ["VoltageDividerResistorsReversed"],
+    issueTypes: ["VoltageDividerSupplyResistorBelowGroundResistor"],
     showOverlay: true,
     showListingIssueMarkers: true,
     width: 1800,
