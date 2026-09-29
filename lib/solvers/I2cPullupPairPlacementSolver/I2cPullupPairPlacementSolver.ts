@@ -54,7 +54,8 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
       const net = this.index.connected(element.source_net_id)
       if (!this.netNames.has(net)) this.netNames.set(net, element.name)
       const match = /^(.*?)(?:^|[_-])(SDA|SCL)$/i.exec(element.name)
-      if (!match || this.index.isRail(net)) continue
+      if (!match || this.powerNets.has(net) || this.index.groundNets.has(net))
+        continue
       const prefix = match[1]!.toUpperCase()
       const role = match[2]!.toLowerCase() as BusRole
       const pair = signals.get(prefix) ?? { sda: new Set(), scl: new Set() }
