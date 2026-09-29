@@ -435,8 +435,21 @@ export interface FlybackDiodeSeparatedFromRelayCoil {
   message: string
 }
 
+/** Advisory for a displaced local shunt with one sense branch split by labels. */
+export interface CurrentSenseShuntSeparatedFromInputs {
+  lineItemType: "CurrentSenseShuntSeparatedFromInputs"
+  amplifierSchematicBox: SchematicBoxPlacement
+  shuntSchematicBox: SchematicBoxPlacement
+  positiveInputSourcePortId: string
+  negativeInputSourcePortId: string
+  /** Gap from the shunt body to the band spanned by the two input pins. */
+  inputBandGap: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | FlybackDiodeSeparatedFromRelayCoil
+  | CurrentSenseShuntSeparatedFromInputs
   | VoltageDividerSupplyResistorBelowGroundResistor
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned
