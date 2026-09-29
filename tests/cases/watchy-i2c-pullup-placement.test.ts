@@ -13,44 +13,53 @@ import {
 const near = (a: { x: number; y: number }, b: { x: number; y: number }) =>
   Math.hypot(a.x - b.x, a.y - b.y) < 0.00001
 
+const issues = (json: CircuitJson) =>
+  analyzeSchematicPlacement(json).getIssues({
+    issueTypes: ["I2cPullupPairNotGrouped"],
+  })
+
+const sourceRecords = (json: CircuitJson) =>
+  json.filter((element) => element.type.startsWith("source_"))
+
+const unchangedSchematic = (json: CircuitJson) =>
+  json.filter((element) => {
+    if (element.type === "schematic_component")
+      return !["schematic_component_73", "schematic_component_80"].includes(
+        element.schematic_component_id,
+      )
+    if (element.type === "schematic_port")
+      return !["schematic_component_73", "schematic_component_80"].includes(
+        element.schematic_component_id ?? "",
+      )
+    if (element.type === "schematic_trace")
+      return ![
+        "schematic_trace_140",
+        "schematic_trace_144",
+        "schematic_trace_148",
+        "schematic_trace_149",
+      ].includes(element.schematic_trace_id)
+    if (element.type === "schematic_text")
+      return ![
+        "schematic_text_114",
+        "schematic_text_117",
+        "schematic_text_123",
+      ].includes(element.schematic_text_id)
+    return element.type.startsWith("schematic_")
+  })
+
+const schematicViewBox = (svg: string) =>
+  svg.match(/class="tscircuit-schematic"[^>]*\bviewBox="([^"]+)"/)?.[1]
+
+const screenTransform = (svg: string) =>
+  svg.match(/data-real-to-screen-transform="([^"]+)"/)?.[1]
+
 test("Watchy I2C pull-ups: draw a shared vertical rail while keeping the published nets", () => {
   const frozen = JSON.stringify(before)
   const after = getGroupedWatchyI2cPullups()
-  const issues = (json: CircuitJson) =>
-    analyzeSchematicPlacement(json).getIssues({
-      issueTypes: ["I2cPullupPairNotGrouped"],
-    })
   expect(issues(before)).toHaveLength(1)
   expect(issues(after)).toEqual([])
 
-  const sourceRecords = (json: CircuitJson) =>
-    json.filter((element) => element.type.startsWith("source_"))
   expect(sourceRecords(after)).toEqual(sourceRecords(before))
-  const unchangedSchematic = (json: CircuitJson) =>
-    json.filter((element) => {
-      if (element.type === "schematic_component")
-        return !["schematic_component_73", "schematic_component_80"].includes(
-          element.schematic_component_id,
-        )
-      if (element.type === "schematic_port")
-        return !["schematic_component_73", "schematic_component_80"].includes(
-          element.schematic_component_id ?? "",
-        )
-      if (element.type === "schematic_trace")
-        return ![
-          "schematic_trace_140",
-          "schematic_trace_144",
-          "schematic_trace_148",
-          "schematic_trace_149",
-        ].includes(element.schematic_trace_id)
-      if (element.type === "schematic_text")
-        return ![
-          "schematic_text_114",
-          "schematic_text_117",
-          "schematic_text_123",
-        ].includes(element.schematic_text_id)
-      return element.type.startsWith("schematic_")
-    })
   expect(unchangedSchematic(after)).toEqual(unchangedSchematic(before))
   expect(getReproSchematicComponent(after, "R20").center.y).toBe(
     getReproSchematicComponent(after, "R18").center.y,
@@ -135,12 +144,8 @@ test("Watchy I2C pull-ups: draw a shared vertical rail while keeping the publish
   }
   // The after view has no issue to define a crop. Use the before view's
   // schematic viewport so the two real-board snapshots compare at one scale.
-  const schematicViewBox = (svg: string) =>
-    svg.match(/class="tscircuit-schematic"[^>]*\bviewBox="([^"]+)"/)?.[1]
   const beforeViewBox = schematicViewBox(snapshots[0]!)
   expect(beforeViewBox).toBeString()
-  const screenTransform = (svg: string) =>
-    svg.match(/data-real-to-screen-transform="([^"]+)"/)?.[1]
   expect(screenTransform(snapshots[1]!)).toBe(screenTransform(snapshots[0]!))
   snapshots[1] = snapshots[1]!.replace(
     /(<svg[^>]*class="tscircuit-schematic"[^>]*)(>)/,

@@ -8,7 +8,10 @@ import { watchyI2cPullups } from "."
 const near = (a: { x: number; y: number }, b: { x: number; y: number }) =>
   Math.hypot(a.x - b.x, a.y - b.y) < 0.00001
 
-function schematicPort(json: CircuitJson, name: string, pin: string) {
+function schematicPort(
+  { name, pin }: { name: string; pin: string },
+  json: CircuitJson,
+) {
   const source = getReproSourcePort(json, name, pin)
   const port = json.find(
     (element): element is SchematicPort =>
@@ -49,18 +52,18 @@ export function getGroupedWatchyI2cPullups(): CircuitJson {
   const json = structuredClone(watchyI2cPullups)
   const r18 = getReproSchematicComponent(json, "R18")
   const r20 = getReproSchematicComponent(json, "R20")
-  const sda = schematicPort(json, "R18", "pin1")
-  const r18Power = schematicPort(json, "R18", "pin2")
-  const scl = schematicPort(json, "R20", "pin1")
-  const r20Power = schematicPort(json, "R20", "pin2")
+  const sda = schematicPort({ name: "R18", pin: "pin1" }, json)
+  const r18Power = schematicPort({ name: "R18", pin: "pin2" }, json)
+  const scl = schematicPort({ name: "R20", pin: "pin1" }, json)
+  const r20Power = schematicPort({ name: "R20", pin: "pin2" }, json)
   const sdaLabelTrace = traceAt(json, sda.center)
   const r18PowerTrace = traceAt(json, r18Power.center)
   const sclTrace = traceAt(json, scl.center)
   const r20PowerTrace = traceAt(json, r20Power.center)
   const sdaLabel = traceText(json, sdaLabelTrace)
   const powerLabel = traceText(json, r20PowerTrace)
-  const u6Scl = schematicPort(json, "U6", "pin12")
-  const u6Power = schematicPort(json, "U6", "pin3")
+  const u6Scl = schematicPort({ name: "U6", pin: "pin12" }, json)
+  const u6Power = schematicPort({ name: "U6", pin: "pin3" }, json)
 
   // Each resistor rises from its signal to a common P3V3 rail.
   for (const [resistor, signal, power, x] of [

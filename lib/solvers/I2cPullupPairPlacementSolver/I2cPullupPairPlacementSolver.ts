@@ -8,6 +8,9 @@ import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
+type ConnectedNetId = string
+type BusPrefix = string
+
 type BusRole = "sda" | "scl"
 type Side = "above" | "below" | "left" | "right"
 
@@ -28,7 +31,7 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly powerNets: Set<string>
   private readonly pairs: Array<{ sda: string; scl: string }>
-  private readonly netNames = new Map<string, string>()
+  private readonly netNames = new Map<ConnectedNetId, string>()
   private pairIndex = 0
 
   constructor(
@@ -46,7 +49,7 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
           this.powerNets.add(this.index.connected(port.source_port_id))
       }
     }
-    const signals = new Map<string, SignalPair>()
+    const signals = new Map<BusPrefix, SignalPair>()
     for (const element of params.ctx.circuitJson) {
       if (element.type !== "source_net") continue
       const net = this.index.connected(element.source_net_id)
@@ -59,11 +62,19 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
       pair[role].add(net)
       signals.set(prefix, pair)
     }
-    this.pairs = [...signals.values()].flatMap((pair) =>
-      pair.sda.size === 1 && pair.scl.size === 1
-        ? [{ sda: [...pair.sda][0]!, scl: [...pair.scl][0]! }]
-        : [],
-    )
+    const sclNetsBySdaNet = new Map<ConnectedNetId, Set<ConnectedNetId>>()
+    this.pairs = []
+    for (const pair of signals.values()) {
+      if (pair.sda.size !== 1 || pair.scl.size !== 1) continue
+      const sda = [...pair.sda][0]!
+      const scl = [...pair.scl][0]!
+      const sclNets = sclNetsBySdaNet.get(sda) ?? new Set<ConnectedNetId>()
+      // Net aliases can name the same electrical bus more than once.
+      if (sclNets.has(scl)) continue
+      sclNets.add(scl)
+      sclNetsBySdaNet.set(sda, sclNets)
+      this.pairs.push({ sda, scl })
+    }
     this.solved = this.pairs.length === 0
   }
 
@@ -84,7 +95,12 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
     )
       return
 
-    const hosts = this.sharedLocalHosts(pair.sda, pair.scl, sda, scl)
+    const hosts = this.sharedLocalHosts({
+      sdaNet: pair.sda,
+      sclNet: pair.scl,
+      sda,
+      scl,
+    })
     if (hosts.length !== 1) return
     const host = hosts[0]!
     const sdaSide = sideOf(sda.placement, host)
@@ -149,12 +165,17 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
     })
   }
 
-  private sharedLocalHosts(
-    sdaNet: string,
-    sclNet: string,
-    sda: Pullup,
-    scl: Pullup,
-  ): SchematicBoxPlacement[] {
+  private sharedLocalHosts({
+    sdaNet,
+    sclNet,
+    sda,
+    scl,
+  }: {
+    sdaNet: ConnectedNetId
+    sclNet: ConnectedNetId
+    sda: Pullup
+    scl: Pullup
+  }): SchematicBoxPlacement[] {
     const index = this.index
     const sclIds = new Set(
       (index.portsByNet.get(sclNet) ?? []).map(
