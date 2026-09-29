@@ -27,7 +27,6 @@ interface Pullup {
 
 /** Advisory for a clearly split SDA/SCL pull-up pair on one local I2C bus. */
 export class I2cPullupPairPlacementSolver extends BaseSolver {
-  private static readonly MAX_RECOMMENDED_BODY_GAP = 2
   private readonly index: PlacementNetworkIndex
   private readonly powerNets: Set<string>
   private readonly pairs: Array<{ sda: string; scl: string }>
@@ -106,19 +105,14 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
     const sdaSide = sideOf(sda.placement, host)
     const sclSide = sideOf(scl.placement, host)
     if (!sdaSide || !sclSide || sdaSide === sclSide) return
-    const bodyGap = Math.hypot(
-      Math.max(
-        0,
-        Math.abs(sda.placement.schX - scl.placement.schX) -
-          (sda.placement.width + scl.placement.width) / 2,
-      ),
-      Math.max(
-        0,
-        Math.abs(sda.placement.schY - scl.placement.schY) -
-          (sda.placement.height + scl.placement.height) / 2,
-      ),
+    const bodyGap = bodyDistance(sda.placement, scl.placement)
+    const maxHostBodyGap = Math.max(
+      bodyDistance(sda.placement, host),
+      bodyDistance(scl.placement, host),
     )
-    if (bodyGap <= I2cPullupPairPlacementSolver.MAX_RECOMMENDED_BODY_GAP) return
+    // A compact pair can straddle a corner. Warn only when each resistor
+    // is closer to the chip than to its partner, regardless of drawing scale.
+    if (bodyGap <= maxHostBodyGap) return
 
     const sdaName = sda.placement.sourceComponentName ?? sda.id
     const sclName = scl.placement.sourceComponentName ?? scl.id
@@ -129,9 +123,8 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
       hostSchematicBox: host,
       railName: this.netNames.get(sda.powerNet) ?? sda.powerNet,
       bodyGap,
-      maxRecommendedBodyGap:
-        I2cPullupPairPlacementSolver.MAX_RECOMMENDED_BODY_GAP,
-      message: `Group ${sdaName} (SDA) and ${sclName} (SCL) on the same side of ${host.sourceComponentName ?? "their shared host"} so the I2C pull-ups read as a pair. Preserve their net connections.`,
+      maxHostBodyGap,
+      message: `Consider grouping ${sdaName} (SDA) and ${sclName} (SCL) on the same side of ${host.sourceComponentName ?? "their shared host"} so the I2C pull-ups read as a pair. Preserve their net connections.`,
     })
   }
 
@@ -217,7 +210,7 @@ export class I2cPullupPairPlacementSolver extends BaseSolver {
     addAttr(attrs, "hostName", issue.hostSchematicBox.sourceComponentName)
     addAttr(attrs, "rail", issue.railName)
     addAttr(attrs, "bodyGap", issue.bodyGap)
-    addAttr(attrs, "maxRecommendedBodyGap", issue.maxRecommendedBodyGap)
+    addAttr(attrs, "maxHostBodyGap", issue.maxHostBodyGap)
     addAttr(attrs, "message", issue.message)
     return `<I2cPullupPairNotGrouped ${attrs.join(" ")} />`
   }
@@ -229,7 +222,26 @@ function sideOf(
 ): Side | undefined {
   const dx = resistor.schX - host.schX
   const dy = resistor.schY - host.schY
-  if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return
-  if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? "right" : "left"
+  const gapX = Math.abs(dx) - (resistor.width + host.width) / 2
+  const gapY = Math.abs(dy) - (resistor.height + host.height) / 2
+  // Overlapping bodies and exact corner ties have no unambiguous side.
+  if ((gapX <= 0 && gapY <= 0) || gapX === gapY) return
+  if (gapX > gapY) return dx > 0 ? "right" : "left"
   return dy > 0 ? "above" : "below"
+}
+
+function bodyDistance(
+  first: SchematicBoxPlacement,
+  second: SchematicBoxPlacement,
+): number {
+  return Math.hypot(
+    Math.max(
+      0,
+      Math.abs(first.schX - second.schX) - (first.width + second.width) / 2,
+    ),
+    Math.max(
+      0,
+      Math.abs(first.schY - second.schY) - (first.height + second.height) / 2,
+    ),
+  )
 }

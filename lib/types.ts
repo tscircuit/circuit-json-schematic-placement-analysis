@@ -411,7 +411,8 @@ export interface I2cPullupPairNotGrouped {
   hostSchematicBox: SchematicBoxPlacement
   railName: string
   bodyGap: number
-  maxRecommendedBodyGap: number
+  /** Larger of the two resistor-to-chip body distances. */
+  maxHostBodyGap: number
   message: string
 }
 
