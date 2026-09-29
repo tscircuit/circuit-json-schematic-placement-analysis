@@ -33,17 +33,46 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
     ).toEqual({ x, y: 0 })
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_6",
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2200,
-      height: 1400,
+    analysis.getIssues({
+      issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
     }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  ).toEqual([])
+  const issues = analysis.getIssues({
+    issueTypes: ["CurrentSenseShuntSeparatedFromInputs"],
+  })
+  expect(issues).toMatchObject([
+    {
+      shuntSchematicBox: { sourceComponentName: "R_PHASE_A" },
+      amplifierSchematicBox: { sourceComponentName: "U_CURRENT_A" },
+    },
+    {
+      shuntSchematicBox: { sourceComponentName: "R_PHASE_B" },
+      amplifierSchematicBox: { sourceComponentName: "U_CURRENT_B" },
+    },
+  ])
+  expect(analysis.getIssues()).toHaveLength(2)
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    schematicSheetId: "schematic_sheet_6",
+    issueTypes: ["CurrentSenseShuntSeparatedFromInputs"],
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2200,
+    height: 1400,
+  })
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) =>
+      Number(match[1]),
+    ),
+  ).toEqual([1, 1, 2, 2])
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
+      Number(match[1]),
+    ),
+  ).toEqual([1, 2])
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

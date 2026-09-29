@@ -1,3 +1,4 @@
+import { CurrentSenseShuntPlacementSolver } from "../CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 import { VoltageDividerPlacementSolver } from "../VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
 import { RegulatorInputOutputCapacitorPlacementSolver } from "../RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
@@ -68,6 +69,7 @@ const solversByIssueType = {
   ConnectorPositionCausesTraceDetours: [ConnectorPlacementSolver],
   LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
   UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
+  CurrentSenseShuntSeparatedFromInputs: [CurrentSenseShuntPlacementSolver],
   VoltageDividerSupplyResistorBelowGroundResistor: [
     VoltageDividerPlacementSolver,
   ],
@@ -241,6 +243,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "VoltageDividerPlacementSolver",
       VoltageDividerPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "CurrentSenseShuntPlacementSolver",
+      CurrentSenseShuntPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

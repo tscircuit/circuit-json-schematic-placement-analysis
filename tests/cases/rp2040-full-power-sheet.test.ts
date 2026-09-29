@@ -23,7 +23,19 @@ test("records the full power sheet's findings without rotating its series induct
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 8,
     DecouplingCapacitorsNotCloseTogether: 1,
+    CurrentSenseShuntSeparatedFromInputs: 1,
   })
+  // R_BUS_SHUNT is above the amplifier, with one sense branch split by labels.
+  expect(
+    analysis.getIssues({
+      issueTypes: ["CurrentSenseShuntSeparatedFromInputs"],
+    }),
+  ).toMatchObject([
+    {
+      shuntSchematicBox: { sourceComponentName: "R_BUS_SHUNT" },
+      amplifierSchematicBox: { sourceComponentName: "U_BUS_SENSE" },
+    },
+  ])
   expect(
     analysis
       .getIssues()

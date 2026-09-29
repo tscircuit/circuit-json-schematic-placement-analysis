@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "CurrentSenseShuntSeparatedFromInputs":
+        addPlacement(issue.amplifierSchematicBox)
+        addPlacement(issue.shuntSchematicBox)
+        break
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)

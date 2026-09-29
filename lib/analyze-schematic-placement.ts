@@ -1,3 +1,4 @@
+import { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 import { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
 import { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
@@ -103,6 +104,7 @@ export class SchematicPlacementAnalysis {
       UsbSeriesResistorsNotAligned: 0,
       RegulatorCapacitorsOnWrongSides: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
+      CurrentSenseShuntSeparatedFromInputs: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -127,6 +129,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "CurrentSenseShuntSeparatedFromInputs":
+        return CurrentSenseShuntPlacementSolver.issueToString(issue)
       case "ComponentOverlap":
         return SchematicBoxOverlapSolver.issueToString(issue)
       case "CapacitorSymbolHorizontal":
