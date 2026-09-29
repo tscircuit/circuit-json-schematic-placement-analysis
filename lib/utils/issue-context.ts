@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "FlybackDiodeSeparatedFromRelayCoil":
+        addPlacement(issue.relaySchematicBox)
+        addPlacement(issue.diodeSchematicBox)
+        break
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)

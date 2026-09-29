@@ -425,7 +425,18 @@ export interface VoltageDividerSupplyResistorBelowGroundResistor {
   message: string
 }
 
+/** A local flyback diode separated from the relay coil it protects. */
+export interface FlybackDiodeSeparatedFromRelayCoil {
+  lineItemType: "FlybackDiodeSeparatedFromRelayCoil"
+  relaySchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  coilSourcePortIds: [string, string]
+  distanceFromCoilPins: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | FlybackDiodeSeparatedFromRelayCoil
   | VoltageDividerSupplyResistorBelowGroundResistor
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned

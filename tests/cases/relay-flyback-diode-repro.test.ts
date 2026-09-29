@@ -33,15 +33,40 @@ test("records separated flyback diodes on the complete relay controller sheet", 
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
     "NetLabelCollision",
+    "FlybackDiodeSeparatedFromRelayCoil",
+    "FlybackDiodeSeparatedFromRelayCoil",
+  ])
+  const issues = analysis.getIssues({
+    issueTypes: ["FlybackDiodeSeparatedFromRelayCoil"],
+  })
+  expect(issues).toMatchObject([
+    {
+      relaySchematicBox: { sourceComponentName: "K1" },
+      diodeSchematicBox: { sourceComponentName: "D1" },
+    },
+    {
+      relaySchematicBox: { sourceComponentName: "K2" },
+      diodeSchematicBox: { sourceComponentName: "D2" },
+    },
   ])
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,
     showFullSchematic: true,
-    showOverlay: false,
+    issueTypes: ["FlybackDiodeSeparatedFromRelayCoil"],
+    showOverlay: true,
+    showListingIssueMarkers: true,
     width: 2200,
     height: 1600,
   })
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([2, 2, 3, 3])
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
+      Number(m[1]),
+    ),
+  ).toEqual([2, 3])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
