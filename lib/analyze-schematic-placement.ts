@@ -5,6 +5,7 @@ import { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/Regulato
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
+import { I2cPullupPairPlacementSolver } from "./solvers/I2cPullupPairPlacementSolver/I2cPullupPairPlacementSolver"
 import type { CircuitJson } from "circuit-json"
 import { CapacitorOrientationSolver } from "./solvers/CapacitorOrientationSolver/CapacitorOrientationSolver"
 import { DecouplingCapacitorGroupingSolver } from "./solvers/DecouplingCapacitorGroupingSolver/DecouplingCapacitorGroupingSolver"
@@ -104,6 +105,7 @@ export class SchematicPlacementAnalysis {
       ConnectorPositionCausesTraceDetours: 0,
       LowSideTransistorNotAlignedWithLoad: 0,
       UsbSeriesResistorsNotAligned: 0,
+      I2cPullupPairNotGrouped: 0,
       RegulatorCapacitorsOnWrongSides: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
@@ -183,6 +185,8 @@ export class SchematicPlacementAnalysis {
         return RegulatorInputOutputCapacitorPlacementSolver.issueToString(issue)
       case "UsbSeriesResistorsNotAligned":
         return UsbSeriesResistorPlacementSolver.issueToString(issue)
+      case "I2cPullupPairNotGrouped":
+        return I2cPullupPairPlacementSolver.issueToString(issue)
       default:
         return ""
     }

@@ -1,16 +1,14 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { stackSvgsVertically } from "stack-svgs"
 import { watchyI2cPullups as circuitJson } from "../assets/watchy-i2c-pullups"
-import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
-import { createAnalyzerTextSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
   expectReproRendered,
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("records the separated I2C pull-ups on the unchanged Watchy controls sheet", () => {
+test("detects Watchy SDA and SCL pull-ups split around the accelerometer", () => {
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 16)
   expectReproNets(circuitJson, [
@@ -29,50 +27,56 @@ test("records the separated I2C pull-ups on the unchanged Watchy controls sheet"
   expect(Math.abs(sdaPullup.center.y - sclPullup.center.y)).toBeGreaterThan(1)
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(
-    analysis
-      .getIssues()
-      .filter(
-        (issue) => String(issue.lineItemType) === "I2cPullupPairNotGrouped",
-      ),
-  ).toEqual([])
-  const circuitSvg = createIssueOverlaySvg({
-    circuitJson,
-    analysis,
-    schematicSheetId: "schematic_sheet_3",
-    showFullSchematic: true,
-    showOverlay: false,
-    width: 1000,
-    height: 750,
+  const issues = analysis.getIssues({
+    issueTypes: ["I2cPullupPairNotGrouped"],
   })
-  const matrix = circuitSvg.match(
-    /data-real-to-screen-transform="matrix\(([^)]+)\)"/,
-  )
-  if (!matrix) throw new Error("Missing schematic transform")
-  const [a, b, c, d, e, f] = matrix[1]!.split(/[\s,]+/).map(Number)
-  const screen = (x: number, y: number) => ({
-    x: a! * x + c! * y + e!,
-    y: b! * x + d! * y + f!,
+  expect(issues).toHaveLength(1)
+  expect(issues[0]).toMatchObject({
+    railName: "P3V3",
+    sdaResistorSchematicBox: { sourceComponentName: "R18" },
+    sclResistorSchematicBox: { sourceComponentName: "R20" },
+    hostSchematicBox: { sourceComponentName: "U6" },
   })
-  // Crop only the accelerometer block while analyzing the complete sheet.
-  const topLeft = screen(21.8, -16.8)
-  const bottomRight = screen(29.4, -22.5)
-  const viewBox = `${topLeft.x} ${topLeft.y} ${bottomRight.x - topLeft.x} ${bottomRight.y - topLeft.y}`
-  const focusedSvg = circuitSvg.replace(/^<svg\b[^>]*>/, (root) =>
-    root.replace(/>$/, ` viewBox="${viewBox}">`),
-  )
-  const analysisSvg = createAnalyzerTextSvg(
-    "Published Watchy controls sheet\nI2C pull-up pair finding: none in current analysis",
-    1000,
+  expect(analysis.schematicIssuesToString(issues[0]!)).toContain(
+    'sdaResistorName="R18"',
   )
   expect(
-    stackSvgsVertically(
-      [
-        `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="750">${focusedSvg}</svg>`,
-        analysisSvg,
-      ],
-      { normalizeSize: false, gap: 0 },
-    ).replace(/[ \t]+$/gm, ""),
+    analyzeSchematicPlacement(circuitJson, {
+      issueTypes: ["I2cPullupPairNotGrouped"],
+    }).getIssueCounts().I2cPullupPairNotGrouped,
+  ).toBe(1)
+  expect(
+    createIssueReproSnapshot({
+      circuitJson,
+      analysis,
+      schematicSheetId: "schematic_sheet_3",
+      showOverlay: true,
+      issueTypes: ["I2cPullupPairNotGrouped"],
+      width: 1000,
+      height: 750,
+    }),
   ).toMatchSvgSnapshot(import.meta.path, "focused")
+
+  // Keep quiet when the same real board's pull-ups sit together above U6.
+  const grouped = structuredClone(circuitJson)
+  const groupedScl = getReproSchematicComponent(grouped, "R20")
+  groupedScl.center = {
+    x: sdaPullup.center.x + 1.2,
+    y: sdaPullup.center.y,
+  }
+  expect(
+    analyzeSchematicPlacement(grouped).getIssues({
+      issueTypes: ["I2cPullupPairNotGrouped"],
+    }),
+  ).toEqual([])
+
+  const otherSheet = structuredClone(circuitJson)
+  getReproSchematicComponent(otherSheet, "R20").schematic_sheet_id =
+    "different-sheet"
+  expect(
+    analyzeSchematicPlacement(otherSheet).getIssues({
+      issueTypes: ["I2cPullupPairNotGrouped"],
+    }),
+  ).toEqual([])
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

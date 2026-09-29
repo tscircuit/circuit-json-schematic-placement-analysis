@@ -403,6 +403,18 @@ export interface UsbSeriesResistorsNotAligned {
   message: string
 }
 
+/** Advisory for an SDA/SCL pull-up pair drawn on different sides of one chip. */
+export interface I2cPullupPairNotGrouped {
+  lineItemType: "I2cPullupPairNotGrouped"
+  sdaResistorSchematicBox: SchematicBoxPlacement
+  sclResistorSchematicBox: SchematicBoxPlacement
+  hostSchematicBox: SchematicBoxPlacement
+  railName: string
+  bodyGap: number
+  maxRecommendedBodyGap: number
+  message: string
+}
+
 /** Advisory for a regulator's local input/output capacitor pair on reversed sides. */
 export interface RegulatorCapacitorsOnWrongSides {
   lineItemType: "RegulatorCapacitorsOnWrongSides"
@@ -453,6 +465,7 @@ export type SchematicPlacementIssue =
   | VoltageDividerSupplyResistorBelowGroundResistor
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned
+  | I2cPullupPairNotGrouped
   | LowSideTransistorNotAlignedWithLoad
   | ComponentOverlap
   | SchematicBoxHasALotOfSurroundingWhitespace

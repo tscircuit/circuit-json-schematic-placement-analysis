@@ -5,6 +5,7 @@ import { RegulatorInputOutputCapacitorPlacementSolver } from "../RegulatorInputO
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 import { UsbSeriesResistorPlacementSolver } from "../UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
+import { I2cPullupPairPlacementSolver } from "../I2cPullupPairPlacementSolver/I2cPullupPairPlacementSolver"
 import {
   BasePipelineSolver,
   definePipelineStep,
@@ -72,6 +73,7 @@ const solversByIssueType = {
   LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
   UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
   CurrentSenseShuntSeparatedFromInputs: [CurrentSenseShuntPlacementSolver],
+  I2cPullupPairNotGrouped: [I2cPullupPairPlacementSolver],
   VoltageDividerSupplyResistorBelowGroundResistor: [
     VoltageDividerPlacementSolver,
   ],
@@ -231,6 +233,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "UsbSeriesResistorPlacementSolver",
       UsbSeriesResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "I2cPullupPairPlacementSolver",
+      I2cPullupPairPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

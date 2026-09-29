@@ -87,6 +87,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.positiveResistorSchematicBox)
         addPlacement(issue.negativeResistorSchematicBox)
         break
+      case "I2cPullupPairNotGrouped":
+        addPlacement(issue.sdaResistorSchematicBox)
+        addPlacement(issue.sclResistorSchematicBox)
+        addPlacement(issue.hostSchematicBox)
+        break
       case "LowSideTransistorNotAlignedWithLoad":
         addPlacement(issue.transistorSchematicBox)
         addPlacement(issue.loadSchematicBox)

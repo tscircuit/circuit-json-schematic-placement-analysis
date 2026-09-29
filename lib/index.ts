@@ -22,6 +22,7 @@ export { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNe
 export * from "./types"
 export { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 export { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
+export { I2cPullupPairPlacementSolver } from "./solvers/I2cPullupPairPlacementSolver/I2cPullupPairPlacementSolver"
 export {
   createSchematicPlacementIssueArtifacts,
   type SchematicPlacementIssueArtifact,
