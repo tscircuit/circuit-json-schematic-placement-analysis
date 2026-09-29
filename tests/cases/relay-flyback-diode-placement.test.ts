@@ -99,6 +99,31 @@ test("groups an identified relay flyback diode while excluding ambiguous or alre
       for (let i = json.length - 1; i >= 0; i--)
         if (json[i]!.type === "schematic_net_label") json.splice(i, 1)
     },
+    "labels on an already wired loop": (json) => {
+      for (const [diodePin, coilPin] of [
+        ["anode", "COIL_A"],
+        ["cathode", "COIL_B"],
+      ]) {
+        const endpoints = [
+          ["D1", diodePin],
+          ["K1", coilPin],
+        ].map(([name, role]) => {
+          const id = getReproSourcePort(json, name!, role!).source_port_id
+          const pin = json.find(
+            (e) => e.type === "schematic_port" && e.source_port_id === id,
+          )
+          if (pin?.type !== "schematic_port") throw new Error("Missing pin")
+          return pin.center
+        })
+        json.push({
+          type: "schematic_trace",
+          schematic_trace_id: `visible-${diodePin}`,
+          source_trace_id: `visible-${diodePin}`,
+          edges: [{ from: endpoints[0]!, to: endpoints[1]! }],
+          junctions: [],
+        })
+      }
+    },
     "deliberately remote block": (json) => {
       getReproSchematicComponent(json, "D1").center.y = 50
     },

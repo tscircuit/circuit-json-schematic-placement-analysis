@@ -1,5 +1,5 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { SourcePort } from "circuit-json"
+import type { SchematicPort, SourcePort } from "circuit-json"
 import type {
   FlybackDiodeSeparatedFromRelayCoil,
   SchematicPlacementIssue,
@@ -130,7 +130,7 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
               Math.hypot(
                 p!.center.x - e.anchor_position!.x,
                 p!.center.y - e.anchor_position!.y,
-              ) < 0.01,
+              ) < 0.01 && !this.hasWireAtPin(p!),
           ),
       )
     )
@@ -143,6 +143,36 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
       distanceFromCoilPins,
       message: `Place ${diode.sourceComponentName ?? diodeId} beside ${relay.sourceComponentName ?? relayId}'s coil pins so the flyback protection loop can be read together. Preserve diode polarity and all pin connections; leave room for labels and reroute affected traces.`,
     })
+  }
+
+  private hasWireAtPin(pin: SchematicPort): boolean {
+    return this.params.ctx.circuitJson.some(
+      (e) =>
+        e.type === "schematic_trace" &&
+        e.schematic_sheet_id === pin.schematic_sheet_id &&
+        e.edges.some(({ from, to }) => {
+          const dx = to.x - from.x,
+            dy = to.y - from.y
+          const lengthSquared = dx * dx + dy * dy
+          const t = lengthSquared
+            ? Math.max(
+                0,
+                Math.min(
+                  1,
+                  ((pin.center.x - from.x) * dx +
+                    (pin.center.y - from.y) * dy) /
+                    lengthSquared,
+                ),
+              )
+            : 0
+          return (
+            Math.hypot(
+              pin.center.x - from.x - t * dx,
+              pin.center.y - from.y - t * dy,
+            ) < 0.01
+          )
+        }),
+    )
   }
 
   private uniquePort(id: string, pattern: RegExp) {
