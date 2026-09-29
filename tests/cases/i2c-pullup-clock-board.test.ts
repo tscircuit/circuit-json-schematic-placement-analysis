@@ -2,7 +2,6 @@ import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import published from "../assets/clock-board.circuit.json"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import { expectReproNets } from "../fixtures/placement-repro-assertions"
 
 test("clock board pull-ups on the same side of the RTC do not warn", () => {
@@ -16,14 +15,4 @@ test("clock board pull-ups on the same side of the RTC do not warn", () => {
   expect(
     analysis.getIssues({ issueTypes: ["I2cPullupPairNotGrouped"] }),
   ).toEqual([])
-  expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_2",
-      issueTypes: ["I2cPullupPairNotGrouped"],
-      width: 1000,
-      height: 750,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path)
 })

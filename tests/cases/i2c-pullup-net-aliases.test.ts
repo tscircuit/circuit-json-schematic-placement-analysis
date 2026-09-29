@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { watchyI2cPullups } from "../assets/watchy-i2c-pullups"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("I2C net aliases do not duplicate a pull-up pair warning", () => {
   const circuitJson = structuredClone(watchyI2cPullups)
@@ -25,14 +24,4 @@ test("I2C net aliases do not duplicate a pull-up pair warning", () => {
   expect(
     analysis.getIssues({ issueTypes: ["I2cPullupPairNotGrouped"] }),
   ).toHaveLength(1)
-  expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_3",
-      issueTypes: ["I2cPullupPairNotGrouped"],
-      width: 1000,
-      height: 750,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path)
 })

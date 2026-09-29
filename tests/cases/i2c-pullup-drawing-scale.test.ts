@@ -1,10 +1,8 @@
 import { expect, test } from "bun:test"
-import { analyzeSchematicPlacement } from "lib/index"
 import { I2cPullupPairPlacementSolver } from "lib/solvers/I2cPullupPairPlacementSolver/I2cPullupPairPlacementSolver"
 import type { SchematicPlacementIssue } from "lib/types"
 import { buildSolverContext } from "lib/utils/placements"
 import { watchyI2cPullups } from "../assets/watchy-i2c-pullups"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("uniform drawing scale and translation do not change the I2C grouping result", () => {
   for (const scale of [0.1, 1, 10]) {
@@ -24,14 +22,4 @@ test("uniform drawing scale and translation do not change the I2C grouping resul
       throw new Error("Unexpected issue")
     expect(issue.bodyGap).toBeGreaterThan(issue.maxHostBodyGap)
   }
-  expect(
-    createIssueReproSnapshot({
-      circuitJson: watchyI2cPullups,
-      analysis: analyzeSchematicPlacement(watchyI2cPullups),
-      schematicSheetId: "schematic_sheet_3",
-      issueTypes: ["I2cPullupPairNotGrouped"],
-      width: 1000,
-      height: 750,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path)
 })

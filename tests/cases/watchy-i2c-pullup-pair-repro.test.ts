@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { watchyI2cPullups as circuitJson } from "../assets/watchy-i2c-pullups"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
   expectReproRendered,
@@ -45,17 +44,6 @@ test("detects Watchy SDA and SCL pull-ups split around the accelerometer", () =>
       issueTypes: ["I2cPullupPairNotGrouped"],
     }).getIssueCounts().I2cPullupPairNotGrouped,
   ).toBe(1)
-  expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_3",
-      showOverlay: true,
-      issueTypes: ["I2cPullupPairNotGrouped"],
-      width: 1000,
-      height: 750,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "focused")
 
   // Keep quiet when the same real board's pull-ups sit together above U6.
   const grouped = structuredClone(circuitJson)

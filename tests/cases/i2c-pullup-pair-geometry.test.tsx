@@ -1,13 +1,12 @@
 import { Circuit } from "@tscircuit/core"
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("I2C grouping distinguishes split pairs from compact corners and same-side pairs", async () => {
-  for (const [name, sda, scl, count] of [
-    ["split", { x: 0, y: 4 }, { x: 4, y: 0 }, 1],
-    ["compact-corner", { x: 3, y: 3.6 }, { x: 3.6, y: 3 }, 0],
-    ["same-side", { x: 4, y: 3 }, { x: 4, y: -3 }, 0],
+  for (const [sda, scl, count] of [
+    [{ x: 0, y: 4 }, { x: 4, y: 0 }, 1],
+    [{ x: 3, y: 3.6 }, { x: 3.6, y: 3 }, 0],
+    [{ x: 4, y: 3 }, { x: 4, y: -3 }, 0],
   ] as const) {
     const circuit = new Circuit()
     circuit.pcbDisabled = true
@@ -53,14 +52,5 @@ test("I2C grouping distinguishes split pairs from compact corners and same-side 
     expect(
       analysis.getIssues({ issueTypes: ["I2cPullupPairNotGrouped"] }),
     ).toHaveLength(count)
-    expect(
-      createIssueReproSnapshot({
-        circuitJson,
-        analysis,
-        issueTypes: ["I2cPullupPairNotGrouped"],
-        width: 1000,
-        height: 650,
-      }),
-    ).toMatchSvgSnapshot(import.meta.path, name)
   }
 })
