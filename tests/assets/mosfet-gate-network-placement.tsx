@@ -3,7 +3,7 @@ import { Circuit } from "@tscircuit/core"
 export async function createMosfetGateNetworkPlacement({
   grouped = false,
   floating = false,
-  native = false,
+  native = true,
 }: {
   grouped?: boolean
   floating?: boolean

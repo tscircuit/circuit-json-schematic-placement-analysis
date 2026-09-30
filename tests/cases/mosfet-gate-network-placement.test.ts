@@ -37,10 +37,10 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
     const original = JSON.stringify(json)
     expectReproRendered(json, 3)
     expectReproNets(json, [
-      ["Q1.G", "R_GATE.pin2", "R_BIAS.pin1"],
-      ["Q1.S", "R_BIAS.pin2", "net.GND"],
+      ["Q1.gate", "R_GATE.pin2", "R_BIAS.pin1"],
+      ["Q1.source", "R_BIAS.pin2", "net.GND"],
       ["R_GATE.pin1", "net.DRIVE"],
-      ["Q1.D", "net.LOAD"],
+      ["Q1.drain", "net.LOAD"],
     ])
     const analysis = analyzeSchematicPlacement(json)
     expect(analysis.getIssues({ issueTypes })).toEqual(issues(json))
@@ -59,7 +59,7 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
     expect(JSON.stringify(json)).toBe(original)
   }
   // Ground is not required: high-side bias returns to the floating source.
-  for (const options of [{ floating: true }, { native: true }]) {
+  for (const options of [{ floating: true }, { native: false }]) {
     expect(
       issues(await createMosfetGateNetworkPlacement(options)),
     ).toHaveLength(1)
@@ -77,12 +77,12 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
       getReproSchematicComponent(json, "R_BIAS").schematic_group_id = "other"
     },
     "unknown gate role": (json) => {
-      const p = getReproSourcePort(json, "Q1", "G")
+      const p = getReproSourcePort(json, "Q1", "gate")
       p.name = "pin1"
       p.port_hints = ["pin1"]
     },
     "ambiguous role": (json) => {
-      getReproSourcePort(json, "Q1", "G").port_hints!.push("S")
+      getReproSourcePort(json, "Q1", "gate").port_hints!.push("S")
     },
     "do not connect": (json) => {
       getReproSourcePort(json, "R_BIAS", "pin1").do_not_connect = true
@@ -94,7 +94,7 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
       })
     },
     "missing gate geometry": (json) => {
-      const id = getReproSourcePort(json, "Q1", "G").source_port_id
+      const id = getReproSourcePort(json, "Q1", "gate").source_port_id
       json.splice(
         json.findIndex(
           (e) => e.type === "schematic_port" && e.source_port_id === id,
@@ -112,13 +112,13 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
           e.resistance = 0
     },
     "wrong return topology": (json) => {
-      const s = getReproSourcePort(json, "Q1", "S"),
-        d = getReproSourcePort(json, "Q1", "D")
+      const s = getReproSourcePort(json, "Q1", "source"),
+        d = getReproSourcePort(json, "Q1", "drain")
       ;[s.name, d.name] = [d.name, s.name]
       ;[s.port_hints, d.port_hints] = [d.port_hints, s.port_hints]
     },
     "shared gate": (json) => {
-      const p = getReproSourcePort(json, "Q1", "G")
+      const p = getReproSourcePort(json, "Q1", "gate")
       json.push({
         ...p,
         source_component_id: "other",
@@ -151,7 +151,7 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
   expect(issues(local)).toEqual([])
   // Unbonded source pins are not one unambiguous MOSFET source node.
   const unbonded = structuredClone(before)
-  const source = getReproSourcePort(unbonded, "Q1", "S")
+  const source = getReproSourcePort(unbonded, "Q1", "source")
   unbonded.push({
     ...source,
     name: "S2",
