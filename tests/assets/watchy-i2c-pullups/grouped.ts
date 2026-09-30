@@ -103,11 +103,21 @@ export function getGroupedWatchyI2cPullups(): CircuitJson {
   powerLabel.position = { x: 25.7, y: -17.04 }
   // The published R18 power label sat on its old route below the resistor.
   // The shared top rail now carries the visible P3V3 label.
+  const r18PowerSourcePort = getReproSourcePort(json, "R18", "pin2")
+  const r18PowerSourceTrace = json.find(
+    (element) =>
+      element.type === "source_trace" &&
+      element.connected_source_port_ids.includes(
+        r18PowerSourcePort.source_port_id,
+      ),
+  )
+  if (r18PowerSourceTrace?.type !== "source_trace")
+    throw new Error("Missing R18 power source trace")
   const oldPowerLabelIndex = json.findIndex(
     (element) =>
       element.type === "schematic_text" &&
       "source_trace_id" in element &&
-      element.source_trace_id === "source_trace_185",
+      element.source_trace_id === r18PowerSourceTrace.source_trace_id,
   )
   if (oldPowerLabelIndex < 0) throw new Error("Missing old R18 P3V3 label")
   json.splice(oldPowerLabelIndex, 1)
