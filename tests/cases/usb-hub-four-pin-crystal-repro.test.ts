@@ -27,7 +27,10 @@ test("records the real USB hub four-pin crystal load network", () => {
     throw new Error("Missing crystal Y2")
   }
   expect(crystal).toMatchObject({
-    ftype: "simple_chip",
+    ftype: "simple_crystal",
+    frequency: 24_000_000,
+    load_capacitance: 12e-12,
+    pin_variant: "four_pin",
     manufacturer_part_number: "TAXM24M4RFBCCT2T",
   })
   expect(
@@ -37,6 +40,13 @@ test("records the real USB hub four-pin crystal load network", () => {
         element.source_component_id === crystal.source_component_id,
     ),
   ).toHaveLength(4)
+  expect(
+    circuitJson.find(
+      (element) =>
+        element.type === "schematic_component" &&
+        element.source_component_id === crystal.source_component_id,
+    ),
+  ).toMatchObject({ symbol_name: "crystal_4pin_right" })
 
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(
