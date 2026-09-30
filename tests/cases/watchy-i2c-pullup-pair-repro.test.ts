@@ -4,6 +4,7 @@ import { I2cPullupPairPlacementSolver } from "lib/solvers/I2cPullupPairPlacement
 import type { SchematicPlacementIssue } from "lib/types"
 import { buildSolverContext } from "lib/utils/placements"
 import { watchyI2cPullups as circuitJson } from "../assets/watchy-i2c-pullups"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
   expectReproRendered,
@@ -40,6 +41,17 @@ test("detects Watchy SDA and SCL pull-ups split around the accelerometer", () =>
     sclResistorSchematicBox: { sourceComponentName: "R20" },
     hostSchematicBox: { sourceComponentName: "U6" },
   })
+  expect(
+    createIssueReproSnapshot({
+      circuitJson,
+      analysis,
+      schematicSheetId: "schematic_sheet_3",
+      issueTypes: ["I2cPullupPairNotGrouped"],
+      showOverlay: true,
+      width: 1000,
+      height: 750,
+    }),
+  ).toMatchSvgSnapshot(import.meta.path, "focused")
   expect(analysis.schematicIssuesToString(issues[0]!)).toContain(
     'sdaResistorName="R18"',
   )
