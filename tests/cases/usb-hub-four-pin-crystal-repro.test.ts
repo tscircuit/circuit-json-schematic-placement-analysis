@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
+import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createFourPinCrystalLoadNetwork } from "../assets/four-pin-crystal-load-network"
+import usbHubCrystalNetwork from "../assets/usb-hub-four-pin-crystal-network.circuit.json"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
@@ -9,23 +10,26 @@ import {
 
 // The USB2244 clock circuit uses one capacitor from each crystal signal to ground.
 // https://ww1.microchip.com/downloads/aemDocuments/documents/UNG/ProductDocuments/DesignChecklist/USB2244-HW-Design-Checklist-00004319.pdf#page=8
-test("records an unreported four-pin crystal load network", async () => {
-  const circuitJson = await createFourPinCrystalLoadNetwork()
+test("records the real USB hub four-pin crystal load network", () => {
+  const circuitJson = usbHubCrystalNetwork as CircuitJson
   const original = JSON.stringify(circuitJson)
-  expectReproRendered(circuitJson, 4)
+  expectReproRendered(circuitJson, 5)
   expectReproNets(circuitJson, [
-    ["U1.X1", "Y1.A", "C1.pin1"],
-    ["U1.X2", "Y1.B", "C2.pin1"],
-    ["U1.GND", "Y1.G1", "Y1.G2", "C1.pin2", "C2.pin2", "net.GND"],
+    ["U13.XTAL1", "Y2.XTAL_A", "R33.pin1", "C31.pin1"],
+    ["U13.XTAL2", "Y2.XTAL_B", "R33.pin2", "C32.pin1"],
+    ["Y2.GND1", "Y2.GND2", "C31.pin2", "C32.pin2", "net.GND"],
   ])
 
   const crystal = circuitJson.find(
-    (element) => element.type === "source_component" && element.name === "Y1",
+    (element) => element.type === "source_component" && element.name === "Y2",
   )
   if (crystal?.type !== "source_component") {
-    throw new Error("Missing crystal Y1")
+    throw new Error("Missing crystal Y2")
   }
-  expect(crystal.ftype).toBe("simple_chip")
+  expect(crystal).toMatchObject({
+    ftype: "simple_chip",
+    manufacturer_part_number: "TAXM24M4RFBCCT2T",
+  })
   expect(
     circuitJson.filter(
       (element) =>
