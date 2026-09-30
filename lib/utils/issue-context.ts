@@ -66,6 +66,11 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "MosfetGateNetworkNotGrouped":
+        addPlacement(issue.mosfetSchematicBox)
+        addPlacement(issue.seriesGateResistorSchematicBox)
+        addPlacement(issue.gateSourceResistorSchematicBox)
+        break
       case "FlybackDiodeSeparatedFromRelayCoil":
         addPlacement(issue.relaySchematicBox)
         addPlacement(issue.diodeSchematicBox)

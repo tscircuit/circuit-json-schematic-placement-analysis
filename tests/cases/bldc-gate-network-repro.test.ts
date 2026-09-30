@@ -32,17 +32,40 @@ test("records both separated gate networks on the complete BLDC PhaseA sheet", (
       y,
     })
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toHaveLength(2)
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_7",
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2200,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    analysis.getIssues({ issueTypes: ["MosfetGateNetworkNotGrouped"] }),
+  ).toMatchObject([
+    {
+      mosfetSchematicBox: { sourceComponentName: "Q_AH" },
+      seriesGateResistorSchematicBox: { sourceComponentName: "R_GAH" },
+      gateSourceResistorSchematicBox: { sourceComponentName: "R_PDAH" },
+    },
+    {
+      mosfetSchematicBox: { sourceComponentName: "Q_AL" },
+      seriesGateResistorSchematicBox: { sourceComponentName: "R_GAL" },
+      gateSourceResistorSchematicBox: { sourceComponentName: "R_PDAL" },
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    schematicSheetId: "schematic_sheet_7",
+    showFullSchematic: true,
+    issueTypes: ["MosfetGateNetworkNotGrouped"],
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2200,
+    height: 1600,
+  })
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([1, 1, 1, 2, 2, 2])
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
+      Number(m[1]),
+    ),
+  ).toEqual([1, 2])
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

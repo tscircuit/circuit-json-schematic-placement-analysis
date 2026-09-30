@@ -34,3 +34,4 @@ export { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/Regulato
 export { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
 export { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 export { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
+export { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"

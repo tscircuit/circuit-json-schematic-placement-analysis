@@ -425,6 +425,18 @@ export interface VoltageDividerSupplyResistorBelowGroundResistor {
   message: string
 }
 
+/** Series gate and gate-source resistors scattered away from their MOSFET. */
+export interface MosfetGateNetworkNotGrouped {
+  lineItemType: "MosfetGateNetworkNotGrouped"
+  mosfetSchematicBox: SchematicBoxPlacement
+  seriesGateResistorSchematicBox: SchematicBoxPlacement
+  gateSourceResistorSchematicBox: SchematicBoxPlacement
+  /** Largest body-to-body gap from either resistor to the MOSFET. */
+  maxBodyGap: number
+  maxRecommendedBodyGap: number
+  message: string
+}
+
 /** A local flyback diode separated from the relay coil it protects. */
 export interface FlybackDiodeSeparatedFromRelayCoil {
   lineItemType: "FlybackDiodeSeparatedFromRelayCoil"
@@ -448,6 +460,7 @@ export interface CurrentSenseShuntSeparatedFromInputs {
 }
 
 export type SchematicPlacementIssue =
+  | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs
   | VoltageDividerSupplyResistorBelowGroundResistor

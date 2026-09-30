@@ -34,16 +34,35 @@ test("records the separated gate network on the complete smart-switch sheet", ()
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
     "DecouplingCapacitorsNotCloseTogether",
+    "MosfetGateNetworkNotGrouped",
   ])
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2200,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    analysis.getIssues({ issueTypes: ["MosfetGateNetworkNotGrouped"] }),
+  ).toMatchObject([
+    {
+      mosfetSchematicBox: { sourceComponentName: "Q1" },
+      seriesGateResistorSchematicBox: { sourceComponentName: "R2" },
+      gateSourceResistorSchematicBox: { sourceComponentName: "R3" },
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    showFullSchematic: true,
+    issueTypes: ["MosfetGateNetworkNotGrouped"],
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2200,
+    height: 1600,
+  })
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([5, 5, 5])
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
+      Number(m[1]),
+    ),
+  ).toEqual([5])
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

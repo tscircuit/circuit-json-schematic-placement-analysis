@@ -1,3 +1,4 @@
+import { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
 import { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 import { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
@@ -107,6 +108,7 @@ export class SchematicPlacementAnalysis {
       RegulatorCapacitorsOnWrongSides: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
+      MosfetGateNetworkNotGrouped: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -131,6 +133,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "MosfetGateNetworkNotGrouped":
+        return MosfetGateNetworkPlacementSolver.issueToString(issue)
       case "CurrentSenseShuntSeparatedFromInputs":
         return CurrentSenseShuntPlacementSolver.issueToString(issue)
       case "ComponentOverlap":
