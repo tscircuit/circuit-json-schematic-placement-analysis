@@ -425,6 +425,21 @@ export interface VoltageDividerSupplyResistorBelowGroundResistor {
   message: string
 }
 
+/** Advisory for an AC-coupled NPN amplifier's supply-to-ground arrangement. */
+export interface CommonEmitterAmplifierNotArrangedVertically {
+  lineItemType: "CommonEmitterAmplifierNotArrangedVertically"
+  transistorSchematicBox: SchematicBoxPlacement
+  collectorResistorSchematicBox: SchematicBoxPlacement
+  emitterResistorSchematicBox: SchematicBoxPlacement
+  placementProblems: Array<
+    | "collector_not_up"
+    | "emitter_not_down"
+    | "collector_resistor_not_above"
+    | "emitter_resistor_not_below"
+  >
+  message: string
+}
+
 /** Series gate and gate-source resistors scattered away from their MOSFET. */
 export interface MosfetGateNetworkNotGrouped {
   lineItemType: "MosfetGateNetworkNotGrouped"
@@ -460,6 +475,7 @@ export interface CurrentSenseShuntSeparatedFromInputs {
 }
 
 export type SchematicPlacementIssue =
+  | CommonEmitterAmplifierNotArrangedVertically
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs

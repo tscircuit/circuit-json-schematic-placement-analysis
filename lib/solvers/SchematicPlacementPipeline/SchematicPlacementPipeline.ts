@@ -1,3 +1,4 @@
+import { CommonEmitterAmplifierPlacementSolver } from "../CommonEmitterAmplifierPlacementSolver/CommonEmitterAmplifierPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "../MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
 import { RelayFlybackDiodePlacementSolver } from "../RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "../CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
@@ -41,6 +42,9 @@ type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  CommonEmitterAmplifierNotArrangedVertically: [
+    CommonEmitterAmplifierPlacementSolver,
+  ],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
   FlybackDiodeSeparatedFromRelayCoil: [RelayFlybackDiodePlacementSolver],
   ComponentOverlap: [SchematicBoxOverlapSolver],
@@ -268,6 +272,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "MosfetGateNetworkPlacementSolver",
       MosfetGateNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "CommonEmitterAmplifierPlacementSolver",
+      CommonEmitterAmplifierPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

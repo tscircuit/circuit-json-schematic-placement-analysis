@@ -44,15 +44,37 @@ test("records sideways common-emitter stages on the complete published QRNG shee
     0,
   )
   expect(analysis.getIssueCounts().LowSideTransistorNotAlignedWithLoad).toBe(0)
+  const issueTypes = ["CommonEmitterAmplifierNotArrangedVertically"] as const
+  expect(analysis.getIssues({ issueTypes })).toMatchObject([
+    {
+      transistorSchematicBox: { sourceComponentName: "Q1" },
+      collectorResistorSchematicBox: { sourceComponentName: "R1C" },
+      emitterResistorSchematicBox: { sourceComponentName: "R1E" },
+    },
+    {
+      transistorSchematicBox: { sourceComponentName: "Q2" },
+      collectorResistorSchematicBox: { sourceComponentName: "R2C" },
+      emitterResistorSchematicBox: { sourceComponentName: "R2E" },
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    showFullSchematic: true,
+    issueTypes,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2200,
+    height: 1600,
+  })
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2200,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([17, 17, 17, 18, 18, 18])
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
+      Number(m[1]),
+    ),
+  ).toEqual([17, 18])
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

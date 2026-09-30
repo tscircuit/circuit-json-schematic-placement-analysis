@@ -66,6 +66,11 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "CommonEmitterAmplifierNotArrangedVertically":
+        addPlacement(issue.transistorSchematicBox)
+        addPlacement(issue.collectorResistorSchematicBox)
+        addPlacement(issue.emitterResistorSchematicBox)
+        break
       case "MosfetGateNetworkNotGrouped":
         addPlacement(issue.mosfetSchematicBox)
         addPlacement(issue.seriesGateResistorSchematicBox)

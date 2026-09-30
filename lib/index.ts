@@ -35,3 +35,4 @@ export { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacement
 export { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 export { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 export { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
+export { CommonEmitterAmplifierPlacementSolver } from "./solvers/CommonEmitterAmplifierPlacementSolver/CommonEmitterAmplifierPlacementSolver"

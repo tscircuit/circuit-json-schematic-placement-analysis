@@ -1,3 +1,4 @@
+import { CommonEmitterAmplifierPlacementSolver } from "./solvers/CommonEmitterAmplifierPlacementSolver/CommonEmitterAmplifierPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
 import { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
@@ -109,6 +110,7 @@ export class SchematicPlacementAnalysis {
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
       MosfetGateNetworkNotGrouped: 0,
+      CommonEmitterAmplifierNotArrangedVertically: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -133,6 +135,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "CommonEmitterAmplifierNotArrangedVertically":
+        return CommonEmitterAmplifierPlacementSolver.issueToString(issue)
       case "MosfetGateNetworkNotGrouped":
         return MosfetGateNetworkPlacementSolver.issueToString(issue)
       case "CurrentSenseShuntSeparatedFromInputs":
