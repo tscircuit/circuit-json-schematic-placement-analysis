@@ -25,6 +25,7 @@ import { CrystalLoadCapacitorPlacementSolver } from "../CrystalLoadCapacitorPlac
 import { DiodeResistorAlignmentSolver } from "../DiodeResistorAlignmentSolver/DiodeResistorAlignmentSolver"
 import { FeedbackNetworkPlacementSolver } from "../FeedbackNetworkPlacementSolver/FeedbackNetworkPlacementSolver"
 import { PullResistorPlacementSolver } from "../PullResistorPlacementSolver/PullResistorPlacementSolver"
+import { SwitchPullResistorPlacementSolver } from "../SwitchPullResistorPlacementSolver/SwitchPullResistorPlacementSolver"
 import { TwoPinComponentRailOrientationSolver } from "../TwoPinComponentRailOrientationSolver/TwoPinComponentRailOrientationSolver"
 import { SchematicBoxInnerLabelCollisionSolver } from "../SchematicBoxInnerLabelCollisionSolver/SchematicBoxInnerLabelCollisionSolver"
 import { SchematicBoxOverlapSolver } from "../SchematicBoxOverlapSolver/SchematicBoxOverlapSolver"
@@ -63,7 +64,10 @@ const solversByIssueType = {
   ComponentBoxNetLabelCollision: [ComponentNetLabelCollisionSolver],
   NetLabelCollision: [ComponentNetLabelCollisionSolver],
   FeedbackNetworkNotCompact: [FeedbackNetworkPlacementSolver],
-  PullResistorOnWrongSide: [PullResistorPlacementSolver],
+  PullResistorOnWrongSide: [
+    PullResistorPlacementSolver,
+    SwitchPullResistorPlacementSolver,
+  ],
   SchematicTextCollision: [SchematicTextClearanceSolver],
   ResetNetworkNotGrouped: [ResetNetworkGroupingSolver],
   TwoPinComponentCouldBeFlipped: [TwoPinComponentOrientationSolver],
@@ -198,6 +202,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "PullResistorPlacementSolver",
       PullResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SwitchPullResistorPlacementSolver",
+      SwitchPullResistorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

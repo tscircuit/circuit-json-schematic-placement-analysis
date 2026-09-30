@@ -6,6 +6,7 @@ import type {
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
+import { getHorizontalPushbuttonComponentIds } from "../../utils/switch-pull-resistor-pairs"
 import type { SolverContext } from "../SolverContext"
 
 /** Prefer vertical two-pin components with power above and ground below. */
@@ -16,6 +17,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
   private readonly groundNets: Set<string>
   private readonly positiveVoltageNets = new Set<string>()
   private readonly componentIds: string[]
+  private readonly horizontalPushbuttonComponentIds: Set<string>
   private readonly issues: SchematicPlacementIssue[]
   private currentIndex = 0
 
@@ -26,6 +28,9 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
     super()
     this.issues = issues
     this.index = new PlacementNetworkIndex(ctx)
+    this.horizontalPushbuttonComponentIds = getHorizontalPushbuttonComponentIds(
+      this.index,
+    )
     this.powerNets = new Set(this.index.powerNets)
     this.groundNets = new Set(this.index.groundNets)
     // Pin declarations also identify supply feeds even when the net has no power label.
@@ -144,6 +149,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         (railPort.facing_direction === "right" &&
           otherPort.facing_direction === "left"))
     if (!horizontal) return
+    if (this.horizontalPushbuttonComponentIds.has(id)) return
     const suggestedRailFacingDirection = railType === "power" ? "up" : "down"
     const deltaSchRotation =
       (railPort.facing_direction === "left") === (railType === "power")
