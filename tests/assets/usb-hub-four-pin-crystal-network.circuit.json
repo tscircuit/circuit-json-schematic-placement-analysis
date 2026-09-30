@@ -1759,41 +1759,6 @@
   },
   {
     "type": "schematic_trace",
-    "schematic_trace_id": "schematic_trace_130",
-    "source_trace_id": "source_trace_218",
-    "edges": [
-      {
-        "from": {
-          "x": 2.7099999999999995,
-          "y": 2.3000000000000003
-        },
-        "to": {
-          "x": 2.7099999999999995,
-          "y": 2.895
-        }
-      },
-      {
-        "from": {
-          "x": 2.7099999999999995,
-          "y": 2.895
-        },
-        "to": {
-          "x": 2.329999999999999,
-          "y": 2.895
-        }
-      }
-    ],
-    "junctions": [
-      {
-        "x": 2.329999999999999,
-        "y": 2.895
-      }
-    ],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net5",
-    "schematic_sheet_id": "schematic_sheet_2"
-  },
-  {
-    "type": "schematic_trace",
     "schematic_trace_id": "schematic_trace_133",
     "source_trace_id": "source_trace_223",
     "edges": [
