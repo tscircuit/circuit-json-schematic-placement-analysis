@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { nema23ChargePump as circuitJson } from "../assets/nema23-charge-pump"
+import { createNema23ChargePump } from "../assets/nema23-charge-pump"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
@@ -10,7 +10,8 @@ import {
 
 // TI draws the 100nF capacitor directly beside CPL/CPH in Figure 8-1.
 // https://www.ti.com/lit/ds/symlink/drv8462.pdf#page=101
-test("preserves the separated charge-pump capacitor on the complete NEMA23 driver sheet", () => {
+test("preserves the separated charge-pump capacitor on the complete NEMA23 driver sheet", async () => {
+  const circuitJson = await createNema23ChargePump()
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 18)
   expectReproNets(circuitJson, [
@@ -27,10 +28,19 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
   })
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues()).toEqual([])
+  const sheet = circuitJson.find(
+    (e) => e.type === "schematic_sheet" && e.name === "driver",
+  )
+  if (sheet?.type !== "schematic_sheet") throw new Error("Missing driver sheet")
+  expect(
+    circuitJson
+      .filter((e) => e.type === "schematic_trace")
+      .every((e) => e.schematic_sheet_id === sheet.schematic_sheet_id),
+  ).toBe(true)
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,
-    schematicSheetId: "schematic_sheet_3",
+    schematicSheetId: sheet.schematic_sheet_id,
     showFullSchematic: true,
     showOverlay: false,
     width: 1800,
