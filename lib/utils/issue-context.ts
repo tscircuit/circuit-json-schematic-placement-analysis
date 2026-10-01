@@ -66,6 +66,13 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "CellSenseFilterLadderNotGrouped":
+        for (const box of [
+          ...issue.resistorSchematicBoxes,
+          ...issue.capacitorSchematicBoxes,
+        ])
+          addPlacement(box)
+        break
       case "MosfetGateNetworkNotGrouped":
         addPlacement(issue.mosfetSchematicBox)
         addPlacement(issue.seriesGateResistorSchematicBox)

@@ -1,3 +1,4 @@
+import { CellSenseFilterLadderPlacementSolver } from "../CellSenseFilterLadderPlacementSolver/CellSenseFilterLadderPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "../MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
 import { RelayFlybackDiodePlacementSolver } from "../RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "../CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
@@ -43,6 +44,7 @@ type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
+  CellSenseFilterLadderNotGrouped: [CellSenseFilterLadderPlacementSolver],
   FlybackDiodeSeparatedFromRelayCoil: [RelayFlybackDiodePlacementSolver],
   ComponentOverlap: [SchematicBoxOverlapSolver],
   // Retained in the issue union, but no solver currently emits this type.
@@ -279,6 +281,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "MosfetGateNetworkPlacementSolver",
       MosfetGateNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "CellSenseFilterLadderPlacementSolver",
+      CellSenseFilterLadderPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

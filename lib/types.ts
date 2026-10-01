@@ -459,7 +459,21 @@ export interface CurrentSenseShuntSeparatedFromInputs {
   message: string
 }
 
+/** A cell monitor's connected input RC ladder is scattered across the schematic. */
+export interface CellSenseFilterLadderNotGrouped {
+  lineItemType: "CellSenseFilterLadderNotGrouped"
+  monitorComponentName: string
+  monitorSourceComponentId: string
+  resistorSchematicBoxes: SchematicBoxPlacement[]
+  capacitorSchematicBoxes: SchematicBoxPlacement[]
+  /** Largest body-to-body gap between filter parts sharing a cell-input node. */
+  maxConnectedBodyGap: number
+  maxRecommendedBodyGap: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | CellSenseFilterLadderNotGrouped
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs

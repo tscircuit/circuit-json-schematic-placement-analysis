@@ -44,17 +44,40 @@ test("records the scattered cell filters on the complete pico battery sheet", ()
   expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
     "MosfetGateNetworkNotGrouped",
     "MosfetGateNetworkNotGrouped",
+    "CellSenseFilterLadderNotGrouped",
   ])
   expect(
-    createIssueReproSnapshot({
-      circuitJson,
-      analysis,
-      schematicSheetId: "schematic_sheet_6",
-      showFullSchematic: true,
-      showOverlay: false,
-      width: 2400,
-      height: 1700,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    analysis.getIssues({ issueTypes: ["CellSenseFilterLadderNotGrouped"] }),
+  ).toMatchObject([
+    {
+      monitorComponentName: "U9",
+      resistorSchematicBoxes: ["R111", "R112", "R113", "R114"].map(
+        (sourceComponentName) => ({ sourceComponentName }),
+      ),
+      capacitorSchematicBoxes: ["C112", "C113", "C114", "C115"].map(
+        (sourceComponentName) => ({ sourceComponentName }),
+      ),
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    schematicSheetId: "schematic_sheet_6",
+    showFullSchematic: true,
+    issueTypes: ["CellSenseFilterLadderNotGrouped"],
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 2400,
+    height: 1700,
+  })
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual(Array(8).fill(3))
+  expect(
+    [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
+      Number(m[1]),
+    ),
+  ).toEqual([3])
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
