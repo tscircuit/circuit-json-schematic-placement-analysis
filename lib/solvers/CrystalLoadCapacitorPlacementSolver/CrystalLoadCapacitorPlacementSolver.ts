@@ -191,60 +191,78 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
       const crystalPorts =
         sourcePortsByComponentId.get(sourceComponent.sourceComponentId) ?? []
       if (
-        crystalPorts.length !== 2 ||
-        crystalPorts[0]!.connectivityKey === crystalPorts[1]!.connectivityKey
+        sourceComponent.ftype === "simple_chip" &&
+        crystalPorts.length !== 2
       ) {
         continue
       }
-      const firstCrystalConnectivityKey = crystalPorts[0]!.connectivityKey
-      const secondCrystalConnectivityKey = crystalPorts[1]!.connectivityKey
-      const hasOscillatorHost = [...sourcePortsByComponentId.entries()].some(
-        ([sourceComponentId, sourcePorts]) =>
-          sourceComponentId !== sourceComponent.sourceComponentId &&
-          sourcePorts.length > 2 &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === firstCrystalConnectivityKey,
-          ) &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === secondCrystalConnectivityKey,
-          ),
-      )
-      if (!hasOscillatorHost) continue
 
       const crystalPlacement = placementBySourceComponentId.get(
         sourceComponent.sourceComponentId,
       )
       if (!crystalPlacement) continue
 
-      const firstConnections =
-        capacitorConnectionsByConnectivityKey.get(
-          crystalPorts[0]!.connectivityKey,
-        ) ?? []
-      const secondConnections =
-        capacitorConnectionsByConnectivityKey.get(
-          crystalPorts[1]!.connectivityKey,
-        ) ?? []
+      const crystalConnectivityKeys = [
+        ...new Set(crystalPorts.map((port) => port.connectivityKey)),
+      ]
+      const crystalConnectivityKeyPairs = crystalConnectivityKeys.flatMap(
+        (firstConnectivityKey, firstIndex) =>
+          crystalConnectivityKeys
+            .slice(firstIndex + 1)
+            .map(
+              (secondConnectivityKey) =>
+                [firstConnectivityKey, secondConnectivityKey] as const,
+            ),
+      )
 
-      const candidatePairs = firstConnections.flatMap((firstConnection) =>
-        secondConnections.flatMap((secondConnection) => {
-          if (
-            firstConnection.capacitor.sourceComponentId ===
-              secondConnection.capacitor.sourceComponentId ||
-            firstConnection.returnConnectivityKey !==
-              secondConnection.returnConnectivityKey ||
-            firstConnection.returnConnectivityKey ===
-              firstCrystalConnectivityKey ||
-            firstConnection.returnConnectivityKey ===
-              secondCrystalConnectivityKey ||
-            firstConnection.capacitor.schematicSheetId !==
-              crystalPlacement.schematicSheetId ||
-            secondConnection.capacitor.schematicSheetId !==
-              crystalPlacement.schematicSheetId
-          ) {
-            return []
-          }
-          return [{ firstConnection, secondConnection }]
-        }),
+      const candidatePairs = crystalConnectivityKeyPairs.flatMap(
+        ([firstCrystalConnectivityKey, secondCrystalConnectivityKey]) => {
+          const hasOscillatorHost = [
+            ...sourcePortsByComponentId.entries(),
+          ].some(
+            ([sourceComponentId, sourcePorts]) =>
+              sourceComponentId !== sourceComponent.sourceComponentId &&
+              sourcePorts.length > 2 &&
+              sourcePorts.some(
+                (port) => port.connectivityKey === firstCrystalConnectivityKey,
+              ) &&
+              sourcePorts.some(
+                (port) => port.connectivityKey === secondCrystalConnectivityKey,
+              ),
+          )
+          if (!hasOscillatorHost) return []
+
+          const firstConnections =
+            capacitorConnectionsByConnectivityKey.get(
+              firstCrystalConnectivityKey,
+            ) ?? []
+          const secondConnections =
+            capacitorConnectionsByConnectivityKey.get(
+              secondCrystalConnectivityKey,
+            ) ?? []
+
+          return firstConnections.flatMap((firstConnection) =>
+            secondConnections.flatMap((secondConnection) => {
+              if (
+                firstConnection.capacitor.sourceComponentId ===
+                  secondConnection.capacitor.sourceComponentId ||
+                firstConnection.returnConnectivityKey !==
+                  secondConnection.returnConnectivityKey ||
+                firstConnection.returnConnectivityKey ===
+                  firstCrystalConnectivityKey ||
+                firstConnection.returnConnectivityKey ===
+                  secondCrystalConnectivityKey ||
+                firstConnection.capacitor.schematicSheetId !==
+                  crystalPlacement.schematicSheetId ||
+                secondConnection.capacitor.schematicSheetId !==
+                  crystalPlacement.schematicSheetId
+              ) {
+                return []
+              }
+              return [{ firstConnection, secondConnection }]
+            }),
+          )
+        },
       )
       if (candidatePairs.length === 0) continue
 

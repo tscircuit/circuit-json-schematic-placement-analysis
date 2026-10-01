@@ -30,6 +30,7 @@ test("records the full controller sheet's current findings around the unreported
   ).toEqual({
     NetLabelCollision: 1,
     DecouplingCapacitorsNotCloseTogether: 1,
+    CrystalNotCenteredOverLoadCapacitors: 1,
   })
   // The previous U3, TP_3V3 and U1 moves cannot be safely rerouted.
   expect(

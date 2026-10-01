@@ -49,13 +49,20 @@ test("records the real USB hub four-pin crystal load network", () => {
   ).toMatchObject({ symbol_name: "crystal_4pin_right" })
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(
-    analysis.getIssues({
-      issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
-    }),
-  ).toEqual([])
-
-  expect(analysis.getIssues()).toEqual([])
+  const crystalPlacementIssues = analysis.getIssues({
+    issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
+  })
+  expect(crystalPlacementIssues).toHaveLength(1)
+  expect(crystalPlacementIssues[0]).toMatchObject({
+    crystalSchematicBox: { sourceComponentName: "Y2" },
+    firstLoadCapacitorSchematicBox: { sourceComponentName: "C32" },
+    secondLoadCapacitorSchematicBox: { sourceComponentName: "C31" },
+    deltaSchX: -0.95,
+    deltaSchY: 0.3,
+    newSchX: 0.66,
+    newSchY: 2.5,
+  })
+  expect(analysis.getIssues()).toEqual(crystalPlacementIssues)
   expect(
     createIssueReproSnapshot({
       circuitJson,
