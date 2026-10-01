@@ -1,3 +1,4 @@
+import { PiFilterPlacementSolver } from "./solvers/PiFilterPlacementSolver/PiFilterPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
 import { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
@@ -108,6 +109,7 @@ export class SchematicPlacementAnalysis {
       RegulatorCapacitorsOnWrongSides: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
+      PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
@@ -133,6 +135,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "PiFilterComponentsNotGrouped":
+        return PiFilterPlacementSolver.issueToString(issue)
       case "MosfetGateNetworkNotGrouped":
         return MosfetGateNetworkPlacementSolver.issueToString(issue)
       case "CurrentSenseShuntSeparatedFromInputs":

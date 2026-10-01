@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { stridePiFilter as circuitJson } from "../assets/stride-pi-filter"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproRendered,
   expectReproNets,
@@ -36,13 +36,31 @@ test("preserves the scattered pi filter on the complete stride sheet", () => {
       issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
     }),
   ).toEqual([])
+  const issueTypes = ["PiFilterComponentsNotGrouped"] as const
+  const issues = analysis.getIssues({ issueTypes })
+  expect(issues).toMatchObject([
+    {
+      inductorSchematicBox: { sourceComponentName: "L2" },
+      firstCapacitorSchematicBox: { sourceComponentName: "C26" },
+      secondCapacitorSchematicBox: { sourceComponentName: "C27" },
+    },
+  ])
+  const svg = createIssueReproSnapshot({
+    circuitJson,
+    analysis,
+    issueTypes,
+    showFullSchematic: true,
+    showOverlay: true,
+    showListingIssueMarkers: true,
+    width: 1800,
+    height: 1200,
+  })
   expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual(Array(3).fill(analysis.getIssues().indexOf(issues[0]!) + 1))
+  expect([...svg.matchAll(/data-listing-issue-number="(\d+)"/g)]).toHaveLength(
+    1,
+  )
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

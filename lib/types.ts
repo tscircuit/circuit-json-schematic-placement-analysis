@@ -459,7 +459,20 @@ export interface CurrentSenseShuntSeparatedFromInputs {
   message: string
 }
 
+/** The series element and grounded shunt branches of a signal pi filter are separated. */
+export interface PiFilterComponentsNotGrouped {
+  lineItemType: "PiFilterComponentsNotGrouped"
+  inductorSchematicBox: SchematicBoxPlacement
+  firstCapacitorSchematicBox: SchematicBoxPlacement
+  secondCapacitorSchematicBox: SchematicBoxPlacement
+  /** Longest direct distance between electrically connected inductor/capacitor pins. */
+  maxSignalPinDistance: number
+  maxRecommendedSignalPinDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs

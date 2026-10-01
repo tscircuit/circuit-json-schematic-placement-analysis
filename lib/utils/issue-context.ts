@@ -66,6 +66,11 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "PiFilterComponentsNotGrouped":
+        addPlacement(issue.inductorSchematicBox)
+        addPlacement(issue.firstCapacitorSchematicBox)
+        addPlacement(issue.secondCapacitorSchematicBox)
+        break
       case "MosfetGateNetworkNotGrouped":
         addPlacement(issue.mosfetSchematicBox)
         addPlacement(issue.seriesGateResistorSchematicBox)
