@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "CapacitorSeparatedFromChipPins":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
       case "PiFilterComponentsNotGrouped":
         addPlacement(issue.inductorSchematicBox)
         addPlacement(issue.firstCapacitorSchematicBox)

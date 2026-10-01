@@ -6,6 +6,7 @@ import {
   expectReproNets,
   expectReproRendered,
   getReproSchematicComponent,
+  getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
 // TI draws the 100nF capacitor directly beside CPL/CPH in Figure 8-1.
@@ -27,7 +28,19 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
     y: 0,
   })
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  const issueTypes = ["CapacitorSeparatedFromChipPins"] as const
+  const issues = analysis.getIssues({ issueTypes })
+  expect(analysis.getIssues()).toEqual(issues)
+  expect(issues).toMatchObject([
+    {
+      hostSchematicBox: { sourceComponentName: "DRIVER" },
+      capacitorSchematicBox: { sourceComponentName: "C_CP" },
+      chipSourcePortIds: [
+        getReproSourcePort(circuitJson, "DRIVER", "CPH").source_port_id,
+        getReproSourcePort(circuitJson, "DRIVER", "CPL").source_port_id,
+      ],
+    },
+  ])
   const sheet = circuitJson.find(
     (e) => e.type === "schematic_sheet" && e.name === "driver",
   )
@@ -42,10 +55,17 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
     analysis,
     schematicSheetId: sheet.schematic_sheet_id,
     showFullSchematic: true,
-    showOverlay: false,
+    issueTypes,
+    showOverlay: true,
+    showListingIssueMarkers: true,
     width: 1800,
     height: 1200,
   })
+  const number = analysis.getIssues().indexOf(issues[0]!) + 1
+  expect(
+    [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
+  ).toEqual([number, number])
+  expect(svg).toContain(`data-listing-issue-number="${number}"`)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

@@ -459,6 +459,18 @@ export interface CurrentSenseShuntSeparatedFromInputs {
   message: string
 }
 
+/** A capacitor placed far across its host chip from its two connected pins. */
+export interface CapacitorSeparatedFromChipPins {
+  lineItemType: "CapacitorSeparatedFromChipPins"
+  hostSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  /** Connected chip pins, in the order of the capacitor's source ports. */
+  chipSourcePortIds: [string, string]
+  maxPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** The series element and grounded shunt branches of a signal pi filter are separated. */
 export interface PiFilterComponentsNotGrouped {
   lineItemType: "PiFilterComponentsNotGrouped"
@@ -472,6 +484,7 @@ export interface PiFilterComponentsNotGrouped {
 }
 
 export type SchematicPlacementIssue =
+  | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
