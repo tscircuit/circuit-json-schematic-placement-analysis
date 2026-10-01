@@ -1,0 +1,667 @@
+{
+  "sourceRecordsIdentical": true,
+  "sourceRecordCount": 1946,
+  "boardComponents": 202,
+  "sheetComponents": 33,
+  "changes": [
+    {
+      "name": "R111",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_180",
+        "center": {
+          "x": -0.2,
+          "y": 0
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_180",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_up",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_180",
+        "center": {
+          "x": -20,
+          "y": -6
+        },
+        "size": {
+          "width": 0.6,
+          "height": 0.65
+        },
+        "source_component_id": "source_component_180",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_left",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "R112",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_181",
+        "center": {
+          "x": 4.4,
+          "y": 0
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_181",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_181",
+        "center": {
+          "x": -20,
+          "y": -4
+        },
+        "size": {
+          "width": 0.6,
+          "height": 0.65
+        },
+        "source_component_id": "source_component_181",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_left",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "R113",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_182",
+        "center": {
+          "x": 9,
+          "y": 0
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_182",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_up",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_182",
+        "center": {
+          "x": -20,
+          "y": -2
+        },
+        "size": {
+          "width": 0.6,
+          "height": 0.65
+        },
+        "source_component_id": "source_component_182",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_left",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "R114",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_183",
+        "center": {
+          "x": 13.6,
+          "y": 0
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_183",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_183",
+        "center": {
+          "x": -20,
+          "y": 0
+        },
+        "size": {
+          "width": 0.6,
+          "height": 0.65
+        },
+        "source_component_id": "source_component_183",
+        "is_box_with_pins": true,
+        "symbol_name": "boxresistor_left",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "33Ω",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "C112",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_184",
+        "center": {
+          "x": -14,
+          "y": -2.8
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_184",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_184",
+        "center": {
+          "x": -21.6,
+          "y": -7
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_184",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "C113",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_185",
+        "center": {
+          "x": -9.4,
+          "y": -2.8
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_185",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_185",
+        "center": {
+          "x": -21.6,
+          "y": -5
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_185",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "C114",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_186",
+        "center": {
+          "x": -4.8,
+          "y": -2.8
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_186",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_186",
+        "center": {
+          "x": -21.6,
+          "y": -3
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_186",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      }
+    },
+    {
+      "name": "C115",
+      "before": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_187",
+        "center": {
+          "x": -0.2,
+          "y": -2.8
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_187",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      },
+      "after": {
+        "type": "schematic_component",
+        "schematic_component_id": "schematic_component_187",
+        "center": {
+          "x": -21.6,
+          "y": -1
+        },
+        "size": {
+          "width": 0.9,
+          "height": 0.6
+        },
+        "source_component_id": "source_component_187",
+        "is_box_with_pins": true,
+        "symbol_name": "capacitor_down",
+        "schematic_sheet_id": "schematic_sheet_6",
+        "symbol_display_value": "1uF/16V",
+        "schematic_group_id": "schematic_group_9"
+      }
+    }
+  ],
+  "renderErrors": [],
+  "beforeIssues": [
+    {
+      "lineItemType": "MosfetGateNetworkNotGrouped",
+      "mosfetSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 0.12,
+        "schY": 7,
+        "width": 0.52,
+        "height": 0.40000000000000036,
+        "sourceComponentId": "source_component_174",
+        "sourceComponentName": "Q20",
+        "schematicComponentId": "schematic_component_174",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "seriesGateResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -9.4,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_192",
+        "sourceComponentName": "R119",
+        "schematicComponentId": "schematic_component_192",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "gateSourceResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -0.2,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_194",
+        "sourceComponentName": "R121",
+        "schematicComponentId": "schematic_component_194",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "maxBodyGap": 14.967501461499845,
+      "maxRecommendedBodyGap": 6,
+      "message": "Group R119 and R121 beside Q20's gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces."
+    },
+    {
+      "lineItemType": "MosfetGateNetworkNotGrouped",
+      "mosfetSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 8.120000000000001,
+        "schY": 7,
+        "width": 0.5200000000000005,
+        "height": 0.40000000000000036,
+        "sourceComponentId": "source_component_175",
+        "sourceComponentName": "Q21",
+        "schematicComponentId": "schematic_component_175",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "seriesGateResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -4.8,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_193",
+        "sourceComponentName": "R120",
+        "schematicComponentId": "schematic_component_193",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "gateSourceResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 4.4,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_195",
+        "sourceComponentName": "R122",
+        "schematicComponentId": "schematic_component_195",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "maxBodyGap": 17.189941826544963,
+      "maxRecommendedBodyGap": 6,
+      "message": "Group R120 and R122 beside Q21's gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces."
+    },
+    {
+      "lineItemType": "CellSenseFilterLadderNotGrouped",
+      "monitorComponentName": "U9",
+      "monitorSourceComponentId": "source_component_169",
+      "resistorSchematicBoxes": [
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": -0.2,
+          "schY": 0,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_180",
+          "sourceComponentName": "R111",
+          "schematicComponentId": "schematic_component_180",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": 4.4,
+          "schY": 0,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_181",
+          "sourceComponentName": "R112",
+          "schematicComponentId": "schematic_component_181",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": 9,
+          "schY": 0,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_182",
+          "sourceComponentName": "R113",
+          "schematicComponentId": "schematic_component_182",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": 13.6,
+          "schY": 0,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_183",
+          "sourceComponentName": "R114",
+          "schematicComponentId": "schematic_component_183",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        }
+      ],
+      "capacitorSchematicBoxes": [
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": -14,
+          "schY": -2.8,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_184",
+          "sourceComponentName": "C112",
+          "schematicComponentId": "schematic_component_184",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": -9.4,
+          "schY": -2.8,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_185",
+          "sourceComponentName": "C113",
+          "schematicComponentId": "schematic_component_185",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": -4.8,
+          "schY": -2.8,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_186",
+          "sourceComponentName": "C114",
+          "schematicComponentId": "schematic_component_186",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        },
+        {
+          "lineItemType": "SchematicBoxPlacement",
+          "positionAnchor": "center",
+          "schX": -0.2,
+          "schY": -2.8,
+          "width": 0.9,
+          "height": 0.6,
+          "sourceComponentId": "source_component_187",
+          "sourceComponentName": "C115",
+          "schematicComponentId": "schematic_component_187",
+          "schematicSheetId": "schematic_sheet_6",
+          "schematicSheetName": "battery"
+        }
+      ],
+      "maxConnectedBodyGap": 13.0862523283024,
+      "maxRecommendedBodyGap": 6,
+      "message": "Group the cell-input resistors and capacitors for U9 into a readable filter ladder so neighboring cell taps can be followed together. A separate labeled block is fine; preserve all pin connections, leave room for annotations, and reroute affected traces."
+    }
+  ],
+  "afterIssues": [
+    {
+      "lineItemType": "TwoPinComponentShouldBeVertical",
+      "schematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -20,
+        "schY": -6,
+        "width": 0.6,
+        "height": 0.65,
+        "sourceComponentId": "source_component_180",
+        "sourceComponentName": "R111",
+        "schematicComponentId": "schematic_component_180",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "railSourcePortId": "source_port_584",
+      "railPinName": "pin1",
+      "railType": "ground",
+      "deltaSchRotation": -90,
+      "suggestedRailFacingDirection": "down",
+      "message": "rotate R111 by -90° so its ground-connected pin faces down and the component is vertical"
+    },
+    {
+      "lineItemType": "TwoPinComponentShouldBeVertical",
+      "schematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -20,
+        "schY": 0,
+        "width": 0.6,
+        "height": 0.65,
+        "sourceComponentId": "source_component_183",
+        "sourceComponentName": "R114",
+        "schematicComponentId": "schematic_component_183",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "railSourcePortId": "source_port_590",
+      "railPinName": "pin1",
+      "railType": "power",
+      "deltaSchRotation": 90,
+      "suggestedRailFacingDirection": "up",
+      "message": "rotate R114 by 90° so its power-connected pin faces up and the component is vertical"
+    },
+    {
+      "lineItemType": "MosfetGateNetworkNotGrouped",
+      "mosfetSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 0.12,
+        "schY": 7,
+        "width": 0.52,
+        "height": 0.40000000000000036,
+        "sourceComponentId": "source_component_174",
+        "sourceComponentName": "Q20",
+        "schematicComponentId": "schematic_component_174",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "seriesGateResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -9.4,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_192",
+        "sourceComponentName": "R119",
+        "schematicComponentId": "schematic_component_192",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "gateSourceResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -0.2,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_194",
+        "sourceComponentName": "R121",
+        "schematicComponentId": "schematic_component_194",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "maxBodyGap": 14.967501461499845,
+      "maxRecommendedBodyGap": 6,
+      "message": "Group R119 and R121 beside Q20's gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces."
+    },
+    {
+      "lineItemType": "MosfetGateNetworkNotGrouped",
+      "mosfetSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 8.120000000000001,
+        "schY": 7,
+        "width": 0.5200000000000005,
+        "height": 0.40000000000000036,
+        "sourceComponentId": "source_component_175",
+        "sourceComponentName": "Q21",
+        "schematicComponentId": "schematic_component_175",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "seriesGateResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": -4.8,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_193",
+        "sourceComponentName": "R120",
+        "schematicComponentId": "schematic_component_193",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "gateSourceResistorSchematicBox": {
+        "lineItemType": "SchematicBoxPlacement",
+        "positionAnchor": "center",
+        "schX": 4.4,
+        "schY": -5.6,
+        "width": 0.9,
+        "height": 0.6,
+        "sourceComponentId": "source_component_195",
+        "sourceComponentName": "R122",
+        "schematicComponentId": "schematic_component_195",
+        "schematicSheetId": "schematic_sheet_6",
+        "schematicSheetName": "battery"
+      },
+      "maxBodyGap": 17.189941826544963,
+      "maxRecommendedBodyGap": 6,
+      "message": "Group R120 and R122 beside Q21's gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces."
+    }
+  ],
+  "annotationChanges": "The eight original component callouts were repositioned. The same support-section title was redrawn clear of its divider; its automatic title was hidden. No analyzer or fixture changes.",
+  "decision": "Generalization remains unproven; no new solver is justified by this audit."
+}
