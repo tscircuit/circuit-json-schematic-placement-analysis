@@ -35,8 +35,8 @@ test("generates a verbose schematic net label issue", async () => {
     'message="Create trace with schDisplayLabel" text="R1_pin2/U1_pin2" involvedPins="R1.pin2,U1.pin2"',
   )
 
-  // U2's reference label crosses a wire in this fixture, but it moves with
-  // U2. The independent-text analyzer must not suggest repositioning it.
+  // U2's reference crosses a wire and a net label. Report both, without
+  // suggesting an independent move for text that belongs to the component.
   const componentLabel = verboseNetLabelCircuitJson.find(
     (element) => element.type === "schematic_text" && element.text === "U2",
   )
@@ -49,7 +49,18 @@ test("generates a verbose schematic net label issue", async () => {
           (issue) => issue.lineItemType === "SchematicTextCollision",
         )
       : [],
-  ).toEqual([])
+  ).toMatchObject([
+    {
+      text: "U2",
+      collidingObject: { type: "trace" },
+      suggestedMove: undefined,
+    },
+    {
+      text: "U2",
+      collidingObject: { type: "net_label" },
+      suggestedMove: undefined,
+    },
+  ])
 
   expect(
     createSchematicAnalysisFixtureSvg({

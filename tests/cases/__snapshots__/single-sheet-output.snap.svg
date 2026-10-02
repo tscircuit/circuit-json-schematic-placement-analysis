@@ -1,4 +1,4 @@
-<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1142" viewBox="0 0 1200 1142" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -23,6 +23,16 @@
     <tspan x="18" dy="22">  height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_0:symbol-text:3&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_0&quot; text=&quot;R1&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectId=&quot;schematic_component_1:symbol-text:3&quot; message=&quot;Text &amp;quot;R1&amp;quot; overlaps</tspan>
+    <tspan x="18" dy="22">  text schematic_component_1:symbol-text:3; adjust the component&apos;s label placement or the</tspan>
+    <tspan x="18" dy="22">  overlapping object to leave the visible text area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_0:symbol-text:4&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_0&quot; text=&quot;1kΩ&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectId=&quot;schematic_component_1:symbol-text:4&quot; message=&quot;Text &amp;quot;1kΩ&amp;quot; overlaps</tspan>
+    <tspan x="18" dy="22">  text schematic_component_1:symbol-text:4; adjust the component&apos;s label placement or the</tspan>
+    <tspan x="18" dy="22">  overlapping object to leave the visible text area clear.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;ComponentOverlap component1Name=&quot;R1&quot; component2Name=&quot;R2&quot; component1SchX=&quot;0&quot; component1SchY=&quot;0&quot;</tspan>
     <tspan x="18" dy="22">  component2SchX=&quot;0&quot; component2SchY=&quot;0&quot; overlapWidth=&quot;0.6&quot; overlapHeight=&quot;0.65&quot;&gt;</tspan>
     <tspan x="18" dy="22">&lt;OverlapCorrectionSuggestion target=&quot;R1&quot; newSchX=&quot;-0.6&quot; deltaSchX=&quot;-0.6&quot; /&gt;</tspan>

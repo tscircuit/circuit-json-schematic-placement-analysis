@@ -45,7 +45,14 @@ test("reports the RUN pull-up below its grounded button without pull metadata", 
     analysis.getIssues({ issueTypes: ["TwoPinComponentShouldBeVertical"] }),
   ).toMatchObject([{ schematicBox: { sourceComponentName: "SW_RUN" } }])
   const correctedAnalysis = analyzeSchematicPlacement(correctedCircuitJson)
-  expect(correctedAnalysis.getIssues()).toEqual([])
+  // Orientation is corrected; the symbol reference still crosses its wire.
+  expect(correctedAnalysis.getIssues()).toMatchObject([
+    {
+      lineItemType: "SchematicTextCollision",
+      text: "SW_RUN",
+      suggestedMove: undefined,
+    },
+  ])
 
   const snapshot = stackSvgsVertically(
     [
@@ -64,7 +71,7 @@ test("reports the RUN pull-up below its grounded button without pull metadata", 
         { normalizeSize: false },
       ),
       createAnalyzerTextSvg(
-        `${analysis.toString()}\nCorrected layout: no placement issues.`,
+        `${analysis.toString()}\nCorrected orientation:\n${correctedAnalysis.toString()}`,
         1200,
       ),
     ],

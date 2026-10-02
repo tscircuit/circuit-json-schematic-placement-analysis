@@ -308,6 +308,8 @@ export interface NetLabelCollision {
   /** Actual intersection regions in schematic coordinates (Y up).
    * Optional for compatibility with previously serialized reports. */
   collisionBounds?: SchematicIssueBounds[]
+  /** Guidance when moving a whole component cannot resolve the collision. */
+  message?: string
   pairs: Array<{ comp1Name: string; comp2Name: string }>
   moves: Array<{
     componentName: string
@@ -317,7 +319,7 @@ export interface NetLabelCollision {
 }
 
 export interface SchematicTextCollisionObject {
-  type: "text" | "trace" | "component"
+  type: "text" | "trace" | "component" | "net_label"
   id: string
   text?: string
   componentName?: string
@@ -329,6 +331,9 @@ export interface SchematicTextCollision {
   schematicSheetId?: string
   schematicSheetName?: string
   schematicTextId: string
+  /** Owner of explicit or renderer-generated symbol text. Generated text IDs
+   * identify symbol primitives and are not standalone Circuit JSON records. */
+  schematicComponentId?: string
   text: string
   collidingObject: SchematicTextCollisionObject
   textBounds: { left: number; right: number; top: number; bottom: number }

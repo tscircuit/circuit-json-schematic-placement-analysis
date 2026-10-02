@@ -42,7 +42,13 @@ test("accepts horizontal pushbutton pairs but rejects mixed pairs and horizontal
     analyzeSchematicPlacement(
       await createCircuit({ layout: "vertical", switchType: "switch" }),
     ).getIssues(),
-  ).toEqual([])
+  ).toMatchObject([
+    {
+      lineItemType: "SchematicTextCollision",
+      text: "SW_RUN",
+      suggestedMove: undefined,
+    },
+  ])
 
   // Both horizontal remains exempt from the wrong-side rule, even below the button
   // and with an explicit pull-up requirement. Filtering must preserve the exception.

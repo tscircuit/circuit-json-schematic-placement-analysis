@@ -27,10 +27,13 @@ const advance = (character: string): number => {
   return 0.56
 }
 
-const widthInEm = (text: string): number =>
+export const widthInEm = (text: string): number =>
   Array.from(text).reduce((width, character) => width + advance(character), 0)
 
-export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
+export function getSchematicTextPolygons(
+  text: SchematicText,
+  { isSymbolText = false }: { isSymbolText?: boolean } = {},
+): Polygon[] {
   const size = text.font_size
   if (
     !Number.isFinite(size) ||
@@ -52,6 +55,13 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
     : anchor.includes("bottom")
       ? size
       : size / 2
+  // Built-in symbols use SVG's middle (x-height) baseline and stay upright.
+  const baselineOffset =
+    isSymbolText && !anchor.includes("top") && !anchor.includes("bottom")
+      ? size / 4
+      : 0
+  const horizontalInset = isSymbolText ? size * 0.05 : 0
+  const verticalInset = size * (isSymbolText ? 0.19 : 0.05)
   // SVG rotates clockwise on a Y-down canvas; our geometry uses Y-up.
   const radians = (-text.rotation * Math.PI) / 180
   const cos = Math.cos(radians)
@@ -62,14 +72,16 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
     const leading = line.length - line.trimStart().length
     const left =
       (widthInEm(line.slice(0, leading)) - widthInEm(line) * horizontal) * size
+    const width = widthInEm(visible) * size
+    if (width <= 2 * horizontalInset) return []
     const polygon = rectPolygon({
-      left,
-      right: left + widthInEm(visible) * size,
+      left: left + horizontalInset,
+      right: left + width - horizontalInset,
       // Leave the small whitespace at the top/bottom of an em outside the
       // collision region. Otherwise a readable caption just above a wire
       // (e.g. 100V at y=4.8, size=0.22 above a wire at y=4.7) is a false hit.
-      top: top - index * size - size * 0.05,
-      bottom: top - (index + 1) * size + size * 0.05,
+      top: top - index * size + baselineOffset - verticalInset,
+      bottom: top - (index + 1) * size + baselineOffset + verticalInset,
     })
     return [
       polygon.map(({ x, y }) => ({

@@ -1,4 +1,6 @@
 import { getNetLabelBounds } from "../../utils/net-label-bounds"
+import { getComponentSymbolGeometry } from "../../utils/component-symbol-geometry"
+import { escapeAttr } from "../../utils/format"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -25,21 +27,20 @@ type CollisionSuggestion = {
 
 interface RawLabelLabelCollision {
   type: "label-label"
-  leftComp: SchematicBoxPlacement
-  rightComp: SchematicBoxPlacement
-  leftId: string
-  rightId: string
-  xSeparation: number
+  leftComp?: SchematicBoxPlacement
+  rightComp?: SchematicBoxPlacement
+  leftLabel: SchematicNetLabel
+  rightLabel: SchematicNetLabel
+  xSeparation?: number
   bounds: RectBounds
 }
 
 interface RawBoxLabelCollision {
   type: "box-label"
   boxComp: SchematicBoxPlacement
-  labelComp: SchematicBoxPlacement
-  boxId: string
-  labelId: string
-  xSeparation: number
+  labelComp?: SchematicBoxPlacement
+  label: SchematicNetLabel
+  xSeparation?: number
   bounds: RectBounds
 }
 
@@ -47,10 +48,11 @@ type RawCollision = RawLabelLabelCollision | RawBoxLabelCollision
 
 export class ComponentNetLabelCollisionSolver extends BaseSolver {
   private readonly placements: SchematicBoxPlacement[]
-  private readonly netLabelsByComponentId: Map<string, SchematicNetLabel[]>
+  private readonly labels: SchematicNetLabel[]
+  private readonly ownerByLabel = new Map<string, SchematicBoxPlacement>()
   private rawCollisions: RawCollision[] = []
-  private firstIndex = 0
-  private secondIndex = 1
+  private index = 0
+  private readonly symbolGeometry: ReturnType<typeof getComponentSymbolGeometry>
 
   constructor(
     private readonly params: {
@@ -60,114 +62,113 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   ) {
     super()
     this.placements = params.ctx.componentPlacements
-    this.netLabelsByComponentId = this.buildNetLabelsByComponentId(
+    this.symbolGeometry = getComponentSymbolGeometry(params.ctx.circuitJson)
+    const labelsByComponentId = this.buildNetLabelsByComponentId(
       params.ctx.circuitJson,
     )
-    this.solved = this.placements.length < 2
+    for (const placement of this.placements) {
+      for (const label of labelsByComponentId.get(
+        placement.schematicComponentId ?? "",
+      ) ?? []) {
+        this.ownerByLabel.set(label.schematic_net_label_id, placement)
+      }
+    }
+    const seen = new Set<string>()
+    this.labels = params.ctx.circuitJson.filter(
+      (element): element is SchematicNetLabel => {
+        if (element.type !== "schematic_net_label" || !element.text)
+          return false
+        // Identical overprinting does not obscure another label.
+        const key = JSON.stringify([
+          element.schematic_sheet_id,
+          element.text,
+          element.symbol_name,
+          element.anchor_side,
+          element.anchor_position,
+          element.center,
+        ])
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      },
+    )
   }
 
   override _step(): void {
-    if (this.firstIndex >= this.placements.length - 1) {
+    if (this.index >= this.labels.length) {
       this.buildAndPushIssues()
       this.solved = true
       return
     }
-    const compA = this.placements[this.firstIndex]!
-    const compB = this.placements[this.secondIndex]!
-    this.detectPair(compA, compB)
-    this.secondIndex++
-    if (this.secondIndex >= this.placements.length) {
-      this.firstIndex++
-      this.secondIndex = this.firstIndex + 1
+    const label = this.labels[this.index]!
+    for (const other of this.labels.slice(this.index + 1)) {
+      this.rawCollisions.push(...this.detectLabelLabel(label, other))
     }
-  }
-
-  private detectPair(
-    compA: SchematicBoxPlacement,
-    compB: SchematicBoxPlacement,
-  ): void {
-    if (compA.schematicSheetId !== compB.schematicSheetId) return
-
-    this.rawCollisions.push(...this.detectLabelLabel(compA, compB))
-    this.rawCollisions.push(...this.detectBoxLabel(compA, compB))
-    this.rawCollisions.push(...this.detectBoxLabel(compB, compA))
+    for (const component of this.placements) {
+      this.rawCollisions.push(...this.detectBoxLabel(component, label))
+    }
+    this.index++
   }
 
   private detectLabelLabel(
-    firstComponent: SchematicBoxPlacement,
-    secondComponent: SchematicBoxPlacement,
+    leftLabel: SchematicNetLabel,
+    rightLabel: SchematicNetLabel,
   ): RawLabelLabelCollision[] {
-    let leftComp = firstComponent
-    let rightComp = secondComponent
-    if (firstComponent.schX > secondComponent.schX) {
-      leftComp = secondComponent
-      rightComp = firstComponent
+    if (leftLabel.schematic_sheet_id !== rightLabel.schematic_sheet_id)
+      return []
+    let leftComp = this.ownerByLabel.get(leftLabel.schematic_net_label_id)
+    let rightComp = this.ownerByLabel.get(rightLabel.schematic_net_label_id)
+    if (leftComp && rightComp && leftComp.schX > rightComp.schX) {
+      ;[leftComp, rightComp] = [rightComp, leftComp]
+      ;[leftLabel, rightLabel] = [rightLabel, leftLabel]
     }
-
-    const leftId = leftComp.schematicComponentId
-    const rightId = rightComp.schematicComponentId
-    if (!leftId || !rightId) return []
-
-    const leftLabels = this.netLabelsByComponentId.get(leftId) ?? []
-    const rightLabels = this.netLabelsByComponentId.get(rightId) ?? []
-    if (leftLabels.length === 0 || rightLabels.length === 0) return []
-
-    const hits: RawLabelLabelCollision[] = []
-    for (const leftLabel of leftLabels) {
-      for (const rightLabel of rightLabels) {
-        const leftBounds = getNetLabelBounds(leftLabel)
-        const rightBounds = getNetLabelBounds(rightLabel)
-        if (rectOverlap(leftBounds, rightBounds)) {
-          hits.push({
-            type: "label-label",
-            bounds: {
-              left: Math.max(leftBounds.left, rightBounds.left),
-              right: Math.min(leftBounds.right, rightBounds.right),
-              top: Math.min(leftBounds.top, rightBounds.top),
-              bottom: Math.max(leftBounds.bottom, rightBounds.bottom),
-            },
-            leftComp,
-            rightComp,
-            leftId,
-            rightId,
-            xSeparation: leftBounds.right - rightBounds.left + 0.1,
-          })
-        }
-      }
-    }
-    return hits
+    const leftBounds = getNetLabelBounds(leftLabel)
+    const rightBounds = getNetLabelBounds(rightLabel)
+    const overlap = rectOverlap(leftBounds, rightBounds)
+    if (!overlap || overlap.ow <= 1e-6 || overlap.oh <= 1e-6) return []
+    return [
+      {
+        type: "label-label",
+        bounds: {
+          left: Math.max(leftBounds.left, rightBounds.left),
+          right: Math.min(leftBounds.right, rightBounds.right),
+          top: Math.min(leftBounds.top, rightBounds.top),
+          bottom: Math.max(leftBounds.bottom, rightBounds.bottom),
+        },
+        leftComp,
+        rightComp,
+        leftLabel,
+        rightLabel,
+        // Moving one component cannot separate its own labels, and labels on
+        // wires have no unambiguous component to move.
+        xSeparation:
+          leftComp && rightComp && leftComp !== rightComp
+            ? leftBounds.right - rightBounds.left + 0.1
+            : undefined,
+      },
+    ]
   }
 
   private detectBoxLabel(
     boxComp: SchematicBoxPlacement,
-    labelComp: SchematicBoxPlacement,
+    label: SchematicNetLabel,
   ): RawBoxLabelCollision[] {
     const boxId = boxComp.schematicComponentId
-    const labelId = labelComp.schematicComponentId
-    if (!boxId || !labelId) return []
-
-    const labels = this.netLabelsByComponentId.get(labelId) ?? []
-    if (labels.length === 0) return []
-
-    const boxBounds = centeredRect(
-      boxComp.schX,
-      boxComp.schY,
-      boxComp.width,
-      boxComp.height,
+    const labelComp = this.ownerByLabel.get(label.schematic_net_label_id)
+    if (
+      !boxId ||
+      boxComp === labelComp ||
+      boxComp.schematicSheetId !== label.schematic_sheet_id
     )
-    const boxIsLeft = boxComp.schX <= labelComp.schX
-    const hits: RawBoxLabelCollision[] = []
-
-    for (const label of labels) {
-      const labelBounds = getNetLabelBounds(label)
-      if (!rectOverlap(boxBounds, labelBounds)) continue
-      let xSeparation: number
-      if (boxIsLeft) {
-        xSeparation = boxBounds.right - labelBounds.left + 0.1
-      } else {
-        xSeparation = labelBounds.right - boxBounds.left + 0.1
-      }
-      hits.push({
+      return []
+    const boxBounds =
+      this.symbolGeometry.get(boxId)?.bounds ??
+      centeredRect(boxComp.schX, boxComp.schY, boxComp.width, boxComp.height)
+    const labelBounds = getNetLabelBounds(label)
+    const overlap = rectOverlap(boxBounds, labelBounds)
+    if (!overlap || overlap.ow <= 1e-6 || overlap.oh <= 1e-6) return []
+    return [
+      {
         type: "box-label",
         bounds: {
           left: Math.max(boxBounds.left, labelBounds.left),
@@ -177,12 +178,14 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         },
         boxComp,
         labelComp,
-        boxId,
-        labelId,
-        xSeparation,
-      })
-    }
-    return hits
+        label,
+        xSeparation: labelComp
+          ? boxComp.schX <= labelComp.schX
+            ? boxBounds.right - labelBounds.left + 0.1
+            : labelBounds.right - boxBounds.left + 0.1
+          : undefined,
+      },
+    ]
   }
 
   private buildAndPushIssues(): void {
@@ -190,11 +193,13 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
     const collisionsBySheet = new Map<string, RawCollision[]>()
     for (const collision of this.rawCollisions) {
-      const placement =
-        collision.type === "label-label"
-          ? collision.leftComp
-          : collision.boxComp
-      const sheetKey = placement.schematicSheetId ?? ""
+      const label =
+        collision.type === "label-label" ? collision.leftLabel : collision.label
+      // Keep label/routing guidance separate from component-move suggestions.
+      const sheetKey = JSON.stringify([
+        label.schematic_sheet_id,
+        collision.xSeparation !== undefined,
+      ])
       const sheetCollisions = collisionsBySheet.get(sheetKey)
       if (sheetCollisions) sheetCollisions.push(collision)
       else collisionsBySheet.set(sheetKey, [collision])
@@ -207,7 +212,6 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
   private buildAndPushIssueForSheet(collisions: RawCollision[]): void {
     const globalFixes = this.computeGlobalFixes(collisions)
-    if (globalFixes.size === 0) return
 
     const seenPairs = new Set<string>()
     const pairs: Array<{ comp1Name: string; comp2Name: string }> = []
@@ -215,11 +219,17 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       let comp1Name: string
       let comp2Name: string
       if (collision.type === "label-label") {
-        comp1Name = collision.leftComp.sourceComponentName ?? ""
-        comp2Name = collision.rightComp.sourceComponentName ?? ""
+        comp1Name =
+          collision.leftComp?.sourceComponentName ??
+          `label ${collision.leftLabel.text}`
+        comp2Name =
+          collision.rightComp?.sourceComponentName ??
+          `label ${collision.rightLabel.text}`
       } else {
         comp1Name = collision.boxComp.sourceComponentName ?? ""
-        comp2Name = collision.labelComp.sourceComponentName ?? ""
+        comp2Name =
+          collision.labelComp?.sourceComponentName ??
+          `label ${collision.label.text}`
       }
       const key = `${comp1Name}/${comp2Name}`
       if (!seenPairs.has(key)) {
@@ -233,13 +243,24 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       firstCollision.type === "label-label"
         ? firstCollision.leftComp
         : firstCollision.boxComp
+    const firstLabel =
+      firstCollision.type === "label-label"
+        ? firstCollision.leftLabel
+        : firstCollision.label
     this.params.issues.push({
       lineItemType: "NetLabelCollision",
-      schematicSheetId: firstPlacement.schematicSheetId,
-      schematicSheetName: firstPlacement.schematicSheetName,
+      schematicSheetId: firstLabel.schematic_sheet_id,
+      schematicSheetName:
+        firstPlacement?.schematicSheetName ??
+        this.placements.find(
+          (p) => p.schematicSheetId === firstLabel.schematic_sheet_id,
+        )?.schematicSheetName,
       pairs,
       collisionBounds: collisions.map((collision) => collision.bounds),
       moves: Array.from(globalFixes.values()),
+      message: globalFixes.size
+        ? undefined
+        : "Separate the overlapping net labels from other labels and component bodies. Adjust label positions, pin spacing, or attached routing while preserving connections.",
     })
   }
 
@@ -257,10 +278,11 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const constraintMap = new Map<string, number>()
 
     const addConstraint = (
-      leftId: string,
-      rightId: string,
+      leftId: string | undefined,
+      rightId: string | undefined,
       xSeparation: number,
     ): void => {
+      if (!leftId || !rightId || leftId === rightId) return
       const leftComp = compById.get(leftId)
       const rightComp = compById.get(rightId)
       if (!leftComp || !rightComp) return
@@ -270,16 +292,27 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     }
 
     for (const collision of collisions) {
+      if (collision.xSeparation === undefined) continue
       if (collision.type === "label-label") {
         addConstraint(
-          collision.leftId,
-          collision.rightId,
+          collision.leftComp?.schematicComponentId,
+          collision.rightComp?.schematicComponentId,
           collision.xSeparation,
         )
+      } else if (!collision.labelComp) {
+        continue
       } else if (collision.boxComp.schX <= collision.labelComp.schX) {
-        addConstraint(collision.boxId, collision.labelId, collision.xSeparation)
+        addConstraint(
+          collision.boxComp.schematicComponentId,
+          collision.labelComp.schematicComponentId,
+          collision.xSeparation,
+        )
       } else {
-        addConstraint(collision.labelId, collision.boxId, collision.xSeparation)
+        addConstraint(
+          collision.labelComp.schematicComponentId,
+          collision.boxComp.schematicComponentId,
+          collision.xSeparation,
+        )
       }
     }
 
@@ -443,12 +476,18 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
 
   static netLabelCollisionToString(issue: NetLabelCollision): string {
     const pairAttrs = issue.pairs
-      .map((pair, i) => `pair${i + 1}="${pair.comp1Name}/${pair.comp2Name}"`)
+      .map(
+        (pair, i) =>
+          `pair${i + 1}="${escapeAttr(`${pair.comp1Name}/${pair.comp2Name}`)}"`,
+      )
       .join(" ")
     const moves = issue.moves.map(
       (move) =>
         `    <Move componentName="${move.componentName}" newSchX="${move.newSchX}" newSchY="${move.newSchY}" />`,
     )
+    if (issue.moves.length === 0) {
+      return `<ComponentNetLabelCollision ${pairAttrs}>\n  ${escapeAttr(issue.message ?? "Separate the overlapping labels while preserving connections.")}\n</ComponentNetLabelCollision>`
+    }
     return [
       `<ComponentNetLabelCollision ${pairAttrs}>`,
       `  <SuggestedFix note="Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.">`,

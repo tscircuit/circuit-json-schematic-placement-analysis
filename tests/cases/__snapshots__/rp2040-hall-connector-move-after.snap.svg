@@ -1,4 +1,4 @@
-<svg width="1800" height="1434" viewBox="0 0 1800 1434" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="1588" viewBox="0 0 1800 1588" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -96,8 +96,15 @@
     <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;J_HALL&quot; positionAnchor=&quot;center&quot; schX=&quot;-13.3&quot; schY=&quot;0.2&quot;</tspan>
     <tspan x="18" dy="22">  width=&quot;1.2&quot; height=&quot;1.2&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_HALL_B_TOP&quot; positionAnchor=&quot;center&quot; schX=&quot;-10&quot; schY=&quot;0&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_4:symbol-text:3&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_4&quot; text=&quot;R_HALL_B_TOP&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectType=&quot;net_label&quot; collidingObjectId=&quot;schematic_net_label_5&quot; message=&quot;Text</tspan>
+    <tspan x="18" dy="22">  &amp;quot;R_HALL_B_TOP&amp;quot; overlaps net_label schematic_net_label_5; adjust the component&apos;s</tspan>
+    <tspan x="18" dy="22">  label placement or the overlapping object to leave the visible text area clear.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;PinHeaderSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;J_HALL&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;1.2&quot; measuredInnerLabelHorizontalEmptySpace=&quot;0.435&quot;</tspan>
     <tspan x="18" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;0.1&quot; suggestedSchWidth=&quot;0.865&quot; /&gt;</tspan>

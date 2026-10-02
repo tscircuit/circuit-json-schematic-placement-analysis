@@ -1,4 +1,4 @@
-<svg width="1200" height="732" viewBox="0 0 1200 732" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="820" viewBox="0 0 1200 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -54,6 +54,10 @@
     <tspan x="52" dy="22">  Interlock&quot; collidingObjectType=&quot;trace&quot; collidingObjectId=&quot;schematic_trace_1&quot; newSchX=&quot;-6.75&quot;</tspan>
     <tspan x="52" dy="22">  newSchY=&quot;3.7&quot; message=&quot;Text &amp;quot;Power-Stage Temperature Interlock&amp;quot; overlaps trace</tspan>
     <tspan x="52" dy="22">  schematic_trace_1; reposition the text to leave its visible area clear.&quot; /&gt;</tspan>
+    <tspan x="52" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;label MCU_TEMP_SDA/label MCU_TEMP_ALERT&quot;&gt;</tspan>
+    <tspan x="52" dy="22">  Separate the overlapping net labels from other labels and component bodies. Adjust label</tspan>
+    <tspan x="52" dy="22">  positions, pin spacing, or attached routing while preserving connections.</tspan>
+    <tspan x="52" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
     <tspan x="52" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
 <g data-listing-issue-number="1"><circle cx="24" cy="233" r="11" fill="#b91c1c" /><text x="24" y="233" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
