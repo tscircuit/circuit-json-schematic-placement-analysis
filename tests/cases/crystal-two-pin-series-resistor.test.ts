@@ -16,6 +16,17 @@ test("reports a two-pin crystal through a series resistor", () => {
     )
       circuitJson.splice(i, 1)
   }
+  const components = circuitJson.filter((e) => e.type === "source_component")
+  expect(components).toHaveLength(4)
+  expect(components.map((e) => e.ftype).sort()).toEqual([
+    "simple_capacitor",
+    "simple_capacitor",
+    "simple_crystal",
+    "simple_resistor",
+  ])
+  expect(
+    circuitJson.filter((e) => e.type === "schematic_component"),
+  ).toHaveLength(4)
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issues = analysis.getIssues({

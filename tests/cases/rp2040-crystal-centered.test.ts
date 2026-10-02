@@ -9,6 +9,17 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 test("accepts a centered four-pin crystal with clearance above the load capacitors", () => {
   const circuitJson = createRp2040CrystalNetwork()
   moveCrystal(circuitJson, -7.125, -5)
+  const components = circuitJson.filter((e) => e.type === "source_component")
+  expect(components).toHaveLength(4)
+  expect(components.map((e) => e.ftype).sort()).toEqual([
+    "simple_capacitor",
+    "simple_capacitor",
+    "simple_crystal",
+    "simple_resistor",
+  ])
+  expect(
+    circuitJson.filter((e) => e.type === "schematic_component"),
+  ).toHaveLength(4)
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issues = analysis.getIssues({

@@ -258,6 +258,15 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
         )
           return false
 
+        // A typed crystal with two grounded loads identifies the local pattern
+        // on its own. It must also work in an isolated four-component section,
+        // without requiring the oscillator host to be present in the input.
+        if (
+          sourceComponent.ftype === "simple_crystal" &&
+          index.groundNets.has(returnKey)
+        )
+          return true
+
         // Follow at most one typed series resistor on each oscillator leg.
         // A feedback resistor between the legs or a rail pull must not make
         // one MCU terminal look like two oscillator terminals.

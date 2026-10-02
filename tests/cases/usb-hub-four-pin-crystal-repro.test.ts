@@ -13,10 +13,10 @@ import {
 test("reports the misplaced real USB hub four-pin crystal load network", () => {
   const circuitJson = usbHubCrystalNetwork as CircuitJson
   const original = JSON.stringify(circuitJson)
-  expectReproRendered(circuitJson, 5)
+  expectReproRendered(circuitJson, 4)
   expectReproNets(circuitJson, [
-    ["U13.XTAL1", "Y2.XTAL_A", "R33.pin1", "C31.pin1"],
-    ["U13.XTAL2", "Y2.XTAL_B", "R33.pin2", "C32.pin1"],
+    ["Y2.XTAL_A", "R33.pin1", "C31.pin1"],
+    ["Y2.XTAL_B", "R33.pin2", "C32.pin1"],
     ["Y2.GND1", "Y2.GND2", "C31.pin2", "C32.pin2", "net.GND"],
   ])
 
