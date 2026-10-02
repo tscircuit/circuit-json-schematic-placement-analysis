@@ -7,6 +7,7 @@ import {
   expectReproNets,
   expectReproRendered,
   getReproSchematicComponent,
+  getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
 test("places a grounded-emitter NPN below its load with collector up and emitter down", async () => {
@@ -90,4 +91,111 @@ test("places a grounded-emitter NPN below its load with collector up and emitter
       highlightIssues: ["LowSideTransistorNotAlignedWithLoad"],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "after")
+
+  const driverIssues = (json: CircuitJson) =>
+    analyzeSchematicPlacement(json, {
+      issueTypes: ["LowSideTransistorNotAlignedWithLoad"],
+    }).getIssues({ issueTypes: ["LowSideTransistorNotAlignedWithLoad"] })
+  for (const misleadingHints of [false, true]) {
+    for (const [json, expected] of [
+      [original, 1],
+      [corrected, 0],
+    ] as const) {
+      const renamed = structuredClone(json)
+      for (const e of renamed) {
+        if (e.type === "source_component") e.name = e.source_component_id
+        if (e.type === "source_net") e.name = e.source_net_id
+        if (e.type === "source_port") {
+          e.name = e.source_port_id
+          e.port_hints = misleadingHints
+            ? ["base", "collector", "emitter", "anode", "cathode"]
+            : []
+        }
+        if (e.type === "schematic_port") e.display_pin_label = "unrelated"
+        if (
+          e.type === "source_port" ||
+          e.type === "source_net" ||
+          e.type === "source_trace"
+        )
+          delete e.subcircuit_connectivity_map_key
+      }
+      const findings = driverIssues(renamed)
+      expect(findings).toHaveLength(expected)
+      if (expected) {
+        expect(findings[0]).toMatchObject({
+          collectorSourcePortId: issues[0]!.collectorSourcePortId,
+          emitterSourcePortId: issues[0]!.emitterSourcePortId,
+          placementProblems: issues[0]!.placementProblems,
+        })
+      }
+    }
+  }
+
+  const guards: Record<string, (json: CircuitJson) => void> = {
+    "missing transistor pin number": (json) => {
+      delete getReproSourcePort(json, "Q1", "base").pin_number
+    },
+    "missing diode pin number": (json) => {
+      delete getReproSourcePort(json, "D1", "anode").pin_number
+    },
+    "duplicate transistor pin number": (json) => {
+      getReproSourcePort(json, "Q1", "base").pin_number = 1
+    },
+    "duplicate diode pin number": (json) => {
+      getReproSourcePort(json, "D1", "cathode").pin_number = 1
+    },
+    "unsupported transistor pin numbering": (json) => {
+      getReproSourcePort(json, "Q1", "base").pin_number = 4
+    },
+    "unconnectable transistor terminal": (json) => {
+      getReproSourcePort(json, "Q1", "base").do_not_connect = true
+    },
+    "unconnectable diode terminal": (json) => {
+      getReproSourcePort(json, "D1", "cathode").do_not_connect = true
+    },
+    "mismatched schematic pin numbering": (json) => {
+      const id = getReproSourcePort(json, "Q1", "base").source_port_id
+      const pin = json.find(
+        (e) => e.type === "schematic_port" && e.source_port_id === id,
+      )!
+      if (pin.type === "schematic_port") pin.pin_number = 3
+    },
+    "duplicate schematic terminal": (json) => {
+      const id = getReproSourcePort(json, "Q1", "base").source_port_id
+      const pin = json.find(
+        (e) => e.type === "schematic_port" && e.source_port_id === id,
+      )!
+      if (pin.type === "schematic_port")
+        json.push({ ...pin, schematic_port_id: "duplicate-pin" })
+    },
+    "generic chip with transistor hints": (json) => {
+      const component = json.find(
+        (e) => e.type === "source_component" && e.ftype === "simple_transistor",
+      )!
+      Object.assign(component, { ftype: "simple_chip" })
+    },
+    "generic chip with diode hints": (json) => {
+      const component = json.find(
+        (e) => e.type === "source_component" && e.ftype === "simple_diode",
+      )!
+      Object.assign(component, { ftype: "simple_chip" })
+    },
+    "shorted base and emitter": (json) => {
+      const component = json.find(
+        (e) => e.type === "source_component" && e.ftype === "simple_transistor",
+      )!
+      if (component.type === "source_component")
+        component.internally_connected_source_port_ids = [
+          [
+            getReproSourcePort(json, "Q1", "base").source_port_id,
+            getReproSourcePort(json, "Q1", "emitter").source_port_id,
+          ],
+        ]
+    },
+  }
+  for (const [name, mutate] of Object.entries(guards)) {
+    const json = structuredClone(original)
+    mutate(json)
+    expect(driverIssues(json), name).toEqual([])
+  }
 })
