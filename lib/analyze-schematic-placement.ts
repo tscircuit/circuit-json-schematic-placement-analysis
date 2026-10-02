@@ -1,3 +1,4 @@
+import { FourPinCrystalPatternSolver } from "./solvers/FourPinCrystalPatternSolver/FourPinCrystalPatternSolver"
 import { ChipPinPairCapacitorPlacementSolver } from "./solvers/ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
 import { PiFilterPlacementSolver } from "./solvers/PiFilterPlacementSolver/PiFilterPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
@@ -92,6 +93,7 @@ export class SchematicPlacementAnalysis {
       DiodeResistorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
       TraceCanBeSimplifiedByMovingComponent: 0,
+      FourPinCrystalPatternMismatch: 0,
       CrystalNotCenteredOverLoadCapacitors: 0,
       ComponentNetLabelCollision: 0,
       ComponentBoxNetLabelCollision: 0,
@@ -166,6 +168,8 @@ export class SchematicPlacementAnalysis {
         return ComponentPinAlignmentSolver.issueToString(issue)
       case "TraceCanBeSimplifiedByMovingComponent":
         return TraceSimplificationSolver.issueToString(issue)
+      case "FourPinCrystalPatternMismatch":
+        return FourPinCrystalPatternSolver.issueToString(issue)
       case "CrystalNotCenteredOverLoadCapacitors":
         return CrystalLoadCapacitorPlacementSolver.issueToString(issue)
       case "TwoPinComponentCouldBeFlipped":
