@@ -30,9 +30,9 @@ test("reproduces the complete wireless mouse controller sheet layout", () => {
       sourceComponentName: "C_HF_XC2",
     },
     deltaSchX: 4.5,
-    deltaSchY: -1.7,
+    deltaSchY: 0,
     newSchX: -5.5,
-    newSchY: -7.7,
+    newSchY: -6,
   })
 
   const railIssues = analysis

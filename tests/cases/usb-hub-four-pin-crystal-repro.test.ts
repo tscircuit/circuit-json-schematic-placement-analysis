@@ -10,7 +10,7 @@ import {
 
 // The USB2244 clock circuit uses one capacitor from each crystal signal to ground.
 // https://ww1.microchip.com/downloads/aemDocuments/documents/UNG/ProductDocuments/DesignChecklist/USB2244-HW-Design-Checklist-00004319.pdf#page=8
-test("records the real USB hub four-pin crystal load network", () => {
+test("reports the misplaced real USB hub four-pin crystal load network", () => {
   const circuitJson = usbHubCrystalNetwork as CircuitJson
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 5)
@@ -53,9 +53,9 @@ test("records the real USB hub four-pin crystal load network", () => {
     analysis.getIssues({
       issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
     }),
-  ).toEqual([])
+  ).toHaveLength(1)
 
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toHaveLength(1)
   expect(
     createIssueReproSnapshot({
       circuitJson,

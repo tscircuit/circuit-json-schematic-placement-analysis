@@ -1,11 +1,12 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicPort } from "circuit-json"
+import type { SchematicPort } from "circuit-json"
 import type {
   CrystalNotCenteredOverLoadCapacitors,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr } from "../../utils/format"
+import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
 interface SourceComponentInfo {
@@ -90,11 +91,12 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
       deltaSchY,
       newSchX: network.newSchX,
       newSchY: network.newSchY,
-      message: `move ${crystalName} to schX=${network.newSchX}, schY=${network.newSchY} so it is centered between ${firstCapacitorName} and ${secondCapacitorName} and aligned with their load-side pins`,
+      message: `move ${crystalName} to schX=${network.newSchX}, schY=${network.newSchY} so it is centered between ${firstCapacitorName} and ${secondCapacitorName} at or above their load-side pins`,
     })
   }
 
   private findCrystalLoadNetworks(ctx: SolverContext): CrystalLoadNetwork[] {
+    const index = new PlacementNetworkIndex(ctx)
     const sourceComponents = new Map<string, SourceComponentInfo>()
     const sourcePortsByComponentId = new Map<string, SourcePortInfo[]>()
     const schematicPortsBySourcePortId = new Map<string, SchematicPort>()
@@ -118,13 +120,12 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
       }
       if (
         element.type === "source_port" &&
-        typeof element.source_component_id === "string" &&
-        typeof element.subcircuit_connectivity_map_key === "string"
+        typeof element.source_component_id === "string"
       ) {
         const sourcePort: SourcePortInfo = {
           sourcePortId: element.source_port_id,
           sourceComponentId: element.source_component_id,
-          connectivityKey: element.subcircuit_connectivity_map_key,
+          connectivityKey: index.connected(element.source_port_id),
         }
         const componentPorts =
           sourcePortsByComponentId.get(element.source_component_id) ?? []
@@ -188,28 +189,28 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
         continue
       }
 
-      const crystalPorts =
+      const allCrystalPorts =
         sourcePortsByComponentId.get(sourceComponent.sourceComponentId) ?? []
+      // Only a typed crystal may have extra grounded case terminals. Do not
+      // interpret an arbitrary multi-pin IC as a crystal based on its wiring.
+      if (
+        allCrystalPorts.length !== 2 &&
+        !(
+          sourceComponent.ftype === "simple_crystal" &&
+          allCrystalPorts.length === 4
+        )
+      )
+        continue
+      const crystalPorts = allCrystalPorts.filter(
+        (port) => !index.groundNets.has(port.connectivityKey),
+      )
       if (
         crystalPorts.length !== 2 ||
         crystalPorts[0]!.connectivityKey === crystalPorts[1]!.connectivityKey
-      ) {
+      )
         continue
-      }
       const firstCrystalConnectivityKey = crystalPorts[0]!.connectivityKey
       const secondCrystalConnectivityKey = crystalPorts[1]!.connectivityKey
-      const hasOscillatorHost = [...sourcePortsByComponentId.entries()].some(
-        ([sourceComponentId, sourcePorts]) =>
-          sourceComponentId !== sourceComponent.sourceComponentId &&
-          sourcePorts.length > 2 &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === firstCrystalConnectivityKey,
-          ) &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === secondCrystalConnectivityKey,
-          ),
-      )
-      if (!hasOscillatorHost) continue
 
       const crystalPlacement = placementBySourceComponentId.get(
         sourceComponent.sourceComponentId,
@@ -246,12 +247,64 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
           return [{ firstConnection, secondConnection }]
         }),
       )
-      if (candidatePairs.length === 0) continue
+      const verifiedPairs = candidatePairs.filter(({ firstConnection }) => {
+        const returnKey = firstConnection.returnConnectivityKey
+        if (
+          allCrystalPorts.some(
+            (port) =>
+              !crystalPorts.includes(port) &&
+              port.connectivityKey !== returnKey,
+          )
+        )
+          return false
 
-      const bestPair = candidatePairs.toSorted(
-        (a, b) =>
-          pairDistance(a, crystalPlacement) - pairDistance(b, crystalPlacement),
-      )[0]!
+        // Follow at most one typed series resistor on each oscillator leg.
+        // A feedback resistor between the legs or a rail pull must not make
+        // one MCU terminal look like two oscillator terminals.
+        const hostNets = (signal: string, otherSignal: string) => {
+          const nets = new Set([signal])
+          for (const component of sourceComponents.values()) {
+            if (component.ftype !== "simple_resistor") continue
+            const terminals = index.twoTerminalNets(component.sourceComponentId)
+            if (!terminals?.includes(signal)) continue
+            const outward = terminals.find((net) => net !== signal)!
+            if (
+              outward !== otherSignal &&
+              outward !== returnKey &&
+              !index.isRail(outward)
+            )
+              nets.add(outward)
+          }
+          return nets
+        }
+        const firstHostNets = hostNets(
+          firstCrystalConnectivityKey,
+          secondCrystalConnectivityKey,
+        )
+        const secondHostNets = hostNets(
+          secondCrystalConnectivityKey,
+          firstCrystalConnectivityKey,
+        )
+        return [...sourcePortsByComponentId.entries()].some(
+          ([id, ports]) =>
+            id !== sourceComponent.sourceComponentId &&
+            sourceComponents.get(id)?.ftype === "simple_chip" &&
+            ports.length > 2 &&
+            ports.some(
+              (first) =>
+                firstHostNets.has(first.connectivityKey) &&
+                ports.some(
+                  (second) =>
+                    secondHostNets.has(second.connectivityKey) &&
+                    first.connectivityKey !== second.connectivityKey,
+                ),
+            ),
+        )
+      })
+      // Ambiguous loads cannot identify a unique standard crystal network.
+      if (verifiedPairs.length !== 1) continue
+
+      const bestPair = verifiedPairs[0]!
       const loadPorts = [
         bestPair.firstConnection.loadPort,
         bestPair.secondConnection.loadPort,
@@ -266,7 +319,15 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
         firstLoadCapacitor: capacitors[0]!,
         secondLoadCapacitor: capacitors[1]!,
         newSchX: round((loadPorts[0]!.center.x + loadPorts[1]!.center.x) / 2),
-        newSchY: round((loadPorts[0]!.center.y + loadPorts[1]!.center.y) / 2),
+        // Matchpack leaves vertical wire clearance below a four-pin crystal.
+        // Preserve that clearance instead of forcing it onto the cap pins.
+        newSchY: round(
+          Math.max(
+            crystalPlacement.schY,
+            loadPorts[0]!.center.y,
+            loadPorts[1]!.center.y,
+          ),
+        ),
       })
     }
 
@@ -294,20 +355,5 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
     return `<CrystalNotCenteredOverLoadCapacitors ${attrs.join(" ")} />`
   }
 }
-
-const pairDistance = (
-  pair: {
-    firstConnection: CapacitorConnection
-    secondConnection: CapacitorConnection
-  },
-  crystal: SchematicBoxPlacement,
-): number =>
-  distance(pair.firstConnection.capacitor, crystal) +
-  distance(pair.secondConnection.capacitor, crystal)
-
-const distance = (
-  first: Pick<SchematicBoxPlacement, "schX" | "schY">,
-  second: Pick<SchematicBoxPlacement, "schX" | "schY">,
-): number => Math.hypot(first.schX - second.schX, first.schY - second.schY)
 
 const round = (value: number): number => Math.round(value * 100) / 100

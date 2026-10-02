@@ -58,7 +58,6 @@ test("reports the four scattered decoupling banks in Trellis Core's CPU sheet", 
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
-    ["CrystalNotCenteredOverLoadCapacitors", 1],
     // SW1/R11 are an accepted horizontal pushbutton pair.
     ["TwoPinComponentShouldBeVertical", 3],
     ["DecouplingCapacitorsNotCloseTogether", 4],
