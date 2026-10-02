@@ -545,7 +545,6 @@
   {
     "type": "source_port",
     "source_port_id": "source_port_30",
-    "provides_power": true,
     "name": "OUT",
     "pin_number": 1,
     "port_hints": ["OUT", "pin1", "1"],
