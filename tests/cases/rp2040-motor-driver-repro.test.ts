@@ -37,6 +37,12 @@ test("reports the motor-driver sheet's overlapping rail labels and component ann
   const textIssues = analysis.getIssues({
     issueTypes: ["SchematicTextCollision"],
   })
+  expect(textIssues).toHaveLength(8)
+  expect(
+    analyzeSchematicPlacement(circuitJson, {
+      issueTypes: ["NetLabelCollision", "SchematicTextCollision"],
+    }).getIssues(),
+  ).toEqual(analysis.getIssues())
   expect(textIssues).toEqual(
     expect.arrayContaining([
       expect.objectContaining({

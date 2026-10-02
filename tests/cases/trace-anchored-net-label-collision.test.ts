@@ -20,6 +20,9 @@ test("reports a collision with a net label anchored to a trace", () => {
   )
 
   expect(netLabelCollisions).toHaveLength(1)
+  expect(netLabelCollisions[0]!.pairs).toEqual([
+    { comp1Name: "J_ETH", comp2Name: "label RTL_VDD_1V0" },
+  ])
   expect(netLabelCollisions[0]!.moves).toEqual([])
   expect(netLabelCollisions[0]!.message).toContain("label positions")
 })

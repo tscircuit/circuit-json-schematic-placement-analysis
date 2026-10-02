@@ -1,6 +1,8 @@
-import type { CircuitJson, SchematicText, SchematicPort } from "circuit-json"
+import { cju } from "@tscircuit/circuit-json-util"
+import type { CircuitJson, SchematicText } from "circuit-json"
 import { symbols } from "schematic-symbols"
 import type { RectBounds } from "./geometry"
+import { polygonBounds } from "./schematic-text-geometry"
 
 /** The renderer expands {REF}/{VAL} without creating schematic_text records.
  * Match its angular port pairing and uniform scale/translation, including
@@ -13,20 +15,14 @@ export function getComponentSymbolGeometry(
     string,
     { texts: SchematicText[]; bounds?: RectBounds }
   >()
-  for (const component of circuitJson) {
-    if (
-      component.type !== "schematic_component" ||
-      component.is_box_with_pins === false ||
-      !component.symbol_name
-    )
-      continue
+  const db = cju(circuitJson)
+  for (const component of db.schematic_component.list()) {
+    if (component.is_box_with_pins === false || !component.symbol_name) continue
     const symbol = symbols[component.symbol_name as keyof typeof symbols]
     if (!symbol) continue
-    const ports = circuitJson.filter(
-      (e): e is SchematicPort =>
-        e.type === "schematic_port" &&
-        e.schematic_component_id === component.schematic_component_id,
-    )
+    const ports = db.schematic_port.list({
+      schematic_component_id: component.schematic_component_id,
+    })
     const angle = (p: { x: number; y: number }, c: { x: number; y: number }) =>
       Math.atan2(p.y - c.y, p.x - c.x)
     const available = [...symbol.ports].sort(
@@ -64,11 +60,9 @@ export function getComponentSymbolGeometry(
       Math.hypot(first.real.x - second.real.x, first.real.y - second.real.y) /
       distance
     if (!Number.isFinite(scale) || scale <= 0) continue
-    const source = circuitJson.find(
-      (e): e is Extract<CircuitJson[number], { type: "source_component" }> =>
-        e.type === "source_component" &&
-        e.source_component_id === component.source_component_id,
-    )
+    const source = component.source_component_id
+      ? db.source_component.get(component.source_component_id)
+      : undefined
     const transform = (p: { x: number; y: number }) => ({
       x: second.real.x + scale * (p.x - second.symbol.x),
       y: second.real.y + scale * (p.y - second.symbol.y),
@@ -109,12 +103,7 @@ export function getComponentSymbolGeometry(
       bounds:
         points.length &&
         symbol.primitives.every((p) => p.type === "path" || p.type === "text")
-          ? {
-              left: Math.min(...points.map((p) => p.x)),
-              right: Math.max(...points.map((p) => p.x)),
-              top: Math.max(...points.map((p) => p.y)),
-              bottom: Math.min(...points.map((p) => p.y)),
-            }
+          ? polygonBounds([points])
           : undefined,
     })
   }

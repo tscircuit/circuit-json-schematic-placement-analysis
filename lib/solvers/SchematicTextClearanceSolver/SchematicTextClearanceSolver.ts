@@ -12,7 +12,6 @@ import { getNetLabelBounds } from "../../utils/net-label-bounds"
 import { getSchematicSheetNamesById } from "../../utils/schematic-sheets"
 import {
   getSchematicTextPolygons,
-  getSymbolTextPolygons,
   polygonBounds,
   polygonsOverlap,
   rectPolygon,
@@ -74,9 +73,9 @@ export class SchematicTextClearanceSolver extends BaseSolver {
       if (element.type !== "schematic_text") return []
       // Component and trace annotations still need collision detection, but
       // they cannot safely be repositioned as independent schematic text.
-      const polygons = symbolTextIds.has(element.schematic_text_id)
-        ? getSymbolTextPolygons(element)
-        : getSchematicTextPolygons(element)
+      const polygons = getSchematicTextPolygons(element, {
+        isSymbolText: symbolTextIds.has(element.schematic_text_id),
+      })
       if (!polygons.length) return []
       const sheetId = element.schematic_sheet_id
       // Some exports emit the same trace label twice. Identical overprinting

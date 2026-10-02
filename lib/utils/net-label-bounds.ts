@@ -1,21 +1,15 @@
 import type { SchematicNetLabel, SchematicText } from "circuit-json"
 import { symbols } from "schematic-symbols"
-import type { RectBounds } from "./geometry"
+import { centeredRect, type RectBounds } from "./geometry"
 import {
-  getSymbolTextPolygons,
+  getSchematicTextPolygons,
   polygonBounds,
   widthInEm,
 } from "./schematic-text-geometry"
 
 /** Approximate label bounds shared by collision and movement validation. */
 export function getNetLabelBounds(label: SchematicNetLabel): RectBounds {
-  if (!label.text)
-    return {
-      left: label.center.x,
-      right: label.center.x,
-      top: label.center.y,
-      bottom: label.center.y,
-    }
+  if (!label.text) return centeredRect(label.center.x, label.center.y, 0, 0)
   const superscript =
     "display_superscript" in label &&
     typeof label.display_superscript === "string"
@@ -46,22 +40,25 @@ export function getNetLabelBounds(label: SchematicNetLabel): RectBounds {
   if (symbol && port) {
     const polygons = symbol.primitives.flatMap((primitive) => {
       if (primitive.type !== "text" || primitive.text === "{VAL}") return []
-      return getSymbolTextPolygons({
-        type: "schematic_text",
-        schematic_text_id: label.schematic_net_label_id,
-        text: primitive.text === "{REF}" ? label.text : primitive.text,
-        position: {
-          x: anchor.x + primitive.x - port.x,
-          y: anchor.y + primitive.y - port.y,
+      return getSchematicTextPolygons(
+        {
+          type: "schematic_text",
+          schematic_text_id: label.schematic_net_label_id,
+          text: primitive.text === "{REF}" ? label.text : primitive.text,
+          position: {
+            x: anchor.x + primitive.x - port.x,
+            y: anchor.y + primitive.y - port.y,
+          },
+          anchor: primitive.anchor.replace(
+            "middle_",
+            "",
+          ) as SchematicText["anchor"],
+          rotation: 0,
+          font_size: 0.18,
+          color: "black",
         },
-        anchor: primitive.anchor.replace(
-          "middle_",
-          "",
-        ) as SchematicText["anchor"],
-        rotation: 0,
-        font_size: 0.18,
-        color: "black",
-      })
+        { isSymbolText: true },
+      )
     })
     if (polygons.length) return polygonBounds(polygons)
   }
@@ -71,10 +68,10 @@ export function getNetLabelBounds(label: SchematicNetLabel): RectBounds {
     x: anchor.x + direction.x * width,
     y: anchor.y + direction.y * width,
   }
-  return {
-    left: Math.min(anchor.x, end.x) - (direction.x === 0 ? 0.1 : 0),
-    right: Math.max(anchor.x, end.x) + (direction.x === 0 ? 0.1 : 0),
-    top: Math.max(anchor.y, end.y) + (direction.y === 0 ? 0.1 : 0),
-    bottom: Math.min(anchor.y, end.y) - (direction.y === 0 ? 0.1 : 0),
-  }
+  return centeredRect(
+    (anchor.x + end.x) / 2,
+    (anchor.y + end.y) / 2,
+    direction.x === 0 ? 0.2 : width,
+    direction.y === 0 ? 0.2 : width,
+  )
 }

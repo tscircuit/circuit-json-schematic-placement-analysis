@@ -35,7 +35,7 @@
     <tspan x="18" dy="22">  width=&quot;2.15&quot; height=&quot;4&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;J_ETH/label RTL_VDD_1V0&quot; pair2=&quot;label RTL_VDD_1V0/J_ETH&quot;&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;J_ETH/label RTL_VDD_1V0&quot;&gt;</tspan>
     <tspan x="18" dy="22">  Separate the overlapping net labels from other labels and component bodies. Adjust label</tspan>
     <tspan x="18" dy="22">  positions, pin spacing, or attached routing while preserving connections.</tspan>
     <tspan x="18" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>

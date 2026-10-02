@@ -323,8 +323,8 @@
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R13_I2C_SDA&quot; railPin=&quot;pin2&quot; railType=&quot;power&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R13_I2C_SDA by 90° so</tspan>
     <tspan x="18" dy="22">  its power-connected pin faces up and the component is vertical&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;Q1_DISPLAY_SWITCH/J3_DISPLAY&quot; pair2=&quot;R12_I2C_SCL/J4_SWD&quot;</tspan>
-    <tspan x="18" dy="22">  pair3=&quot;C10_VDDR_1U/U1_MCU&quot; pair4=&quot;J4_SWD/C20_DISPLAY_BULK&quot; pair5=&quot;C9_VDDR_10U/L1_DCDC&quot;&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;Q1_DISPLAY_SWITCH/J3_DISPLAY&quot; pair2=&quot;J4_SWD/C20_DISPLAY_BULK&quot;</tspan>
+    <tspan x="18" dy="22">  pair3=&quot;R12_I2C_SCL/J4_SWD&quot; pair4=&quot;C10_VDDR_1U/U1_MCU&quot; pair5=&quot;C9_VDDR_10U/L1_DCDC&quot;&gt;</tspan>
     <tspan x="18" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
     <tspan x="18" dy="22">  circuit.&quot;&gt;</tspan>
     <tspan x="18" dy="22">    &lt;Move componentName=&quot;Q1_DISPLAY_SWITCH&quot; newSchX=&quot;3.73&quot; newSchY=&quot;-6.09&quot; /&gt;</tspan>
