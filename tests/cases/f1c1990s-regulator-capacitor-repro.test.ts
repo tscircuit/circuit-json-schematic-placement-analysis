@@ -6,7 +6,6 @@ import {
   expectReproNets,
   expectReproRendered,
   getReproSchematicComponent,
-  getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
 // AP2112 typical application: CIN beside VIN, COUT beside VOUT.
@@ -48,16 +47,13 @@ test("records reversed regulator capacitor placement on the complete F1C1990S sh
   const issues = analysis.getIssues({
     issueTypes: ["RegulatorCapacitorsOnWrongSides"],
   })
-  // The unchanged export lacks supply directions; familiar pin labels are insufficient.
-  for (const name of ["U_1V8", "U_1V2"]) {
-    expect(getReproSourcePort(circuitJson, name, "IN").requires_power).not.toBe(
-      true,
-    )
-    expect(
-      getReproSourcePort(circuitJson, name, "OUT").provides_power,
-    ).not.toBe(true)
-  }
-  expect(issues).toEqual([])
+  expect(
+    issues.map(
+      (issue) =>
+        issue.lineItemType === "RegulatorCapacitorsOnWrongSides" &&
+        issue.regulatorSchematicBox.sourceComponentName,
+    ),
+  ).toEqual(["U_1V8", "U_1V2"])
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,

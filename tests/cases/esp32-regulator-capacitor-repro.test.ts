@@ -6,7 +6,6 @@ import {
   expectReproNets,
   expectReproRendered,
   getReproSchematicComponent,
-  getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
 // TI TLV757P typical application places each capacitor beside its connected port.
@@ -40,12 +39,13 @@ test("records reversed regulator capacitor placement on the complete ESP32 ducky
   const issues = analysis.getIssues({
     issueTypes: ["RegulatorCapacitorsOnWrongSides"],
   })
-  // The unchanged export lacks an output supply flag; its OUT label is insufficient.
-  expect(getReproSourcePort(circuitJson, "U2", "IN").requires_power).toBe(true)
-  expect(getReproSourcePort(circuitJson, "U2", "OUT").provides_power).not.toBe(
-    true,
-  )
-  expect(issues).toEqual([])
+  expect(
+    issues.map(
+      (issue) =>
+        issue.lineItemType === "RegulatorCapacitorsOnWrongSides" &&
+        issue.regulatorSchematicBox.sourceComponentName,
+    ),
+  ).toEqual(["U2"])
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,
