@@ -1,9 +1,13 @@
 import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
+import { stackSvgsVertically } from "stack-svgs"
 import original from "../assets/pd-i2c-inverted-pull-ups.json"
 import { createPdI2cPullUpsCircuitJson } from "../assets/pd-i2c-pull-ups"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import {
+  createAnalyzerTextSvg,
+  createSchematicAnalysisFixtureSvg,
+} from "../fixtures/create-schematic-analysis-fixture-svg"
 import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 
 test("uses positive-supply metadata for pull-up flips on either pin and skips uncertain or series roles", async () => {
@@ -99,7 +103,6 @@ test("uses positive-supply metadata for pull-up flips on either pin and skips un
   for (const [name, json] of [
     ["pin1-before", pin1Before],
     ["pin1-after", pin1After],
-    ["unclassified", controls["unclassified rail despite label"]!],
   ] as const) {
     expect(
       createSchematicAnalysisFixtureSvg({
@@ -109,4 +112,51 @@ test("uses positive-supply metadata for pull-up flips on either pin and skips un
       }),
     ).toMatchSvgSnapshot(import.meta.path, name)
   }
+
+  // Keep the V3V3-named control above to check that names alone cannot imply
+  // a supply, but make its visual snapshot clearly show an unclassified net.
+  const unclassified = controls["unclassified rail despite label"]!.map((e) => {
+    if (e.type === "source_net" && supplyIds.has(e.source_net_id))
+      return { ...e, name: "UNCLASSIFIED_NET" }
+    if (e.type === "schematic_net_label" && supplyIds.has(e.source_net_id)) {
+      const { symbol_name, ...label } = e
+      return {
+        ...label,
+        text: "UNCLASSIFIED_NET",
+        anchor_side: "left" as const,
+        anchor_position: { x: -1, y: -3.1 },
+        center: { x: 0, y: -3.1 },
+      }
+    }
+    return e
+  })
+  unclassified.push({
+    type: "schematic_trace",
+    schematic_trace_id: "unclassified-control-label-stub",
+    source_trace_id: "source_trace_52",
+    schematic_sheet_id: "schematic_sheet_0",
+    edges: [{ from: { x: -1, y: -2.5 }, to: { x: -1, y: -3.1 } }],
+    junctions: [],
+  })
+  const unclassifiedAnalysis = analyzeSchematicPlacement(unclassified, {
+    issueTypes,
+  })
+  expect(unclassifiedAnalysis.getIssues()).toEqual([])
+  const snapshot = stackSvgsVertically(
+    [
+      createSchematicAnalysisFixtureSvg({
+        circuitJson: unclassified,
+        analysis: unclassifiedAnalysis,
+        highlightIssues: [...issueTypes],
+      }),
+      createAnalyzerTextSvg(
+        "NEGATIVE CONTROL: UNCLASSIFIED_NET has no declared supply role.\n" +
+          "is_power=false; is_positive_voltage_source=false.\n" +
+          "Expected inverted-rail errors: 0. The analyzer cannot establish a positive supply.",
+        1200,
+      ).replace('fill="#d00"', 'fill="#334155"'),
+    ],
+    { normalizeSize: false, gap: 0 },
+  )
+  expect(snapshot).toMatchSvgSnapshot(import.meta.path, "unclassified")
 })
