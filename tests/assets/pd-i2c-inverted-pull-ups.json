@@ -1,0 +1,365 @@
+[
+  {
+    "type": "source_net",
+    "source_net_id": "source_net_5",
+    "name": "V3V3",
+    "member_source_group_ids": [],
+    "is_ground": false,
+    "is_power": true,
+    "trace_width": 0.25,
+    "is_positive_voltage_source": true,
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_38",
+    "name": "pin1",
+    "pin_number": 1,
+    "port_hints": ["pin1", "anode", "pos", "left", "1"],
+    "source_component_id": "source_component_10",
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net14"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_39",
+    "name": "pin2",
+    "pin_number": 2,
+    "port_hints": ["pin2", "cathode", "neg", "right", "2"],
+    "source_component_id": "source_component_10",
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16"
+  },
+  {
+    "type": "source_component",
+    "source_component_id": "source_component_10",
+    "ftype": "simple_resistor",
+    "name": "R_PD_SDA",
+    "supplier_part_numbers": {
+      "jlcpcb": ["C23162"]
+    },
+    "resistance": 4700,
+    "display_resistance": "4.7k\u03a9",
+    "are_pins_interchangeable": true,
+    "source_group_id": "source_group_1"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_40",
+    "name": "pin1",
+    "pin_number": 1,
+    "port_hints": ["pin1", "anode", "pos", "left", "1"],
+    "source_component_id": "source_component_11",
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net13"
+  },
+  {
+    "type": "source_port",
+    "source_port_id": "source_port_41",
+    "name": "pin2",
+    "pin_number": 2,
+    "port_hints": ["pin2", "cathode", "neg", "right", "2"],
+    "source_component_id": "source_component_11",
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16"
+  },
+  {
+    "type": "source_component",
+    "source_component_id": "source_component_11",
+    "ftype": "simple_resistor",
+    "name": "R_PD_SCL",
+    "supplier_part_numbers": {
+      "jlcpcb": ["C23162"]
+    },
+    "resistance": 4700,
+    "display_resistance": "4.7k\u03a9",
+    "are_pins_interchangeable": true,
+    "source_group_id": "source_group_1"
+  },
+  {
+    "type": "source_net",
+    "source_net_id": "source_net_17",
+    "name": "PD_SCL",
+    "member_source_group_ids": [],
+    "is_ground": false,
+    "is_power": false,
+    "is_positive_voltage_source": false,
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net13"
+  },
+  {
+    "type": "source_net",
+    "source_net_id": "source_net_18",
+    "name": "PD_SDA",
+    "member_source_group_ids": [],
+    "is_ground": false,
+    "is_power": false,
+    "is_positive_voltage_source": false,
+    "subcircuit_id": "subcircuit_source_group_1",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net14"
+  },
+  {
+    "type": "source_trace",
+    "source_trace_id": "source_trace_51",
+    "connected_source_port_ids": ["source_port_38"],
+    "connected_source_net_ids": ["source_net_18"],
+    "subcircuit_id": "subcircuit_source_group_1",
+    "display_name": ".R_PD_SDA > .pin1 to net.PD_SDA",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net14"
+  },
+  {
+    "type": "source_trace",
+    "source_trace_id": "source_trace_52",
+    "connected_source_port_ids": ["source_port_39"],
+    "connected_source_net_ids": ["source_net_5"],
+    "subcircuit_id": "subcircuit_source_group_1",
+    "display_name": ".R_PD_SDA > .pin2 to net.V3V3",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16"
+  },
+  {
+    "type": "source_trace",
+    "source_trace_id": "source_trace_53",
+    "connected_source_port_ids": ["source_port_40"],
+    "connected_source_net_ids": ["source_net_17"],
+    "subcircuit_id": "subcircuit_source_group_1",
+    "display_name": ".R_PD_SCL > .pin1 to net.PD_SCL",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net13"
+  },
+  {
+    "type": "source_trace",
+    "source_trace_id": "source_trace_54",
+    "connected_source_port_ids": ["source_port_41"],
+    "connected_source_net_ids": ["source_net_5"],
+    "subcircuit_id": "subcircuit_source_group_1",
+    "display_name": ".R_PD_SCL > .pin2 to net.V3V3",
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16"
+  },
+  {
+    "type": "schematic_component",
+    "schematic_component_id": "schematic_component_10",
+    "center": {
+      "x": -3,
+      "y": -2
+    },
+    "size": {
+      "width": 0.9,
+      "height": 0.6
+    },
+    "source_component_id": "source_component_10",
+    "is_box_with_pins": true,
+    "symbol_name": "boxresistor_down",
+    "schematic_sheet_id": "schematic_sheet_0",
+    "symbol_display_value": "4.7k\u03a9",
+    "schematic_group_id": "schematic_group_1"
+  },
+  {
+    "type": "schematic_component",
+    "schematic_component_id": "schematic_component_11",
+    "center": {
+      "x": 1,
+      "y": -2
+    },
+    "size": {
+      "width": 0.9,
+      "height": 0.6
+    },
+    "source_component_id": "source_component_11",
+    "is_box_with_pins": true,
+    "symbol_name": "boxresistor_down",
+    "schematic_sheet_id": "schematic_sheet_0",
+    "symbol_display_value": "4.7k\u03a9",
+    "schematic_group_id": "schematic_group_1"
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_38",
+    "schematic_component_id": "schematic_component_10",
+    "center": {
+      "x": -3,
+      "y": -1.7
+    },
+    "source_port_id": "source_port_38",
+    "facing_direction": "up",
+    "distance_from_component_edge": 0.4,
+    "pin_number": 1,
+    "display_pin_label": "anode",
+    "is_connected": true,
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_39",
+    "schematic_component_id": "schematic_component_10",
+    "center": {
+      "x": -3,
+      "y": -2.3
+    },
+    "source_port_id": "source_port_39",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "pin_number": 2,
+    "display_pin_label": "cathode",
+    "is_connected": true,
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_40",
+    "schematic_component_id": "schematic_component_11",
+    "center": {
+      "x": 1,
+      "y": -1.7
+    },
+    "source_port_id": "source_port_40",
+    "facing_direction": "up",
+    "distance_from_component_edge": 0.4,
+    "pin_number": 1,
+    "display_pin_label": "anode",
+    "is_connected": true,
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_port",
+    "schematic_port_id": "schematic_port_41",
+    "schematic_component_id": "schematic_component_11",
+    "center": {
+      "x": 1,
+      "y": -2.3
+    },
+    "source_port_id": "source_port_41",
+    "facing_direction": "down",
+    "distance_from_component_edge": 0.4,
+    "pin_number": 2,
+    "display_pin_label": "cathode",
+    "is_connected": true,
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_trace",
+    "schematic_trace_id": "schematic_trace_10",
+    "source_trace_id": "schematic_port_39-schematic_port_41",
+    "edges": [
+      {
+        "from": {
+          "x": -3,
+          "y": -2.3
+        },
+        "to": {
+          "x": -3,
+          "y": -2.5
+        }
+      },
+      {
+        "from": {
+          "x": -3,
+          "y": -2.5
+        },
+        "to": {
+          "x": 1,
+          "y": -2.5
+        }
+      },
+      {
+        "from": {
+          "x": 1,
+          "y": -2.5
+        },
+        "to": {
+          "x": 1,
+          "y": -2.3
+        }
+      }
+    ],
+    "junctions": [],
+    "subcircuit_connectivity_map_key": "B1_connectivity_net16",
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_net_label",
+    "schematic_net_label_id": "schematic_net_label_8",
+    "text": "V3V3",
+    "source_net_id": "source_net_5",
+    "anchor_position": {
+      "x": -1,
+      "y": -2.5
+    },
+    "center": {
+      "x": -1,
+      "y": -2.41
+    },
+    "anchor_side": "bottom",
+    "schematic_sheet_id": "schematic_sheet_0",
+    "symbol_name": "rail_up"
+  },
+  {
+    "type": "schematic_trace",
+    "schematic_trace_id": "schematic_trace_26",
+    "source_trace_id": "source_trace_53",
+    "edges": [
+      {
+        "from": {
+          "x": 1,
+          "y": -1.7
+        },
+        "to": {
+          "x": 1,
+          "y": -0.94
+        }
+      }
+    ],
+    "junctions": [],
+    "subcircuit_connectivity_map_key": "B1_connectivity_net13",
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_text",
+    "schematic_text_id": "schematic_text_76",
+    "text": "PD_SCL",
+    "source_trace_id": "source_trace_53",
+    "anchor": "left",
+    "position": {
+      "x": 0.94,
+      "y": -1.5999999999999999
+    },
+    "rotation": -90,
+    "font_size": 0.12,
+    "color": "rgb(132, 0, 0)",
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_trace",
+    "schematic_trace_id": "schematic_trace_28",
+    "source_trace_id": "source_trace_51",
+    "edges": [
+      {
+        "from": {
+          "x": -3,
+          "y": -1.7
+        },
+        "to": {
+          "x": -3,
+          "y": -0.94
+        }
+      }
+    ],
+    "junctions": [],
+    "subcircuit_connectivity_map_key": "B1_connectivity_net14",
+    "schematic_sheet_id": "schematic_sheet_0"
+  },
+  {
+    "type": "schematic_text",
+    "schematic_text_id": "schematic_text_78",
+    "text": "PD_SDA",
+    "source_trace_id": "source_trace_51",
+    "anchor": "left",
+    "position": {
+      "x": -3.06,
+      "y": -1.5999999999999999
+    },
+    "rotation": -90,
+    "font_size": 0.12,
+    "color": "rgb(132, 0, 0)",
+    "schematic_sheet_id": "schematic_sheet_0"
+  }
+]

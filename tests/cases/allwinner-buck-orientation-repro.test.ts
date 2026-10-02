@@ -68,7 +68,7 @@ test("records buck orientation findings on the complete published Allwinner sche
     snapshot.matchAll(/data-listing-issue-number="(\d+)"/g),
     (match) => match[1],
   )
-  expect(listingNumbers).toHaveLength(47)
+  expect(listingNumbers).toHaveLength(56)
   expect(listingNumbers).toEqual(
     Array.from(
       snapshot.matchAll(/data-issue-number="(\d+)"/g),

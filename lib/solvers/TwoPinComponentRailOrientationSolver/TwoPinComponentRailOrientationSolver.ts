@@ -114,11 +114,18 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
     const otherPort = index.port(otherSourcePort)
     if (!railPort || !otherPort) return
 
-    // Only unambiguous positive-supply-to-ground branches justify this flip.
-    // A single rail, an unknown supply polarity or a signal path is not enough.
+    const otherNet = index.connected(otherSourcePort.source_port_id)
+    const otherIsGround = this.groundNets.has(otherNet)
+    // A resistor from an explicitly positive supply to a non-rail signal also
+    // reads toward power above. Keep capacitors and other series paths restricted
+    // to positive-supply-to-ground, and never infer a rail from label text.
+    const isSupplyToSignalResistor =
+      sourceComponent?.ftype === "simple_resistor" &&
+      !this.powerNets.has(otherNet) &&
+      !otherIsGround
     const invertedRails =
       this.positiveVoltageNets.has(rail) &&
-      this.groundNets.has(index.connected(otherSourcePort.source_port_id)) &&
+      (otherIsGround || isSupplyToSignalResistor) &&
       Math.abs(railPort.center.x - otherPort.center.x) <=
         TwoPinComponentRailOrientationSolver.EPSILON &&
       railPort.center.y <
@@ -134,7 +141,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         railType: "power",
         deltaSchRotation: 180,
         suggestedRailFacingDirection: "up",
-        message: `rotate ${component.sourceComponentName ?? id} by 180° so its positive-supply pin faces up and its ground pin faces down; preserve pin connections and reroute attached traces`,
+        message: `rotate ${component.sourceComponentName ?? id} by 180° so its positive-supply pin faces up and its ${otherIsGround ? "ground" : "signal"} pin faces down; preserve pin connections and reroute attached traces`,
       })
       return
     }

@@ -6,20 +6,50 @@ import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createAnalyzerTextSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 
-test("identifies inverted positive-supply capacitors in the unchanged Allwinner schematic", () => {
+test("identifies inverted positive-supply capacitors and resistors in the unchanged Allwinner schematic", () => {
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issues = analysis.getIssues({
     issueTypes: ["TwoPinComponentHasInvertedRails"],
   })
   // Review the full design's count, not just the six buck capacitors.
-  expect(issues).toHaveLength(47)
+  expect(issues).toHaveLength(56)
   expect(
     analyzeSchematicPlacement(circuitJson, {
       issueTypes: ["TwoPinComponentHasInvertedRails"],
     }).getIssues(),
   ).toEqual(issues)
-  for (const issue of issues) {
+  const capacitorIssues = issues.filter(
+    (issue) =>
+      issue.lineItemType === "TwoPinComponentHasInvertedRails" &&
+      circuitJson.some(
+        (e) =>
+          e.type === "source_component" &&
+          e.source_component_id === issue.schematicBox.sourceComponentId &&
+          e.ftype === "simple_capacitor",
+      ),
+  )
+  expect(capacitorIssues).toHaveLength(47)
+  expect(
+    issues.filter((issue) => !capacitorIssues.includes(issue)),
+  ).toMatchObject(
+    [
+      "R101",
+      "R103",
+      "R105",
+      "R109",
+      "R110",
+      "R111",
+      "R113",
+      "R114",
+      "R115",
+    ].map((name) => ({
+      schematicBox: { sourceComponentName: name },
+      railPinName: "pin1",
+      deltaSchRotation: 180,
+    })),
+  )
+  for (const issue of capacitorIssues) {
     if (issue.lineItemType !== "TwoPinComponentHasInvertedRails")
       throw new Error("Expected rail-facing issue")
     const source = circuitJson.find(
@@ -56,7 +86,7 @@ test("identifies inverted positive-supply capacitors in the unchanged Allwinner 
     )
   }
   // Render only the two reviewed views, retaining the complete source data and
-  // original issue numbers. The other 45 findings are checked above.
+  // original issue numbers. The other findings are checked above.
   const allIssues = analysis.getIssues()
   for (const name of ["C101", "C102"]) {
     const issueIndex = allIssues.findIndex(
