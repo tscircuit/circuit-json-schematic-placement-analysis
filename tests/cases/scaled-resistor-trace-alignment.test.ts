@@ -5,6 +5,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { symbols } from "schematic-symbols"
 import { parseSync } from "svgson"
+import { getComponentSymbolGeometry } from "lib/utils/component-symbol-geometry"
 
 test("scaled resistor terminals meet traces in all four orientations", () => {
   const circuitJson: CircuitJson = []
@@ -94,7 +95,26 @@ test("scaled resistor terminals meet traces in all four orientations", () => {
     .split(/[\s,]+/)
     .map(Number) as [number, number, number, number, number, number]
   const vertices: { x: number; y: number }[] = []
-  const visit = (node: ReturnType<typeof parseSync>) => {
+  const symbolGeometry = getComponentSymbolGeometry(circuitJson)
+  let matchedSymbolTexts = 0
+  const visit = (node: ReturnType<typeof parseSync>, componentId?: string) => {
+    const owner = node.attributes["data-schematic-component-id"] ?? componentId
+    if (node.attributes.class?.split(" ").includes("sch-component-text")) {
+      const value = node.children.map((child) => child.value ?? "").join("")
+      const text = symbolGeometry
+        .get(owner ?? "")
+        ?.texts.find((text) => text.text === value)
+      expect(text).toBeDefined()
+      expect(Number(node.attributes.x)).toBeCloseTo(
+        a * text!.position.x + c * text!.position.y + e,
+        6,
+      )
+      expect(Number(node.attributes.y)).toBeCloseTo(
+        b * text!.position.x + d * text!.position.y + f,
+        6,
+      )
+      matchedSymbolTexts++
+    }
     if (node.attributes.class === "sch-component-symbol-path") {
       for (const match of node.attributes.d!.matchAll(
         /[ML]\s+([-\d.e+]+)\s+([-\d.e+]+)/g,
@@ -102,9 +122,10 @@ test("scaled resistor terminals meet traces in all four orientations", () => {
         vertices.push({ x: Number(match[1]), y: Number(match[2]) })
       }
     }
-    node.children.forEach(visit)
+    node.children.forEach((child) => visit(child, owner))
   }
   visit(parseSync(svg))
+  expect(matchedSymbolTexts).toBe(24)
   for (const port of circuitJson.filter(
     (element) => element.type === "schematic_port",
   )) {

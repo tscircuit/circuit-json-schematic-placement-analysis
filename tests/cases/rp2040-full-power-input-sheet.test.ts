@@ -22,6 +22,7 @@ test("records the full input sheet's local trace suggestions without rearranging
   ).toEqual({
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
+    SchematicTextCollision: 5,
     NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 6,
   })
@@ -158,7 +159,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 13 }, (_, index) => index + 1),
+      Array.from({ length: 18 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

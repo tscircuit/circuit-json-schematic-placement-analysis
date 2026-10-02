@@ -51,7 +51,10 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
       amplifierSchematicBox: { sourceComponentName: "U_CURRENT_B" },
     },
   ])
-  expect(analysis.getIssues()).toHaveLength(2)
+  expect(analysis.getIssues()).toHaveLength(4)
+  expect(
+    analysis.getIssues({ issueTypes: ["SchematicTextCollision"] }),
+  ).toHaveLength(2)
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,
@@ -67,12 +70,12 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([1, 1, 2, 2])
+  ).toEqual([3, 3, 4, 4])
   expect(
     [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([1, 2])
+  ).toEqual([3, 4])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

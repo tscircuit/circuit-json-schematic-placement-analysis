@@ -30,6 +30,7 @@ test("records the separated gate network on the complete smart-switch sheet", ()
     })
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
+    "SchematicTextCollision",
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
@@ -57,12 +58,12 @@ test("records the separated gate network on the complete smart-switch sheet", ()
   })
   expect(
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
-  ).toEqual([5, 5, 5])
+  ).toEqual([6, 6, 6])
   expect(
     [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
       Number(m[1]),
     ),
-  ).toEqual([5])
+  ).toEqual([6])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

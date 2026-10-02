@@ -1,4 +1,4 @@
-<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1032" viewBox="0 0 1200 1032" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -23,6 +23,11 @@
     <tspan x="18" dy="22">  height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_1&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_0&quot; text=&quot;U1&quot; collidingObjectType=&quot;trace&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectId=&quot;schematic_trace_capacitor_to_chip&quot; message=&quot;Text &amp;quot;U1&amp;quot; overlaps</tspan>
+    <tspan x="18" dy="22">  trace schematic_trace_capacitor_to_chip; adjust the component&apos;s label placement or the</tspan>
+    <tspan x="18" dy="22">  overlapping object to leave the visible text area clear.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;C1.pin1 to U1.pin1&quot; targetComponentName=&quot;C1&quot;</tspan>
     <tspan x="18" dy="22">  connectedComponentName=&quot;U1&quot; targetPin=&quot;pin1&quot; currentFacingDirection=&quot;up&quot;</tspan>
     <tspan x="18" dy="22">  suggestedFacingDirection=&quot;down&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;3&quot;</tspan>

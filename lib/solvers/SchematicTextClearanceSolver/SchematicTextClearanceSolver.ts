@@ -7,9 +7,12 @@ import type {
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { centeredRect } from "../../utils/geometry"
+import { getComponentSymbolGeometry } from "../../utils/component-symbol-geometry"
+import { getNetLabelBounds } from "../../utils/net-label-bounds"
 import { getSchematicSheetNamesById } from "../../utils/schematic-sheets"
 import {
   getSchematicTextPolygons,
+  getSymbolTextPolygons,
   polygonBounds,
   polygonsOverlap,
   rectPolygon,
@@ -57,14 +60,23 @@ export class SchematicTextClearanceSolver extends BaseSolver {
       ),
     )
     const seenText = new Set<string>()
-    this.texts = ctx.circuitJson.flatMap((element) => {
+    const symbolGeometry = getComponentSymbolGeometry(ctx.circuitJson)
+    const symbolTexts = [...symbolGeometry.values()].flatMap((g) => g.texts)
+    const symbolTextIds = new Set(symbolTexts.map((t) => t.schematic_text_id))
+    const componentBySymbolId = new Map(
+      ctx.componentPlacements.flatMap((p) =>
+        p.schematicSymbolId && p.schematicComponentId
+          ? [[p.schematicSymbolId, p.schematicComponentId]]
+          : [],
+      ),
+    )
+    this.texts = [...ctx.circuitJson, ...symbolTexts].flatMap((element) => {
       if (element.type !== "schematic_text") return []
-      // Reference/value labels move with their component. Trace-generated
-      // labels still need collision detection, even though they cannot be
-      // repositioned independently of their owning trace.
-      if (element.schematic_component_id || element.schematic_symbol_id)
-        return []
-      const polygons = getSchematicTextPolygons(element)
+      // Component and trace annotations still need collision detection, but
+      // they cannot safely be repositioned as independent schematic text.
+      const polygons = symbolTextIds.has(element.schematic_text_id)
+        ? getSymbolTextPolygons(element)
+        : getSchematicTextPolygons(element)
       if (!polygons.length) return []
       const sheetId = element.schematic_sheet_id
       // Some exports emit the same trace label twice. Identical overprinting
@@ -93,6 +105,9 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             type: "text" as const,
             id: element.schematic_text_id,
             text: element.text,
+            schematicComponentId:
+              element.schematic_component_id ??
+              componentBySymbolId.get(element.schematic_symbol_id ?? ""),
           },
         },
       ]
@@ -111,7 +126,10 @@ export class SchematicTextClearanceSolver extends BaseSolver {
                   schematicComponentId: p.schematicComponentId,
                 },
                 polygons: [
-                  rectPolygon(centeredRect(p.schX, p.schY, p.width, p.height)),
+                  rectPolygon(
+                    symbolGeometry.get(p.schematicComponentId)?.bounds ??
+                      centeredRect(p.schX, p.schY, p.width, p.height),
+                  ),
                 ],
                 sheetId: p.schematicSheetId,
               },
@@ -136,6 +154,21 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             ]
           : [],
       ),
+      ...ctx.circuitJson.flatMap((element) =>
+        element.type === "schematic_net_label"
+          ? [
+              {
+                object: {
+                  type: "net_label" as const,
+                  id: element.schematic_net_label_id,
+                  text: element.text,
+                },
+                sheetId: element.schematic_sheet_id,
+                polygons: [rectPolygon(getNetLabelBounds(element))],
+              },
+            ]
+          : [],
+      ),
     ]
     this.solved = this.texts.length === 0
   }
@@ -145,9 +178,13 @@ export class SchematicTextClearanceSolver extends BaseSolver {
     const targets = [...this.obstacles, ...this.texts.slice(this.index + 1)]
     const collisions = targets.filter((target) => this.collides(text, target))
     if (collisions.length) {
-      const suggestedMove = text.isTraceLabel
-        ? undefined
-        : this.findClearPosition(text)
+      const componentOwned = Boolean(
+        text.text.schematic_component_id || text.text.schematic_symbol_id,
+      )
+      const suggestedMove =
+        text.isTraceLabel || componentOwned
+          ? undefined
+          : this.findClearPosition(text)
       for (const target of collisions) {
         this.params.issues.push({
           lineItemType: "SchematicTextCollision",
@@ -156,15 +193,18 @@ export class SchematicTextClearanceSolver extends BaseSolver {
             ? this.sheetNames.get(text.sheetId)
             : undefined,
           schematicTextId: text.text.schematic_text_id,
+          schematicComponentId: text.object.schematicComponentId,
           text: text.text.text,
           collidingObject: target.object,
           textBounds: polygonBounds(text.polygons),
           collidingObjectBounds: polygonBounds(target.polygons),
           suggestedMove,
           message: `Text "${text.text.text}" overlaps ${target.object.type} ${target.object.componentName ?? target.object.id}; ${
-            text.isTraceLabel
-              ? "adjust the owning trace's label placement or remove stale duplicates to leave the visible text area clear."
-              : "reposition the text to leave its visible area clear."
+            componentOwned
+              ? "adjust the component's label placement or the overlapping object to leave the visible text area clear."
+              : text.isTraceLabel
+                ? "adjust the owning trace's label placement or remove stale duplicates to leave the visible text area clear."
+                : "reposition the text to leave its visible area clear."
           }`,
         })
       }
@@ -175,6 +215,12 @@ export class SchematicTextClearanceSolver extends BaseSolver {
 
   private collides(text: TextGeometry, obstacle: Obstacle): boolean {
     if (text.sheetId !== obstacle.sheetId) return false
+    // Symbol annotations may intentionally sit inside their own symbol body.
+    if (
+      obstacle.object.type === "component" &&
+      text.object.schematicComponentId === obstacle.object.schematicComponentId
+    )
+      return false
     return text.polygons.some((a) =>
       obstacle.segments
         ? obstacle.segments.some((edge) =>
@@ -222,6 +268,7 @@ export class SchematicTextClearanceSolver extends BaseSolver {
   static issueToString(issue: SchematicTextCollision): string {
     const attrs: string[] = []
     addAttr(attrs, "schematicTextId", issue.schematicTextId)
+    addAttr(attrs, "schematicComponentId", issue.schematicComponentId)
     addAttr(attrs, "text", issue.text)
     addAttr(attrs, "collidingObjectType", issue.collidingObject.type)
     addAttr(attrs, "collidingObjectId", issue.collidingObject.id)

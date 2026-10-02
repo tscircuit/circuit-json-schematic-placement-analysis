@@ -1,4 +1,4 @@
-<svg width="1200" height="1660" viewBox="0 0 1200 1660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1880" viewBox="0 0 1200 1880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0) scale(1, 1) translate(0, 0)">
     <rect class="boundary" x="0" y="0" width="1200" height="1272" fill="rgb(245, 241, 237)"/><text class="stacked-sheet-label" x="193.589318" y="20.16" font-family="sans-serif" font-size="15.4px" fill="rgb(0, 100, 100)" data-schematic-sheet-id="schematic_sheet_0">Power</text><svg class="tscircuit-schematic" width="1200" height="600" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(25.2778238514,0,0,-25.2778238514,606.9514015591,300)" data-software-used-string="@tscircuit/core@0.0.1382" x="0" y="28"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -35,6 +35,16 @@
     <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_2:symbol-text:11&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_2&quot; text=&quot;LED_STATUS&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectId=&quot;schematic_component_3:symbol-text:3&quot; message=&quot;Text &amp;quot;LED_STATUS&amp;quot;</tspan>
+    <tspan x="18" dy="22">  overlaps text schematic_component_3:symbol-text:3; adjust the component&apos;s label placement or</tspan>
+    <tspan x="18" dy="22">  the overlapping object to leave the visible text area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_3:symbol-text:4&quot;</tspan>
+    <tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_3&quot; text=&quot;10kΩ&quot; collidingObjectType=&quot;component&quot;</tspan>
+    <tspan x="18" dy="22">  collidingObjectId=&quot;schematic_component_2&quot; message=&quot;Text &amp;quot;10kΩ&amp;quot; overlaps component</tspan>
+    <tspan x="18" dy="22">  LED_STATUS; adjust the component&apos;s label placement or the overlapping object to leave the</tspan>
+    <tspan x="18" dy="22">  visible text area clear.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;ComponentOverlap component1Name=&quot;LED_STATUS&quot; component2Name=&quot;R_BOOT&quot; component1SchX=&quot;-1&quot;</tspan>
     <tspan x="18" dy="22">  component1SchY=&quot;0&quot; component2SchX=&quot;-0.4&quot; component2SchY=&quot;0.15&quot; overlapWidth=&quot;0.265&quot;</tspan>
     <tspan x="18" dy="22">  overlapHeight=&quot;0.5&quot;&gt;</tspan>

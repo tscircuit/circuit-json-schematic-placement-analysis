@@ -82,8 +82,8 @@
     <tspan x="18" dy="22">&lt;ComponentNetLabelCollision pair1=&quot;U1/U2&quot;&gt;</tspan>
     <tspan x="18" dy="22">  &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your</tspan>
     <tspan x="18" dy="22">  circuit.&quot;&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;U1&quot; newSchX=&quot;-2.57&quot; newSchY=&quot;1&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">    &lt;Move componentName=&quot;U2&quot; newSchX=&quot;1.87&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">    &lt;Move componentName=&quot;U1&quot; newSchX=&quot;-2.43&quot; newSchY=&quot;1&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">    &lt;Move componentName=&quot;U2&quot; newSchX=&quot;1.73&quot; newSchY=&quot;1&quot; /&gt;</tspan>
     <tspan x="18" dy="22">  &lt;/SuggestedFix&gt;</tspan>
     <tspan x="18" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>

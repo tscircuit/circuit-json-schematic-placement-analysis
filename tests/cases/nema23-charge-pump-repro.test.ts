@@ -30,7 +30,10 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issueTypes = ["CapacitorSeparatedFromChipPins"] as const
   const issues = analysis.getIssues({ issueTypes })
-  expect(analysis.getIssues()).toHaveLength(4)
+  expect(analysis.getIssues()).toHaveLength(5)
+  expect(
+    analysis.getIssues({ issueTypes: ["NetLabelCollision"] }),
+  ).toHaveLength(1)
   expect(
     analysis.getIssues({ issueTypes: ["TwoPinComponentHasInvertedRails"] }),
   ).toMatchObject(

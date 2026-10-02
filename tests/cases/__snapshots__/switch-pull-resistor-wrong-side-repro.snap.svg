@@ -1,4 +1,4 @@
-<svg width="1200" height="914" viewBox="0 0 1200 914" xmlns="http://www.w3.org/2000/svg">
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <rect width="1200" height="48" fill="white" />
       <text x="300" y="32" text-anchor="middle" font-family="sans-serif" font-size="24">Bad layout</text>
@@ -65,7 +65,20 @@
 <tspan x="18" dy="22">  pullDirection=&quot;up&quot; preferredSide=&quot;above&quot; signalSchY=&quot;0&quot; wrongSideGap=&quot;3.7&quot; message=&quot;place</tspan>
 <tspan x="18" dy="22">  R_RUN above SW_RUN so the pull-up branch reads toward power&quot; /&gt;</tspan>
 <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
-<tspan x="18" dy="22">Corrected layout: no placement issues.</tspan>
+<tspan x="18" dy="22">Corrected orientation:</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPositions&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;SW_RUN&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;0&quot;</tspan>
+<tspan x="18" dy="22">  width=&quot;0.719&quot; height=&quot;0.94&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_RUN&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;1.5&quot;</tspan>
+<tspan x="18" dy="22">  width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_component_0:symbol-text:8&quot;</tspan>
+<tspan x="18" dy="22">  schematicComponentId=&quot;schematic_component_0&quot; text=&quot;SW_RUN&quot; collidingObjectType=&quot;trace&quot;</tspan>
+<tspan x="18" dy="22">  collidingObjectId=&quot;schematic_trace_0&quot; message=&quot;Text &amp;quot;SW_RUN&amp;quot; overlaps trace</tspan>
+<tspan x="18" dy="22">  schematic_trace_0; adjust the component&apos;s label placement or the overlapping object to leave</tspan>
+<tspan x="18" dy="22">  the visible text area clear.&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
 </svg>

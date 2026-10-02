@@ -27,7 +27,7 @@ const advance = (character: string): number => {
   return 0.56
 }
 
-const widthInEm = (text: string): number =>
+export const widthInEm = (text: string): number =>
   Array.from(text).reduce((width, character) => width + advance(character), 0)
 
 export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
@@ -76,6 +76,35 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
         x: text.position.x + x * cos - y * sin,
         y: text.position.y + x * sin + y * cos,
       })),
+    ]
+  })
+}
+
+/** Built-in symbol text uses SVG `middle` (x-height) rather than `central`
+ * alignment. Use a conservative ink box, leaving font side bearings/leading
+ * out of collisions instead of treating the whole em rectangle as painted.
+ * Symbol text is rendered upright even when the symbol itself is rotated.
+ */
+export function getSymbolTextPolygons(text: SchematicText): Polygon[] {
+  const middle = !text.anchor.includes("top") && !text.anchor.includes("bottom")
+  return getSchematicTextPolygons({
+    ...text,
+    position: {
+      x: text.position.x,
+      y: text.position.y + (middle ? text.font_size / 4 : 0),
+    },
+  }).flatMap((polygon) => {
+    const b = polygonBounds([polygon])
+    const dx = text.font_size * 0.05
+    const dy = text.font_size * 0.14
+    if (b.right - b.left <= 2 * dx || b.top - b.bottom <= 2 * dy) return []
+    return [
+      rectPolygon({
+        left: b.left + dx,
+        right: b.right - dx,
+        top: b.top - dy,
+        bottom: b.bottom + dy,
+      }),
     ]
   })
 }

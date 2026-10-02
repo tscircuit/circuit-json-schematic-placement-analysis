@@ -3,7 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createTraceAnchoredNetLabelCollisionCircuitJson } from "../assets/trace-anchored-net-label-collision"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test.failing("reports a collision with a net label anchored to a trace", () => {
+test("reports a collision with a net label anchored to a trace", () => {
   const circuitJson = createTraceAnchoredNetLabelCollisionCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
 
@@ -20,4 +20,6 @@ test.failing("reports a collision with a net label anchored to a trace", () => {
   )
 
   expect(netLabelCollisions).toHaveLength(1)
+  expect(netLabelCollisions[0]!.moves).toEqual([])
+  expect(netLabelCollisions[0]!.message).toContain("label positions")
 })

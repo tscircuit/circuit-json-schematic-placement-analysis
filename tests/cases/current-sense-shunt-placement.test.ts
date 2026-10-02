@@ -48,7 +48,7 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
       highlightIssues: ["CurrentSenseShuntSeparatedFromInputs"],
     })
     if (variant === "before") {
-      expect(svg).toContain('data-listing-issue-number="1"')
+      expect(svg).toContain('data-listing-issue-number="2"')
       expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
     }
     expect(svg).toMatchSvgSnapshot(import.meta.path, variant)

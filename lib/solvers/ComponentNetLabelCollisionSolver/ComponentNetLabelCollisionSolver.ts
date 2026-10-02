@@ -1,4 +1,6 @@
 import { getNetLabelBounds } from "../../utils/net-label-bounds"
+import { getComponentSymbolGeometry } from "../../utils/component-symbol-geometry"
+import { escapeAttr } from "../../utils/format"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -51,6 +53,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   private rawCollisions: RawCollision[] = []
   private firstIndex = 0
   private secondIndex = 1
+  private readonly symbolGeometry: ReturnType<typeof getComponentSymbolGeometry>
 
   constructor(
     private readonly params: {
@@ -60,15 +63,16 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
   ) {
     super()
     this.placements = params.ctx.componentPlacements
+    this.symbolGeometry = getComponentSymbolGeometry(params.ctx.circuitJson)
     this.netLabelsByComponentId = this.buildNetLabelsByComponentId(
       params.ctx.circuitJson,
     )
-    this.solved = this.placements.length < 2
   }
 
   override _step(): void {
     if (this.firstIndex >= this.placements.length - 1) {
       this.buildAndPushIssues()
+      this.detectCollisionsWithoutComponentMoves()
       this.solved = true
       return
     }
@@ -149,12 +153,9 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     const labels = this.netLabelsByComponentId.get(labelId) ?? []
     if (labels.length === 0) return []
 
-    const boxBounds = centeredRect(
-      boxComp.schX,
-      boxComp.schY,
-      boxComp.width,
-      boxComp.height,
-    )
+    const boxBounds =
+      this.symbolGeometry.get(boxId)?.bounds ??
+      centeredRect(boxComp.schX, boxComp.schY, boxComp.width, boxComp.height)
     const boxIsLeft = boxComp.schX <= labelComp.schX
     const hits: RawBoxLabelCollision[] = []
 
@@ -441,14 +442,124 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     return result
   }
 
+  /** A label need not sit on a component port to participate in detection.
+   * Keep the existing component-move suggestions only for pairs whose labels
+   * are attached to different components. Same-component and wire-anchored
+   * collisions need label/routing edits, not guessed component ownership.
+   */
+  private detectCollisionsWithoutComponentMoves(): void {
+    const ownerByLabel = new Map<string, SchematicBoxPlacement>()
+    for (const placement of this.placements) {
+      for (const label of this.netLabelsByComponentId.get(
+        placement.schematicComponentId ?? "",
+      ) ?? [])
+        ownerByLabel.set(label.schematic_net_label_id, placement)
+    }
+    const seen = new Set<string>()
+    const labels = this.params.ctx.circuitJson
+      .filter(
+        (e): e is SchematicNetLabel =>
+          e.type === "schematic_net_label" && Boolean(e.text),
+      )
+      .filter((label) => {
+        const key = JSON.stringify([
+          label.schematic_sheet_id,
+          label.text,
+          label.symbol_name,
+          label.anchor_side,
+          label.anchor_position,
+          label.center,
+        ])
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+    const issuesBySheet = new Map<string, NetLabelCollision>()
+    const add = (
+      label: SchematicNetLabel,
+      a: RectBounds,
+      b: RectBounds,
+      comp1Name: string,
+      comp2Name: string,
+    ) => {
+      const overlap = rectOverlap(a, b)
+      if (!overlap || overlap.ow <= 1e-6 || overlap.oh <= 1e-6) return
+      const key = label.schematic_sheet_id ?? ""
+      let issue = issuesBySheet.get(key)
+      if (!issue) {
+        issue = {
+          lineItemType: "NetLabelCollision",
+          schematicSheetId: label.schematic_sheet_id,
+          schematicSheetName: this.placements.find(
+            (p) => p.schematicSheetId === label.schematic_sheet_id,
+          )?.schematicSheetName,
+          pairs: [],
+          moves: [],
+          collisionBounds: [],
+          message:
+            "Separate the overlapping net labels from other labels and component bodies. Adjust label positions, pin spacing, or attached routing while preserving connections.",
+        }
+        issuesBySheet.set(key, issue)
+      }
+      if (
+        !issue.pairs.some(
+          (p) => p.comp1Name === comp1Name && p.comp2Name === comp2Name,
+        )
+      )
+        issue.pairs.push({ comp1Name, comp2Name })
+      issue.collisionBounds!.push({
+        left: Math.max(a.left, b.left),
+        right: Math.min(a.right, b.right),
+        top: Math.min(a.top, b.top),
+        bottom: Math.max(a.bottom, b.bottom),
+      })
+    }
+    for (const [i, first] of labels.entries()) {
+      const owner = ownerByLabel.get(first.schematic_net_label_id)
+      const name = owner?.sourceComponentName ?? `label ${first.text}`
+      const bounds = getNetLabelBounds(first)
+      for (const second of labels.slice(i + 1)) {
+        if (first.schematic_sheet_id !== second.schematic_sheet_id) continue
+        const other = ownerByLabel.get(second.schematic_net_label_id)
+        if (owner && other && owner !== other) continue // Checked by detectPair.
+        add(
+          first,
+          bounds,
+          getNetLabelBounds(second),
+          name,
+          other?.sourceComponentName ?? `label ${second.text}`,
+        )
+      }
+      if (owner) continue // Component-attached box/label pairs are already checked.
+      for (const box of this.placements) {
+        if (box.schematicSheetId !== first.schematic_sheet_id) continue
+        add(
+          first,
+          bounds,
+          this.symbolGeometry.get(box.schematicComponentId ?? "")?.bounds ??
+            centeredRect(box.schX, box.schY, box.width, box.height),
+          name,
+          box.sourceComponentName ?? box.schematicComponentId ?? "component",
+        )
+      }
+    }
+    this.params.issues.push(...issuesBySheet.values())
+  }
+
   static netLabelCollisionToString(issue: NetLabelCollision): string {
     const pairAttrs = issue.pairs
-      .map((pair, i) => `pair${i + 1}="${pair.comp1Name}/${pair.comp2Name}"`)
+      .map(
+        (pair, i) =>
+          `pair${i + 1}="${escapeAttr(`${pair.comp1Name}/${pair.comp2Name}`)}"`,
+      )
       .join(" ")
     const moves = issue.moves.map(
       (move) =>
         `    <Move componentName="${move.componentName}" newSchX="${move.newSchX}" newSchY="${move.newSchY}" />`,
     )
+    if (issue.moves.length === 0) {
+      return `<ComponentNetLabelCollision ${pairAttrs}>\n  ${escapeAttr(issue.message ?? "Separate the overlapping labels while preserving connections.")}\n</ComponentNetLabelCollision>`
+    }
     return [
       `<ComponentNetLabelCollision ${pairAttrs}>`,
       `  <SuggestedFix note="Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.">`,
