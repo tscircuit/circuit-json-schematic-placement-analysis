@@ -15,13 +15,7 @@
     "source_port_id": "source_port_111",
     "name": "pin4",
     "pin_number": 4,
-    "port_hints": [
-      "pin4",
-      "gnd1",
-      "bottom1",
-      "gnd2",
-      "4"
-    ],
+    "port_hints": ["pin4", "gnd1", "bottom1", "gnd2", "4"],
     "source_component_id": "source_component_16",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -31,13 +25,7 @@
     "source_port_id": "source_port_112",
     "name": "pin2",
     "pin_number": 2,
-    "port_hints": [
-      "pin2",
-      "gnd2",
-      "top1",
-      "gnd1",
-      "2"
-    ],
+    "port_hints": ["pin2", "gnd2", "top1", "gnd1", "2"],
     "source_component_id": "source_component_16",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -47,12 +35,7 @@
     "source_port_id": "source_port_113",
     "name": "pin1",
     "pin_number": 1,
-    "port_hints": [
-      "pin1",
-      "left1",
-      "X1",
-      "1"
-    ],
+    "port_hints": ["pin1", "left1", "X1", "1"],
     "source_component_id": "source_component_16",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net24"
@@ -62,12 +45,7 @@
     "source_port_id": "source_port_114",
     "name": "pin3",
     "pin_number": 3,
-    "port_hints": [
-      "pin3",
-      "right1",
-      "X2",
-      "3"
-    ],
+    "port_hints": ["pin3", "right1", "X2", "3"],
     "source_component_id": "source_component_16",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net25"
@@ -79,9 +57,7 @@
     "ftype": "simple_crystal",
     "manufacturer_part_number": "ABM8-272-T3",
     "supplier_part_numbers": {
-      "jlcpcb": [
-        "C20625731"
-      ]
+      "jlcpcb": ["C20625731"]
     },
     "frequency": 12000000,
     "load_capacitance": 1e-11,
@@ -89,10 +65,7 @@
     "are_pins_interchangeable": false,
     "source_group_id": "source_group_0",
     "internally_connected_source_port_ids": [
-      [
-        "source_port_111",
-        "source_port_112"
-      ]
+      ["source_port_111", "source_port_112"]
     ]
   },
   {
@@ -100,13 +73,7 @@
     "source_port_id": "source_port_145",
     "name": "pin1",
     "pin_number": 1,
-    "port_hints": [
-      "pin1",
-      "anode",
-      "pos",
-      "1",
-      "left"
-    ],
+    "port_hints": ["pin1", "anode", "pos", "1", "left"],
     "source_component_id": "source_component_30",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net24"
@@ -116,13 +83,7 @@
     "source_port_id": "source_port_146",
     "name": "pin2",
     "pin_number": 2,
-    "port_hints": [
-      "pin2",
-      "cathode",
-      "neg",
-      "2",
-      "right"
-    ],
+    "port_hints": ["pin2", "cathode", "neg", "2", "right"],
     "source_component_id": "source_component_30",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -134,9 +95,7 @@
     "name": "C_XIN",
     "manufacturer_part_number": "0402CG150J500NT",
     "supplier_part_numbers": {
-      "jlcpcb": [
-        "C1548"
-      ]
+      "jlcpcb": ["C1548"]
     },
     "capacitance": 1.5e-11,
     "display_capacitance": "15pF",
@@ -148,13 +107,7 @@
     "source_port_id": "source_port_147",
     "name": "pin1",
     "pin_number": 1,
-    "port_hints": [
-      "pin1",
-      "anode",
-      "pos",
-      "1",
-      "left"
-    ],
+    "port_hints": ["pin1", "anode", "pos", "1", "left"],
     "source_component_id": "source_component_31",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net25"
@@ -164,13 +117,7 @@
     "source_port_id": "source_port_148",
     "name": "pin2",
     "pin_number": 2,
-    "port_hints": [
-      "pin2",
-      "cathode",
-      "neg",
-      "2",
-      "right"
-    ],
+    "port_hints": ["pin2", "cathode", "neg", "2", "right"],
     "source_component_id": "source_component_31",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -182,9 +129,7 @@
     "name": "C_XOUT",
     "manufacturer_part_number": "0402CG150J500NT",
     "supplier_part_numbers": {
-      "jlcpcb": [
-        "C1548"
-      ]
+      "jlcpcb": ["C1548"]
     },
     "capacitance": 1.5e-11,
     "display_capacitance": "15pF",
@@ -196,13 +141,7 @@
     "source_port_id": "source_port_149",
     "name": "pin1",
     "pin_number": 1,
-    "port_hints": [
-      "pin1",
-      "anode",
-      "pos",
-      "left",
-      "1"
-    ],
+    "port_hints": ["pin1", "anode", "pos", "left", "1"],
     "source_component_id": "source_component_32",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net25"
@@ -212,13 +151,7 @@
     "source_port_id": "source_port_150",
     "name": "pin2",
     "pin_number": 2,
-    "port_hints": [
-      "pin2",
-      "cathode",
-      "neg",
-      "right",
-      "2"
-    ],
+    "port_hints": ["pin2", "cathode", "neg", "right", "2"],
     "source_component_id": "source_component_32",
     "subcircuit_id": "subcircuit_source_group_10",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net26"
@@ -229,9 +162,7 @@
     "ftype": "simple_resistor",
     "name": "R_XOUT",
     "supplier_part_numbers": {
-      "jlcpcb": [
-        "C11702"
-      ]
+      "jlcpcb": ["C11702"]
     },
     "resistance": 1000,
     "display_resistance": "1k\u03a9",
@@ -241,12 +172,8 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_0",
-    "connected_source_port_ids": [
-      "source_port_112"
-    ],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_port_ids": ["source_port_112"],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "Y1_G1",
     "display_name": "GND",
@@ -255,12 +182,8 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_1",
-    "connected_source_port_ids": [
-      "source_port_111"
-    ],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_port_ids": ["source_port_111"],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "Y1_G2",
     "display_name": "GND",
@@ -270,9 +193,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_11",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO5_G",
     "display_name": "GND",
@@ -282,9 +203,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_13",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO6_G",
     "display_name": "GND",
@@ -294,9 +213,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_15",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO3_G",
     "display_name": "GND",
@@ -306,9 +223,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_17",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO4_G",
     "display_name": "GND",
@@ -318,9 +233,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_20",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "TEST_G",
     "display_name": "GND",
@@ -330,9 +243,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_22",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "FLSH_G",
     "max_length": 1.3,
@@ -343,9 +254,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_24",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO1_G",
     "display_name": "GND",
@@ -355,9 +264,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_26",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "IO2_G",
     "display_name": "GND",
@@ -367,9 +274,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_28",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "UVDD_G",
     "max_length": 1.5,
@@ -380,9 +285,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_30",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "ADC_G",
     "display_name": "GND",
@@ -392,9 +295,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_51",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "GND_G",
     "display_name": "GND",
@@ -404,9 +305,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_59",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_G",
     "display_name": "GND",
@@ -417,9 +316,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_60",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_G_B",
     "display_name": "GND",
@@ -430,9 +327,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_61",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_EH1",
     "display_name": "GND",
@@ -443,9 +338,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_62",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_EH1_ALT",
     "display_name": "GND",
@@ -456,9 +349,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_63",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_EH2",
     "display_name": "GND",
@@ -469,9 +360,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_64",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "USB_EH2_ALT",
     "display_name": "GND",
@@ -482,9 +371,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_65",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CC1_G",
     "display_name": "GND",
@@ -494,9 +381,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_66",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CC2_G",
     "display_name": "GND",
@@ -516,9 +401,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_71",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "REG_G",
     "display_name": "GND",
@@ -528,9 +411,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_73",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "C3V3_G",
     "display_name": "GND",
@@ -540,9 +421,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_74",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CORE_G",
     "max_length": 1.5,
@@ -553,9 +432,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_76",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CUSB_G",
     "max_length": 1.5,
@@ -566,9 +443,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_80",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "FLSH_GND",
     "display_name": "GND",
@@ -587,9 +462,7 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_83",
-    "connected_source_port_ids": [
-      "source_port_113"
-    ],
+    "connected_source_port_ids": ["source_port_113"],
     "connected_source_net_ids": [],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "XIN",
@@ -601,10 +474,7 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_84",
-    "connected_source_port_ids": [
-      "source_port_114",
-      "source_port_149"
-    ],
+    "connected_source_port_ids": ["source_port_114", "source_port_149"],
     "connected_source_net_ids": [],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "XOUT_R",
@@ -616,9 +486,7 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_85",
-    "connected_source_port_ids": [
-      "source_port_150"
-    ],
+    "connected_source_port_ids": ["source_port_150"],
     "connected_source_net_ids": [],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "XOUT",
@@ -629,10 +497,7 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_86",
-    "connected_source_port_ids": [
-      "source_port_145",
-      "source_port_113"
-    ],
+    "connected_source_port_ids": ["source_port_145", "source_port_113"],
     "connected_source_net_ids": [],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CXIN",
@@ -644,12 +509,8 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_87",
-    "connected_source_port_ids": [
-      "source_port_146"
-    ],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_port_ids": ["source_port_146"],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CXIN_G",
     "display_name": "GND",
@@ -658,10 +519,7 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_88",
-    "connected_source_port_ids": [
-      "source_port_147",
-      "source_port_114"
-    ],
+    "connected_source_port_ids": ["source_port_147", "source_port_114"],
     "connected_source_net_ids": [],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CXOUT",
@@ -673,12 +531,8 @@
   {
     "type": "source_trace",
     "source_trace_id": "source_trace_89",
-    "connected_source_port_ids": [
-      "source_port_148"
-    ],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_port_ids": ["source_port_148"],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CXOUT_G",
     "display_name": "GND",
@@ -688,9 +542,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_90",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DVDD1_CAP_G",
     "max_length": 1.5,
@@ -701,9 +553,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_91",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DVDD2_CAP_G",
     "display_name": "GND",
@@ -713,9 +563,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_93",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "BOOT_G",
     "display_name": "GND",
@@ -725,9 +573,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_97",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "RUN_G",
     "display_name": "GND",
@@ -747,9 +593,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_103",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "TP_G",
     "display_name": "GND",
@@ -759,9 +603,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_125",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_VMA_CAP_GND",
     "max_length": 4,
@@ -784,9 +626,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_128",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_V3P3_GND",
     "max_length": 4.5,
@@ -798,9 +638,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_134",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_REF_CAP_GND",
     "display_name": ".C_DRV_REF > .pin2 to net.GND",
@@ -811,9 +649,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_135",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_REF_GND",
     "display_name": ".R_DRV_REF_BOTTOM > .pin2 to net.GND",
@@ -824,9 +660,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_136",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_MODE0",
     "display_name": ".DRIVER > .MODE0 to net.GND",
@@ -837,9 +671,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_137",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "DRV_MODE1",
     "display_name": ".DRIVER > .MODE1 to net.GND",
@@ -850,9 +682,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_173",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "BOARD_GND_JOIN",
     "display_name": ".DRIVER > .EP to net.GND",
@@ -962,9 +792,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_183",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "PD_VBUS_CAP_GND",
     "max_length": 22,
@@ -976,9 +804,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_184",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "MOTOR_BULK_GND",
     "display_name": ".C_MOTOR_BULK > .pin2 to net.GND",
@@ -989,9 +815,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_185",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "MOTOR_TVS_GND",
     "display_name": ".D_MOTOR_TVS > .anode to net.GND",
@@ -1002,9 +826,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_186",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "PD_VDD_CAP_GND",
     "max_length": 10,
@@ -1016,9 +838,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_187",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "ISEN_A_GND",
     "display_name": ".R_ISEN_A > .pin2 to net.GND",
@@ -1029,9 +849,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_188",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "ISEN_B_GND",
     "display_name": ".R_ISEN_B > .pin2 to net.GND",
@@ -1042,9 +860,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_189",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "VM_BULK_GND",
     "max_length": 7.5,
@@ -1056,9 +872,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_190",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "VM_HF_GND",
     "max_length": 5.5,
@@ -1070,9 +884,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_191",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "SLEEP_PULLDOWN_GND",
     "display_name": ".R_SLEEP_PD > .pin2 to net.GND",
@@ -1105,9 +917,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_216",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "C_TEMP_GND",
     "max_length": 4,
@@ -1130,9 +940,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_218",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "display_name": ".MH1 > .pin1 to net.GND",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -1141,9 +949,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_219",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "display_name": ".MH2 > .pin1 to net.GND",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -1152,9 +958,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_220",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "display_name": ".MH3 > .pin1 to net.GND",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -1163,9 +967,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_221",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "display_name": ".MH4 > .pin1 to net.GND",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_10_connectivity_net34"
@@ -1174,9 +976,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_231",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "BUZZER_PD_GND",
     "display_name": ".R_BUZZER_PD > .pin2 to net.GND",
@@ -1187,9 +987,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_232",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "BUZZER_SOURCE",
     "display_name": ".Q_BUZZER > .S to net.GND",
@@ -1200,9 +998,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_238",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "BUZZER_DECOUPLE_GND",
     "max_length": 6,
@@ -1214,9 +1010,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_244",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_A_REF2",
     "display_name": ".U_CURRENT_A > .REF2 to net.GND",
@@ -1227,9 +1021,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_245",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_A_GND",
     "display_name": ".U_CURRENT_A > .GND to net.GND",
@@ -1240,9 +1032,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_246",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_A_RESERVED",
     "display_name": ".U_CURRENT_A > .NC to net.GND",
@@ -1253,9 +1043,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_248",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_A_BYPASS_GND",
     "max_length": 5,
@@ -1267,9 +1055,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_252",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_A_FILTER_GND",
     "display_name": ".C_ADC_A > .pin2 to net.GND",
@@ -1280,9 +1066,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_258",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_B_REF2",
     "display_name": ".U_CURRENT_B > .REF2 to net.GND",
@@ -1293,9 +1077,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_259",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_B_GND",
     "display_name": ".U_CURRENT_B > .GND to net.GND",
@@ -1306,9 +1088,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_260",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_B_RESERVED",
     "display_name": ".U_CURRENT_B > .NC to net.GND",
@@ -1319,9 +1099,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_262",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_B_BYPASS_GND",
     "max_length": 5,
@@ -1333,9 +1111,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_266",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "CURRENT_B_FILTER_GND",
     "display_name": ".C_ADC_B > .pin2 to net.GND",
@@ -1346,9 +1122,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_270",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "STATUS_R_GND",
     "display_name": ".Q_STATUS_R > .E to net.GND",
@@ -1359,9 +1133,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_274",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "STATUS_G_GND",
     "display_name": ".Q_STATUS_G > .E to net.GND",
@@ -1372,9 +1144,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_278",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "STATUS_B_GND",
     "display_name": ".Q_STATUS_B > .E to net.GND",
@@ -1385,9 +1155,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_282",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "TP_PD_GND_TRACE",
     "display_name": ".TP_PD_GND > .pin1 to net.GND",
@@ -1398,9 +1166,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_287",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "ENCODER_GND",
     "display_name": ".U_ENCODER > .GND to net.GND",
@@ -1411,9 +1177,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_288",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "ENCODER_DIRECTION",
     "display_name": ".U_ENCODER > .DIR to net.GND",
@@ -1424,9 +1188,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_290",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "C_ENCODER_GND",
     "max_length": 8,
@@ -1438,9 +1200,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_292",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "C_ENCODER_BULK_GND",
     "max_length": 8,
@@ -1452,9 +1212,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_301",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "PD_CFG1_GROUND",
     "display_name": ".Q_PD_CFG1 > .GND to net.GND",
@@ -1465,9 +1223,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_306",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "PD_CFG2_GROUND",
     "display_name": ".Q_PD_CFG2 > .GND to net.GND",
@@ -1478,9 +1234,7 @@
     "type": "source_trace",
     "source_trace_id": "source_trace_311",
     "connected_source_port_ids": [],
-    "connected_source_net_ids": [
-      "source_net_0"
-    ],
+    "connected_source_net_ids": ["source_net_0"],
     "subcircuit_id": "subcircuit_source_group_10",
     "name": "PD_CFG3_GROUND",
     "display_name": ".Q_PD_CFG3 > .GND to net.GND",

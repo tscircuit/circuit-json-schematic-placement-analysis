@@ -173,6 +173,10 @@ export const getRelevantPlacementsForIssues = ({
           relevantPlacements.add(placement)
         }
         break
+      case "FourPinCrystalPatternMismatch":
+        for (const target of issue.suggestedPlacements)
+          addPlacement(target.schematicBox)
+        break
       case "CrystalNotCenteredOverLoadCapacitors":
         addPlacement(issue.crystalSchematicBox)
         addPlacement(issue.firstLoadCapacitorSchematicBox)

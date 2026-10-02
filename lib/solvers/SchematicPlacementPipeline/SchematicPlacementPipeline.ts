@@ -1,3 +1,4 @@
+import { FourPinCrystalPatternSolver } from "../FourPinCrystalPatternSolver/FourPinCrystalPatternSolver"
 import { ChipPinPairCapacitorPlacementSolver } from "../ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
 import { PiFilterPlacementSolver } from "../PiFilterPlacementSolver/PiFilterPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "../MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
@@ -63,6 +64,7 @@ const solversByIssueType = {
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
   TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
+  FourPinCrystalPatternMismatch: [FourPinCrystalPatternSolver],
   CrystalNotCenteredOverLoadCapacitors: [CrystalLoadCapacitorPlacementSolver],
   ComponentNetLabelCollision: [ComponentNetLabelCollisionSolver],
   ComponentBoxNetLabelCollision: [ComponentNetLabelCollisionSolver],
@@ -171,6 +173,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "TraceSimplificationSolver",
       TraceSimplificationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "FourPinCrystalPatternSolver",
+      FourPinCrystalPatternSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

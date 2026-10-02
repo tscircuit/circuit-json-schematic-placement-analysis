@@ -175,6 +175,27 @@ export interface TraceCanBeSimplifiedByMovingComponent {
   message: string
 }
 
+/** Suggested schematic positions and rotations for the four-part crystal pattern. */
+export interface CrystalPatternPlacement {
+  schematicBox: SchematicBoxPlacement
+  newSchX: number
+  newSchY: number
+  deltaSchRotation: number
+  pins: Array<{
+    sourcePortId: string
+    pinNumber?: number
+    newSchX: number
+    newSchY: number
+  }>
+}
+
+export interface FourPinCrystalPatternMismatch {
+  lineItemType: "FourPinCrystalPatternMismatch"
+  crystalSchematicBox: SchematicBoxPlacement
+  suggestedPlacements: CrystalPatternPlacement[]
+  message: string
+}
+
 export interface CrystalNotCenteredOverLoadCapacitors {
   lineItemType: "CrystalNotCenteredOverLoadCapacitors"
   crystalSchematicBox: SchematicBoxPlacement
@@ -504,6 +525,7 @@ export type SchematicPlacementIssue =
   | DiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
+  | FourPinCrystalPatternMismatch
   | CrystalNotCenteredOverLoadCapacitors
   | TwoPinComponentCouldBeFlipped
   | FeedbackNetworkNotCompact
