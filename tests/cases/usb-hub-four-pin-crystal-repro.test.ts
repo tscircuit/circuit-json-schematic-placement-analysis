@@ -55,7 +55,22 @@ test("records the real USB hub four-pin crystal load network", () => {
     }),
   ).toEqual([])
 
-  expect(analysis.getIssues()).toEqual([])
+  // The crystal placement is valid, but C32's reference overlaps a net label.
+  expect(analysis.getIssues()).toEqual([
+    expect.objectContaining({
+      lineItemType: "SchematicTextCollision",
+      schematicSheetId: "schematic_sheet_2",
+      schematicComponentId: "schematic_component_71",
+      schematicTextId: "schematic_component_71:symbol-text:4",
+      text: "C32",
+      collidingObject: {
+        type: "net_label",
+        id: "schematic_net_label_113",
+        text: "U13_XTAL2",
+      },
+      suggestedMove: undefined,
+    }),
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson,
