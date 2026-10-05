@@ -1,4 +1,4 @@
-import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxResizeComponentIds } from "../../utils/schematic-box-components"
 import {
   getPinLabelLength,
   getSafeSchematicBoxResize,
@@ -30,7 +30,6 @@ interface SourceComponentWithFtype {
   type: "source_component"
   source_component_id: string
   ftype?: string
-  standard?: string
 }
 
 interface LabelColumn {
@@ -68,7 +67,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
         .map((component) => [component.schematic_component_id, component]),
     )
     this.sourceComponentById = this.getSourceComponentById(circuitJson)
-    const boxIds = getSchematicBoxComponentIds(circuitJson)
+    const boxIds = getSchematicBoxResizeComponentIds(circuitJson)
     this.entries = Array.from(
       this.getPortsBySchematicComponentId(circuitJson),
     ).filter(([id]) => boxIds.has(id))
@@ -86,17 +85,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     const [schematicComponentId, ports] = entry
     const schematicBox = this.placementById.get(schematicComponentId)
     if (!schematicBox) return
-
-    const sourceComponent = schematicBox.sourceComponentId
-      ? this.sourceComponentById.get(schematicBox.sourceComponentId)
-      : undefined
-    // Standard USB-C boxes contain connector/USB artwork. A label-only gap
-    // estimate treats that artwork as empty space and recommends clipping it.
-    if (
-      sourceComponent?.ftype === "simple_connector" &&
-      sourceComponent.standard === "usb_c"
-    )
-      return
 
     const bounds = this.getCenteredRectBounds(schematicBox)
     const leftCol = this.getLabelColumn("left", ports)
@@ -195,10 +183,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     return {
       type: "source_component",
       source_component_id: el.source_component_id,
-      standard:
-        "standard" in el && typeof el.standard === "string"
-          ? el.standard
-          : undefined,
       ftype:
         "ftype" in el && typeof el.ftype === "string" ? el.ftype : undefined,
     }

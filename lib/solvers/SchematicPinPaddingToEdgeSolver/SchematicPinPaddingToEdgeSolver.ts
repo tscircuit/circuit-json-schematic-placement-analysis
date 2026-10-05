@@ -2,7 +2,7 @@ import {
   getPinLabelLength,
   getSafeSchematicBoxResize,
 } from "../../utils/schematic-box-resize"
-import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxResizeComponentIds } from "../../utils/schematic-box-components"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -63,7 +63,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.schematicComponentById = this.getSchematicComponentById(circuitJson)
     this.sourcePortById = this.getSourcePortById(circuitJson)
-    const boxIds = getSchematicBoxComponentIds(circuitJson)
+    const boxIds = getSchematicBoxResizeComponentIds(circuitJson)
     this.entries = Array.from(
       this.getPortsBySchematicComponentId(circuitJson),
     ).filter(([id]) => boxIds.has(id))
@@ -81,19 +81,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     const [schematicComponentId, ports] = entry
     const schematicBox = this.placementById.get(schematicComponentId)
     if (!schematicBox) return
-
-    const sourceComponent = this.params.ctx.circuitJson.find(
-      (element) =>
-        element.type === "source_component" &&
-        element.source_component_id === schematicBox.sourceComponentId,
-    )
-    // Standard connector artwork is not a resizable generic chip box.
-    if (
-      sourceComponent?.type === "source_component" &&
-      sourceComponent.ftype === "simple_connector" &&
-      sourceComponent.standard === "usb_c"
-    )
-      return
 
     const pinSpacing = this.getPinSpacing(
       schematicBox,
