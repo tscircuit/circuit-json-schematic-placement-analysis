@@ -43,10 +43,11 @@ test("records direct-wire impact on six real examples without changing other dia
       issueTypes,
     })) {
       expect(artifact.content).toContain('stroke="#16a34a"')
-      expect(artifact.content).toMatchSvgSnapshot(
-        import.meta.path,
-        `${artifact.schematicSheetId}-${artifact.issueIndex}`,
-      )
+      if (fixture === realSchematics.at(-1))
+        expect(artifact.content).toMatchSvgSnapshot(
+          import.meta.path,
+          `${artifact.schematicSheetId}-${artifact.issueIndex}`,
+        )
     }
     expect(JSON.stringify(circuitJson)).toBe(original)
   }

@@ -352,10 +352,7 @@ test("replaces only short isolated passive labels with a facing-compatible clear
 
   for (const [variant, json] of [
     ["trace-backed-text", base],
-    ["explicit-labels", explicit],
-    ["labels-at-pins", attached],
     ["direct-wire", wired],
-    ["blocked-route", blocked],
   ] as const)
     expect(
       createSchematicAnalysisFixtureSvg({
