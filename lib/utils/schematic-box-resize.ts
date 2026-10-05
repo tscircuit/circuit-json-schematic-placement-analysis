@@ -8,6 +8,10 @@ import {
   type LabelRect,
 } from "./schematic-box-labels"
 
+// Schematic units: leave readable space between label banks on different sides.
+// Same-side labels retain their pin spacing; resizing does not separate them.
+const MINIMUM_RESIZE_LABEL_BANK_GAP = 0.2
+
 /** Native pin labels use the renderer's 0.15-unit font. Measure their displayed
  * text uniformly; names and electrical roles do not determine text geometry. */
 export const getPinLabelLength = (port: SchematicPort): number =>
@@ -92,6 +96,7 @@ export function getSafeSchematicBoxResize(
         height: candidate.height ?? box.height,
       },
       ports,
+      MINIMUM_RESIZE_LABEL_BANK_GAP,
     ),
   )
 }
@@ -129,12 +134,17 @@ function getLabelLimitedDimension(
     constrainGap(center + current / 2 - a[maxKey], 0.5 - speed(a))
     for (let j = i + 1; j < labels.length; j++) {
       const b = labels[j]!
+      const requiredGap =
+        a.side === b.side
+          ? INNER_LABEL_COLLISION_PADDING
+          : MINIMUM_RESIZE_LABEL_BANK_GAP
       if (
         !schematicLabelIntervalsOverlap(
           a[otherMinKey],
           a[otherMaxKey],
           b[otherMinKey],
           b[otherMaxKey],
+          requiredGap,
         )
       )
         continue
@@ -144,7 +154,7 @@ function getLabelLimitedDimension(
       constrainGap(
         second[minKey] - first[maxKey],
         speed(second) - speed(first),
-        INNER_LABEL_COLLISION_PADDING,
+        requiredGap,
       )
     }
   }
@@ -154,6 +164,7 @@ function getLabelLimitedDimension(
 function labelsFit(
   resized: SchematicBoxPlacement,
   ports: SchematicPort[],
+  labelBankGap = INNER_LABEL_COLLISION_PADDING,
 ): boolean {
   if (!Number.isFinite(resized.width) || !Number.isFinite(resized.height))
     return false
@@ -169,7 +180,10 @@ function labelsFit(
     )
       return false
     for (let j = i + 1; j < labels.length; j++) {
-      if (schematicLabelRectsOverlap(a, labels[j]!)) return false
+      const b = labels[j]!
+      const gap =
+        a.side === b.side ? INNER_LABEL_COLLISION_PADDING : labelBankGap
+      if (schematicLabelRectsOverlap(a, b, gap)) return false
     }
   }
   return true

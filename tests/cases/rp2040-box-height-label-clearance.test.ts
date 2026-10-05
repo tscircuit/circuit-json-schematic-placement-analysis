@@ -3,6 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { renderRp2040InputSymbol } from "../assets/rp2040-bldc-controller/input-symbols"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("retains a height warning with a safe label-limited reduction", async () => {
   const circuitJson = await renderRp2040InputSymbol("J_PD", { width: 1.4 })
@@ -16,8 +17,7 @@ test("retains a height warning with a safe label-limited reduction", async () =>
   expect(issues).toHaveLength(1)
   const issue = issues[0]!
   expect(issue.suggestedSchWidth).toBeUndefined()
-  expect(issue.suggestedSchHeight).toBeGreaterThan(2.455)
-  expect(issue.suggestedSchHeight).toBeLessThanOrEqual(2.8)
+  expect(issue.suggestedSchHeight).toBeCloseTo(3.1)
   expect(issue.message).toEndWith("height")
   expect(JSON.stringify(circuitJson)).toBe(unchanged)
 
@@ -26,6 +26,7 @@ test("retains a height warning with a safe label-limited reduction", async () =>
     height: issue.suggestedSchHeight,
   })
   const resizedAnalysis = analyzeSchematicPlacement(resized)
+  expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
   expect(resizedAnalysis.getIssues()).toHaveLength(0)
   const component = resized.find(
     (element) => element.type === "schematic_component",
@@ -39,8 +40,8 @@ test("retains a height warning with a safe label-limited reduction", async () =>
       : component.size.width / 2 - Math.abs(port.center.x - component.center.x)
     expect(clearance + 1e-9).toBeGreaterThanOrEqual(component.pin_spacing!)
   }
-  // The limiting constraint really is label clearance: reducing the proposed
-  // height by a fraction of a pin spacing creates the original corner overlap.
+  // The readability margin is distinct from overlap detection. A slightly
+  // smaller body loses the requested gap before the labels actually collide.
   const tooShort = await renderRp2040InputSymbol("J_PD", {
     width: 1.4,
     height: issue.suggestedSchHeight! - component.pin_spacing! / 10,
@@ -49,7 +50,8 @@ test("retains a height warning with a safe label-limited reduction", async () =>
     analyzeSchematicPlacement(tooShort).getIssues({
       issueTypes: ["SchematicBoxInnerLabelCollision"],
     }),
-  ).toHaveLength(1)
+  ).toHaveLength(0)
+  expect(measureLabelBankGap(tooShort)).toBeLessThan(0.2)
   await expect(
     stackSvgsVertically(
       [

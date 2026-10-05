@@ -3,6 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { renderRp2040InputSymbol } from "../assets/rp2040-bldc-controller/input-symbols"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("checks corner labels after a height reduction while retaining safe width suggestions", async () => {
   for (const name of ["J_PD", "U_PD"] as const) {
@@ -40,6 +41,7 @@ test("checks corner labels after a height reduction while retaining safe width s
       })
       const resizedAnalysis = analyzeSchematicPlacement(resized)
       expect(resizedAnalysis.getIssues()).toHaveLength(0)
+      expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
       snapshots.push(
         createIssueReproSnapshot({
           circuitJson: resized,

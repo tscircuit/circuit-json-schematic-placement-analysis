@@ -3,10 +3,17 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("does not shrink BLDC symbols below the space needed by all pin banks", async () => {
-  for (const name of ["U1", "U3"] as const) {
-    const circuitJson = await renderBldcSymbol(name)
+  for (const variant of [
+    { name: "U1", height: undefined, snapshot: "U1" },
+    { name: "U1", height: 6, snapshot: "U1-tall" },
+    { name: "U3", height: undefined, snapshot: "U3" },
+  ] as const) {
+    const circuitJson = await renderBldcSymbol(variant.name, {
+      schHeight: variant.height,
+    })
     const original = JSON.stringify(circuitJson)
     const analysis = analyzeSchematicPlacement(circuitJson)
     const issues = analysis
@@ -14,7 +21,7 @@ test("does not shrink BLDC symbols below the space needed by all pin banks", asy
       .filter(
         (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
       )
-    expect(issues).toHaveLength(name === "U1" ? 1 : 0)
+    expect(issues).toHaveLength(variant.height === undefined ? 0 : 1)
     expect(JSON.stringify(circuitJson)).toBe(original)
     const snapshots = [
       createIssueReproSnapshot({
@@ -28,12 +35,13 @@ test("does not shrink BLDC symbols below the space needed by all pin banks", asy
       }),
     ]
     if (issues.length) {
-      const resized = await renderBldcSymbol(name, {
+      const resized = await renderBldcSymbol(variant.name, {
         schWidth: issues[0]!.suggestedSchWidth,
         schHeight: issues[0]!.suggestedSchHeight,
       })
       const resizedAnalysis = analyzeSchematicPlacement(resized)
       expect(resizedAnalysis.getIssues()).toHaveLength(0)
+      expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
       const component = resized.find(
         (element) => element.type === "schematic_component",
       )!
@@ -61,6 +69,6 @@ test("does not shrink BLDC symbols below the space needed by all pin banks", asy
     }
     await expect(
       stackSvgsVertically(snapshots, { normalizeSize: false, gap: 0 }),
-    ).toMatchSvgSnapshot(import.meta.path, name)
+    ).toMatchSvgSnapshot(import.meta.path, variant.snapshot)
   }
 })

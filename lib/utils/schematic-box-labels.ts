@@ -89,10 +89,11 @@ export function getSchematicBoxLabelRects(
 export function schematicLabelRectsOverlap(
   a: LabelRect,
   b: LabelRect,
+  padding = INNER_LABEL_COLLISION_PADDING,
 ): boolean {
   return (
-    schematicLabelIntervalsOverlap(a.xMin, a.xMax, b.xMin, b.xMax) &&
-    schematicLabelIntervalsOverlap(a.yMin, a.yMax, b.yMin, b.yMax)
+    schematicLabelIntervalsOverlap(a.xMin, a.xMax, b.xMin, b.xMax, padding) &&
+    schematicLabelIntervalsOverlap(a.yMin, a.yMax, b.yMin, b.yMax, padding)
   )
 }
 
@@ -101,11 +102,10 @@ export function schematicLabelIntervalsOverlap(
   aMax: number,
   bMin: number,
   bMax: number,
+  padding = INNER_LABEL_COLLISION_PADDING,
 ): boolean {
   return (
-    Math.min(aMax, bMax) -
-      Math.max(aMin, bMin) +
-      INNER_LABEL_COLLISION_PADDING >
+    Math.min(aMax, bMax) - Math.max(aMin, bMin) + padding >
     COLLISION_COMPARISON_EPSILON
   )
 }

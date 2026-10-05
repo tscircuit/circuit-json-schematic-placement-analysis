@@ -3,6 +3,7 @@ import { Circuit } from "@tscircuit/core"
 import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("solves label clearance symmetrically for width and height at every corner", async () => {
   for (const variant of [
@@ -58,17 +59,19 @@ test("solves label clearance symmetrically for width and height at every corner"
         ? issues[0]!.suggestedSchHeight
         : issues[0]!.suggestedSchWidth
     // 11-character label, edge padding, outer bank pin, half text height,
-    // and the shared 0.02 label clearance determine the limiting dimension.
-    expect(length).toBeCloseTo(3.08)
+    // and a 0.2 gap between label banks determine the limiting dimension.
+    expect(length).toBeCloseTo(3.44)
     const resized = await render(length!)
     const resizedAnalysis = analyzeSchematicPlacement(resized)
     expect(resizedAnalysis.getIssues()).toHaveLength(0)
+    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
     const tooSmall = await render(length! - 0.02)
     expect(
       analyzeSchematicPlacement(tooSmall).getIssues({
         issueTypes: ["SchematicBoxInnerLabelCollision"],
       }),
-    ).toHaveLength(1)
+    ).toHaveLength(0)
+    expect(measureLabelBankGap(tooSmall)).toBeLessThan(0.2)
     await expect(
       stackSvgsVertically(
         [

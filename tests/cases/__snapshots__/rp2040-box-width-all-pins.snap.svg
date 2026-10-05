@@ -58,7 +58,7 @@
 <tspan x="18" dy="22">#1</tspan>
 <tspan x="18" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
 <tspan x="18" dy="22">  the schematic box height&quot; componentName=&quot;J_PD&quot; pinSides=&quot;left&quot; edgeSides=&quot;top,bottom&quot;</tspan>
-<tspan x="18" dy="22">  suggestedSchHeight=&quot;2.74&quot; /&gt;</tspan>
+<tspan x="18" dy="22">  suggestedSchHeight=&quot;3.1&quot; /&gt;</tspan>
 </text>
   </g>
   </g>

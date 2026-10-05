@@ -3,6 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { renderRp2040InputSymbol } from "../assets/rp2040-bldc-controller/input-symbols"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("retains safe single-axis suggestions when a joint shrink collides at a corner", async () => {
   for (const variant of [
@@ -49,6 +50,7 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
       height: height ?? issue.schematicBox.height,
     })
     const resizedAnalysis = analyzeSchematicPlacement(resized)
+    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
     expect(
       resizedAnalysis
         .getIssues()
@@ -81,6 +83,7 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
     })
     const compactAnalysis = analyzeSchematicPlacement(compact)
     expect(compactAnalysis.getIssues()).toHaveLength(0)
+    expect(measureLabelBankGap(compact) + 1e-9).toBeGreaterThanOrEqual(0.2)
     if (variant.axis === "width") {
       expect(
         resizedAnalysis.getIssues({
