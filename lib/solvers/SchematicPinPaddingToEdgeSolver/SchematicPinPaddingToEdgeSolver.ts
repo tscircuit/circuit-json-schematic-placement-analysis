@@ -156,9 +156,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     }
     if (!candidates.length) return
     const details = candidates.map((candidate) => this.createIssue(candidate))
-    const representative = details.reduce((a, b) =>
-      b.excessPadding > a.excessPadding ? b : a,
-    )
     // Use the least aggressive dimension across the affected pin rows/columns.
     const widths = details.flatMap((detail) =>
       detail.suggestedSchWidth === undefined ? [] : [detail.suggestedSchWidth],
@@ -173,6 +170,16 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       height: heights.length ? Math.max(...heights) : undefined,
     })
     if (!resize) return
+    const applicableDetails = details.filter(
+      (detail) =>
+        (resize.width !== undefined &&
+          detail.suggestedSchWidth !== undefined) ||
+        (resize.height !== undefined &&
+          detail.suggestedSchHeight !== undefined),
+    )
+    const representative = applicableDetails.reduce((a, b) =>
+      b.excessPadding > a.excessPadding ? b : a,
+    )
     const dimensions = [
       resize.width === undefined ? "" : "width",
       resize.height === undefined ? "" : "height",
@@ -181,7 +188,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       .join(" and ")
     this.params.issues.push({
       ...representative,
-      paddingDetails: details.map(
+      paddingDetails: applicableDetails.map(
         ({
           pinSide,
           edgeSide,

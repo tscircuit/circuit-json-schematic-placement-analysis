@@ -21,7 +21,7 @@ test("records the full input sheet's local trace suggestions without rearranging
     ),
   ).toEqual({
     GenericSchematicBoxTooWide: 2,
-    SchematicPinPaddingToEdgeTooLarge: 2,
+    SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 6,
   })
@@ -34,7 +34,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         ? issue.schematicBox.sourceComponentName
         : "",
     ),
-  ).toEqual(["U_PD_OR", "U_BARREL_OR"])
+  ).toEqual(["J_PD", "U_PD", "U_PD_OR", "U_BARREL_OR"])
   // These custom symbols have no symbol_name: the explicit box flag is decisive.
   for (const name of [
     "D_PD_CC1",
@@ -110,7 +110,7 @@ test("records the full input sheet's local trace suggestions without rearranging
     .findLastIndex(
       (issue) =>
         issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge" &&
-        issue.schematicBox.sourceComponentName === "U_PD_OR",
+        issue.schematicBox.sourceComponentName === "U_PD",
     )
   expect(paddingIndex).toBeGreaterThan(-1)
   expect(
@@ -158,7 +158,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 11 }, (_, index) => index + 1),
+      Array.from({ length: 13 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

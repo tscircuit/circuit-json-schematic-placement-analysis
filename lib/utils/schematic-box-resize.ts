@@ -10,7 +10,7 @@ import {
 export const getPinLabelLength = (port: SchematicPort): number =>
   Array.from(port.display_pin_label ?? "").length * 0.095
 
-/** Validate the proposed dimensions together, preserving every pin's position
+/** Validate joint and single-axis proposals while preserving every pin's position
  * along its edge. Missing side metadata cannot establish a safe resize. */
 export function getSafeSchematicBoxResize(
   box: SchematicBoxPlacement,
@@ -55,13 +55,36 @@ export function getSafeSchematicBoxResize(
     box.height - height >= 2 * pinSpacing - 1e-9 ? height : undefined
   if (suggestedWidth === undefined && suggestedHeight === undefined) return
 
-  const resized = {
-    ...box,
-    width: suggestedWidth ?? box.width,
-    height: suggestedHeight ?? box.height,
+  const candidates: Array<{ width?: number; height?: number }> = [
+    { width: suggestedWidth, height: suggestedHeight },
+  ]
+  if (suggestedWidth !== undefined && suggestedHeight !== undefined) {
+    candidates.push({ width: suggestedWidth }, { height: suggestedHeight })
   }
+  const area = (candidate: { width?: number; height?: number }) =>
+    (candidate.width ?? box.width) * (candidate.height ?? box.height)
+  // A corner collision may invalidate the joint proposal while either axis
+  // remains useful. Apply identical geometry checks and prefer the smallest
+  // valid body; never combine separately validated dimensions afterward.
+  candidates.sort((a, b) => area(a) - area(b))
+  return candidates.find((candidate) =>
+    labelsFit(
+      {
+        ...box,
+        width: candidate.width ?? box.width,
+        height: candidate.height ?? box.height,
+      },
+      ports,
+    ),
+  )
+}
+
+function labelsFit(
+  resized: SchematicBoxPlacement,
+  ports: SchematicPort[],
+): boolean {
   if (!Number.isFinite(resized.width) || !Number.isFinite(resized.height))
-    return
+    return false
   const labels = getSchematicBoxLabelRects(resized, ports, getPinLabelLength)
   for (let i = 0; i < labels.length; i++) {
     const a = labels[i]!
@@ -72,10 +95,10 @@ export function getSafeSchematicBoxResize(
       a.yMin < resized.schY - resized.height / 2 - 1e-9 ||
       a.yMax > resized.schY + resized.height / 2 + 1e-9
     )
-      return
+      return false
     for (let j = i + 1; j < labels.length; j++) {
-      if (schematicLabelRectsOverlap(a, labels[j]!)) return
+      if (schematicLabelRectsOverlap(a, labels[j]!)) return false
     }
   }
-  return { width: suggestedWidth, height: suggestedHeight }
+  return true
 }
