@@ -2,6 +2,7 @@ import type {
   CircuitJson,
   SchematicComponent,
   SchematicPort,
+  SimulationOpAmp,
   SourcePort,
 } from "circuit-json"
 import type { SolverContext } from "../solvers/SolverContext"
@@ -24,6 +25,7 @@ export class PlacementNetworkIndex {
   private readonly placements = new Map<string, SchematicBoxPlacement[]>()
   private readonly schematicComponents = new Map<string, SchematicComponent>()
   private readonly schematicPorts = new Map<string, SchematicPort[]>()
+  private readonly opAmpModels: SimulationOpAmp[] = []
 
   constructor(ctx: SolverContext) {
     this.connected = getSourceConnectivity(ctx.circuitJson)
@@ -56,6 +58,7 @@ export class PlacementNetworkIndex {
         this.schematicComponents.set(element.schematic_component_id, element)
       if (element.type === "schematic_port" && element.source_port_id)
         append(this.schematicPorts, element.source_port_id, element)
+      if (element.type === "simulation_op_amp") this.opAmpModels.push(element)
     }
   }
 
@@ -82,6 +85,40 @@ export class PlacementNetworkIndex {
     return ports?.length === 1 ? ports[0] : undefined
   }
 
+  opAmpPorts(componentId: string) {
+    const ports = this.portsByComponent.get(componentId) ?? []
+    const models = this.opAmpModels.filter(
+      (model) =>
+        model.source_component_id === componentId ||
+        (!model.source_component_id &&
+          ports.some(
+            (port) => port.source_port_id === model.output_source_port_id,
+          )),
+    )
+    if (models.length !== 1) return
+    const model = models[0]!
+    const ids = [
+      model.inverting_input_source_port_id,
+      model.non_inverting_input_source_port_id,
+      model.output_source_port_id,
+      model.positive_supply_source_port_id,
+      model.negative_supply_source_port_id,
+    ]
+    if (new Set(ids).size !== ids.length) return
+    const terminals = ids.map((id) => {
+      const matches = ports.filter((port) => port.source_port_id === id)
+      return matches.length === 1 && !matches[0]!.do_not_connect
+        ? matches[0]
+        : undefined
+    })
+    if (terminals.some((port) => !port)) return
+    return {
+      invertingInput: terminals[0]!,
+      nonInvertingInput: terminals[1]!,
+      output: terminals[2]!,
+    }
+  }
+
   twoTerminalNets(componentId: string): [string, string] | undefined {
     const ports = this.portsByComponent.get(componentId)
     if (ports?.length !== 2) return
@@ -94,24 +131,43 @@ export class PlacementNetworkIndex {
     return this.powerNets.has(net) || this.groundNets.has(net)
   }
 
-  /** Direct feedback may return to either input; grounded output loads do not count. */
-  isDirectOpAmpFeedback(componentId: string): boolean {
+  /** Undefined means a connection across op-amp pins lacks unambiguous role metadata. */
+  isDirectOpAmpFeedback(componentId: string): boolean | undefined {
     const nets = this.twoTerminalNets(componentId)
     if (!nets || nets.some((net) => this.isRail(net))) return false
-    return nets.some((net) =>
-      (this.portsByNet.get(net) ?? []).some((port) => {
-        const hostId = port.source_component_id
-        if (this.components.get(hostId)?.ftype !== "simple_op_amp") return false
-        const output = this.namedPort(hostId, "output")
-        if (output?.source_port_id !== port.source_port_id) return false
-        return ["inverting_input", "non_inverting_input"].some((name) => {
-          const input = this.namedPort(hostId, name)
-          if (!input) return false
-          const inputNet = this.connected(input.source_port_id)
-          return inputNet !== net && nets.includes(inputNet)
-        })
-      }),
+    const hostIds = new Set(
+      (this.portsByNet.get(nets[0]) ?? [])
+        .filter(
+          (port) =>
+            this.components.get(port.source_component_id)?.ftype ===
+            "simple_op_amp",
+        )
+        .map((port) => port.source_component_id),
     )
+    let unknown = false
+    for (const hostId of hostIds) {
+      if (
+        !(this.portsByNet.get(nets[1]) ?? []).some(
+          (port) => port.source_component_id === hostId,
+        )
+      )
+        continue
+      const roles = this.opAmpPorts(hostId)
+      if (!roles) {
+        unknown = true
+        continue
+      }
+      const outputNet = this.connected(roles.output.source_port_id)
+      if (
+        nets.includes(outputNet) &&
+        [roles.invertingInput, roles.nonInvertingInput].some((input) => {
+          const inputNet = this.connected(input.source_port_id)
+          return inputNet !== outputNet && nets.includes(inputNet)
+        })
+      )
+        return true
+    }
+    return unknown ? undefined : false
   }
 
   sameLocalScope(

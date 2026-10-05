@@ -1,5 +1,4 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { SourcePort } from "circuit-json"
 import type {
   RegulatorCapacitorsOnWrongSides,
   SchematicBoxPlacement,
@@ -8,8 +7,6 @@ import type {
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
-
-type PortRole = "input" | "output" | "ground" | "control"
 
 /** A local input/output capacitor pair placed across the regulator from its ports. */
 export class RegulatorInputOutputCapacitorPlacementSolver extends BaseSolver {
@@ -38,15 +35,23 @@ export class RegulatorInputOutputCapacitorPlacementSolver extends BaseSolver {
     const index = this.index
     const host = index.placement(hostId)
     const ports = index.portsByComponent.get(hostId) ?? []
-    // Avoid interpreting arbitrary signal-processing chips as regulators.
-    if (!host || ports.some((port) => !portRole(port))) return
-    const inputs = ports.filter((port) => portRole(port) === "input")
-    const outputs = ports.filter((port) => portRole(port) === "output")
-    const grounds = ports.filter((port) => portRole(port) === "ground")
+    if (!host) return
+    // Supply direction must be explicit; other chip pins need no classification.
+    const inputs = ports.filter((port) => port.requires_power === true)
+    const outputs = ports.filter((port) => port.provides_power === true)
+    const grounds = ports.filter(
+      (port) => port.requires_ground === true || port.provides_ground === true,
+    )
     if (inputs.length !== 1 || outputs.length !== 1 || !grounds.length) return
     const input = inputs[0]!
     const output = outputs[0]!
-    if ([input, output, ...grounds].some((port) => port.do_not_connect)) return
+    const supplyPorts = [input, output, ...grounds]
+    if (
+      supplyPorts.some((port) => port.do_not_connect) ||
+      new Set(supplyPorts.map((port) => port.source_port_id)).size !==
+        supplyPorts.length
+    )
+      return
     const inputNet = index.connected(input.source_port_id)
     const outputNet = index.connected(output.source_port_id)
     const groundNets = new Set(
@@ -56,12 +61,9 @@ export class RegulatorInputOutputCapacitorPlacementSolver extends BaseSolver {
     const groundNet = [...groundNets][0]!
     if (
       new Set([inputNet, outputNet, groundNet]).size !== 3 ||
-      !(
-        index.groundNets.has(groundNet) ||
-        grounds.some((port) => port.requires_ground || port.provides_ground)
-      ) ||
-      !(index.powerNets.has(inputNet) || input.requires_power) ||
-      !(index.powerNets.has(outputNet) || output.provides_power)
+      index.groundNets.has(inputNet) ||
+      index.groundNets.has(outputNet) ||
+      index.powerNets.has(groundNet)
     )
       return
 
@@ -183,21 +185,4 @@ export class RegulatorInputOutputCapacitorPlacementSolver extends BaseSolver {
     addAttr(attrs, "message", issue.message)
     return `<RegulatorCapacitorsOnWrongSides ${attrs.join(" ")} />`
   }
-}
-
-function portRole(port: SourcePort): PortRole | undefined {
-  const roles = new Set<PortRole>()
-  for (const hint of [port.name, ...(port.port_hints ?? [])]) {
-    const name = hint.toUpperCase().replace(/[ _-]/g, "")
-    if (/^(?:VIN|IN|INPUT)$/.test(name)) roles.add("input")
-    else if (/^(?:VOUT|OUT|OUTPUT)$/.test(name)) roles.add("output")
-    else if (/^(?:GND\d*|VSS)$/.test(name)) roles.add("ground")
-    else if (
-      /^(?:EN|ENABLE|CE|SHDN|NC\d*|EP|PAD|ADJ|FB|BYP|BYPASS|NR|PG|PGOOD)$/.test(
-        name,
-      )
-    )
-      roles.add("control")
-  }
-  return roles.size === 1 ? [...roles][0] : undefined
 }

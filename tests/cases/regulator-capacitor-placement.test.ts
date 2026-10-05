@@ -50,18 +50,37 @@ test("reports reversed regulator capacitors while accepting offset correct-side 
   const guards: Record<string, (json: CircuitJson) => void> = {
     "unknown input": (json) => {
       const p = getReproSourcePort(json, "U1", "IN")
-      p.name = "pin1"
-      p.port_hints = ["pin1"]
+      delete p.requires_power
     },
-    "conflicting input/output aliases": (json) => {
-      getReproSourcePort(json, "U1", "IN").port_hints!.push("OUT")
+    "conflicting supply roles": (json) => {
+      getReproSourcePort(json, "U1", "IN").provides_power = true
+    },
+    "explicitly false input role": (json) => {
+      getReproSourcePort(json, "U1", "IN").requires_power = false
+    },
+    "unknown ground despite a named ground net": (json) => {
+      delete getReproSourcePort(json, "U1", "GND").requires_ground
+    },
+    "unconnectable output": (json) => {
+      getReproSourcePort(json, "U1", "OUT").do_not_connect = true
+    },
+    "multiple supply inputs": (json) => {
+      getReproSourcePort(json, "U1", "EN").requires_power = true
+    },
+    "additional ambiguous power port": (json) => {
+      const port = getReproSourcePort(json, "U1", "EN")
+      port.requires_power = true
+      port.provides_power = true
+    },
+    "power and ground on the same port": (json) => {
+      getReproSourcePort(json, "U1", "IN").requires_ground = true
     },
     "signal chip instead of regulator": (json) => {
-      const p = getReproSourcePort(json, "U1", "EN")
-      p.name = "DATA"
-      p.port_hints = ["DATA"]
+      delete getReproSourcePort(json, "U1", "IN").requires_power
+      delete getReproSourcePort(json, "U1", "OUT").provides_power
     },
     "unknown output supply": (json) => {
+      delete getReproSourcePort(json, "U1", "OUT").provides_power
       for (const e of json)
         if (e.type === "source_net" && e.name === "V3V3") {
           e.is_power = false
@@ -147,6 +166,11 @@ test("reports reversed regulator capacitors while accepting offset correct-side 
   const renamed = structuredClone(before)
   for (const e of renamed) {
     if (e.type === "source_component") e.name = `part_${e.source_component_id}`
+    if (e.type === "source_port") {
+      e.name = e.source_port_id
+      e.port_hints = ["IN", "OUT", "GND"]
+    }
+    if (e.type === "source_net") e.name = `net_${e.source_net_id}`
     if (
       e.type === "source_port" ||
       e.type === "source_net" ||
@@ -154,7 +178,23 @@ test("reports reversed regulator capacitors while accepting offset correct-side 
     )
       delete e.subcircuit_connectivity_map_key
   }
-  expect(issues(renamed)).toHaveLength(1)
+  const originalIssue = issues(before)[0]!
+  if (originalIssue.lineItemType !== "RegulatorCapacitorsOnWrongSides")
+    throw new Error("Expected regulator capacitor issue")
+  expect(issues(renamed)).toMatchObject([
+    {
+      inputSourcePortId: originalIssue.inputSourcePortId,
+      outputSourcePortId: originalIssue.outputSourcePortId,
+      inputCapacitorSchematicBox: {
+        sourceComponentId:
+          originalIssue.inputCapacitorSchematicBox.sourceComponentId,
+      },
+      outputCapacitorSchematicBox: {
+        sourceComponentId:
+          originalIssue.outputCapacitorSchematicBox.sourceComponentId,
+      },
+    },
+  ])
   // Rotate the whole geometry; the rule follows actual port sides in every direction.
   let rotated = structuredClone(before)
   for (let turn = 0; turn < 3; turn++) {

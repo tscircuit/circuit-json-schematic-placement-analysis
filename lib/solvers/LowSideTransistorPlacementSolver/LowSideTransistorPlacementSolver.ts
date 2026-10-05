@@ -42,12 +42,12 @@ export class LowSideTransistorPlacementSolver extends BaseSolver {
     if (!id) return
     const index = this.index
     const transistor = index.placement(id)
-    if (!transistor || index.portsByComponent.get(id)?.length !== 3) return
-    // Imported symbols may use a different package pinout. Never infer roles
-    // from pin numbers, reference designators or the rendered symbol name.
-    const base = index.namedPort(id, "base")
-    const collector = index.namedPort(id, "collector")
-    const emitter = index.namedPort(id, "emitter")
+    if (!transistor) return
+    // Native transistor pin numbering is collector = 1, base = 2, emitter = 3.
+    const terminals = this.nativeTerminalPorts(id, "simple_transistor")
+    const collector = terminals?.get(1)
+    const base = terminals?.get(2)
+    const emitter = terminals?.get(3)
     if (!base || !collector || !emitter) return
     const baseNet = index.connected(base.source_port_id)
     const collectorNet = index.connected(collector.source_port_id)
@@ -110,8 +110,10 @@ export class LowSideTransistorPlacementSolver extends BaseSolver {
     if (clampPeers.length !== 1) return
     const clampId = clampPeers[0]!.source_component_id
     const clamp = index.placement(clampId)
-    const anode = index.namedPort(clampId, "anode")
-    const cathode = index.namedPort(clampId, "cathode")
+    // Native diode pin numbering is anode = 1, cathode = 2.
+    const diodeTerminals = this.nativeTerminalPorts(clampId, "simple_diode")
+    const anode = diodeTerminals?.get(1)
+    const cathode = diodeTerminals?.get(2)
     if (
       index.components.get(clampId)?.ftype !== "simple_diode" ||
       !index.twoTerminalNets(clampId) ||
@@ -158,6 +160,39 @@ export class LowSideTransistorPlacementSolver extends BaseSolver {
       placementProblems,
       message: `Arrange ${name} below ${loadName}, with its collector facing up toward the load and emitter facing down toward ground; place ${baseResistor.sourceComponentName ?? resistorId} beside the base. Preserve all pin connections and reroute affected traces.`,
     })
+  }
+
+  private nativeTerminalPorts(
+    componentId: string,
+    ftype: "simple_transistor" | "simple_diode",
+  ) {
+    const index = this.index
+    if (index.components.get(componentId)?.ftype !== ftype) return
+    const pinCount = ftype === "simple_transistor" ? 3 : 2
+    const ports = index.portsByComponent.get(componentId) ?? []
+    if (
+      ports.length !== pinCount ||
+      new Set(ports.map((port) => port.source_port_id)).size !== pinCount
+    )
+      return
+    const numbered = new Map<number, (typeof ports)[number]>()
+    for (const port of ports) {
+      const pin = port.pin_number
+      const schematicPort = index.port(port)
+      if (
+        pin === undefined ||
+        !Number.isInteger(pin) ||
+        pin < 1 ||
+        pin > pinCount ||
+        numbered.has(pin) ||
+        port.do_not_connect ||
+        !schematicPort ||
+        schematicPort.pin_number !== pin
+      )
+        return
+      numbered.set(pin, port)
+    }
+    return numbered
   }
 
   static issueToString(issue: LowSideTransistorNotAlignedWithLoad): string {

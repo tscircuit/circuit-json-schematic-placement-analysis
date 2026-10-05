@@ -17,6 +17,8 @@ export async function createRegulatorCapacitorPlacement(corrected = false) {
           pin5: "OUT",
         }}
         pinAttributes={{
+          pin1: { requiresPower: true },
+          pin5: { providesPower: true },
           pin2: { requiresGround: true },
           pin4: { doNotConnect: true },
         }}

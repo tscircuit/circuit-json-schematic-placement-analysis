@@ -21,11 +21,11 @@ test("skips ambiguous transistor roles, rails, loads and circuits in separate bl
     (json) => {
       for (const role of ["base", "collector", "emitter"]) {
         const port = getReproSourcePort(json, "Q1", role)
-        port.port_hints = [port.name]
+        delete port.pin_number
       }
     },
     (json) => {
-      getReproSourcePort(json, "Q1", "collector").port_hints!.push("base")
+      getReproSourcePort(json, "Q1", "collector").pin_number = 2
     },
     (json) => {
       const net = json.find((e) => e.type === "source_net" && e.name === "VCC")!
@@ -45,10 +45,13 @@ test("skips ambiguous transistor roles, rails, loads and circuits in separate bl
     (json) => {
       const anode = getReproSourcePort(json, "D1", "anode")
       const cathode = getReproSourcePort(json, "D1", "cathode")
-      anode.port_hints = ["cathode"]
-      cathode.port_hints = ["anode"]
-      anode.name = "pin1"
-      cathode.name = "pin2"
+      anode.pin_number = 2
+      cathode.pin_number = 1
+      for (const e of json) {
+        if (e.type !== "schematic_port") continue
+        if (e.source_port_id === anode.source_port_id) e.pin_number = 2
+        if (e.source_port_id === cathode.source_port_id) e.pin_number = 1
+      }
     },
     (json) => {
       getReproSchematicComponent(json, "BZ1").schematic_sheet_id = "other-sheet"
@@ -87,8 +90,7 @@ test("skips ambiguous transistor roles, rails, loads and circuits in separate bl
         .LowSideTransistorNotAlignedWithLoad,
     ).toBe(0)
   }
-  // Connectivity must also work without cached keys (using source traces), and
-  // never depend on a load's name or on a particular package pin numbering.
+  // Names and connectivity cannot substitute for unsupported native pin numbers.
   const renamed = structuredClone(original)
   for (const e of renamed) {
     if (e.type === "source_component")
@@ -104,7 +106,7 @@ test("skips ambiguous transistor roles, rails, loads and circuits in separate bl
   expect(
     analyzeSchematicPlacement(renamed).getIssueCounts()
       .LowSideTransistorNotAlignedWithLoad,
-  ).toBe(1)
+  ).toBe(0)
   const unknownPins = structuredClone(original)
   mutations[1]!(unknownPins)
   expect(
