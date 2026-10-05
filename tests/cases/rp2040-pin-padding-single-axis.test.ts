@@ -54,10 +54,33 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
         .getIssues()
         .filter(
           (finding) =>
-            finding.lineItemType === "SchematicBoxInnerLabelCollision" ||
-            finding.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
+            finding.lineItemType === "SchematicBoxInnerLabelCollision",
         ),
     ).toHaveLength(0)
+    // A safe single-axis resize can leave a useful reduction on the other
+    // axis. Apply that suggestion too instead of asserting a false zero count.
+    const remaining = resizedAnalysis
+      .getIssues()
+      .filter(
+        (finding) =>
+          finding.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
+      )
+    expect(remaining).toHaveLength(1)
+    const followup = remaining[0]!
+    if (variant.axis === "height") {
+      expect(followup.suggestedSchHeight).toBeUndefined()
+      expect(followup.suggestedSchWidth).toBeDefined()
+    } else {
+      expect(followup.suggestedSchWidth).toBeUndefined()
+      expect(followup.suggestedSchHeight).toBeDefined()
+    }
+    const compact = await renderRp2040InputSymbol(variant.name, {
+      width: followup.suggestedSchWidth ?? width ?? issue.schematicBox.width,
+      height:
+        followup.suggestedSchHeight ?? height ?? issue.schematicBox.height,
+    })
+    const compactAnalysis = analyzeSchematicPlacement(compact)
+    expect(compactAnalysis.getIssues()).toHaveLength(0)
     if (variant.axis === "width") {
       expect(
         resizedAnalysis.getIssues({
@@ -97,6 +120,14 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
           createIssueReproSnapshot({
             circuitJson: resized,
             analysis: resizedAnalysis,
+            width: 1200,
+            height: 550,
+            showFullSchematic: true,
+            showOverlay: false,
+          }),
+          createIssueReproSnapshot({
+            circuitJson: compact,
+            analysis: compactAnalysis,
             width: 1200,
             height: 550,
             showFullSchematic: true,

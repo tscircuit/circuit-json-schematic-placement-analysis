@@ -2,7 +2,10 @@ import type { SchematicPort } from "circuit-json"
 import type { SchematicBoxPlacement } from "../types"
 import {
   getSchematicBoxLabelRects,
+  INNER_LABEL_COLLISION_PADDING,
+  schematicLabelIntervalsOverlap,
   schematicLabelRectsOverlap,
+  type LabelRect,
 } from "./schematic-box-labels"
 
 /** Native pin labels use the renderer's 0.15-unit font. Measure their displayed
@@ -21,6 +24,7 @@ export function getSafeSchematicBoxResize(
 ): { width?: number; height?: number } | undefined {
   if (!Number.isFinite(pinSpacing) || pinSpacing <= 0) return
   if (ports.some((port) => !port.side_of_component)) return
+  if (!labelsFit(box, ports)) return
 
   let minWidth = 0
   let minHeight = 0
@@ -43,11 +47,19 @@ export function getSafeSchematicBoxResize(
   const width =
     proposed.width === undefined
       ? box.width
-      : Math.max(proposed.width, minWidth)
+      : Math.max(
+          proposed.width,
+          minWidth,
+          getLabelLimitedDimension(box, ports, "width"),
+        )
   const height =
     proposed.height === undefined
       ? box.height
-      : Math.max(proposed.height, minHeight)
+      : Math.max(
+          proposed.height,
+          minHeight,
+          getLabelLimitedDimension(box, ports, "height"),
+        )
   // Each caller owns its reporting threshold. The padding rule requires a
   // spacing per edge; the width rule has already checked its label-gap limit.
   const isUsefulReduction = (reduction: number) =>
@@ -82,6 +94,61 @@ export function getSafeSchematicBoxResize(
       ports,
     ),
   )
+}
+
+/** With the other dimension fixed, each label moves with its edge: -1/2,
+ * 0 or +1/2 units per unit of resizing. Solve the resulting linear clearance
+ * constraints directly, preserving the order of initially separated labels. */
+function getLabelLimitedDimension(
+  box: SchematicBoxPlacement,
+  ports: SchematicPort[],
+  dimension: "width" | "height",
+): number {
+  const current = box[dimension]
+  const center = dimension === "width" ? box.schX : box.schY
+  const minKey = dimension === "width" ? "xMin" : "yMin"
+  const maxKey = dimension === "width" ? "xMax" : "yMax"
+  const otherMinKey = dimension === "width" ? "yMin" : "xMin"
+  const otherMaxKey = dimension === "width" ? "yMax" : "xMax"
+  const speed = (label: LabelRect): number => {
+    if (dimension === "width") {
+      return label.side === "left" ? -0.5 : label.side === "right" ? 0.5 : 0
+    }
+    return label.side === "bottom" ? -0.5 : label.side === "top" ? 0.5 : 0
+  }
+  let minimum = 0
+  const constrainGap = (gap: number, rate: number, requiredGap = 0) => {
+    // A gap with zero/negative rate cannot get smaller during a shrink.
+    if (rate > 0)
+      minimum = Math.max(minimum, current + (requiredGap - gap) / rate)
+  }
+  const labels = getSchematicBoxLabelRects(box, ports, getPinLabelLength)
+  for (let i = 0; i < labels.length; i++) {
+    const a = labels[i]!
+    constrainGap(a[minKey] - (center - current / 2), speed(a) + 0.5)
+    constrainGap(center + current / 2 - a[maxKey], 0.5 - speed(a))
+    for (let j = i + 1; j < labels.length; j++) {
+      const b = labels[j]!
+      if (
+        !schematicLabelIntervalsOverlap(
+          a[otherMinKey],
+          a[otherMaxKey],
+          b[otherMinKey],
+          b[otherMaxKey],
+        )
+      )
+        continue
+      // The original box was validated before reaching here. If the labels
+      // overlap on the fixed axis, they must be separated along this axis.
+      const [first, second] = a[maxKey] <= b[minKey] ? [a, b] : [b, a]
+      constrainGap(
+        second[minKey] - first[maxKey],
+        speed(second) - speed(first),
+        INNER_LABEL_COLLISION_PADDING,
+      )
+    }
+  }
+  return minimum
 }
 
 function labelsFit(

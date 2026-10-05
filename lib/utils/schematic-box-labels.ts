@@ -12,7 +12,7 @@ export interface LabelRect {
 // Existing inner-label collision geometry, shared by detection and resize validation.
 const PIN_LABEL_EDGE_PADDING = 0.1
 const PIN_LABEL_TEXT_HEIGHT = 0.15
-const INNER_LABEL_COLLISION_PADDING = 0.02
+export const INNER_LABEL_COLLISION_PADDING = 0.02
 const COLLISION_COMPARISON_EPSILON = 1e-9
 
 export function getSchematicBoxLabelRects(
@@ -91,13 +91,21 @@ export function schematicLabelRectsOverlap(
   b: LabelRect,
 ): boolean {
   return (
-    Math.min(a.xMax, b.xMax) -
-      Math.max(a.xMin, b.xMin) +
+    schematicLabelIntervalsOverlap(a.xMin, a.xMax, b.xMin, b.xMax) &&
+    schematicLabelIntervalsOverlap(a.yMin, a.yMax, b.yMin, b.yMax)
+  )
+}
+
+export function schematicLabelIntervalsOverlap(
+  aMin: number,
+  aMax: number,
+  bMin: number,
+  bMax: number,
+): boolean {
+  return (
+    Math.min(aMax, bMax) -
+      Math.max(aMin, bMin) +
       INNER_LABEL_COLLISION_PADDING >
-      COLLISION_COMPARISON_EPSILON &&
-    Math.min(a.yMax, b.yMax) -
-      Math.max(a.yMin, b.yMin) +
-      INNER_LABEL_COLLISION_PADDING >
-      COLLISION_COMPARISON_EPSILON
+    COLLISION_COMPARISON_EPSILON
   )
 }

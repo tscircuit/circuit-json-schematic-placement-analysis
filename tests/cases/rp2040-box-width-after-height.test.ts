@@ -20,9 +20,9 @@ test("checks corner labels after a height reduction while retaining safe width s
     const widthIssues = analysis
       .getIssues()
       .filter((issue) => issue.lineItemType === "GenericSchematicBoxTooWide")
-    // The first symbol's corner labels block the proposed width. The second
-    // still has enough space to reduce width after reducing height.
-    expect(widthIssues).toHaveLength(name === "J_PD" ? 0 : 1)
+    // Both symbols can shrink in width, but corner labels may require a wider
+    // result than the label-gap estimate alone would suggest.
+    expect(widthIssues).toHaveLength(1)
     const snapshots = [
       createIssueReproSnapshot({
         circuitJson,

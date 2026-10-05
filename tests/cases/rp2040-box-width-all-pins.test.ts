@@ -39,7 +39,24 @@ test("width suggestions preserve every pin bank and stop at the required width",
     width: issue.suggestedSchWidth,
   })
   const resizedAnalysis = analyzeSchematicPlacement(resized)
-  expect(resizedAnalysis.getIssues()).toHaveLength(0)
+  expect(
+    resizedAnalysis.getIssues({
+      issueTypes: [
+        "GenericSchematicBoxTooWide",
+        "SchematicBoxInnerLabelCollision",
+      ],
+    }),
+  ).toHaveLength(0)
+  const heightIssues = resizedAnalysis
+    .getIssues()
+    .filter(
+      (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
+    )
+  expect(heightIssues).toHaveLength(1)
+  expect(heightIssues[0]!.suggestedSchWidth).toBeUndefined()
+  expect(heightIssues[0]!.suggestedSchHeight).toBeLessThan(
+    component.size.height,
+  )
   const resizedComponent = resized.find(
     (element) => element.type === "schematic_component",
   )!
