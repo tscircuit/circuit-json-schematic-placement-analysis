@@ -47,7 +47,11 @@ test("preserves component and symbol owned boxes and converts standalone box cor
     { lineItemType: "ComponentOverlap", overlapWidth: 2, overlapHeight: 1 },
   ])
   await expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 400 }),
+    createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      height: 400,
+    }).replace(/[ \t]+$/gm, ""),
   ).toMatchSvgSnapshot(import.meta.path)
 
   // A normal component record remains authoritative for the centre. Its owned
