@@ -39,11 +39,13 @@ import { TwoPinComponentOrientationSolver } from "../TwoPinComponentOrientationS
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
+import { LocalPassiveNetLabelSolver } from "../LocalPassiveNetLabelSolver/LocalPassiveNetLabelSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  LocalPassiveConnectionShouldBeDirectWire: [LocalPassiveNetLabelSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
@@ -297,6 +299,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ChipPinPairCapacitorPlacementSolver",
       ChipPinPairCapacitorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "LocalPassiveNetLabelSolver",
+      LocalPassiveNetLabelSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
