@@ -262,8 +262,7 @@ export class ConnectorPlacementSolver extends BaseSolver {
           ]),
         ).values(),
       ]
-      const name =
-        connector.sourceComponentName ?? connector.schematicComponentId
+      const name = connector.sourceComponentName || "component"
       issues.push({
         lineItemType: "ConnectorPositionCausesTraceDetours",
         connectorSchematicBox: connector,
@@ -278,7 +277,7 @@ export class ConnectorPlacementSolver extends BaseSolver {
         deltaSchY: round(delta.y),
         currentTotalSignalDistance: round(before),
         suggestedTotalSignalDistance: round(after),
-        message: `Move ${name} to schX=${target.x}, schY=${target.y} so its signal pins face ${connectedComponents.map((p) => p.sourceComponentName ?? p.schematicComponentId).join(", ")}. Preserve rotation and pin assignments; reroute the connections and attached rail labels.`,
+        message: `Move ${name} to schX=${target.x}, schY=${target.y} so its signal pins face ${connectedComponents.map((p) => p.sourceComponentName || "component").join(", ")}. Preserve rotation and pin assignments; reroute the connections and attached rail labels.`,
       })
     }
     this.solved = true
@@ -295,7 +294,7 @@ export class ConnectorPlacementSolver extends BaseSolver {
       attrs,
       "connectedComponents",
       issue.connectedComponents
-        .map((p) => p.sourceComponentName ?? p.schematicComponentId)
+        .map((p) => p.sourceComponentName || "component")
         .join(","),
     )
     for (const key of [

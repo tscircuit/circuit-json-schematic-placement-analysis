@@ -114,7 +114,7 @@ export class PiFilterPlacementSolver extends BaseSolver {
     const maxSignalPinDistance = Math.max(first.distance, second.distance)
     if (maxSignalPinDistance <= maxRecommendedSignalPinDistance) return
     const name = (p: typeof inductor.placement) =>
-      p.sourceComponentName ?? p.sourceComponentId
+      p.sourceComponentName || "component"
     this.params.issues.push({
       lineItemType: "PiFilterComponentsNotGrouped",
       inductorSchematicBox: inductor.placement,

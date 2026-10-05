@@ -111,7 +111,7 @@ export class PullResistorPlacementSolver extends BaseSolver {
       wrongSideGap,
       maxRecommendedWrongSideGap:
         PullResistorPlacementSolver.MIN_WRONG_SIDE_GAP,
-      message: `consider placing ${resistor.sourceComponentName ?? id} ${preferredSide} ${host.sourceComponentName ?? signalPort.source_component_id}.${signalPort.name} so the pull-${pullDirection} branch reads toward ${pullDirection === "up" ? "power" : "ground"}`,
+      message: `consider placing ${resistor.sourceComponentName || "component"} ${preferredSide} ${host.sourceComponentName || "component"}.${signalPort.name} so the pull-${pullDirection} branch reads toward ${pullDirection === "up" ? "power" : "ground"}`,
     })
   }
 

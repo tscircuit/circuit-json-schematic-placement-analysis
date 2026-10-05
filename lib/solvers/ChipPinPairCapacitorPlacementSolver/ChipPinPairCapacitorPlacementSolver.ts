@@ -144,7 +144,7 @@ export class ChipPinPairCapacitorPlacementSolver extends BaseSolver {
       ],
       maxPinDistance,
       maxRecommendedPinDistance,
-      message: `Place ${capacitor.sourceComponentName ?? capacitorId} beside its two connected pins on the ${side} side of ${host.sourceComponentName ?? hostId} so their connections can be read together. Preserve pin connections, leave room for labels, and reroute affected traces; exact alignment is not required.`,
+      message: `Place ${capacitor.sourceComponentName || "component"} beside its two connected pins on the ${side} side of ${host.sourceComponentName || "component"} so their connections can be read together. Preserve pin connections, leave room for labels, and reroute affected traces; exact alignment is not required.`,
     })
   }
 

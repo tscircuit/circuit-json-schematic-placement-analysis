@@ -125,8 +125,8 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
     )
       return
 
-    const diodeName = diodeBox.sourceComponentName ?? diodeCompId
-    const resistorName = resistorBox.sourceComponentName ?? resistorCompId
+    const diodeName = diodeBox.sourceComponentName || "component"
+    const resistorName = resistorBox.sourceComponentName || "component"
     const diodePin =
       diodePort?.display_pin_label ?? diodePort?.pin_number?.toString()
     const resistorPin =

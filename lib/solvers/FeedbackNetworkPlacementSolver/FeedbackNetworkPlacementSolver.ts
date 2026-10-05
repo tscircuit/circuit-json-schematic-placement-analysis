@@ -99,8 +99,7 @@ export class FeedbackNetworkPlacementSolver extends BaseSolver {
     if (distantComponents.length === 0) return
     const names = distantComponents
       .map(
-        ({ schematicBox }) =>
-          schematicBox.sourceComponentName ?? schematicBox.sourceComponentId,
+        ({ schematicBox }) => schematicBox.sourceComponentName || "component",
       )
       .join(", ")
     this.issues.push({
@@ -110,7 +109,7 @@ export class FeedbackNetworkPlacementSolver extends BaseSolver {
       distantComponents,
       outputSourcePortId: output.source_port_id,
       invertingInputSourcePortId: input.source_port_id,
-      message: `consider grouping ${names} closer to ${amplifier.sourceComponentName ?? id}, with a compact feedback return path above or below the amplifier`,
+      message: `consider grouping ${names} closer to ${amplifier.sourceComponentName || "component"}, with a compact feedback return path above or below the amplifier`,
     })
   }
 
@@ -125,7 +124,7 @@ export class FeedbackNetworkPlacementSolver extends BaseSolver {
       attrs,
       "feedbackComponentNames",
       issue.feedbackComponents
-        .map((box) => box.sourceComponentName ?? box.sourceComponentId)
+        .map((box) => box.sourceComponentName || "component")
         .join(", "),
     )
     addAttr(
@@ -133,8 +132,7 @@ export class FeedbackNetworkPlacementSolver extends BaseSolver {
       "distantComponentNames",
       issue.distantComponents
         .map(
-          ({ schematicBox }) =>
-            schematicBox.sourceComponentName ?? schematicBox.sourceComponentId,
+          ({ schematicBox }) => schematicBox.sourceComponentName || "component",
         )
         .join(", "),
     )

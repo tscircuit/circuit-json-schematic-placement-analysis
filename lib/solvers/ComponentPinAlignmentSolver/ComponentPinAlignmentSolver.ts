@@ -198,10 +198,7 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
       return
     }
 
-    const targetName =
-      rightPlacement.sourceComponentName ??
-      rightPlacement.schematicComponentId ??
-      "component"
+    const targetName = rightPlacement.sourceComponentName || "component"
     const deltaSchY = bestCandidate.deltaSchY
     const newSchY = rightPlacement.schY + deltaSchY
 

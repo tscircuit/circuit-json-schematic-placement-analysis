@@ -35,10 +35,10 @@
     <tspan x="18" dy="22">&lt;FeedbackNetworkNotCompact amplifierName=&quot;U1&quot; feedbackComponentNames=&quot;R1&quot;</tspan>
     <tspan x="18" dy="22">  distantComponentNames=&quot;R1&quot; message=&quot;consider grouping R1 closer to U1, with a compact feedback</tspan>
     <tspan x="18" dy="22">  return path above or below the amplifier&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U1&quot; sourcePortId=&quot;source_port_2&quot; railType=&quot;ground&quot;</tspan>
-    <tspan x="18" dy="22">  pathSpan=&quot;9.3&quot; pathLength=&quot;20.732&quot; message=&quot;Visible path from U1 pin source_port_2 to ground</tspan>
-    <tspan x="18" dy="22">  spans 9.30 schematic units; move the connected support elements closer together near the pin</tspan>
-    <tspan x="18" dy="22">  and recompute their schematic traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U1&quot; pinName=&quot;out&quot; railType=&quot;ground&quot; pathSpan=&quot;9.3&quot;</tspan>
+    <tspan x="18" dy="22">  pathLength=&quot;20.732&quot; message=&quot;Visible path from U1.out to ground spans 9.30 schematic units;</tspan>
+    <tspan x="18" dy="22">  move the connected support elements closer together near the pin and recompute their schematic</tspan>
+    <tspan x="18" dy="22">  traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

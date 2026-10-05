@@ -63,10 +63,10 @@
     <tspan x="18" dy="22">  C_SENSOR_VDD_BULK, C_SENSOR_VDD&quot; maxBodyGap=&quot;12.322&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group</tspan>
     <tspan x="18" dy="22">  the decoupling capacitors between V1V9 and GND closer together in this schematic block.</tspan>
     <tspan x="18" dy="22">  Preserve their net connections.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U_SENSOR&quot; sourcePortId=&quot;source_port_182&quot; railType=&quot;power&quot;</tspan>
-    <tspan x="18" dy="22">  pathSpan=&quot;9.551&quot; pathLength=&quot;15.724&quot; message=&quot;Visible path from U_SENSOR pin source_port_182</tspan>
-    <tspan x="18" dy="22">  to power spans 9.55 schematic units; move the connected support elements closer together near</tspan>
-    <tspan x="18" dy="22">  the pin and recompute their schematic traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U_SENSOR&quot; pinName=&quot;LED_P&quot; railType=&quot;power&quot; pathSpan=&quot;9.551&quot;</tspan>
+    <tspan x="18" dy="22">  pathLength=&quot;15.724&quot; message=&quot;Visible path from U_SENSOR.LED_P to power spans 9.55 schematic</tspan>
+    <tspan x="18" dy="22">  units; move the connected support elements closer together near the pin and recompute their</tspan>
+    <tspan x="18" dy="22">  schematic traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

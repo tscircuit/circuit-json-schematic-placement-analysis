@@ -197,7 +197,7 @@ export class CurrentSenseShuntPlacementSolver extends BaseSolver {
       positiveInputSourcePortId: inputs[0]!.source_port_id,
       negativeInputSourcePortId: inputs[1]!.source_port_id,
       inputBandGap,
-      message: `Place ${shunt.sourceComponentName ?? shuntId} near ${host.sourceComponentName ?? hostId}.${inputs[0]!.name}/${inputs[1]!.name}, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.`,
+      message: `Place ${shunt.sourceComponentName || "component"} near ${host.sourceComponentName || "component"}.${inputs[0]!.name}/${inputs[1]!.name}, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.`,
     })
   }
 

@@ -112,8 +112,8 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
       }
     }
     if (maxBodyGap <= maxRecommendedBodyGap + 1e-6) return
-    const railName = this.netNames.get(bank.power) ?? bank.power
-    const groundName = this.netNames.get(bank.ground) ?? bank.ground
+    const railName = this.netNames.get(bank.power) ?? "power"
+    const groundName = this.netNames.get(bank.ground) ?? "ground"
     // Report the entire bank once, including long rows of nearby neighbors.
     this.params.issues.push({
       lineItemType: "DecouplingCapacitorsNotCloseTogether",
@@ -134,7 +134,7 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
       attrs,
       "capacitorNames",
       issue.capacitorSchematicBoxes
-        .map((box) => box.sourceComponentName ?? box.schematicComponentId)
+        .map((box) => box.sourceComponentName || "component")
         .join(", "),
     )
     addAttr(attrs, "maxBodyGap", issue.maxBodyGap)

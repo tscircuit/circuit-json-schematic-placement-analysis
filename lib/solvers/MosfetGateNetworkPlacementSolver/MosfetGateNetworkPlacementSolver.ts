@@ -111,7 +111,7 @@ export class MosfetGateNetworkPlacementSolver extends BaseSolver {
       gateSourceResistorSchematicBox: gateSourceResistor,
       maxBodyGap,
       maxRecommendedBodyGap,
-      message: `Group ${seriesGateResistor.sourceComponentName ?? seriesGateResistor.sourceComponentId} and ${gateSourceResistor.sourceComponentName ?? gateSourceResistor.sourceComponentId} beside ${mosfet.sourceComponentName ?? id}'s gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces.`,
+      message: `Group ${seriesGateResistor.sourceComponentName || "component"} and ${gateSourceResistor.sourceComponentName || "component"} beside ${mosfet.sourceComponentName || "component"}'s gate/source pins so the gate-drive branch can be read together. Preserve all pin connections, leave room for labels, and reroute affected traces.`,
     })
   }
 

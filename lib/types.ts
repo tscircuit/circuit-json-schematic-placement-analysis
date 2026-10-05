@@ -488,6 +488,8 @@ export interface RailPathTooSpreadOut {
   lineItemType: "RailPathTooSpreadOut"
   hostSchematicBox: SchematicBoxPlacement
   sourcePortId: string
+  /** Display name for user-facing diagnostics; identity remains sourcePortId. */
+  sourcePortName?: string
   railType: "power" | "ground"
   supportSchematicBoxes: SchematicBoxPlacement[]
   schematicTraceIds: string[]

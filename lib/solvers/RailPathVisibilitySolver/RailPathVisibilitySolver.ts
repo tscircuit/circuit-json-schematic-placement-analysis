@@ -177,6 +177,16 @@ export class RailPathVisibilitySolver extends BaseSolver {
     const start = this.starts[this.currentIndex++]
     this.solved = this.currentIndex >= this.starts.length
     if (!start) return
+    const sourcePort = this.index.portsByComponent
+      .get(start.componentId)
+      ?.find((port) => port.source_port_id === start.portId)
+    const placedPort = sourcePort ? this.index.port(sourcePort) : undefined
+    const sourcePortName =
+      placedPort?.display_pin_label ||
+      sourcePort?.name ||
+      (placedPort?.pin_number !== undefined
+        ? `pin${placedPort.pin_number}`
+        : "connected pin")
     const host = this.index.placement(start.componentId)
     if (!host) return
     type State = {
@@ -220,6 +230,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
           lineItemType: "RailPathTooSpreadOut",
           hostSchematicBox: host,
           sourcePortId: start.portId,
+          sourcePortName,
           railType: current.terminal,
           supportSchematicBoxes: componentIds.flatMap((id) => {
             const placement = this.index.placement(id)
@@ -236,7 +247,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
           pathSpan: span,
           maxRecommendedSpan: this.maxSpan,
           maxRecommendedPathLength: this.maxLength,
-          message: `Visible path from ${host.sourceComponentName ?? start.componentId} pin ${start.portId} to ${current.terminal} spans ${span.toFixed(2)} schematic units; move the connected support elements closer together near the pin and recompute their schematic traces.`,
+          message: `Visible path from ${host.sourceComponentName || "component"}.${sourcePortName} to ${current.terminal} spans ${span.toFixed(2)} schematic units; move the connected support elements closer together near the pin and recompute their schematic traces.`,
         })
         return
       }
@@ -270,7 +281,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
   static issueToString(issue: RailPathTooSpreadOut): string {
     const attrs: string[] = []
     addAttr(attrs, "hostName", issue.hostSchematicBox.sourceComponentName)
-    addAttr(attrs, "sourcePortId", issue.sourcePortId)
+    addAttr(attrs, "pinName", issue.sourcePortName)
     addAttr(attrs, "railType", issue.railType)
     addAttr(attrs, "pathSpan", issue.pathSpan)
     addAttr(attrs, "pathLength", issue.pathLength)

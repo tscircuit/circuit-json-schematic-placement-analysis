@@ -50,11 +50,10 @@ export class ResetNetworkGroupingSolver extends BaseSolver {
       ),
     )
     if (distances.some((distance) => distance > threshold)) {
-      const hostName =
-        network.host.sourceComponentName ?? network.host.schematicComponentId
+      const hostName = network.host.sourceComponentName || "component"
       const resetPin = resetPinName(network.pin)!
       const memberNames = rcMembers
-        .map((p) => p.sourceComponentName ?? p.schematicComponentId)
+        .map((p) => p.sourceComponentName || "component")
         .join(", ")
       this.params.issues.push({
         lineItemType: "ResetNetworkNotGrouped",
@@ -234,7 +233,7 @@ export class ResetNetworkGroupingSolver extends BaseSolver {
       attrs,
       "supportNetworkComponents",
       issue.supportNetworkComponents
-        .map((p) => p.sourceComponentName ?? p.schematicComponentId)
+        .map((p) => p.sourceComponentName || "component")
         .join(","),
     )
     addAttr(attrs, "maxDistanceFromResetPin", issue.maxDistanceFromResetPin)

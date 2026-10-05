@@ -384,7 +384,7 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
         const comp = compById.get(compId)
         if (!comp || Math.abs(newX - comp.schX) < 1e-9) continue
         result.set(compId, {
-          componentName: comp.sourceComponentName ?? compId,
+          componentName: comp.sourceComponentName || "component",
           newSchX: Math.round(newX * 100) / 100,
           newSchY: Math.round(comp.schY * 100) / 100,
         })

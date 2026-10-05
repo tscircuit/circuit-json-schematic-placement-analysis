@@ -19,6 +19,9 @@ test("rail path visibility: renamed", () => {
   })
   const issues = analysis.getIssues()
   expect(issues).toHaveLength(1)
+  if (issues[0]?.lineItemType !== "RailPathTooSpreadOut")
+    throw Error("Missing finding")
+  expect(issues[0].message).toContain("unrelated-name.VBUS_VS_DISCH")
   expect(
     createIssueReproSnapshot({
       circuitJson,

@@ -141,7 +141,7 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
       diodeSchematicBox: diode,
       coilSourcePortIds: [coil[0].source_port_id, coil[1].source_port_id],
       distanceFromCoilPins,
-      message: `Place ${diode.sourceComponentName ?? diodeId} beside ${relay.sourceComponentName ?? relayId}'s coil pins so the flyback protection loop can be read together. Preserve diode polarity and all pin connections; leave room for labels and reroute affected traces.`,
+      message: `Place ${diode.sourceComponentName || "component"} beside ${relay.sourceComponentName || "component"}'s coil pins so the flyback protection loop can be read together. Preserve diode polarity and all pin connections; leave room for labels and reroute affected traces.`,
     })
   }
 

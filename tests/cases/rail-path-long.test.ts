@@ -18,6 +18,14 @@ test("rail path visibility: long", () => {
   })
   if (issues[0]?.lineItemType !== "RailPathTooSpreadOut")
     throw new Error("Missing finding")
+  expect(issues[0].message).toContain("U_PD.VBUS_VS_DISCH")
+  expect(issues[0].message).not.toContain(issues[0].sourcePortId)
+  expect(analysis.schematicIssuesToString(issues[0])).toContain(
+    'pinName="VBUS_VS_DISCH"',
+  )
+  expect(analysis.schematicIssuesToString(issues[0])).not.toContain(
+    issues[0].sourcePortId,
+  )
   expect(issues[0].pathLength).toBeCloseTo(23.2)
   expect(
     issues[0].supportSchematicBoxes.map((p) => p.sourceComponentName),

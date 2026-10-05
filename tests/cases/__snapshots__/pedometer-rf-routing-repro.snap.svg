@@ -266,18 +266,18 @@
     <tspan x="18" dy="22">  schY=&quot;-3.41&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_28&quot; text=&quot;I2C Bus and Step Sensor&quot;</tspan>
-    <tspan x="18" dy="22">  collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_29&quot; newSchX=&quot;-8.374&quot;</tspan>
-    <tspan x="18" dy="22">  newSchY=&quot;1.2&quot; message=&quot;Text &amp;quot;I2C Bus and Step Sensor&amp;quot; overlaps text</tspan>
-    <tspan x="18" dy="22">  schematic_text_29; reposition the text to leave its visible area clear.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_28&quot; text=&quot;I2C Bus and Step Sensor&quot;</tspan>
-    <tspan x="18" dy="22">  collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_31&quot; newSchX=&quot;-8.374&quot;</tspan>
-    <tspan x="18" dy="22">  newSchY=&quot;1.2&quot; message=&quot;Text &amp;quot;I2C Bus and Step Sensor&amp;quot; overlaps text</tspan>
-    <tspan x="18" dy="22">  schematic_text_31; reposition the text to leave its visible area clear.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_29&quot; text=&quot;Display Interface and Power</tspan>
-    <tspan x="18" dy="22">  Switch&quot; collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_31&quot; newSchX=&quot;-8.374&quot;</tspan>
-    <tspan x="18" dy="22">  newSchY=&quot;1.2&quot; message=&quot;Text &amp;quot;Display Interface and Power Switch&amp;quot; overlaps text</tspan>
-    <tspan x="18" dy="22">  schematic_text_31; reposition the text to leave its visible area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision text=&quot;I2C Bus and Step Sensor&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingText=&quot;Display Interface and Power Switch&quot; newSchX=&quot;-8.374&quot; newSchY=&quot;1.2&quot;</tspan>
+    <tspan x="18" dy="22">  message=&quot;Text &amp;quot;I2C Bus and Step Sensor&amp;quot; overlaps text Display Interface and Power</tspan>
+    <tspan x="18" dy="22">  Switch; reposition the text to leave its visible area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision text=&quot;I2C Bus and Step Sensor&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingText=&quot;Programming and Test&quot; newSchX=&quot;-8.374&quot; newSchY=&quot;1.2&quot; message=&quot;Text &amp;quot;I2C</tspan>
+    <tspan x="18" dy="22">  Bus and Step Sensor&amp;quot; overlaps text Programming and Test; reposition the text to leave its</tspan>
+    <tspan x="18" dy="22">  visible area clear.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicTextCollision text=&quot;Display Interface and Power Switch&quot; collidingObjectType=&quot;text&quot;</tspan>
+    <tspan x="18" dy="22">  collidingText=&quot;Programming and Test&quot; newSchX=&quot;-8.374&quot; newSchY=&quot;1.2&quot; message=&quot;Text</tspan>
+    <tspan x="18" dy="22">  &amp;quot;Display Interface and Power Switch&amp;quot; overlaps text Programming and Test; reposition</tspan>
+    <tspan x="18" dy="22">  the text to leave its visible area clear.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;ComponentOverlap component1Name=&quot;J4_SWD&quot; component2Name=&quot;C20_DISPLAY_BULK&quot;</tspan>
     <tspan x="18" dy="22">  component1SchX=&quot;5.85&quot; component1SchY=&quot;-3.12&quot; component2SchX=&quot;6.4&quot; component2SchY=&quot;-3.41&quot;</tspan>
     <tspan x="18" dy="22">  overlapWidth=&quot;0.9&quot; overlapHeight=&quot;0.51&quot;&gt;</tspan>

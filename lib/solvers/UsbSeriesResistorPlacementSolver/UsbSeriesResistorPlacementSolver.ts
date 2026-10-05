@@ -89,8 +89,8 @@ export class UsbSeriesResistorPlacementSolver extends BaseSolver {
       return
 
     this.reportedPairs.add(pairKey)
-    const positiveName = a.sourceComponentName ?? positive.id
-    const negativeName = b.sourceComponentName ?? negative.id
+    const positiveName = a.sourceComponentName || "component"
+    const negativeName = b.sourceComponentName || "component"
     this.params.issues.push({
       lineItemType: "UsbSeriesResistorsNotAligned",
       positiveResistorSchematicBox: a,

@@ -90,7 +90,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       supplyTapSourcePortId: supplyTap.bottom.source_port_id,
       groundTapSourcePortId: groundTap.top.source_port_id,
       reversedBodyGap,
-      message: `Place ${supply.sourceComponentName ?? supplyId} above ${ground.sourceComponentName ?? groundId}, close enough to read their shared divider tap. Preserve all connections and leave room for labels; exact alignment is not required.`,
+      message: `Place ${supply.sourceComponentName || "component"} above ${ground.sourceComponentName || "component"}, close enough to read their shared divider tap. Preserve all connections and leave room for labels; exact alignment is not required.`,
     })
   }
 

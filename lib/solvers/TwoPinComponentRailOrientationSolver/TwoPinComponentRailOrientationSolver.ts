@@ -141,7 +141,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         railType: "power",
         deltaSchRotation: 180,
         suggestedRailFacingDirection: "up",
-        message: `rotate ${component.sourceComponentName ?? id} by 180° so its positive-supply pin faces up and its ${otherIsGround ? "ground" : "signal"} pin faces down; preserve pin connections and reroute attached traces`,
+        message: `rotate ${component.sourceComponentName || "component"} by 180° so its positive-supply pin faces up and its ${otherIsGround ? "ground" : "signal"} pin faces down; preserve pin connections and reroute attached traces`,
       })
       return
     }
@@ -170,7 +170,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
       railType,
       deltaSchRotation,
       suggestedRailFacingDirection,
-      message: `rotate ${component.sourceComponentName ?? id} by ${deltaSchRotation}° so its ${railType}-connected pin faces ${suggestedRailFacingDirection} and the component is vertical`,
+      message: `rotate ${component.sourceComponentName || "component"} by ${deltaSchRotation}° so its ${railType}-connected pin faces ${suggestedRailFacingDirection} and the component is vertical`,
     })
   }
 

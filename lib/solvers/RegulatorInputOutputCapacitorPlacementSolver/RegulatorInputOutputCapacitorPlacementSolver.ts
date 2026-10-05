@@ -113,7 +113,7 @@ export class RegulatorInputOutputCapacitorPlacementSolver extends BaseSolver {
     if (!beyondOppositeSide(inputCap, 1) || !beyondOppositeSide(outputCap, -1))
       return
 
-    const name = host.sourceComponentName ?? hostId
+    const name = host.sourceComponentName || "component"
     this.params.issues.push({
       lineItemType: "RegulatorCapacitorsOnWrongSides",
       regulatorSchematicBox: host,

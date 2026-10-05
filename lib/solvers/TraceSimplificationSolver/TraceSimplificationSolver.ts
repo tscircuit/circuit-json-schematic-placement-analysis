@@ -610,10 +610,7 @@ export class TraceSimplificationSolver extends BaseSolver {
     trace: SchematicTrace,
     candidate: MoveCandidate,
   ): TraceCanBeSimplifiedByMovingComponent {
-    const targetName =
-      candidate.target.sourceComponentName ??
-      candidate.target.schematicComponentId ??
-      "component"
+    const targetName = candidate.target.sourceComponentName || "component"
     const direction = this.getMoveDirection(
       candidate.deltaSchX,
       candidate.deltaSchY,

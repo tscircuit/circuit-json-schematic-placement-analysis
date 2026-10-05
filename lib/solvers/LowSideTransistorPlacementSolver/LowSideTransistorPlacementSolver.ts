@@ -143,8 +143,8 @@ export class LowSideTransistorPlacementSolver extends BaseSolver {
       placementProblems.push("emitter_not_down")
     if (placementProblems.length === 0) return
 
-    const name = transistor.sourceComponentName ?? id
-    const loadName = load.sourceComponentName ?? loadId
+    const name = transistor.sourceComponentName || "component"
+    const loadName = load.sourceComponentName || "component"
     this.issues.push({
       lineItemType: "LowSideTransistorNotAlignedWithLoad",
       transistorSchematicBox: transistor,
@@ -156,7 +156,7 @@ export class LowSideTransistorPlacementSolver extends BaseSolver {
       collectorFacingDirection,
       emitterFacingDirection,
       placementProblems,
-      message: `Arrange ${name} below ${loadName}, with its collector facing up toward the load and emitter facing down toward ground; place ${baseResistor.sourceComponentName ?? resistorId} beside the base. Preserve all pin connections and reroute affected traces.`,
+      message: `Arrange ${name} below ${loadName}, with its collector facing up toward the load and emitter facing down toward ground; place ${baseResistor.sourceComponentName || "component"} beside the base. Preserve all pin connections and reroute affected traces.`,
     })
   }
 

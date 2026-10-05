@@ -373,13 +373,9 @@ export class TwoPinComponentOrientationSolver extends BaseSolver {
 
   private makeIssue(candidate: FlipCandidate): TwoPinComponentCouldBeFlipped {
     const targetName =
-      candidate.targetPlacement.sourceComponentName ??
-      candidate.targetPlacement.schematicComponentId ??
-      "component"
+      candidate.targetPlacement.sourceComponentName || "component"
     const connectedName =
-      candidate.connectedPlacement.sourceComponentName ??
-      candidate.connectedPlacement.schematicComponentId ??
-      "connected component"
+      candidate.connectedPlacement.sourceComponentName || "component"
     const targetPin = candidate.targetPort.pin_number
       ? `pin${candidate.targetPort.pin_number}`
       : candidate.targetPort.display_pin_label

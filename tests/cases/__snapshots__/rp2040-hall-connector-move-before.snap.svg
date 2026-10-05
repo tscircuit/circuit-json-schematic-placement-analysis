@@ -115,10 +115,10 @@
     <tspan x="18" dy="22">  currentTotalSignalDistance=&quot;64.7&quot; suggestedTotalSignalDistance=&quot;15.6&quot; message=&quot;Move J_HALL to</tspan>
     <tspan x="18" dy="22">  schX=-13.3, schY=0.2 so its signal pins face R_HALL_A_TOP, R_HALL_B_TOP, R_HALL_C_TOP.</tspan>
     <tspan x="18" dy="22">  Preserve rotation and pin assignments; reroute the connections and attached rail labels.&quot; /&gt;</tspan>
-    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;J_HALL&quot; sourcePortId=&quot;source_port_2&quot; railType=&quot;ground&quot;</tspan>
-    <tspan x="18" dy="22">  pathSpan=&quot;18.881&quot; pathLength=&quot;31.544&quot; message=&quot;Visible path from J_HALL pin source_port_2 to</tspan>
-    <tspan x="18" dy="22">  ground spans 18.88 schematic units; move the connected support elements closer together near</tspan>
-    <tspan x="18" dy="22">  the pin and recompute their schematic traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;J_HALL&quot; pinName=&quot;HALL_A&quot; railType=&quot;ground&quot; pathSpan=&quot;18.881&quot;</tspan>
+    <tspan x="18" dy="22">  pathLength=&quot;31.544&quot; message=&quot;Visible path from J_HALL.HALL_A to ground spans 18.88 schematic</tspan>
+    <tspan x="18" dy="22">  units; move the connected support elements closer together near the pin and recompute their</tspan>
+    <tspan x="18" dy="22">  schematic traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
