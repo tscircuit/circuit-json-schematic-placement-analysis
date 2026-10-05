@@ -1,4 +1,4 @@
-<svg width="1200" height="1010" viewBox="0 0 1200 1010" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1098" viewBox="0 0 1200 1098" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -32,6 +32,10 @@
     <tspan x="18" dy="22">&lt;TwoPinComponentShouldBeVertical componentName=&quot;R1&quot; railPin=&quot;pin2&quot; railType=&quot;ground&quot;</tspan>
     <tspan x="18" dy="22">  deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;down&quot; message=&quot;rotate R1 by -90° so its</tspan>
     <tspan x="18" dy="22">  ground-connected pin faces down and the component is vertical&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;D1&quot; secondComponentName=&quot;R1&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;4.84&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place D1 and R1 closer together so</tspan>
+    <tspan x="18" dy="22">  this local passive connection can be read together. Preserve pin connections, leave room for</tspan>
+    <tspan x="18" dy="22">  labels, and reroute affected traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

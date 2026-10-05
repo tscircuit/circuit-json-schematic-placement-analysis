@@ -12,7 +12,7 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 
 // USB reference: RP2040 hardware design guide, Figure 9 (PDF page 12).
 // https://datasheets.raspberrypi.com/rp2040/hardware-design-with-rp2040.pdf#page=12
-test("records the full controller sheet's current findings around the unreported USB layout", () => {
+test("records local passive spacing and existing findings on the full controller sheet", () => {
   expect(
     getReproSheets(rp2040BldcCircuitJson).map((sheet) => sheet.name),
   ).toEqual(["controller", "hall", "encoder", "power_input", "power"])
@@ -28,6 +28,7 @@ test("records the full controller sheet's current findings around the unreported
       ),
     ),
   ).toEqual({
+    LocalPassiveConnectionTooLong: 3,
     NetLabelCollision: 1,
     DecouplingCapacitorsNotCloseTogether: 1,
   })

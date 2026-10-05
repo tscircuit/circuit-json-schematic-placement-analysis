@@ -1,4 +1,4 @@
-<svg width="1800" height="1522" viewBox="0 0 1800 1522" xmlns="http://www.w3.org/2000/svg">
+<svg width="1800" height="1544" viewBox="0 0 1800 1544" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1800" height="1200" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(19.0769309034,0,0,-19.0769309034,661.6407432372,186.0852865991)"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -303,6 +303,7 @@
     <rect width="100%" height="100%" fill="#fff" />
 <text x="52" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
 <tspan x="52" dy="0">Emitted issue counts (all sheets):</tspan>
+<tspan x="52" dy="22">LocalPassiveConnectionTooLong: 4</tspan>
 <tspan x="52" dy="22">CrystalNotCenteredOverLoadCapacitors: 1</tspan>
 <tspan x="52" dy="22">ResetNetworkNotGrouped: 1</tspan>
 <tspan x="52" dy="22">TwoPinComponentShouldBeVertical: 20</tspan>
@@ -316,6 +317,6 @@
 <tspan x="52" dy="22">  grounded branches of the pi filter can be read together. Preserve pin connections, allow room</tspan>
 <tspan x="52" dy="22">  for labels, and reroute affected traces.&quot; /&gt;</tspan>
 </text>
-<g data-listing-issue-number="28"><circle cx="24" cy="211" r="11" fill="#b91c1c" /><text x="24" y="211" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">28</text></g>
+<g data-listing-issue-number="28"><circle cx="24" cy="233" r="11" fill="#b91c1c" /><text x="24" y="233" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">28</text></g>
   </g>
 </svg>

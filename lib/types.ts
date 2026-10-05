@@ -49,6 +49,32 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
+/** Advisory for an unusually long, unbranched local passive connection. */
+export interface LocalPassiveConnectionTooLong {
+  lineItemType: "LocalPassiveConnectionTooLong"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  sourcePortIds: [string, string]
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
+/** A label-separated local passive connection with a verified simple wire route. */
+export interface LocalPassiveConnectionShouldBeDirectWire {
+  lineItemType: "LocalPassiveConnectionShouldBeDirectWire"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  sourcePortIds: [string, string]
+  schematicNetLabelIds: string[]
+  /** Auto-generated signal labels exported as trace-associated text. */
+  schematicTextIds?: string[]
+  /** Isolated label stub traces replaced by suggestedRoute. */
+  replacedSchematicTraceIds: string[]
+  suggestedRoute: Array<{ x: number; y: number }>
+  message: string
+}
+
 /** A power-to-ground capacitor bank is spread out within one schematic block. */
 export interface DecouplingCapacitorsNotCloseTogether {
   lineItemType: "DecouplingCapacitorsNotCloseTogether"
@@ -484,6 +510,8 @@ export interface PiFilterComponentsNotGrouped {
 }
 
 export type SchematicPlacementIssue =
+  | LocalPassiveConnectionTooLong
+  | LocalPassiveConnectionShouldBeDirectWire
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped

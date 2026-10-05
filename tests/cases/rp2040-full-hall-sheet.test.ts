@@ -6,7 +6,7 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 // Compare connector/filter arrangement with TI's Hall interface, Figure 21.
 // https://www.ti.com/lit/ug/slvuaq4a/slvuaq4a.pdf#page=15
 // The circuit differs; the repro concerns the long A/C wire detours, not resistor values.
-test("records no trace or orientation suggestions for the full Hall sheet's connector detours", () => {
+test("records local passive spacing and connector detours on the full Hall sheet", () => {
   const circuitJson = getRp2040BldcSheet("hall")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
@@ -19,6 +19,7 @@ test("records no trace or orientation suggestions for the full Hall sheet's conn
       ),
     ),
   ).toEqual({
+    LocalPassiveConnectionTooLong: 3,
     PinHeaderSchematicBoxTooWide: 1,
     ConnectorPositionCausesTraceDetours: 1,
   })

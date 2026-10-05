@@ -30,14 +30,28 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
       variant,
     )
     if (variant === "conventional") {
-      expect(analysis.toString()).toBe("")
+      expect(analysis.getIssues()).toMatchObject([
+        {
+          lineItemType: "LocalPassiveConnectionTooLong",
+          firstComponent: { sourceComponentName: "U1" },
+          secondComponent: { sourceComponentName: "R2" },
+        },
+      ])
+      expect(
+        analysis.getIssues({
+          issueTypes: [
+            "PullResistorOnWrongSide",
+            "TwoPinComponentShouldBeVertical",
+          ],
+        }),
+      ).toEqual([])
     } else {
       const issues = analysis
         .getLineItems()
         .flatMap((item) =>
           item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
         )
-      expect(issues).toHaveLength(2)
+      expect(issues).toHaveLength(3)
       expect(issues).toMatchObject([
         {
           lineItemType: "TwoPinComponentShouldBeVertical",
@@ -54,6 +68,11 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
           railType: "ground",
           deltaSchRotation: -90,
           suggestedRailFacingDirection: "down",
+        },
+        {
+          lineItemType: "LocalPassiveConnectionTooLong",
+          firstComponent: { sourceComponentName: "U1" },
+          secondComponent: { sourceComponentName: "R2" },
         },
       ])
       // Recognition uses the rail connections, without requiring pull-specific pin metadata.

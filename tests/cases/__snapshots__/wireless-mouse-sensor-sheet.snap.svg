@@ -1,4 +1,4 @@
-<svg width="1800" height="2192" viewBox="0 0 1800 2192" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="2874" viewBox="0 0 1800 2874" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -33,9 +33,15 @@
     <tspan x="18" dy="22">  schY=&quot;8.5&quot; width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SENSOR_RESET&quot; positionAnchor=&quot;center&quot; schX=&quot;11.25&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;5.5&quot; width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SENSOR_MOTION_SERIES&quot; positionAnchor=&quot;center&quot;</tspan>
+    <tspan x="18" dy="22">  schX=&quot;11.25&quot; schY=&quot;-6&quot; width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SPI_SCLK&quot; positionAnchor=&quot;center&quot; schX=&quot;8.75&quot; schY=&quot;3&quot;</tspan>
     <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SPI_MOSI&quot; positionAnchor=&quot;center&quot; schX=&quot;9.22&quot; schY=&quot;0&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SPI_MISO&quot; positionAnchor=&quot;center&quot; schX=&quot;9.22&quot; schY=&quot;1.5&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R_SPI_CS&quot; positionAnchor=&quot;center&quot; schX=&quot;8.75&quot; schY=&quot;-3&quot;</tspan>
     <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
@@ -63,6 +69,31 @@
     <tspan x="18" dy="22">  C_SENSOR_VDD_BULK, C_SENSOR_VDD&quot; maxBodyGap=&quot;12.322&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group</tspan>
     <tspan x="18" dy="22">  the decoupling capacitors between V1V9 and GND closer together in this schematic block.</tspan>
     <tspan x="18" dy="22">  Preserve their net connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot;</tspan>
+    <tspan x="18" dy="22">  secondComponentName=&quot;R_SENSOR_MOTION_SERIES&quot; pinDistance=&quot;10.021&quot;</tspan>
+    <tspan x="18" dy="22">  maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SENSOR_MOTION_SERIES closer</tspan>
+    <tspan x="18" dy="22">  together so this local passive connection can be read together. Preserve pin connections,</tspan>
+    <tspan x="18" dy="22">  leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot; secondComponentName=&quot;R_SPI_SCLK&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;6.613&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SPI_SCLK</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot; secondComponentName=&quot;R_SPI_MOSI&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;6.689&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SPI_MOSI</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot; secondComponentName=&quot;R_SPI_MISO&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;6.777&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SPI_MISO</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot; secondComponentName=&quot;R_SPI_CS&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;6.932&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SPI_CS closer</tspan>
+    <tspan x="18" dy="22">  together so this local passive connection can be read together. Preserve pin connections,</tspan>
+    <tspan x="18" dy="22">  leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_SENSOR&quot; secondComponentName=&quot;R_SENSOR_LED&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;9.224&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_SENSOR and R_SENSOR_LED</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

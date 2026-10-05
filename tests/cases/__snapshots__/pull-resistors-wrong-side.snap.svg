@@ -1,4 +1,4 @@
-<svg width="1200" height="1076" viewBox="0 0 1200 1076" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1164" viewBox="0 0 1200 1164" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -35,6 +35,10 @@
     <tspan x="18" dy="22">&lt;PullResistorOnWrongSide resistorName=&quot;R2&quot; hostName=&quot;U1&quot; signalPin=&quot;BOOT&quot; pullDirection=&quot;down&quot;</tspan>
     <tspan x="18" dy="22">  preferredSide=&quot;below&quot; signalSchY=&quot;-0.1&quot; wrongSideGap=&quot;2.8&quot; message=&quot;consider placing R2 below</tspan>
     <tspan x="18" dy="22">  U1.BOOT so the pull-down branch reads toward ground&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U1&quot; secondComponentName=&quot;R2&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;5.471&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U1 and R2 closer together so</tspan>
+    <tspan x="18" dy="22">  this local passive connection can be read together. Preserve pin connections, leave room for</tspan>
+    <tspan x="18" dy="22">  labels, and reroute affected traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

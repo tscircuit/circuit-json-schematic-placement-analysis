@@ -192,3 +192,25 @@ issue per component, with combined affected sides and width/height guidance.
 largest excess. Box width, pin padding and inner-label checks skip built-in
 symbols and custom components with `is_box_with_pins: false`. Older box exports
 that omit the flag remain supported.
+
+## Local passive connections
+
+`LocalPassiveConnectionTooLong` reports unusually distant pins on an unbranched
+local connection involving a typed resistor, capacitor, or inductor. The distance
+limit is the larger of 4 schematic units and three times the passive symbol's
+largest dimension. This is advice to compact the connection; it does not propose
+an unchecked component move.
+
+`LocalPassiveConnectionShouldBeDirectWire` reports nearby pins connected through
+separate labels when a facing-compatible wire with at most two turns is clear of
+components, other wires, text, and labels. `suggestedRoute` contains the verified
+points, shown in green in issue SVGs. `schematicNetLabelIds` and `schematicTextIds`
+identify the labels to replace, including signal labels exported as trace-backed
+schematic text. `replacedSchematicTraceIds` identifies their isolated wire stubs.
+Route suggestions use the current component positions.
+
+Both checks require exactly two electrical component ports, unique placements,
+and a shared sheet and local scope. They skip branched connections, pins marked
+`do_not_connect`, and rails identified by typed net or port metadata. Electrical
+roles and net membership are never inferred from displayed names. The Cosmos gallery
+includes the unchanged four-sheet Museview v0.1.9 schematic as a regression example.

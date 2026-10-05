@@ -11,6 +11,8 @@ import {
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
 import { centeredRect } from "../utils/geometry"
+import { getNetLabelBounds } from "../utils/net-label-bounds"
+import { getSchematicTextPolygons } from "../utils/schematic-text-geometry"
 import {
   createIssueMarkerPlacer,
   ISSUE_MARKER_RADIUS,
@@ -166,6 +168,40 @@ export function renderIssueOverlay(input: {
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
     anchor = undefined
     switch (issue.lineItemType) {
+      case "LocalPassiveConnectionShouldBeDirectWire": {
+        for (const placement of context) rect(boxBounds(placement))
+        for (const element of sheetJson) {
+          if (
+            element.type === "schematic_net_label" &&
+            issue.schematicNetLabelIds.includes(element.schematic_net_label_id)
+          )
+            rect(getNetLabelBounds(element))
+          if (
+            element.type === "schematic_text" &&
+            issue.schematicTextIds?.includes(element.schematic_text_id)
+          )
+            for (const polygon of getSchematicTextPolygons(element))
+              rect({
+                left: Math.min(...polygon.map((p) => p.x)),
+                right: Math.max(...polygon.map((p) => p.x)),
+                bottom: Math.min(...polygon.map((p) => p.y)),
+                top: Math.max(...polygon.map((p) => p.y)),
+              })
+        }
+        for (const [i, to] of issue.suggestedRoute.slice(1).entries()) {
+          const from = issue.suggestedRoute[i]!
+          includeBounds({
+            left: Math.min(from.x, to.x),
+            right: Math.max(from.x, to.x),
+            bottom: Math.min(from.y, to.y),
+            top: Math.max(from.y, to.y),
+          })
+          geometry.push(
+            `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#16a34a" stroke-width="1.5" vector-effect="non-scaling-stroke" />`,
+          )
+        }
+        break
+      }
       case "ComponentOverlap": {
         const first = boxBounds(issue.firstComponent)
         const second = boxBounds(issue.secondComponent)

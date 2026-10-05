@@ -1,4 +1,4 @@
-<svg width="1800" height="2732" viewBox="0 0 1800 2732" xmlns="http://www.w3.org/2000/svg">
+<svg width="1800" height="2864" viewBox="0 0 1800 2864" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1800" height="1200" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(50.5556477028,0,0,-50.5556477028,882.5583015425,520.1220766296)"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -108,13 +108,16 @@
 <g data-issue-index="12" data-issue-type="DecouplingCapacitorsNotCloseTogether"><title>#13 DecouplingCapacitorsNotCloseTogether
 &lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VM&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_VM_BULK1, C_VM_BULK2, C_VM_HF, C_BUCK_IN&quot; maxBodyGap=&quot;9.916&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling capacitors between VM and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><g transform="matrix(50.5556477028 0 0 -50.5556477028 882.5583015425 520.1220766296)"><rect x="5.05" y="1.7" width="0.9000000000000004" height="0.5999999999999999" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="-2.45" y="-6.3" width="0.9000000000000001" height="0.5999999999999996" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="5.05" y="1.7" width="0.9000000000000004" height="0.5999999999999999" fill="#ef444433" stroke="#dc2626" stroke-width="0.5"  vector-effect="non-scaling-stroke" /><rect x="-2.45" y="-6.3" width="0.9000000000000001" height="0.5999999999999996" fill="#ef444433" stroke="#dc2626" stroke-width="0.5"  vector-effect="non-scaling-stroke" /></g></g>
 <g data-issue-index="13" data-issue-type="CurrentSenseShuntSeparatedFromInputs"><title>#14 CurrentSenseShuntSeparatedFromInputs
-&lt;CurrentSenseShuntSeparatedFromInputs amplifierName=&quot;U_BUS_SENSE&quot; shuntName=&quot;R_BUS_SHUNT&quot; inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.&quot; /&gt;</title><g transform="matrix(50.5556477028 0 0 -50.5556477028 882.5583015425 520.1220766296)"></g></g><line x1="348.69066180093193" y1="504.7784375518002" x2="322.69066180093193" y2="466.7784375518002" stroke="#b91c1c" stroke-width="0.5" />
+&lt;CurrentSenseShuntSeparatedFromInputs amplifierName=&quot;U_BUS_SENSE&quot; shuntName=&quot;R_BUS_SHUNT&quot; inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.&quot; /&gt;</title><g transform="matrix(50.5556477028 0 0 -50.5556477028 882.5583015425 520.1220766296)"></g></g>
+<g data-issue-index="14" data-issue-type="LocalPassiveConnectionTooLong"><title>#15 LocalPassiveConnectionTooLong
+&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_BUCK&quot; secondComponentName=&quot;C_BOOT_BUCK&quot; pinDistance=&quot;4.588&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_BUCK and C_BOOT_BUCK closer together so this local passive connection can be read together. Preserve pin connections, leave room for labels, and reroute affected traces.&quot; /&gt;</title><g transform="matrix(50.5556477028 0 0 -50.5556477028 882.5583015425 520.1220766296)"><rect x="1.2" y="-7.3" width="0.9000000000000001" height="0.5999999999999996" fill="none" stroke="#2563eb" stroke-width="0.35" stroke-dasharray="5 3" vector-effect="non-scaling-stroke" /><rect x="1.2" y="-7.3" width="0.9000000000000001" height="0.5999999999999996" fill="#ef444433" stroke="#dc2626" stroke-width="0.5"  vector-effect="non-scaling-stroke" /></g></g><line x1="348.69066180093193" y1="504.7784375518002" x2="322.69066180093193" y2="466.7784375518002" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="844.6415657654" y1="656.6223254271599" x2="818.6415657654" y2="618.6223254271599" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="816.83595952886" y1="604.8027865317899" x2="790.83595952886" y2="566.8027865317899" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="897.72499585334" y1="411.90265715698627" x2="871.72499585334" y2="373.90265715698627" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="1024.11411511034" y1="411.90265715698627" x2="998.11411511034" y2="373.90265715698627" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="513.50207331206" y1="554.2471388289899" x2="487.50207331206" y2="516.2471388289899" stroke="#b91c1c" stroke-width="0.5" />
-<line x1="474.32144634239" y1="651.56676065688" x2="448.32144634239" y2="613.56676065688" stroke="#b91c1c" stroke-width="0.5" /><g data-issue-number="1" data-issue-type="SchematicTextCollision" transform="translate(348.69066180093193 492.7784375518002) scale(1)"><title>#1 SchematicTextCollision
+<line x1="474.32144634239" y1="651.56676065688" x2="448.32144634239" y2="613.56676065688" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="844.6415657654" y1="656.6223254271599" x2="818.6415657654" y2="644.6223254271599" stroke="#b91c1c" stroke-width="0.5" /><g data-issue-number="1" data-issue-type="SchematicTextCollision" transform="translate(348.69066180093193 492.7784375518002) scale(1)"><title>#1 SchematicTextCollision
 &lt;SchematicTextCollision schematicTextId=&quot;schematic_text_49&quot; text=&quot;DC Bus Current Sense&quot; collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_50&quot; newSchX=&quot;-10.56&quot; newSchY=&quot;0.512&quot; message=&quot;Text &amp;quot;DC Bus Current Sense&amp;quot; overlaps text schematic_text_50; reposition the text to leave its visible area clear.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">1</text></g>
 <g data-issue-number="1" data-issue-type="SchematicTextCollision" transform="translate(322.69066180093193 466.7784375518002) scale(1)"><title>#1 SchematicTextCollision
 &lt;SchematicTextCollision schematicTextId=&quot;schematic_text_49&quot; text=&quot;DC Bus Current Sense&quot; collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_50&quot; newSchX=&quot;-10.56&quot; newSchY=&quot;0.512&quot; message=&quot;Text &amp;quot;DC Bus Current Sense&amp;quot; overlaps text schematic_text_50; reposition the text to leave its visible area clear.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">1</text></g>
@@ -151,12 +154,17 @@
 <g data-issue-number="14" data-issue-type="CurrentSenseShuntSeparatedFromInputs" transform="translate(487.50207331206 516.2471388289899) scale(1)"><title>#14 CurrentSenseShuntSeparatedFromInputs
 &lt;CurrentSenseShuntSeparatedFromInputs amplifierName=&quot;U_BUS_SENSE&quot; shuntName=&quot;R_BUS_SHUNT&quot; inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">14</text></g>
 <g data-issue-number="14" data-issue-type="CurrentSenseShuntSeparatedFromInputs" transform="translate(448.32144634239 613.56676065688) scale(1)"><title>#14 CurrentSenseShuntSeparatedFromInputs
-&lt;CurrentSenseShuntSeparatedFromInputs amplifierName=&quot;U_BUS_SENSE&quot; shuntName=&quot;R_BUS_SHUNT&quot; inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">14</text></g></g></svg>
+&lt;CurrentSenseShuntSeparatedFromInputs amplifierName=&quot;U_BUS_SENSE&quot; shuntName=&quot;R_BUS_SHUNT&quot; inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense connections can be read together. Move or rotate the shunt as needed; preserve all pin connections and leave room for labels.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">14</text></g>
+<g data-issue-number="15" data-issue-type="LocalPassiveConnectionTooLong" transform="translate(818.6415657654 644.6223254271599) scale(1)"><title>#15 LocalPassiveConnectionTooLong
+&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_BUCK&quot; secondComponentName=&quot;C_BOOT_BUCK&quot; pinDistance=&quot;4.588&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_BUCK and C_BOOT_BUCK closer together so this local passive connection can be read together. Preserve pin connections, leave room for labels, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">15</text></g>
+<g data-issue-number="15" data-issue-type="LocalPassiveConnectionTooLong" transform="translate(943.22507878586 846.8449162383599) scale(1)"><title>#15 LocalPassiveConnectionTooLong
+&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_BUCK&quot; secondComponentName=&quot;C_BOOT_BUCK&quot; pinDistance=&quot;4.588&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_BUCK and C_BOOT_BUCK closer together so this local passive connection can be read together. Preserve pin connections, leave room for labels, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">15</text></g></g></svg>
   </g>
   <g transform="translate(0, 1200) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
 <text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
 <tspan x="18" dy="0">Emitted issue counts (all sheets):</tspan>
+<tspan x="18" dy="22">LocalPassiveConnectionTooLong: 1</tspan>
 <tspan x="18" dy="22">GenericSchematicBoxTooWide: 1</tspan>
 <tspan x="18" dy="22">SchematicPinPaddingToEdgeTooLarge: 2</tspan>
 <tspan x="18" dy="22">SchematicTextCollision: 1</tspan>
@@ -164,7 +172,7 @@
 <tspan x="18" dy="22">DecouplingCapacitorsNotCloseTogether: 1</tspan>
 <tspan x="18" dy="22">CurrentSenseShuntSeparatedFromInputs: 1</tspan>
 <tspan x="18" dy="22">Selected type(s): all</tspan>
-<tspan x="18" dy="22">Matching issues: 14</tspan>
+<tspan x="18" dy="22">Matching issues: 15</tspan>
 <tspan x="18" dy="22">#1</tspan>
 <tspan x="18" dy="22">&lt;SchematicTextCollision schematicTextId=&quot;schematic_text_49&quot; text=&quot;DC Bus Current Sense&quot;</tspan>
 <tspan x="18" dy="22">  collidingObjectType=&quot;text&quot; collidingObjectId=&quot;schematic_text_50&quot; newSchX=&quot;-10.56&quot;</tspan>
@@ -224,6 +232,11 @@
 <tspan x="18" dy="22">  inputBandGap=&quot;2.575&quot; message=&quot;Place R_BUS_SHUNT near U_BUS_SENSE.IN_POS/IN_NEG, so both sense</tspan>
 <tspan x="18" dy="22">  connections can be read together. Move or rotate the shunt as needed; preserve all pin</tspan>
 <tspan x="18" dy="22">  connections and leave room for labels.&quot; /&gt;</tspan>
+<tspan x="18" dy="22">#15</tspan>
+<tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;U_BUCK&quot; secondComponentName=&quot;C_BOOT_BUCK&quot;</tspan>
+<tspan x="18" dy="22">  pinDistance=&quot;4.588&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place U_BUCK and C_BOOT_BUCK closer</tspan>
+<tspan x="18" dy="22">  together so this local passive connection can be read together. Preserve pin connections,</tspan>
+<tspan x="18" dy="22">  leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
 </text>
   </g>
 </svg>

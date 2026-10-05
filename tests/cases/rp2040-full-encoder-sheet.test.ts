@@ -5,7 +5,7 @@ import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapsho
 
 // The same connector/filter arrangement as the Hall sheet, with A/B/Z channels.
 // Keep the actual full sheet: the outer A/Z routes and labeled B route differ.
-test("records no trace or orientation suggestions for the full encoder sheet's connector detours", () => {
+test("records local passive spacing and connector detours on the full encoder sheet", () => {
   const circuitJson = getRp2040BldcSheet("encoder")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
@@ -18,6 +18,7 @@ test("records no trace or orientation suggestions for the full encoder sheet's c
       ),
     ),
   ).toEqual({
+    LocalPassiveConnectionTooLong: 3,
     PinHeaderSchematicBoxTooWide: 1,
     ConnectorPositionCausesTraceDetours: 1,
   })

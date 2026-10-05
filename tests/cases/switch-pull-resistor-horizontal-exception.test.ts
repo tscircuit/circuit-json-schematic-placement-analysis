@@ -54,9 +54,20 @@ test("accepts horizontal pushbutton pairs but rejects mixed pairs and horizontal
       ["PullResistorOnWrongSide" as const],
       ["TwoPinComponentShouldBeVertical" as const],
     ]) {
-      expect(
-        analyzeSchematicPlacement(below, { issueTypes }).getIssues(),
-      ).toEqual([])
+      const issues = analyzeSchematicPlacement(below, {
+        issueTypes,
+      }).getIssues()
+      if (issueTypes === undefined) {
+        expect(issues).toMatchObject([
+          {
+            lineItemType: "LocalPassiveConnectionTooLong",
+            firstComponent: { sourceComponentName: "SW_RUN" },
+            secondComponent: { sourceComponentName: "R_RUN" },
+          },
+        ])
+      } else {
+        expect(issues).toEqual([])
+      }
     }
   }
   // An IC reading RUN does not change the accepted orientation of the pair.

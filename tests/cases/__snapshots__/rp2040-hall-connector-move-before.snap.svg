@@ -1,4 +1,4 @@
-<svg width="1800" height="1698" viewBox="0 0 1800 1698" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="1962" viewBox="0 0 1800 1962" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -113,6 +113,18 @@
     <tspan x="18" dy="22">  currentTotalSignalDistance=&quot;64.7&quot; suggestedTotalSignalDistance=&quot;15.6&quot; message=&quot;Move J_HALL to</tspan>
     <tspan x="18" dy="22">  schX=-13.3, schY=0.2 so its signal pins face R_HALL_A_TOP, R_HALL_B_TOP, R_HALL_C_TOP.</tspan>
     <tspan x="18" dy="22">  Preserve rotation and pin assignments; reroute the connections and attached rail labels.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;J_HALL&quot; secondComponentName=&quot;R_HALL_A_TOP&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;18.971&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place J_HALL and R_HALL_A_TOP</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;J_HALL&quot; secondComponentName=&quot;R_HALL_B_TOP&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;18.301&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place J_HALL and R_HALL_B_TOP</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;LocalPassiveConnectionTooLong firstComponentName=&quot;J_HALL&quot; secondComponentName=&quot;R_HALL_C_TOP&quot;</tspan>
+    <tspan x="18" dy="22">  pinDistance=&quot;18.869&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place J_HALL and R_HALL_C_TOP</tspan>
+    <tspan x="18" dy="22">  closer together so this local passive connection can be read together. Preserve pin</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute affected traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

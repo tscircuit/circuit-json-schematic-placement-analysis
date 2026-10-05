@@ -11,6 +11,8 @@ import {
   getRelevantPlacementsForIssues,
 } from "lib/utils/issue-context"
 import { buildSolverContext } from "lib/utils/placements"
+import { getNetLabelBounds } from "lib/utils/net-label-bounds"
+import { getSchematicTextPolygons } from "lib/utils/schematic-text-geometry"
 import { parseSync, stringify, type INode } from "svgson"
 
 type Bounds = { left: number; right: number; top: number; bottom: number }
@@ -138,6 +140,37 @@ function getIssueHighlights(
             },
             p.schematicComponentId,
           )
+        if (issue.lineItemType === "LocalPassiveConnectionShouldBeDirectWire") {
+          for (const element of circuitJson) {
+            if (
+              element.type === "schematic_net_label" &&
+              (element.schematic_sheet_id ?? "") === sheetId &&
+              issue.schematicNetLabelIds.includes(
+                element.schematic_net_label_id,
+              )
+            )
+              box(getNetLabelBounds(element))
+            if (
+              element.type === "schematic_text" &&
+              (element.schematic_sheet_id ?? "") === sheetId &&
+              issue.schematicTextIds?.includes(element.schematic_text_id)
+            )
+              for (const polygon of getSchematicTextPolygons(element))
+                box({
+                  left: Math.min(...polygon.map((p) => p.x)),
+                  right: Math.max(...polygon.map((p) => p.x)),
+                  bottom: Math.min(...polygon.map((p) => p.y)),
+                  top: Math.max(...polygon.map((p) => p.y)),
+                })
+          }
+          for (const [i, to] of issue.suggestedRoute.slice(1).entries())
+            shapes.push({
+              type: "line",
+              suggested: true,
+              from: issue.suggestedRoute[i]!,
+              to,
+            })
+        }
         if (
           issue.lineItemType === "TraceCanBeSimplifiedByMovingComponent" ||
           issue.lineItemType === "TwoPinComponentCouldBeFlipped"

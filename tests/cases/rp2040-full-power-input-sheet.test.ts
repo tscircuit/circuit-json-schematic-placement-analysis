@@ -7,7 +7,7 @@ import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 
 // Compare the ORing power paths with LM74700-Q1 Figure 10-1.
 // https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf#page=16
-test("records the full input sheet's local trace suggestions without rearranging its ORing branches", () => {
+test("records local passive spacing and existing findings on the full input sheet", () => {
   const circuitJson = getRp2040BldcSheet("power_input")
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
@@ -20,6 +20,7 @@ test("records the full input sheet's local trace suggestions without rearranging
       ),
     ),
   ).toEqual({
+    LocalPassiveConnectionTooLong: 4,
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
@@ -158,7 +159,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 13 }, (_, index) => index + 1),
+      Array.from({ length: 17 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

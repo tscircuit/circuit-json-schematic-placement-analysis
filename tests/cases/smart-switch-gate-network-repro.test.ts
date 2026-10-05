@@ -35,6 +35,8 @@ test("records the separated gate network on the complete smart-switch sheet", ()
     "TwoPinComponentShouldBeVertical",
     "DecouplingCapacitorsNotCloseTogether",
     "MosfetGateNetworkNotGrouped",
+    "LocalPassiveConnectionTooLong",
+    "LocalPassiveConnectionShouldBeDirectWire",
   ])
   expect(
     analysis.getIssues({ issueTypes: ["MosfetGateNetworkNotGrouped"] }),
