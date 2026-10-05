@@ -4,7 +4,7 @@ import { stackSvgsVertically } from "stack-svgs"
 import { renderRp2040InputSymbol } from "../assets/rp2040-bldc-controller/input-symbols"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("width validation uses geometry and skips incomplete pin metadata", async () => {
+test("width and padding validation use geometry and skip incomplete pin metadata", async () => {
   const original = await renderRp2040InputSymbol("J_PD", { width: 8 })
   const renamed = structuredClone(original)
   for (const element of renamed) {
@@ -35,6 +35,24 @@ test("width validation uses geometry and skips incomplete pin metadata", async (
   expect(renamedIssues[0]!.measuredInnerLabelHorizontalEmptySpace).toBe(
     originalIssues[0]!.measuredInnerLabelHorizontalEmptySpace,
   )
+  const originalPadding = analyzeSchematicPlacement(original)
+    .getIssues()
+    .filter(
+      (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
+    )
+  const renamedPadding = renamedAnalysis
+    .getIssues()
+    .filter(
+      (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
+    )
+  expect(originalPadding).toHaveLength(1)
+  expect(renamedPadding).toHaveLength(1)
+  expect(renamedPadding[0]!.suggestedSchWidth).toBe(
+    originalPadding[0]!.suggestedSchWidth,
+  )
+  expect(renamedPadding[0]!.suggestedSchHeight).toBe(
+    originalPadding[0]!.suggestedSchHeight,
+  )
 
   const snapshots = [
     createIssueReproSnapshot({
@@ -61,7 +79,12 @@ test("width validation uses geometry and skips incomplete pin metadata", async (
     }
     const analysis = analyzeSchematicPlacement(incomplete)
     expect(
-      analysis.getIssues({ issueTypes: ["GenericSchematicBoxTooWide"] }),
+      analysis.getIssues({
+        issueTypes: [
+          "GenericSchematicBoxTooWide",
+          "SchematicPinPaddingToEdgeTooLarge",
+        ],
+      }),
     ).toHaveLength(0)
     snapshots.push(
       createIssueReproSnapshot({

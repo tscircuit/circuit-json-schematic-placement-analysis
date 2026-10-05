@@ -7,14 +7,34 @@ import { measureLabelBankGap } from "../fixtures/measure-label-bank-gap"
 
 test("solves label clearance symmetrically for width and height at every corner", async () => {
   for (const variant of [
-    { bank: "leftSide", end: "topSide", dimension: "height" },
-    { bank: "leftSide", end: "bottomSide", dimension: "height" },
-    { bank: "rightSide", end: "topSide", dimension: "height" },
-    { bank: "rightSide", end: "bottomSide", dimension: "height" },
-    { bank: "topSide", end: "leftSide", dimension: "width" },
-    { bank: "topSide", end: "rightSide", dimension: "width" },
-    { bank: "bottomSide", end: "leftSide", dimension: "width" },
-    { bank: "bottomSide", end: "rightSide", dimension: "width" },
+    { bank: "leftSide", end: "topSide", dimension: "height", snapshot: true },
+    {
+      bank: "leftSide",
+      end: "bottomSide",
+      dimension: "height",
+      snapshot: false,
+    },
+    { bank: "rightSide", end: "topSide", dimension: "height", snapshot: false },
+    {
+      bank: "rightSide",
+      end: "bottomSide",
+      dimension: "height",
+      snapshot: false,
+    },
+    { bank: "topSide", end: "leftSide", dimension: "width", snapshot: true },
+    { bank: "topSide", end: "rightSide", dimension: "width", snapshot: false },
+    {
+      bank: "bottomSide",
+      end: "leftSide",
+      dimension: "width",
+      snapshot: false,
+    },
+    {
+      bank: "bottomSide",
+      end: "rightSide",
+      dimension: "width",
+      snapshot: false,
+    },
   ] as const) {
     const render = async (length: number) => {
       const circuit = new Circuit()
@@ -72,6 +92,8 @@ test("solves label clearance symmetrically for width and height at every corner"
       }),
     ).toHaveLength(0)
     expect(measureLabelBankGap(tooSmall)).toBeLessThan(0.2)
+    // Assert every mirrored corner; keep one visual example per resize axis.
+    if (!variant.snapshot) continue
     await expect(
       stackSvgsVertically(
         [

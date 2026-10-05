@@ -38,6 +38,34 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
     } else {
       expect(height).toBeUndefined()
       expect(width).toBeLessThan(issue.schematicBox.width)
+      const component = circuitJson.find(
+        (element) => element.type === "schematic_component",
+      )!
+      const horizontalPins = circuitJson
+        .filter((element) => element.type === "schematic_port")
+        .filter(
+          (pin) =>
+            pin.side_of_component === "top" ||
+            pin.side_of_component === "bottom",
+        )
+      const minimumWidth =
+        2 *
+        Math.max(
+          ...horizontalPins.map(
+            (pin) =>
+              Math.abs(pin.center.x - component.center.x) +
+              component.pin_spacing!,
+          ),
+        )
+      const widthIssues = analysis
+        .getIssues()
+        .filter(
+          (finding) => finding.lineItemType === "GenericSchematicBoxTooWide",
+        )
+      expect(widthIssues).toHaveLength(1)
+      expect(widthIssues[0]!.suggestedSchWidth).toBeCloseTo(minimumWidth)
+      expect(width).toBeCloseTo(minimumWidth)
+      expect(width).toBeCloseTo(1.4)
       expect(
         issue.paddingDetails!.every(
           (detail) => detail.pinSide === "top" || detail.pinSide === "bottom",
@@ -72,9 +100,18 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
     if (variant.axis === "height") {
       expect(followup.suggestedSchHeight).toBeUndefined()
       expect(followup.suggestedSchWidth).toBeDefined()
+      const widthIssues = resizedAnalysis
+        .getIssues()
+        .filter(
+          (finding) => finding.lineItemType === "GenericSchematicBoxTooWide",
+        )
+      expect(widthIssues).toHaveLength(1)
+      expect(widthIssues[0]!.suggestedSchWidth).toBeCloseTo(
+        followup.suggestedSchWidth!,
+      )
     } else {
       expect(followup.suggestedSchWidth).toBeUndefined()
-      expect(followup.suggestedSchHeight).toBeDefined()
+      expect(followup.suggestedSchHeight).toBeCloseTo(3.1)
     }
     const compact = await renderRp2040InputSymbol(variant.name, {
       width: followup.suggestedSchWidth ?? width ?? issue.schematicBox.width,
@@ -91,22 +128,21 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
         }),
       ).toHaveLength(0)
     }
-    const component = resized.find(
-      (element) => element.type === "schematic_component",
-    )!
-    for (const port of resized) {
-      if (port.type !== "schematic_port") continue
-      if (
-        port.side_of_component === "left" ||
-        port.side_of_component === "right"
-      ) {
-        expect(Math.abs(port.center.y - component.center.y)).toBeLessThan(
-          component.size.height / 2,
-        )
-      } else {
-        expect(Math.abs(port.center.x - component.center.x)).toBeLessThan(
-          component.size.width / 2,
-        )
+    for (const state of [resized, compact]) {
+      const component = state.find(
+        (element) => element.type === "schematic_component",
+      )!
+      for (const port of state) {
+        if (port.type !== "schematic_port") continue
+        const verticalEdge =
+          port.side_of_component === "left" ||
+          port.side_of_component === "right"
+        const clearance = verticalEdge
+          ? component.size.height / 2 -
+            Math.abs(port.center.y - component.center.y)
+          : component.size.width / 2 -
+            Math.abs(port.center.x - component.center.x)
+        expect(clearance + 1e-9).toBeGreaterThanOrEqual(component.pin_spacing!)
       }
     }
     await expect(
