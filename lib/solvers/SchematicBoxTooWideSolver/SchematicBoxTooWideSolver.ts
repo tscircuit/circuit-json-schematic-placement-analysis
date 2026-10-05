@@ -1,6 +1,14 @@
 import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import {
+  getPinLabelLength,
+  getSafeSchematicBoxResize,
+} from "../../utils/schematic-box-resize"
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicComponent,
+  SchematicPort,
+} from "circuit-json"
 import type {
   SchematicBoxPlacement,
   SchematicBoxTooWideIssue,
@@ -36,13 +44,11 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
   private readonly PIN_HEADER_MAX_ALLOWED_GAP = 0.1
   private readonly GENERIC_MAX_ALLOWED_GAP = 1
   private readonly PIN_LABEL_EDGE_PADDING = 0.1
-  private readonly PIN_NAME_CHARACTER_WIDTH = 0.095
-  private readonly FALLBACK_CHARACTER_WIDTH = 0.13
   private readonly GAP_COMPARISON_EPSILON = 1e-9
 
   private readonly entries: Array<[string, SchematicPort[]]>
   private readonly placementById: Map<string, SchematicBoxPlacement>
-  private readonly sourcePortById: Map<string, SourcePort>
+  private readonly schematicComponentById: Map<string, SchematicComponent>
   private readonly sourceComponentById: Map<string, SourceComponentWithFtype>
   private currentIndex = 0
 
@@ -56,7 +62,11 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     const { circuitJson, componentPlacements } = params.ctx
     this.placementById =
       this.getPlacementBySchematicComponentId(componentPlacements)
-    this.sourcePortById = this.getSourcePortById(circuitJson)
+    this.schematicComponentById = new Map(
+      circuitJson
+        .filter((element) => element.type === "schematic_component")
+        .map((component) => [component.schematic_component_id, component]),
+    )
     this.sourceComponentById = this.getSourceComponentById(circuitJson)
     const boxIds = getSchematicBoxComponentIds(circuitJson)
     this.entries = Array.from(
@@ -89,8 +99,8 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
       return
 
     const bounds = this.getCenteredRectBounds(schematicBox)
-    const leftCol = this.getLabelColumn("left", ports, this.sourcePortById)
-    const rightCol = this.getLabelColumn("right", ports, this.sourcePortById)
+    const leftCol = this.getLabelColumn("left", ports)
+    const rightCol = this.getLabelColumn("right", ports)
     const ftype = this.getSourceComponentFtype(
       schematicBox,
       this.sourceComponentById,
@@ -115,11 +125,19 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
 
     if (!this.exceedsMaxAllowedGap(measuredSpace, maxAllowed)) return
 
-    const suggestedSchWidth = this.getSuggestedWidth({
+    const proposedWidth = this.getSuggestedWidth({
       measuredInnerLabelHorizontalEmptySpace: measuredSpace,
       maxAllowedInnerLabelHorizontalEmptySpace: maxAllowed,
       currentWidth: schematicBox.width,
     })
+    const pinSpacing =
+      this.schematicComponentById.get(schematicComponentId)?.pin_spacing
+    if (pinSpacing === undefined) return
+    const resize = getSafeSchematicBoxResize(schematicBox, ports, pinSpacing, {
+      width: proposedWidth,
+    })
+    if (resize?.width === undefined) return
+    const suggestedSchWidth = resize.width
 
     if (ftype === "simple_pin_header") {
       this.params.issues.push({
@@ -165,16 +183,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     return el.type === "schematic_port"
   }
 
-  private isSourcePort(el: CircuitJson[number]): el is SourcePort {
-    return el.type === "source_port"
-  }
-
-  private isHorizontalSide(
-    side: SchematicPort["side_of_component"],
-  ): side is HorizontalSide {
-    return side === "left" || side === "right"
-  }
-
   private getSourceComponentWithFtype(
     el: CircuitJson[number],
   ): SourceComponentWithFtype | null {
@@ -196,30 +204,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     }
   }
 
-  private isPinNameLabel(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): boolean {
-    if (!sourcePort) return false
-    return (
-      label === sourcePort.name ||
-      label === String(sourcePort.pin_number) ||
-      (sourcePort.port_hints ?? []).includes(label)
-    )
-  }
-
-  private estimateLabelWidth(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): number {
-    return (
-      Array.from(label).length *
-      (this.isPinNameLabel(label, sourcePort)
-        ? this.PIN_NAME_CHARACTER_WIDTH
-        : this.FALLBACK_CHARACTER_WIDTH)
-    )
-  }
-
   private exceedsMaxAllowedGap(measured: number, maxAllowed: number): boolean {
     return measured - maxAllowed > this.GAP_COMPARISON_EPSILON
   }
@@ -231,14 +215,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
       top: box.schY + box.height / 2,
       bottom: box.schY - box.height / 2,
     }
-  }
-
-  private getSourcePortById(circuitJson: CircuitJson): Map<string, SourcePort> {
-    return new Map(
-      circuitJson
-        .filter((el) => this.isSourcePort(el))
-        .map((sp) => [sp.source_port_id, sp]),
-    )
   }
 
   private getSourceComponentById(
@@ -270,7 +246,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     const map = new Map<string, SchematicPort[]>()
     for (const port of circuitJson.filter((el) => this.isSchematicPort(el))) {
       if (!port.schematic_component_id) continue
-      if (!this.isHorizontalSide(port.side_of_component)) continue
       const ports = map.get(port.schematic_component_id)
       if (ports) ports.push(port)
       else map.set(port.schematic_component_id, [port])
@@ -290,20 +265,10 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
   private getLabelColumn(
     side: HorizontalSide,
     ports: SchematicPort[],
-    sourcePortById: Map<string, SourcePort>,
   ): LabelColumn | null {
     const widths = ports
       .filter((p) => p.side_of_component === side)
-      .flatMap((p) =>
-        p.display_pin_label
-          ? [
-              this.estimateLabelWidth(
-                p.display_pin_label,
-                sourcePortById.get(p.source_port_id),
-              ),
-            ]
-          : [],
-      )
+      .flatMap((p) => (p.display_pin_label ? [getPinLabelLength(p)] : []))
     if (widths.length === 0) return null
     return {
       side,

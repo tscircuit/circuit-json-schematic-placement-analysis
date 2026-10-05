@@ -17,6 +17,7 @@ export function getSafeSchematicBoxResize(
   ports: SchematicPort[],
   pinSpacing: number,
   proposed: { width?: number; height?: number },
+  minimumReduction = 0,
 ): { width?: number; height?: number } | undefined {
   if (!Number.isFinite(pinSpacing) || pinSpacing <= 0) return
   if (ports.some((port) => !port.side_of_component)) return
@@ -47,12 +48,16 @@ export function getSafeSchematicBoxResize(
     proposed.height === undefined
       ? box.height
       : Math.max(proposed.height, minHeight)
-  // Preserve the rule's one-spacing-per-edge tolerance after clamping to all
-  // pin banks; an insignificant remaining reduction is not excessive padding.
-  const suggestedWidth =
-    box.width - width >= 2 * pinSpacing - 1e-9 ? width : undefined
-  const suggestedHeight =
-    box.height - height >= 2 * pinSpacing - 1e-9 ? height : undefined
+  // Each caller owns its reporting threshold. The padding rule requires a
+  // spacing per edge; the width rule has already checked its label-gap limit.
+  const isUsefulReduction = (reduction: number) =>
+    reduction > 1e-9 && reduction >= minimumReduction - 1e-9
+  const suggestedWidth = isUsefulReduction(box.width - width)
+    ? width
+    : undefined
+  const suggestedHeight = isUsefulReduction(box.height - height)
+    ? height
+    : undefined
   if (suggestedWidth === undefined && suggestedHeight === undefined) return
 
   const candidates: Array<{ width?: number; height?: number }> = [

@@ -1,7 +1,9 @@
 import { Circuit } from "@tscircuit/core"
 import type { CircuitJson } from "circuit-json"
 
-export async function createSchematicBoxSizingGenericCircuitJson(): Promise<CircuitJson> {
+export async function createSchematicBoxSizingGenericCircuitJson(
+  schWidth = 4.4,
+): Promise<CircuitJson> {
   const circuit = new Circuit()
 
   circuit.add(
@@ -11,7 +13,7 @@ export async function createSchematicBoxSizingGenericCircuitJson(): Promise<Circ
         footprint="pinrow8"
         schX={8.1}
         schY={8.4}
-        schWidth={4.4}
+        schWidth={schWidth}
         schHeight={2.0}
         pinLabels={{
           pin1: "VBUS",

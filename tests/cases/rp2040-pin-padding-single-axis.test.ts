@@ -58,6 +58,13 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
             finding.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
         ),
     ).toHaveLength(0)
+    if (variant.axis === "width") {
+      expect(
+        resizedAnalysis.getIssues({
+          issueTypes: ["GenericSchematicBoxTooWide"],
+        }),
+      ).toHaveLength(0)
+    }
     const component = resized.find(
       (element) => element.type === "schematic_component",
     )!

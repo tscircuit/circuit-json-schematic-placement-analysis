@@ -165,10 +165,16 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         ? []
         : [detail.suggestedSchHeight],
     )
-    const resize = getSafeSchematicBoxResize(schematicBox, ports, pinSpacing, {
-      width: widths.length ? Math.max(...widths) : undefined,
-      height: heights.length ? Math.max(...heights) : undefined,
-    })
+    const resize = getSafeSchematicBoxResize(
+      schematicBox,
+      ports,
+      pinSpacing,
+      {
+        width: widths.length ? Math.max(...widths) : undefined,
+        height: heights.length ? Math.max(...heights) : undefined,
+      },
+      2 * pinSpacing,
+    )
     if (!resize) return
     const applicableDetails = details.filter(
       (detail) =>

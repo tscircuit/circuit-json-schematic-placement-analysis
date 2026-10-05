@@ -23,8 +23,8 @@
 <tspan x="52" dy="22">Matching issues: 2</tspan>
 <tspan x="52" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot;</tspan>
 <tspan x="52" dy="22">  componentName=&quot;arbitrary_reference&quot; currentSchWidth=&quot;3&quot;</tspan>
-<tspan x="52" dy="22">  measuredInnerLabelHorizontalEmptySpace=&quot;2.02&quot; maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot;</tspan>
-<tspan x="52" dy="22">  suggestedSchWidth=&quot;1.98&quot; /&gt;</tspan>
+<tspan x="52" dy="22">  measuredInnerLabelHorizontalEmptySpace=&quot;2.23&quot; maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot;</tspan>
+<tspan x="52" dy="22">  suggestedSchWidth=&quot;1.77&quot; /&gt;</tspan>
 <tspan x="52" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
 <tspan x="52" dy="22">  the schematic box width and height&quot; componentName=&quot;arbitrary_reference&quot;</tspan>
 <tspan x="52" dy="22">  pinSides=&quot;left,right,top,bottom&quot; edgeSides=&quot;top,bottom,left,right&quot; suggestedSchWidth=&quot;0.97&quot;</tspan>
