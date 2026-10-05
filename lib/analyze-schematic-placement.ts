@@ -28,6 +28,7 @@ import { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrien
 import { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { SchematicTextClearanceSolver } from "./solvers/SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "./solvers/ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
+import { NetLabeledPassiveIsolationSolver } from "./solvers/NetLabeledPassiveIsolationSolver/NetLabeledPassiveIsolationSolver"
 import type {
   SchematicBoxPlacementLineItem,
   SchematicPlacementIssue,
@@ -80,6 +81,7 @@ export class SchematicPlacementAnalysis {
   /** Counts emitted issue objects, including zero counts for known types. */
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
+      NetLabeledPassiveIsolated: 0,
       FlybackDiodeSeparatedFromRelayCoil: 0,
       ComponentOverlap: 0,
       SchematicBoxHasALotOfSurroundingWhitespace: 0,
@@ -137,6 +139,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "NetLabeledPassiveIsolated":
+        return NetLabeledPassiveIsolationSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
       case "PiFilterComponentsNotGrouped":

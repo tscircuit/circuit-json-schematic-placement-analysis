@@ -79,8 +79,16 @@ export function renderIssueOverlay(input: {
   height?: number
 }) {
   const { circuitJson, analysis } = input
+  const selectedIssue =
+    input.issueIndex === undefined
+      ? undefined
+      : analysis.getIssues()[input.issueIndex]
   const sheetId =
-    input.schematicSheetId ?? getReproSheets(circuitJson)[0]?.id ?? ""
+    input.schematicSheetId ??
+    (selectedIssue &&
+      getIssueSchematicSheetContext(selectedIssue).schematicSheetId) ??
+    getReproSheets(circuitJson)[0]?.id ??
+    ""
   const sheetJson = circuitJson.filter(
     (element) =>
       !element.type.startsWith("schematic_") ||
@@ -144,6 +152,9 @@ export function renderIssueOverlay(input: {
     const geometry: string[] = []
     let anchor: { x: number; y: number } | undefined
     const markerAnchors = new Map<string, { x: number; y: number }>()
+    const pinDistanceOverlay =
+      issue.lineItemType === "NetLabeledPassiveIsolated"
+    const strokeScale = pinDistanceOverlay ? Math.abs(a) : 1
     const rect = (bounds: SchematicIssueBounds, isContext = false) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
@@ -159,13 +170,39 @@ export function renderIssueOverlay(input: {
       if (!isContext) markerAnchors.set(key, { x: bounds.left, y: bounds.top })
       if (drawnRectangles.has(key)) return
       drawnRectangles.add(key)
-      const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
+      const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${(isContext ? 0.35 : 0.5) / strokeScale}" ${isContext ? 'stroke-dasharray="5 3"' : ""} ${pinDistanceOverlay ? "" : 'vector-effect="non-scaling-stroke"'} />`
       geometry.push(markup)
     }
     for (const placement of context) rect(boxBounds(placement), true)
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
     anchor = undefined
     switch (issue.lineItemType) {
+      case "NetLabeledPassiveIsolated": {
+        for (const placement of context) rect(boxBounds(placement))
+        for (const [i, sourcePortId] of issue.passiveSourcePortIds.entries()) {
+          const passivePin = sheetJson.find(
+            (element) =>
+              element.type === "schematic_port" &&
+              element.source_port_id === sourcePortId,
+          )
+          const connectedPin = sheetJson.find(
+            (element) =>
+              element.type === "schematic_port" &&
+              element.source_port_id === issue.connectedSourcePortIds[i],
+          )
+          if (
+            passivePin?.type !== "schematic_port" ||
+            connectedPin?.type !== "schematic_port"
+          )
+            continue
+          const from = passivePin.center,
+            to = connectedPin.center
+          geometry.push(
+            `<g data-passive-distance-source-port="${escapeXml(sourcePortId)}" data-connected-source-port="${escapeXml(issue.connectedSourcePortIds[i]!)}"><title>Pin distance guide; not a schematic wire</title><line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="#dc2626" stroke-width="${0.9 / Math.abs(a)}" stroke-dasharray="${4 / Math.abs(a)} ${4 / Math.abs(a)}" />${[from, to].map((point) => `<circle cx="${point.x}" cy="${point.y}" r="${4 / Math.abs(a)}" fill="none" stroke="#dc2626" stroke-width="${1.5 / Math.abs(a)}" />`).join("")}</g>`,
+          )
+        }
+        break
+      }
       case "ComponentOverlap": {
         const first = boxBounds(issue.firstComponent)
         const second = boxBounds(issue.secondComponent)

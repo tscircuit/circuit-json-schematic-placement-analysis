@@ -49,6 +49,18 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
+/** A net-labeled passive is far from the connected pin on both terminals. */
+export interface NetLabeledPassiveIsolated {
+  lineItemType: "NetLabeledPassiveIsolated"
+  passiveComponent: SchematicBoxPlacement
+  connectedComponents: [SchematicBoxPlacement, SchematicBoxPlacement]
+  passiveSourcePortIds: [string, string]
+  connectedSourcePortIds: [string, string]
+  pinDistances: [number, number]
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** A power-to-ground capacitor bank is spread out within one schematic block. */
 export interface DecouplingCapacitorsNotCloseTogether {
   lineItemType: "DecouplingCapacitorsNotCloseTogether"
@@ -484,6 +496,7 @@ export interface PiFilterComponentsNotGrouped {
 }
 
 export type SchematicPlacementIssue =
+  | NetLabeledPassiveIsolated
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
@@ -526,7 +539,7 @@ export type SchematicPlacementLineItem =
   | SchematicBoxPlacementLineItem
   | SchematicPlacementIssues
 
-/** Select issue types to execute; omitted runs all checks, [] runs none. */
+/** Select checks; omitted excludes opt-in spacing advice, [] runs none. */
 export interface SchematicPlacementAnalysisOptions {
   issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
 }

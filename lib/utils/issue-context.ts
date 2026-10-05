@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "NetLabeledPassiveIsolated":
+        addPlacement(issue.passiveComponent)
+        issue.connectedComponents.forEach(addPlacement)
+        break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)

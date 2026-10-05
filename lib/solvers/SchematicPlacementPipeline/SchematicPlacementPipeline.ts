@@ -39,11 +39,13 @@ import { TwoPinComponentOrientationSolver } from "../TwoPinComponentOrientationS
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
+import { NetLabeledPassiveIsolationSolver } from "../NetLabeledPassiveIsolationSolver/NetLabeledPassiveIsolationSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  NetLabeledPassiveIsolated: [NetLabeledPassiveIsolationSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
@@ -301,6 +303,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
         { ctx: p.ctx, issues: p.issues },
       ],
     ),
+    definePipelineStep(
+      "NetLabeledPassiveIsolationSolver",
+      NetLabeledPassiveIsolationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
   ]
 
   private readonly selectedIssueTypes?: Set<
@@ -321,6 +330,12 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       )
       this.pipelineDef = this.pipelineDef.filter((step) =>
         selectedSolvers.has(step.solverClass),
+      )
+    } else {
+      // Distance alone cannot distinguish a bad layout from intentional spacing.
+      // Run this readability advisory only when the caller explicitly selects it.
+      this.pipelineDef = this.pipelineDef.filter(
+        (step) => step.solverClass !== NetLabeledPassiveIsolationSolver,
       )
     }
   }
