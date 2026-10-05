@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("does not recommend resizing when a pin's side metadata is missing", async () => {
   const circuitJson = await renderBldcSymbol("U3", { schHeight: 5 })
@@ -16,6 +16,14 @@ test("does not recommend resizing when a pin's side metadata is missing", async 
       ),
   ).toHaveLength(0)
   await expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 450 }),
+    createIssueReproSnapshot({
+      width: 1200,
+      showFullSchematic: true,
+      showOverlay: false,
+      showListingIssueMarkers: true,
+      circuitJson,
+      analysis,
+      height: 450,
+    }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

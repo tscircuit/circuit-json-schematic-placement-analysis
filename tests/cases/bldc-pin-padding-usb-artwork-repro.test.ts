@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("does not shrink the BLDC board's standard USB-C artwork", async () => {
   const circuitJson = await renderBldcSymbol("J1")
@@ -16,6 +16,14 @@ test("does not shrink the BLDC board's standard USB-C artwork", async () => {
     )
   expect(issues).toHaveLength(0)
   await expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 550 }),
+    createIssueReproSnapshot({
+      width: 1200,
+      showFullSchematic: true,
+      showOverlay: false,
+      showListingIssueMarkers: true,
+      circuitJson,
+      analysis,
+      height: 550,
+    }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

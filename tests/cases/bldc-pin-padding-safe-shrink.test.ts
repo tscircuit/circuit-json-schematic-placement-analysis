@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { stackSvgsVertically } from "stack-svgs"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("still shrinks an oversized unequal-bank symbol to dimensions that render safely", async () => {
   const circuitJson = await renderBldcSymbol("U3", { schHeight: 5 })
@@ -44,12 +44,20 @@ test("still shrinks an oversized unequal-bank symbol to dimensions that render s
   await expect(
     stackSvgsVertically(
       [
-        createSchematicAnalysisFixtureSvg({
+        createIssueReproSnapshot({
+          width: 1200,
+          showFullSchematic: true,
+          showOverlay: false,
+          showListingIssueMarkers: true,
           circuitJson,
           analysis,
           height: 450,
         }),
-        createSchematicAnalysisFixtureSvg({
+        createIssueReproSnapshot({
+          width: 1200,
+          showFullSchematic: true,
+          showOverlay: false,
+          showListingIssueMarkers: true,
           circuitJson: resized,
           analysis: resizedAnalysis,
           height: 450,

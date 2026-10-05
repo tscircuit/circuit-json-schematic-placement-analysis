@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 test("does not shrink BLDC symbols below the space needed by all pin banks", async () => {
   for (const name of ["U1", "U3"] as const) {
@@ -16,7 +16,15 @@ test("does not shrink BLDC symbols below the space needed by all pin banks", asy
     expect(issues).toHaveLength(0)
     expect(JSON.stringify(circuitJson)).toBe(original)
     await expect(
-      createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 550 }),
+      createIssueReproSnapshot({
+        width: 1200,
+        showFullSchematic: true,
+        showOverlay: false,
+        showListingIssueMarkers: true,
+        circuitJson,
+        analysis,
+        height: 550,
+      }),
     ).toMatchSvgSnapshot(import.meta.path, name)
   }
 })

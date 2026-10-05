@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicPinPaddingToEdgeAllSidesCircuitJson } from "../assets/schematic-pin-padding-to-edge-all-sides"
-import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 const dimensions = (circuitJson: CircuitJson) =>
   analyzeSchematicPlacement(circuitJson)
@@ -34,6 +34,14 @@ test("padding dimensions do not depend on component names, pin names or hints", 
   expect(dimensions(original)).toHaveLength(1)
   expect(dimensions(renamed)).toEqual(dimensions(original))
   await expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson: renamed, height: 450 }),
+    createIssueReproSnapshot({
+      width: 1200,
+      showFullSchematic: true,
+      showOverlay: false,
+      showListingIssueMarkers: true,
+      circuitJson: renamed,
+      analysis: analyzeSchematicPlacement(renamed),
+      height: 450,
+    }),
   ).toMatchSvgSnapshot(import.meta.path)
 })
