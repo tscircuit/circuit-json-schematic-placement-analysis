@@ -87,8 +87,8 @@ export function getSchematicBoxLabelRects(
 }
 
 export function schematicLabelRectsOverlap(
-  a: LabelRect,
-  b: LabelRect,
+  a: Omit<LabelRect, "side">,
+  b: Omit<LabelRect, "side">,
   padding = INNER_LABEL_COLLISION_PADDING,
 ): boolean {
   return (

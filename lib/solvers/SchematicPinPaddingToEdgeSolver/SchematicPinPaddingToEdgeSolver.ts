@@ -2,7 +2,8 @@ import {
   getPinLabelLength,
   getSafeSchematicBoxResize,
 } from "../../utils/schematic-box-resize"
-import { getSchematicBoxResizeComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxGraphicBounds } from "../../utils/schematic-box-graphics"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -63,7 +64,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       this.getPlacementBySchematicComponentId(componentPlacements)
     this.schematicComponentById = this.getSchematicComponentById(circuitJson)
     this.sourcePortById = this.getSourcePortById(circuitJson)
-    const boxIds = getSchematicBoxResizeComponentIds(circuitJson)
+    const boxIds = getSchematicBoxComponentIds(circuitJson)
     this.entries = Array.from(
       this.getPortsBySchematicComponentId(circuitJson),
     ).filter(([id]) => boxIds.has(id))
@@ -161,6 +162,10 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         height: heights.length ? Math.max(...heights) : undefined,
       },
       2 * pinSpacing,
+      getSchematicBoxGraphicBounds(
+        this.params.ctx.circuitJson,
+        schematicComponentId,
+      ),
     )
     if (!resize) return
     const applicableDetails = details.filter(

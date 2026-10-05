@@ -1,4 +1,5 @@
-import { getSchematicBoxResizeComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicBoxGraphicBounds } from "../../utils/schematic-box-graphics"
 import {
   getPinLabelLength,
   getSafeSchematicBoxResize,
@@ -67,7 +68,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
         .map((component) => [component.schematic_component_id, component]),
     )
     this.sourceComponentById = this.getSourceComponentById(circuitJson)
-    const boxIds = getSchematicBoxResizeComponentIds(circuitJson)
+    const boxIds = getSchematicBoxComponentIds(circuitJson)
     this.entries = Array.from(
       this.getPortsBySchematicComponentId(circuitJson),
     ).filter(([id]) => boxIds.has(id))
@@ -121,9 +122,17 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     const pinSpacing =
       this.schematicComponentById.get(schematicComponentId)?.pin_spacing
     if (pinSpacing === undefined) return
-    const resize = getSafeSchematicBoxResize(schematicBox, ports, pinSpacing, {
-      width: proposedWidth,
-    })
+    const resize = getSafeSchematicBoxResize(
+      schematicBox,
+      ports,
+      pinSpacing,
+      { width: proposedWidth },
+      0,
+      getSchematicBoxGraphicBounds(
+        this.params.ctx.circuitJson,
+        schematicComponentId,
+      ),
+    )
     if (resize?.width === undefined) return
     const suggestedSchWidth = resize.width
 
