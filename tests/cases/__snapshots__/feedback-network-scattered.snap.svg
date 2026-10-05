@@ -1,4 +1,4 @@
-<svg width="1200" height="878" viewBox="0 0 1200 878" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1010" viewBox="0 0 1200 1010" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -28,11 +28,17 @@
     <tspan x="18" dy="22">  height=&quot;0.72&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R1&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;7&quot; width=&quot;0.6&quot;</tspan>
     <tspan x="18" dy="22">  height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R2&quot; positionAnchor=&quot;center&quot; schX=&quot;-3&quot; schY=&quot;-2&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;FeedbackNetworkNotCompact amplifierName=&quot;U1&quot; feedbackComponentNames=&quot;R1&quot;</tspan>
     <tspan x="18" dy="22">  distantComponentNames=&quot;R1&quot; message=&quot;consider grouping R1 closer to U1, with a compact feedback</tspan>
     <tspan x="18" dy="22">  return path above or below the amplifier&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U1&quot; sourcePortId=&quot;source_port_2&quot; railType=&quot;ground&quot;</tspan>
+    <tspan x="18" dy="22">  pathSpan=&quot;9.3&quot; pathLength=&quot;20.732&quot; message=&quot;Visible path from U1 pin source_port_2 to ground</tspan>
+    <tspan x="18" dy="22">  spans 9.30 schematic units; move the connected support elements closer together near the pin</tspan>
+    <tspan x="18" dy="22">  and recompute their schematic traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
