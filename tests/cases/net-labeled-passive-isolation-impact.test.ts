@@ -37,18 +37,33 @@ test("records isolated labeled passives in six real schematics while preserving 
           ],
         },
       ])
+      const svg = createIssueReproSnapshot({
+        circuitJson: json,
+        analysis: selected,
+        issueTypes: [...issueTypes],
+        issueIndex: 0,
+        showOverlay: true,
+        showListingIssueMarkers: true,
+        width: 1600,
+        height: 1000,
+      })
+      const issue = selected.getIssues()[0]!
+      if (issue.lineItemType !== issueTypes[0])
+        throw new Error("Unexpected type")
+      expect(svg).toContain(
+        `data-schematic-sheet-id="${issue.passiveComponent.schematicSheetId}"`,
+      )
+      expect(svg).toContain("03 · ESP32 / CONTROLS")
+      expect(svg).not.toContain("01 · USB-C INPUT / PROTECTION")
       expect(
-        createIssueReproSnapshot({
-          circuitJson: json,
-          analysis: selected,
-          issueTypes: [...issueTypes],
-          issueIndex: 0,
-          showOverlay: true,
-          showListingIssueMarkers: true,
-          width: 1600,
-          height: 1000,
-        }),
-      ).toMatchSvgSnapshot(import.meta.path, "museview")
+        [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) =>
+          Number(m[1]),
+        ),
+      ).toEqual([1, 1, 1])
+      expect([
+        ...svg.matchAll(/data-passive-distance-source-port=/g),
+      ]).toHaveLength(2)
+      expect(svg).toMatchSvgSnapshot(import.meta.path, "museview")
     }
     expect(JSON.stringify(json)).toBe(before)
   }
