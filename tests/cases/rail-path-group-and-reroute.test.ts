@@ -126,7 +126,8 @@ test("group the existing four support elements and recompute all traces without 
         e.type === "schematic_net_label" &&
         e.schematic_net_label_id === labelId,
     )
-    if (label?.type !== "schematic_net_label") throw Error(labelId)
+    if (label?.type !== "schematic_net_label" || !label.anchor_position)
+      throw Error(labelId)
     expect(root(portKey(portId!))).toBe(root(key(label.anchor_position)))
   }
   const totalLength = (c: CircuitJson) =>

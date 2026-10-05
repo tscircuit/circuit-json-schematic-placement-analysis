@@ -99,7 +99,6 @@ export class SchematicPlacementAnalysis {
       NetLabelCollision: 0,
       FeedbackNetworkNotCompact: 0,
       PullResistorOnWrongSide: 0,
-      RailPathTooSpreadOut: 0,
       SchematicTextCollision: 0,
       ResetNetworkNotGrouped: 0,
       TwoPinComponentCouldBeFlipped: 0,
@@ -115,6 +114,7 @@ export class SchematicPlacementAnalysis {
       PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
+      RailPathTooSpreadOut: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts

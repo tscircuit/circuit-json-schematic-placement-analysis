@@ -8,6 +8,7 @@ test("a label near a long segment does not create a visible connection", () => {
   // Same electrical net, but detached from the actual drawn segment by 0.01 units.
   circuitJson.push({
     type: "source_net",
+    member_source_group_ids: ["visibility-group"],
     source_net_id: "near-power",
     name: "VBUS",
     is_power: true,

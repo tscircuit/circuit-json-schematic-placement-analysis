@@ -106,18 +106,6 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
 
   pipelineDef: PipelineStep<any>[] = [
     definePipelineStep(
-      "RailPathVisibilitySolver",
-      RailPathVisibilitySolver,
-      (p: SchematicPlacementPipeline): [SolverParams] => [
-        {
-          ctx: p.ctx,
-          issues: p.issues,
-          maxSpan: p.railPathVisibility?.maxSpan,
-          maxLength: p.railPathVisibility?.maxPathLength,
-        },
-      ],
-    ),
-    definePipelineStep(
       "SchematicTextClearanceSolver",
       SchematicTextClearanceSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
@@ -318,6 +306,18 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ChipPinPairCapacitorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RailPathVisibilitySolver",
+      RailPathVisibilitySolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        {
+          ctx: p.ctx,
+          issues: p.issues,
+          maxSpan: p.railPathVisibility?.maxSpan,
+          maxLength: p.railPathVisibility?.maxPathLength,
+        },
       ],
     ),
   ]

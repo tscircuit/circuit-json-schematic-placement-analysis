@@ -7,6 +7,7 @@ test("rail path visibility: local-power-symbol", () => {
   const circuitJson = createRailPathRepro()
   circuitJson.push({
     type: "source_net",
+    member_source_group_ids: ["visibility-group"],
     source_net_id: "local-power",
     name: "VBUS",
     is_power: true,

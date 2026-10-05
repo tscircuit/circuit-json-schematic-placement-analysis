@@ -213,6 +213,7 @@ export function createRailPathRepro({
   }
   circuit.push({
     type: "source_net",
+    member_source_group_ids: ["visibility-group"],
     source_net_id: "return-net",
     name: power ? "+3V3" : "GND",
     is_ground: !power,

@@ -1,0 +1,23 @@
+name: Refresh rail repro snapshots
+on:
+  pull_request:
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install
+      - name: Regenerate affected fixtures with CI dependencies
+        env:
+          BUN_UPDATE_SNAPSHOTS: "1"
+          FORCE_BUN_UPDATE_SNAPSHOTS: "1"
+        run: bun test --timeout 30000 tests/cases/esp32-regulator-capacitor-repro.test.ts tests/cases/rp2040-full-hall-sheet.test.ts tests/cases/real-sensor-issue-overlay.test.ts tests/cases/stride-pi-filter-repro.test.ts tests/cases/rp2040-hall-connector-move.test.tsx tests/cases/rp2040-encoder-connector-placement.test.ts tests/cases/acoustic-guitar-tuner-full-sheet-preview.test.ts tests/cases/wireless-mouse-sensor-sheet.test.ts tests/cases/feedback-network-scattered.test.ts tests/cases/rp2040-hall-connector-placement.test.ts tests/cases/allwinner-buck-orientation-repro.test.ts tests/cases/allwinner-inverted-rails.test.ts tests/cases/esp32-usb-pair-repro.test.ts tests/cases/ble-pi-filter-repro.test.ts tests/cases/rp2040-full-encoder-sheet.test.ts tests/cases/decoupling-capacitors-not-close.test.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: refreshed-rail-snapshots
+          path: tests/cases/__snapshots__/*.snap.svg

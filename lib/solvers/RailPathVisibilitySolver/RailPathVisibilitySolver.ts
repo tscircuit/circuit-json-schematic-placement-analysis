@@ -104,7 +104,11 @@ export class RailPathVisibilitySolver extends BaseSolver {
       }
     }
     for (const element of ctx.circuitJson) {
-      if (element.type !== "schematic_net_label" || !element.source_net_id)
+      if (
+        element.type !== "schematic_net_label" ||
+        !element.source_net_id ||
+        !element.anchor_position
+      )
         continue
       const net = index.connected(element.source_net_id)
       if (
@@ -185,13 +189,12 @@ export class RailPathVisibilitySolver extends BaseSolver {
     const queue: State[] = [
       { id: start.nodeId, length: 0, hops: 0, path: [start.nodeId], links: [] },
     ]
-    const visited = new Set<string>()
+    const bestLengths = new Map<string, number>([[`${start.nodeId}:0`, 0]])
     while (queue.length) {
       queue.sort((a, b) => a.length - b.length)
       const state = queue.shift()!
       const key = `${state.id}:${state.hops}`
-      if (visited.has(key)) continue
-      visited.add(key)
+      if (state.length !== bestLengths.get(key)) continue
       const current = this.nodes.get(state.id)!
       if (current.terminal) {
         const points = state.path.map((id) => this.nodes.get(id)!.point)
@@ -248,10 +251,15 @@ export class RailPathVisibilitySolver extends BaseSolver {
           )
             continue
         }
+        const length = state.length + edge.length
+        const hops = state.hops + (edge.componentId ? 1 : 0)
+        const nextKey = `${edge.to}:${hops}`
+        if (length >= (bestLengths.get(nextKey) ?? Infinity)) continue
+        bestLengths.set(nextKey, length)
         queue.push({
           id: edge.to,
-          length: state.length + edge.length,
-          hops: state.hops + (edge.componentId ? 1 : 0),
+          length,
+          hops,
           path: [...state.path, edge.to],
           links: [...state.links, edge],
         })

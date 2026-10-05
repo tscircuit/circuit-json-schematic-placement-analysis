@@ -21,6 +21,7 @@ test("records no trace or orientation suggestions for the full Hall sheet's conn
   ).toEqual({
     PinHeaderSchematicBoxTooWide: 1,
     ConnectorPositionCausesTraceDetours: 1,
+    RailPathTooSpreadOut: 2,
   })
   const input = {
     circuitJson,

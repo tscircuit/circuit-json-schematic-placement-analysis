@@ -61,7 +61,7 @@ export function compactRailPathRepro(input: CircuitJson): CircuitJson {
         e.type === "schematic_net_label" &&
         e.schematic_net_label_id === labelId,
     )
-    if (label?.type !== "schematic_net_label")
+    if (label?.type !== "schematic_net_label" || !label.anchor_position)
       throw new Error(`Missing repro rail ${labelId}`)
     const anchor = { x: port.x, y: port.y - 0.65 }
     const offset = {

@@ -20,6 +20,7 @@ test("records no trace or orientation suggestions for the full encoder sheet's c
   ).toEqual({
     PinHeaderSchematicBoxTooWide: 1,
     ConnectorPositionCausesTraceDetours: 1,
+    RailPathTooSpreadOut: 2,
   })
   const input = {
     circuitJson,
