@@ -11,6 +11,9 @@ test("USB-C artwork is not treated as empty space in a generic box", () => {
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.toString()).not.toContain("GenericSchematicBoxTooWide")
   expect(
+    analysis.getIssues({ issueTypes: ["SchematicPinPaddingToEdgeTooLarge"] }),
+  ).toHaveLength(0)
+  expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

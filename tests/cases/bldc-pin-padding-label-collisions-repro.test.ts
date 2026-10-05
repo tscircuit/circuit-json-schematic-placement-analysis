@@ -1,10 +1,9 @@
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { stackSvgsVertically } from "stack-svgs"
 import { renderBldcSymbol } from "../assets/bldc-pin-padding"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test("reproduces BLDC padding suggestions that introduce inner pin-label collisions", async () => {
+test("does not suggest shrinking BLDC symbols into inner pin-label collisions", async () => {
   for (const name of ["U5", "U7", "U8", "U9", "J5"] as const) {
     const circuitJson = await renderBldcSymbol(name)
     const analysis = analyzeSchematicPlacement(circuitJson)
@@ -20,38 +19,9 @@ test("reproduces BLDC padding suggestions that introduce inner pin-label collisi
       .filter(
         (issue) => issue.lineItemType === "SchematicPinPaddingToEdgeTooLarge",
       )
-    expect(issues).toHaveLength(1)
-    const issue = issues[0]!
-    // Apply the actual recommendation by rendering TSX again, not by rewriting JSON.
-    const resized = await renderBldcSymbol(name, {
-      schWidth: issue.suggestedSchWidth,
-      schHeight: issue.suggestedSchHeight,
-    })
-    const resizedAnalysis = analyzeSchematicPlacement(resized)
-    expect(
-      resizedAnalysis
-        .getIssues()
-        .filter(
-          (finding) =>
-            finding.lineItemType === "SchematicBoxInnerLabelCollision",
-        ),
-    ).toHaveLength(1)
+    expect(issues).toHaveLength(0)
     await expect(
-      stackSvgsVertically(
-        [
-          createSchematicAnalysisFixtureSvg({
-            circuitJson,
-            analysis,
-            height: 550,
-          }),
-          createSchematicAnalysisFixtureSvg({
-            circuitJson: resized,
-            analysis: resizedAnalysis,
-            height: 550,
-          }),
-        ],
-        { normalizeSize: false, gap: 0 },
-      ),
+      createSchematicAnalysisFixtureSvg({ circuitJson, analysis, height: 550 }),
     ).toMatchSvgSnapshot(import.meta.path, name)
   }
 })

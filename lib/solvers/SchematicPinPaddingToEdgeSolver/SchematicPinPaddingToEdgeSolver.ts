@@ -1,3 +1,7 @@
+import {
+  getPinLabelLength,
+  getSafeSchematicBoxResize,
+} from "../../utils/schematic-box-resize"
 import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
@@ -39,8 +43,6 @@ type MaxLabelLengthBySide = Record<SchematicSide, number>
 export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
   private readonly MESSAGE =
     "Move schematic pins closer to the box edge or change the schematic box"
-  private readonly PIN_NAME_CHARACTER_WIDTH = 0.095
-  private readonly FALLBACK_CHARACTER_WIDTH = 0.13
   private readonly GAP_COMPARISON_EPSILON = 1e-9
 
   private readonly entries: Array<[string, SchematicPort[]]>
@@ -80,16 +82,26 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     const schematicBox = this.placementById.get(schematicComponentId)
     if (!schematicBox) return
 
+    const sourceComponent = this.params.ctx.circuitJson.find(
+      (element) =>
+        element.type === "source_component" &&
+        element.source_component_id === schematicBox.sourceComponentId,
+    )
+    // Standard connector artwork is not a resizable generic chip box.
+    if (
+      sourceComponent?.type === "source_component" &&
+      sourceComponent.ftype === "simple_connector" &&
+      sourceComponent.standard === "usb_c"
+    )
+      return
+
     const pinSpacing = this.getPinSpacing(
       schematicBox,
       this.schematicComponentById,
     )
     if (pinSpacing === null) return
 
-    const maxLabelLengthBySide = this.getMaxLabelLengthBySide(
-      ports,
-      this.sourcePortById,
-    )
+    const maxLabelLengthBySide = this.getMaxLabelLengthBySide(ports)
     const portsBySide = new Map<SchematicSide, SchematicPort[]>()
     for (const port of ports) {
       if (!this.isSchematicSide(port.side_of_component)) continue
@@ -97,8 +109,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       sidePorts.push(port)
       portsBySide.set(port.side_of_component, sidePorts)
     }
-
-    const useLabelAwareMaxPadding = this.hasPinsOnAllSides(portsBySide)
 
     const candidates: PinPaddingCandidate[] = []
     for (const [pinSide, sidePorts] of portsBySide) {
@@ -114,13 +124,14 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
           outerPin,
           edgeSide,
         )
-        const maxAllowedPadding = useLabelAwareMaxPadding
-          ? this.getMaxAllowedPinPadding(
-              pinSpacing,
-              edgeSide,
-              maxLabelLengthBySide,
-            )
-          : pinSpacing
+        const maxAllowedPadding = Math.max(
+          pinSpacing,
+          this.getMaxAllowedPinPadding(
+            pinSpacing,
+            edgeSide,
+            maxLabelLengthBySide,
+          ),
+        )
 
         // Allow one extra pin spacing at each end so moderately roomy boxes
         // and centered banks with unequal pin counts are not flagged. Keep
@@ -157,9 +168,14 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         ? []
         : [detail.suggestedSchHeight],
     )
+    const resize = getSafeSchematicBoxResize(schematicBox, ports, pinSpacing, {
+      width: widths.length ? Math.max(...widths) : undefined,
+      height: heights.length ? Math.max(...heights) : undefined,
+    })
+    if (!resize) return
     const dimensions = [
-      widths.length ? "width" : "",
-      heights.length ? "height" : "",
+      resize.width === undefined ? "" : "width",
+      resize.height === undefined ? "" : "height",
     ]
       .filter(Boolean)
       .join(" and ")
@@ -182,8 +198,8 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
           excessPadding,
         }),
       ),
-      suggestedSchWidth: widths.length ? Math.max(...widths) : undefined,
-      suggestedSchHeight: heights.length ? Math.max(...heights) : undefined,
+      suggestedSchWidth: resize.width,
+      suggestedSchHeight: resize.height,
       message: `${this.MESSAGE} ${dimensions}`,
     })
   }
@@ -252,30 +268,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     return this.isHorizontalSide(side) || this.isVerticalSide(side)
   }
 
-  private isPinNameLabel(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): boolean {
-    if (!sourcePort) return false
-    return (
-      label === sourcePort.name ||
-      label === String(sourcePort.pin_number) ||
-      (sourcePort.port_hints ?? []).includes(label)
-    )
-  }
-
-  private estimateLabelWidth(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): number {
-    return (
-      Array.from(label).length *
-      (this.isPinNameLabel(label, sourcePort)
-        ? this.PIN_NAME_CHARACTER_WIDTH
-        : this.FALLBACK_CHARACTER_WIDTH)
-    )
-  }
-
   private exceedsMaxAllowedGap(measured: number, maxAllowed: number): boolean {
     return measured - maxAllowed > this.GAP_COMPARISON_EPSILON
   }
@@ -323,7 +315,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     const map = new Map<string, SchematicPort[]>()
     for (const port of circuitJson.filter((el) => this.isSchematicPort(el))) {
       if (!port.schematic_component_id) continue
-      if (!this.isSchematicSide(port.side_of_component)) continue
       const ports = map.get(port.schematic_component_id)
       if (ports) ports.push(port)
       else map.set(port.schematic_component_id, [port])
@@ -353,7 +344,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
 
   private getMaxLabelLengthBySide(
     ports: SchematicPort[],
-    sourcePortById: Map<string, SourcePort>,
   ): MaxLabelLengthBySide {
     const result: MaxLabelLengthBySide = {
       left: 0,
@@ -366,10 +356,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       if (!port.display_pin_label) continue
       result[port.side_of_component] = Math.max(
         result[port.side_of_component],
-        this.estimateLabelWidth(
-          port.display_pin_label,
-          sourcePortById.get(port.source_port_id),
-        ),
+        getPinLabelLength(port),
       )
     }
     return result
@@ -416,17 +403,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     return this.isHorizontalSide(pinSide)
       ? ["top", "bottom"]
       : ["left", "right"]
-  }
-
-  private hasPinsOnAllSides(
-    portsBySide: Map<SchematicSide, SchematicPort[]>,
-  ): boolean {
-    return (
-      portsBySide.has("left") &&
-      portsBySide.has("right") &&
-      portsBySide.has("top") &&
-      portsBySide.has("bottom")
-    )
   }
 
   private getMaxAllowedPinPadding(
