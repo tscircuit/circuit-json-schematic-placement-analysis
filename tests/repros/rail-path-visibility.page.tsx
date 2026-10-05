@@ -1,3 +1,4 @@
+import { compactRailPathRepro } from "../fixtures/compact-rail-path-repro"
 import { useState } from "react"
 import { analyzeSchematicPlacement } from "../../lib/index"
 import { createIssueOverlaySvg } from "../../lib/svg/create-issue-overlay-svg"
@@ -10,7 +11,9 @@ export default function RailPathVisibilityRepro() {
   const [maxSpan, setMaxSpan] = useState(8)
   const circuitJson = real
     ? getRp2040BldcSheet("hall")
-    : createRailPathRepro({ compact })
+    : compact
+      ? compactRailPathRepro(createRailPathRepro())
+      : createRailPathRepro()
   const analysis = analyzeSchematicPlacement(circuitJson, {
     issueTypes: ["RailPathTooSpreadOut"],
     railPathVisibility: { maxSpan, maxPathLength: maxSpan * 2 },
@@ -29,14 +32,18 @@ export default function RailPathVisibilityRepro() {
         Reconstruction of the supplied RP2040 screenshot plus the repository's
         real Hall sheet. Red routes are readability advisories.
       </p>
-      <label>
-        <input
-          type="checkbox"
-          checked={compact}
-          onChange={(e) => setCompact(e.target.checked)}
-        />{" "}
-        Compact reconstruction{" "}
-      </label>
+      <button disabled={real} onClick={() => setCompact(!compact)}>
+        {compact
+          ? "Reset placement"
+          : "Group R1, R11, R12 and C4 + recompute traces"}
+      </button>
+      <p>
+        The grouping action moves the existing screenshot repro's four support
+        components, shifts their pins and attached ground symbols, and
+        regenerates all six traces from the moved endpoints, preserving the
+        divider junction and source connectivity. The real Hall sheet is a
+        detection-only control.
+      </p>
       <label>
         <input
           type="checkbox"

@@ -233,7 +233,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
           pathSpan: span,
           maxRecommendedSpan: this.maxSpan,
           maxRecommendedPathLength: this.maxLength,
-          message: `Visible path from ${host.sourceComponentName ?? start.componentId} pin ${start.portId} to ${current.terminal} spans ${span.toFixed(2)} schematic units; consider grouping this branch near the pin or adding a local rail symbol.`,
+          message: `Visible path from ${host.sourceComponentName ?? start.componentId} pin ${start.portId} to ${current.terminal} spans ${span.toFixed(2)} schematic units; move the connected support elements closer together near the pin and recompute their schematic traces.`,
         })
         return
       }

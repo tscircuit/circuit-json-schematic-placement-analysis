@@ -1,3 +1,4 @@
+import { compactRailPathRepro } from "../fixtures/compact-rail-path-repro"
 import type { CircuitJson } from "circuit-json"
 
 /** Reconstruction of the supplied screenshot, not an export of the live URL.
@@ -10,6 +11,7 @@ export function createRailPathRepro({
   compact?: boolean
   power?: boolean
 } = {}): CircuitJson {
+  if (compact) return compactRailPathRepro(createRailPathRepro({ power }))
   const circuit: any[] = []
   const sheet = "visibility-sheet"
   const common = { schematic_sheet_id: sheet }
@@ -29,8 +31,8 @@ export function createRailPathRepro({
       id: "series",
       name: "R1",
       ftype: "simple_resistor",
-      x: compact ? 5 : 2,
-      y: compact ? 4 : 6,
+      x: 2,
+      y: 6,
       width: 0.9,
       height: 0.6,
       symbol: "boxresistor_right",
@@ -40,8 +42,8 @@ export function createRailPathRepro({
       id: "upper",
       name: "R11",
       ftype: "simple_resistor",
-      x: compact ? 3 : -1,
-      y: compact ? 3 : -4,
+      x: -1,
+      y: -4,
       width: 0.6,
       height: 0.9,
       symbol: "boxresistor_down",
@@ -51,8 +53,8 @@ export function createRailPathRepro({
       id: "lower",
       name: "R12",
       ftype: "simple_resistor",
-      x: compact ? 3 : -1,
-      y: compact ? 1.5 : -6.5,
+      x: -1,
+      y: -6.5,
       width: 0.6,
       height: 0.9,
       symbol: "boxresistor_down",
@@ -62,8 +64,8 @@ export function createRailPathRepro({
       id: "filter",
       name: "C4",
       ftype: "simple_capacitor",
-      x: compact ? 4.5 : 2,
-      y: compact ? 1.5 : -6.5,
+      x: 2,
+      y: -6.5,
       width: 0.6,
       height: 0.9,
       symbol: "capacitor_down",
@@ -171,8 +173,8 @@ export function createRailPathRepro({
     })
   wire("sense-wire", "sense", [
     [6.5, 4],
-    [compact ? 5.8 : 4.6, 4],
-    [compact ? 5.8 : 4.6, series.y],
+    [4.6, 4],
+    [4.6, series.y],
     [series.x + 0.45, series.y],
   ])
   wire("long-input-wire", "input", [
@@ -180,7 +182,7 @@ export function createRailPathRepro({
     [upper.x, series.y],
     [upper.x, upper.y + 0.45],
   ])
-  const tapY = compact ? 2.25 : -5.7
+  const tapY = -5.7
   wire("tap-wire", "tap", [
     [upper.x, upper.y - 0.45],
     [upper.x, tapY],
@@ -191,7 +193,7 @@ export function createRailPathRepro({
     [filter.x, tapY],
     [filter.x, filter.y + 0.45],
   ])
-  const railY = compact ? 0.4 : -7.7
+  const railY = -7.7
   for (const c of [lower, filter]) {
     wire(`rail-wire-${c.id}`, "rail", [
       [c.x, c.y - 0.45],
@@ -223,7 +225,7 @@ export function createRailPathRepro({
     schematic_text_id: "heading",
     text: "Input-voltage monitor",
     anchor: "center",
-    position: { x: compact ? 3.5 : 1.2, y: compact ? -0.55 : -2.5 },
+    position: { x: 1.2, y: -2.5 },
     font_size: 0.22,
     ...common,
   })
