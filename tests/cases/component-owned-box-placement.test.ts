@@ -51,7 +51,7 @@ test("preserves component and symbol owned boxes and converts standalone box cor
       circuitJson,
       analysis,
       height: 400,
-    }).replace(/[ \t]+$/gm, ""),
+    }),
   ).toMatchSvgSnapshot(import.meta.path)
 
   // A normal component record remains authoritative for the centre. Its owned
