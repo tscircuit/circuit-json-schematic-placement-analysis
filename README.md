@@ -40,7 +40,7 @@ const analysis = analyzeSchematicPlacement(circuitJson, {
 })
 ```
 
-Omit `issueTypes` to run all checks, or pass `[]` to run none. Shared solvers
+Omit `issueTypes` to run default checks, or pass `[]` to run none. Shared solvers
 run once, with any prerequisites needed to preserve diagnostic deduplication;
 only requested findings are returned. `analysis.getIssues({ issueTypes })`
 filters already-computed results instead. Counts describe emitted findings;
@@ -192,3 +192,24 @@ issue per component, with combined affected sides and width/height guidance.
 largest excess. Box width, pin padding and inner-label checks skip built-in
 symbols and custom components with `is_box_with_pins: false`. Older box exports
 that omit the flag remain supported.
+
+## Opt-in passive spacing advice
+
+`LocalPassiveConnectionTooLong` is disabled by default. Distance alone cannot
+prove that a schematic is poorly placed: an orderly LED bank or separated
+functional block can intentionally use long connections.
+
+To explicitly request these readability advisories:
+
+```ts
+analyzeSchematicPlacement(circuitJson, {
+  issueTypes: ["LocalPassiveConnectionTooLong"],
+})
+```
+
+The check requires an unbranched two-port connection involving a typed resistor,
+capacitor, or inductor, unique pin placements, and a shared sheet and local scope.
+It skips typed power/ground nets and pins marked `do_not_connect`. The distance
+limit is the larger of 4 schematic units and three times the passive's largest
+dimension. Findings include measured distances without proposing component moves.
+They describe spacing preferences, not electrical errors.

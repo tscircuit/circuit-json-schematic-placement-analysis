@@ -49,6 +49,17 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
+/** Advisory for an unusually long, unbranched local passive connection. */
+export interface LocalPassiveConnectionTooLong {
+  lineItemType: "LocalPassiveConnectionTooLong"
+  firstComponent: SchematicBoxPlacement
+  secondComponent: SchematicBoxPlacement
+  sourcePortIds: [string, string]
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** A power-to-ground capacitor bank is spread out within one schematic block. */
 export interface DecouplingCapacitorsNotCloseTogether {
   lineItemType: "DecouplingCapacitorsNotCloseTogether"
@@ -484,6 +495,7 @@ export interface PiFilterComponentsNotGrouped {
 }
 
 export type SchematicPlacementIssue =
+  | LocalPassiveConnectionTooLong
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
@@ -526,7 +538,7 @@ export type SchematicPlacementLineItem =
   | SchematicBoxPlacementLineItem
   | SchematicPlacementIssues
 
-/** Select issue types to execute; omitted runs all checks, [] runs none. */
+/** Select checks; omitted excludes opt-in spacing advice, [] runs none. */
 export interface SchematicPlacementAnalysisOptions {
   issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
 }

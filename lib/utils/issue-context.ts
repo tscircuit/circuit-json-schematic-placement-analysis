@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "LocalPassiveConnectionTooLong":
+        addPlacement(issue.firstComponent)
+        addPlacement(issue.secondComponent)
+        break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
