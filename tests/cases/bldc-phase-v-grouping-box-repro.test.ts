@@ -8,7 +8,7 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("reproduces false component overlaps inside the BLDC Phase V grouping box", async () => {
+test("does not treat the BLDC Phase V grouping box as an overlapping component", async () => {
   const circuitJson = await createBldcPhaseVGroupingBoxCircuitJson()
   expectReproRendered(circuitJson, 5)
   expectReproNets(circuitJson, [
@@ -39,14 +39,7 @@ test("reproduces false component overlaps inside the BLDC Phase V grouping box",
   const overlaps = analysis
     .getIssues()
     .filter((issue) => issue.lineItemType === "ComponentOverlap")
-  // Record today's incorrect output; the stacked fix will change this assertion.
-  expect(overlaps).toHaveLength(2)
-  expect(
-    overlaps.map((issue) => issue.firstComponent.sourceComponentName).sort(),
-  ).toEqual(["R96", "R97"])
-  for (const issue of overlaps) {
-    expect(issue.secondComponent.schematicComponentId).toBeUndefined()
-  }
+  expect(overlaps).toEqual([])
   await expect(
     createIssueReproSnapshot({
       circuitJson,

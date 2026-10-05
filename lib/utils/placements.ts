@@ -103,8 +103,9 @@ export const schematicBoxToPlacement = (
   const placement: SchematicBoxPlacementLineItem = {
     lineItemType: "SchematicBoxPlacement",
     positionAnchor: "center",
-    schX: schematicBox.x,
-    schY: schematicBox.y,
+    // Circuit JSON stores a box's lower-left corner; placements use centres.
+    schX: schematicBox.x + schematicBox.width / 2,
+    schY: schematicBox.y + schematicBox.height / 2,
     width: schematicBox.width,
     height: schematicBox.height,
     ...getSourceComponentMetadata(schematicBox, circuitJson),
@@ -122,7 +123,13 @@ export const schematicBoxToPlacement = (
 }
 
 export const buildSolverContext = (circuitJson: CircuitJson): SolverContext => {
-  const schematicBoxes = circuitJson.filter(isSchematicBox)
+  // Unowned boxes are drawing annotations (for example, a grouping frame).
+  // They may intentionally contain components and are not component bodies.
+  // Keep component/symbol-owned boxes, including partial Circuit JSON where
+  // their corresponding schematic_component record is absent.
+  const schematicBoxes = circuitJson
+    .filter(isSchematicBox)
+    .filter((box) => box.schematic_component_id || box.schematic_symbol_id)
   const schematicSheetNameById = getSchematicSheetNamesById(circuitJson)
   const schematicComponentIds = new Set(
     circuitJson
