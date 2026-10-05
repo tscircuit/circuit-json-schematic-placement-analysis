@@ -78,9 +78,10 @@ export function createNetLabeledPassiveIsolationFixture(): CircuitJson {
         schematic_net_label_id: `label_${id}`,
         source_net_id: net,
         source_trace_id: `src_${id}`,
-        center: { ...anchor },
+        center: { x: anchor.x + (direction === "left" ? -0.45 : 0.45), y: 0 },
         anchor_position: { ...anchor },
-        anchor_side: direction,
+        // anchor_side is the label edge facing the pin, opposite its facing direction.
+        anchor_side: direction === "left" ? "right" : "left",
         text: net,
       },
     )

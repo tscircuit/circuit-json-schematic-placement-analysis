@@ -207,7 +207,7 @@ test("reports one passive only when both labeled terminals are far from their co
     expect(analyze(json).getIssues(), name).toEqual([])
   }
   const near = structuredClone(base)
-  moveLeft(near, 1)
+  moveLeft(near, 2.5)
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: near,
