@@ -191,6 +191,11 @@ export const getRelevantPlacementsForIssues = ({
       case "TwoPinComponentHasInvertedRails":
         addPlacement(issue.schematicBox)
         break
+      case "RailPathTooSpreadOut":
+        addPlacement(issue.hostSchematicBox)
+        for (const placement of issue.supportSchematicBoxes)
+          addPlacement(placement)
+        break
       case "PullResistorOnWrongSide":
         addPlacement(issue.resistorSchematicBox)
         addPlacement(issue.hostSchematicBox)

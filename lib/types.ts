@@ -483,7 +483,25 @@ export interface PiFilterComponentsNotGrouped {
   message: string
 }
 
+/** Readability advisory for a physically continuous local path to an explicit rail. */
+export interface RailPathTooSpreadOut {
+  lineItemType: "RailPathTooSpreadOut"
+  hostSchematicBox: SchematicBoxPlacement
+  sourcePortId: string
+  railType: "power" | "ground"
+  supportSchematicBoxes: SchematicBoxPlacement[]
+  schematicTraceIds: string[]
+  pathPoints: Array<{ x: number; y: number }>
+  pathBounds: SchematicIssueBounds
+  pathLength: number
+  pathSpan: number
+  maxRecommendedSpan: number
+  maxRecommendedPathLength: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | RailPathTooSpreadOut
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
@@ -528,5 +546,7 @@ export type SchematicPlacementLineItem =
 
 /** Select issue types to execute; omitted runs all checks, [] runs none. */
 export interface SchematicPlacementAnalysisOptions {
+  /** Schematic drawing units, not PCB dimensions. Defaults: span 8, length 16. */
+  railPathVisibility?: { maxSpan?: number; maxPathLength?: number }
   issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
 }

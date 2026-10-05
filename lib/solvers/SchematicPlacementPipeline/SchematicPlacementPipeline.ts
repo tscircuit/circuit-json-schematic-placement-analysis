@@ -1,3 +1,4 @@
+import { RailPathVisibilitySolver } from "../RailPathVisibilitySolver/RailPathVisibilitySolver"
 import { ChipPinPairCapacitorPlacementSolver } from "../ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
 import { PiFilterPlacementSolver } from "../PiFilterPlacementSolver/PiFilterPlacementSolver"
 import { MosfetGateNetworkPlacementSolver } from "../MosfetGateNetworkPlacementSolver/MosfetGateNetworkPlacementSolver"
@@ -40,10 +41,16 @@ import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelS
 import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
 
-type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
+type SolverParams = {
+  ctx: SolverContext
+  issues: SchematicPlacementIssue[]
+  maxSpan?: number
+  maxLength?: number
+}
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  RailPathTooSpreadOut: [RailPathVisibilitySolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
@@ -98,6 +105,18 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "RailPathVisibilitySolver",
+      RailPathVisibilitySolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        {
+          ctx: p.ctx,
+          issues: p.issues,
+          maxSpan: p.railPathVisibility?.maxSpan,
+          maxLength: p.railPathVisibility?.maxPathLength,
+        },
+      ],
+    ),
     definePipelineStep(
       "SchematicTextClearanceSolver",
       SchematicTextClearanceSolver,
@@ -307,11 +326,14 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     SchematicPlacementIssue["lineItemType"]
   >
 
+  private readonly railPathVisibility: SchematicPlacementAnalysisOptions["railPathVisibility"]
+
   constructor(
     circuitJson: CircuitJson,
     options: SchematicPlacementAnalysisOptions = {},
   ) {
     super(circuitJson)
+    this.railPathVisibility = options.railPathVisibility
     if (options.issueTypes !== undefined) {
       this.selectedIssueTypes = new Set(options.issueTypes)
       const selectedSolvers = new Set<PipelineStep<any>["solverClass"]>(

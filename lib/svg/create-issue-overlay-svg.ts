@@ -166,6 +166,14 @@ export function renderIssueOverlay(input: {
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
     anchor = undefined
     switch (issue.lineItemType) {
+      case "RailPathTooSpreadOut": {
+        includeBounds(issue.pathBounds)
+        anchor = issue.pathPoints[0]
+        geometry.push(
+          `<polyline points="${issue.pathPoints.map((p) => `${p.x},${p.y}`).join(" ")}" fill="none" stroke="#dc2626" stroke-width="3" stroke-opacity="0.75" vector-effect="non-scaling-stroke" />`,
+        )
+        break
+      }
       case "ComponentOverlap": {
         const first = boxBounds(issue.firstComponent)
         const second = boxBounds(issue.secondComponent)
