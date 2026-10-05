@@ -49,13 +49,14 @@ export interface CapacitorSymbolHorizontal {
   message: string
 }
 
-/** Advisory for an unusually long, unbranched local passive connection. */
-export interface LocalPassiveConnectionTooLong {
-  lineItemType: "LocalPassiveConnectionTooLong"
-  firstComponent: SchematicBoxPlacement
-  secondComponent: SchematicBoxPlacement
-  sourcePortIds: [string, string]
-  pinDistance: number
+/** A net-labeled passive is far from the connected pin on both terminals. */
+export interface NetLabeledPassiveIsolated {
+  lineItemType: "NetLabeledPassiveIsolated"
+  passiveComponent: SchematicBoxPlacement
+  connectedComponents: [SchematicBoxPlacement, SchematicBoxPlacement]
+  passiveSourcePortIds: [string, string]
+  connectedSourcePortIds: [string, string]
+  pinDistances: [number, number]
   maxRecommendedPinDistance: number
   message: string
 }
@@ -495,7 +496,7 @@ export interface PiFilterComponentsNotGrouped {
 }
 
 export type SchematicPlacementIssue =
-  | LocalPassiveConnectionTooLong
+  | NetLabeledPassiveIsolated
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped

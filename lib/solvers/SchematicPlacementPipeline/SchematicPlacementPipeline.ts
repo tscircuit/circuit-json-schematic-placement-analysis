@@ -39,13 +39,13 @@ import { TwoPinComponentOrientationSolver } from "../TwoPinComponentOrientationS
 import { VerboseNetLabelSolver } from "../VerboseNetLabelSolver/VerboseNetLabelSolver"
 import { SchematicTextClearanceSolver } from "../SchematicTextClearanceSolver/SchematicTextClearanceSolver"
 import { ResetNetworkGroupingSolver } from "../ResetNetworkGroupingSolver/ResetNetworkGroupingSolver"
-import { LocalPassiveSpacingSolver } from "../LocalPassiveSpacingSolver/LocalPassiveSpacingSolver"
+import { NetLabeledPassiveIsolationSolver } from "../NetLabeledPassiveIsolationSolver/NetLabeledPassiveIsolationSolver"
 
 type SolverParams = { ctx: SolverContext; issues: SchematicPlacementIssue[] }
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
-  LocalPassiveConnectionTooLong: [LocalPassiveSpacingSolver],
+  NetLabeledPassiveIsolated: [NetLabeledPassiveIsolationSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
@@ -304,8 +304,8 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ],
     ),
     definePipelineStep(
-      "LocalPassiveSpacingSolver",
-      LocalPassiveSpacingSolver,
+      "NetLabeledPassiveIsolationSolver",
+      NetLabeledPassiveIsolationSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
@@ -335,7 +335,7 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       // Distance alone cannot distinguish a bad layout from intentional spacing.
       // Run this readability advisory only when the caller explicitly selects it.
       this.pipelineDef = this.pipelineDef.filter(
-        (step) => step.solverClass !== LocalPassiveSpacingSolver,
+        (step) => step.solverClass !== NetLabeledPassiveIsolationSolver,
       )
     }
   }

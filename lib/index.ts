@@ -21,7 +21,7 @@ export { TraceSimplificationSolver } from "./solvers/TraceSimplificationSolver/T
 export { TwoPinComponentOrientationSolver } from "./solvers/TwoPinComponentOrientationSolver/TwoPinComponentOrientationSolver"
 export { VerboseNetLabelSolver } from "./solvers/VerboseNetLabelSolver/VerboseNetLabelSolver"
 export * from "./types"
-export { LocalPassiveSpacingSolver } from "./solvers/LocalPassiveSpacingSolver/LocalPassiveSpacingSolver"
+export { NetLabeledPassiveIsolationSolver } from "./solvers/NetLabeledPassiveIsolationSolver/NetLabeledPassiveIsolationSolver"
 export { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
 export { UsbSeriesResistorPlacementSolver } from "./solvers/UsbSeriesResistorPlacementSolver/UsbSeriesResistorPlacementSolver"
 export {
