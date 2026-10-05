@@ -192,3 +192,19 @@ issue per component, with combined affected sides and width/height guidance.
 largest excess. Box width, pin padding and inner-label checks skip built-in
 symbols and custom components with `is_box_with_pins: false`. Older box exports
 that omit the flag remain supported.
+
+## Local passive direct-wire suggestions
+
+`LocalPassiveConnectionShouldBeDirectWire` identifies a short local connection
+split into isolated labeled stubs when a wire with at most two turns is clear.
+It requires exactly two component ports, a typed resistor/capacitor/inductor,
+unique pin placements, and a shared sheet and local scope. It skips typed rails,
+branched nets, ambiguous label identities, and obstructed routes.
+
+`suggestedRoute` contains the checked wire points, shown in green in issue SVGs.
+`schematicNetLabelIds`, `schematicTextIds`, and `replacedSchematicTraceIds` identify
+the labels and isolated stubs to replace. Component positions are unchanged.
+
+This is a readability suggestion, not an electrical error. A clear route does
+not prove that an intentional net label is undesirable; callers can exclude this
+issue type using `issueTypes`. The collision checks use approximate text bounds.
