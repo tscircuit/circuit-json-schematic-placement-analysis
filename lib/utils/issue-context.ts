@@ -162,6 +162,7 @@ export const getRelevantPlacementsForIssues = ({
           addComponentName(getComponentNameFromPin(pin), issue.schematicSheetId)
         }
         break
+      case "ParallelDiodeResistorNotAligned":
       case "DiodeResistorNotAligned":
         addPlacement(issue.diodeSchematicBox)
         addPlacement(issue.resistorSchematicBox)

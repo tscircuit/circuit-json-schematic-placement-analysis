@@ -20,11 +20,21 @@ test("records the full input sheet's local trace suggestions without rearranging
       ),
     ),
   ).toEqual({
+    ParallelDiodeResistorNotAligned: 1,
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
     TwoPinComponentShouldBeVertical: 6,
   })
+  expect(
+    analysis.getIssues({ issueTypes: ["ParallelDiodeResistorNotAligned"] }),
+  ).toMatchObject([
+    {
+      diodeSchematicBox: { sourceComponentName: "D_PD_SENSE" },
+      resistorSchematicBox: { sourceComponentName: "R_PD_SENSE_CHARGE" },
+      reason: "crossed_connections",
+    },
+  ])
   const padding = analysis.getIssues({
     issueTypes: ["SchematicPinPaddingToEdgeTooLarge"],
   })
@@ -158,7 +168,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 13 }, (_, index) => index + 1),
+      Array.from({ length: 14 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

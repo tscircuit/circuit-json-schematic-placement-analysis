@@ -1,4 +1,5 @@
 import { RepeatedBranchPlacementSolver } from "./solvers/RepeatedBranchPlacementSolver/RepeatedBranchPlacementSolver"
+import { ParallelDiodeResistorPlacementSolver } from "./solvers/ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "./solvers/RailPathVisibilitySolver/RailPathVisibilitySolver"
 import { ChipPinPairCapacitorPlacementSolver } from "./solvers/ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
 import { PiFilterPlacementSolver } from "./solvers/PiFilterPlacementSolver/PiFilterPlacementSolver"
@@ -92,6 +93,7 @@ export class SchematicPlacementAnalysis {
       SchematicBoxInnerLabelCollision: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
+      ParallelDiodeResistorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
       TraceCanBeSimplifiedByMovingComponent: 0,
       CrystalNotCenteredOverLoadCapacitors: 0,
@@ -166,6 +168,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "ParallelDiodeResistorNotAligned":
+        return ParallelDiodeResistorPlacementSolver.issueToString(issue)
       case "DiodeResistorNotAligned":
         return DiodeResistorAlignmentSolver.issueToString(issue)
       case "ComponentPinsWouldAlignWithVerticalShift":
