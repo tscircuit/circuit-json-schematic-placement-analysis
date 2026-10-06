@@ -55,8 +55,8 @@ beforeAll(async () => {
     await expect(
       createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
     ).toMatchSvgSnapshot(import.meta.path, compact ? "compact" : undefined)
-    // Grouping moves R8 closer without changing its horizontal orientation.
-    expect(issueTypes.includes("TwoPinComponentShouldBeVertical")).toBe(true)
+    // Moving the network does not establish an otherwise undeclared resistor role.
+    expect(issueTypes.includes("TwoPinComponentShouldBeVertical")).toBe(false)
     hasGroupingIssue.push(issueTypes.includes("ResetNetworkNotGrouped"))
   }
 })

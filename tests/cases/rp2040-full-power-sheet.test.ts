@@ -21,7 +21,7 @@ test("records the full power sheet's findings without rotating its series induct
     GenericSchematicBoxTooWide: 1,
     SchematicPinPaddingToEdgeTooLarge: 2,
     SchematicTextCollision: 1,
-    TwoPinComponentShouldBeVertical: 8,
+    TwoPinComponentShouldBeVertical: 2,
     DecouplingCapacitorsNotCloseTogether: 1,
     CurrentSenseShuntSeparatedFromInputs: 1,
   })

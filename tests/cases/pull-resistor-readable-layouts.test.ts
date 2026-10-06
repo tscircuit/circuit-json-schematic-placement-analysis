@@ -6,7 +6,7 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("accepts vertical rail resistors and reports horizontal rail branches", async () => {
+test("accepts vertical rail resistors and unidentified horizontal rail branches", async () => {
   for (const [variant, pullUpY, pullDownY, resistorRotation] of [
     ["conventional", 3, -3, 270],
     ["horizontal", 0.1, -0.1, 0],
@@ -37,26 +37,8 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
         .flatMap((item) =>
           item.lineItemType === "SchematicPlacementIssues" ? item.issues : [],
         )
-      expect(issues).toHaveLength(2)
-      expect(issues).toMatchObject([
-        {
-          lineItemType: "TwoPinComponentShouldBeVertical",
-          schematicBox: { sourceComponentName: "R1" },
-          railPinName: "pin1",
-          railType: "power",
-          deltaSchRotation: -90,
-          suggestedRailFacingDirection: "up",
-        },
-        {
-          lineItemType: "TwoPinComponentShouldBeVertical",
-          schematicBox: { sourceComponentName: "R2" },
-          railPinName: "pin2",
-          railType: "ground",
-          deltaSchRotation: -90,
-          suggestedRailFacingDirection: "down",
-        },
-      ])
-      // Recognition uses the rail connections, without requiring pull-specific pin metadata.
+      expect(issues).toEqual([])
+      // Without a declared pull requirement, the horizontal resistor role remains unknown.
       expect(
         circuitJson.some(
           (item) =>
@@ -64,7 +46,9 @@ test("accepts vertical rail resistors and reports horizontal rail branches", asy
             (item.needs_external_pullup || item.needs_external_pulldown),
         ),
       ).toBe(false)
-      expect(analysis.toString()).toContain("<TwoPinComponentShouldBeVertical")
+      expect(analysis.toString()).not.toContain(
+        "<TwoPinComponentShouldBeVertical",
+      )
     }
   }
 })

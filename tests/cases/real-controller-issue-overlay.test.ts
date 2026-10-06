@@ -9,11 +9,8 @@ test("records every issue count and isolates the real controller's crystal repor
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
-  ).toEqual([
-    ["CrystalNotCenteredOverLoadCapacitors", 1],
-    ["TwoPinComponentShouldBeVertical", 1],
-  ])
-  expect(analysis.getIssues()).toHaveLength(2)
+  ).toEqual([["CrystalNotCenteredOverLoadCapacitors", 1]])
+  expect(analysis.getIssues()).toHaveLength(1)
   expect(analysis.getIssues({ issueTypes: [] })).toEqual([])
   const input = {
     circuitJson,

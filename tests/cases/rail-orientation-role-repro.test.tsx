@@ -7,7 +7,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-test("records rail orientation on series paths and declared versus unidentified pull branches", async () => {
+test("requires role evidence for rail orientation and preserves identified branch warnings", async () => {
   for (const declared of [false, true]) {
     const circuit = new Circuit()
     circuit.pcbDisabled = true
@@ -99,7 +99,7 @@ test("records rail orientation on series paths and declared versus unidentified 
     ).toBe(declared)
     const issueTypes = ["TwoPinComponentShouldBeVertical"] as const
     const analysis = analyzeSchematicPlacement(circuitJson, { issueTypes })
-    // Current behavior incorrectly rotates the series paths and unidentified resistors.
+    // Series paths and unidentified resistors remain horizontal; identified shunts still warn.
     expect(
       analysis
         .getIssues()
@@ -108,7 +108,7 @@ test("records rail orientation on series paths and declared versus unidentified 
             ? issue.schematicBox.sourceComponentName
             : undefined,
         ),
-    ).toEqual(["F1", "R13", "R1", "R2", "R3", "C1"])
+    ).toEqual(declared ? ["R2", "R3", "C1"] : ["C1"])
     expect(
       createIssueReproSnapshot({
         circuitJson,

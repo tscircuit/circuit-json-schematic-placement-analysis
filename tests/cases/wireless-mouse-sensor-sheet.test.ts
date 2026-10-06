@@ -61,10 +61,7 @@ test("reproduces the complete wireless mouse sensor sheet layout", () => {
       issue.schematicBox.sourceComponentName,
       issue.railType,
     ]),
-  ).toEqual([
-    ["R_SENSOR_LED", "power"],
-    ["R_SENSOR_RESET", "power"],
-  ])
+  ).toEqual([])
 
   expect(
     createSchematicAnalysisFixtureSvg({

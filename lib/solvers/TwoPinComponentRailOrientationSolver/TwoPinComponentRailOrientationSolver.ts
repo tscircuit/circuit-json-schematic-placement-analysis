@@ -6,7 +6,10 @@ import type {
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
-import { getHorizontalPushbuttonComponentIds } from "../../utils/switch-pull-resistor-pairs"
+import {
+  getHorizontalPushbuttonComponentIds,
+  getSwitchPullResistorPairs,
+} from "../../utils/switch-pull-resistor-pairs"
 import type { SolverContext } from "../SolverContext"
 
 /** Prefer vertical two-pin components with power above and ground below. */
@@ -18,6 +21,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
   private readonly positiveVoltageNets = new Set<string>()
   private readonly componentIds: string[]
   private readonly horizontalPushbuttonComponentIds: Set<string>
+  private readonly switchPullComponentIds: Set<string>
   private readonly issues: SchematicPlacementIssue[]
   private currentIndex = 0
 
@@ -30,6 +34,12 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
     this.index = new PlacementNetworkIndex(ctx)
     this.horizontalPushbuttonComponentIds = getHorizontalPushbuttonComponentIds(
       this.index,
+    )
+    this.switchPullComponentIds = new Set(
+      getSwitchPullResistorPairs(this.index).flatMap((pair) => [
+        pair.resistor.sourceComponentId!,
+        pair.switchBox.sourceComponentId!,
+      ]),
     )
     this.powerNets = new Set(this.index.powerNets)
     this.groundNets = new Set(this.index.groundNets)
@@ -157,6 +167,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
           otherPort.facing_direction === "left"))
     if (!horizontal) return
     if (this.horizontalPushbuttonComponentIds.has(id)) return
+    if (!this.isIdentifiedRailBranch(id, rail, otherNet, railType)) return
     const suggestedRailFacingDirection = railType === "power" ? "up" : "down"
     const deltaSchRotation =
       (railPort.facing_direction === "left") === (railType === "power")
@@ -172,6 +183,66 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
       suggestedRailFacingDirection,
       message: `rotate ${component.sourceComponentName || "component"} by ${deltaSchRotation}° so its ${railType}-connected pin faces ${suggestedRailFacingDirection} and the component is vertical`,
     })
+  }
+
+  /** A rail connection alone does not distinguish a series feed from a shunt. */
+  private isIdentifiedRailBranch(
+    id: string,
+    rail: string,
+    otherNet: string,
+    railType: "power" | "ground",
+  ): boolean {
+    const index = this.index
+    const component = index.components.get(id)
+    if (!component) return false
+    if (index.portsByComponent.get(id)?.some((port) => port.do_not_connect))
+      return false
+    const type = component.ftype
+    // A capacitor with a ground return is a shunt, including signal filtering.
+    if (type === "simple_capacitor")
+      return this.groundNets.has(rail) || this.groundNets.has(otherNet)
+    // These two-terminal devices drawn across supply and ground form a shunt.
+    if (
+      railType === "power" &&
+      this.groundNets.has(otherNet) &&
+      (type === "simple_resistor" ||
+        type === "simple_diode" ||
+        type === "simple_led" ||
+        type === "simple_inductor")
+    )
+      return true
+    if (this.switchPullComponentIds.has(id)) return true
+    if (
+      type !== "simple_resistor" ||
+      component.resistance <= 0 ||
+      this.powerNets.has(otherNet) ||
+      this.groundNets.has(otherNet)
+    )
+      return false
+
+    const peers = index.portsByNet.get(otherNet) ?? []
+    // Multiple resistor branches do not identify which one supplies the pull.
+    if (
+      peers.filter(
+        (port) =>
+          index.components.get(port.source_component_id)?.ftype ===
+          "simple_resistor",
+      ).length !== 1
+    )
+      return false
+    const requirements = peers.filter(
+      (port) => port.needs_external_pullup || port.needs_external_pulldown,
+    )
+    return (
+      requirements.length > 0 &&
+      requirements.every(
+        (port) =>
+          !port.do_not_connect &&
+          (railType === "power"
+            ? port.needs_external_pullup && !port.needs_external_pulldown
+            : port.needs_external_pulldown && !port.needs_external_pullup),
+      )
+    )
   }
 
   static issueToString(

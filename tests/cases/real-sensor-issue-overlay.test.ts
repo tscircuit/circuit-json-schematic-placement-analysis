@@ -18,11 +18,10 @@ test("suppresses the real sensor's unverified trace movement suggestions", () =>
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
     ["TwoPinComponentCouldBeFlipped", 2],
-    ["TwoPinComponentShouldBeVertical", 2],
     ["DecouplingCapacitorsNotCloseTogether", 2],
     ["RailPathTooSpreadOut", 1],
   ])
-  expect(analysis.getIssues()).toHaveLength(7)
+  expect(analysis.getIssues()).toHaveLength(5)
   const input = {
     circuitJson,
     analysis,

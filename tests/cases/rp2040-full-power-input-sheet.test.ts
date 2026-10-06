@@ -23,7 +23,6 @@ test("records the full input sheet's local trace suggestions without rearranging
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
-    TwoPinComponentShouldBeVertical: 6,
   })
   const padding = analysis.getIssues({
     issueTypes: ["SchematicPinPaddingToEdgeTooLarge"],
@@ -158,7 +157,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 13 }, (_, index) => index + 1),
+      Array.from({ length: 7 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

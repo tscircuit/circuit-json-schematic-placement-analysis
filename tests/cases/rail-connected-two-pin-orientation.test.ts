@@ -6,7 +6,7 @@ import {
   expectReproRendered,
 } from "../fixtures/placement-repro-assertions"
 
-test("reports horizontal rail-connected two-pin components and accepts their vertical layouts", async () => {
+test("reports identified grounded capacitor branches and accepts their vertical layouts", async () => {
   for (const vertical of [false, true]) {
     const circuitJson = await createRailConnectedTwoPinComponentsCircuitJson({
       vertical,
@@ -40,8 +40,8 @@ test("reports horizontal rail-connected two-pin components and accepts their ver
       expect(analysis.toString()).toBe("")
       continue
     }
-    // Exactly one orientation issue per component, including capacitors and a zero-ohm link.
-    expect(issues).toHaveLength(6)
+    // Grounded capacitors are identifiable shunts; a rail connection alone is insufficient for the other roles.
+    expect(issues).toHaveLength(2)
     const railIssues = issues.filter(
       (issue) => issue.lineItemType === "TwoPinComponentShouldBeVertical",
     )
@@ -52,11 +52,7 @@ test("reports horizontal rail-connected two-pin components and accepts their ver
       ]),
     ).toEqual([
       ["C1", "ground"],
-      ["D1", "power"],
-      ["L1", "ground"],
       ["C2", "power"],
-      ["R0", "power"],
-      ["LED1", "ground"],
     ])
     // Check the suggested rotation against the rendered pin vector, preserving pin identity.
     for (const issue of railIssues) {
