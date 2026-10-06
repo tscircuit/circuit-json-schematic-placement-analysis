@@ -1,4 +1,4 @@
-import { RepeatedBranchPlacementSolver } from "../RepeatedBranchPlacementSolver/RepeatedBranchPlacementSolver"
+import { RepeatedResistorThreePinBranchPlacementSolver } from "../RepeatedResistorThreePinBranchPlacementSolver/RepeatedResistorThreePinBranchPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "../ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "../RailPathVisibilitySolver/RailPathVisibilitySolver"
 import { ChipPinPairCapacitorPlacementSolver } from "../ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
@@ -54,7 +54,7 @@ type SolverParams = {
 const solversByIssueType = {
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
-  RepeatedBranchesStaggered: [RepeatedBranchPlacementSolver],
+  RepeatedBranchesStaggered: [RepeatedResistorThreePinBranchPlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
   FlybackDiodeSeparatedFromRelayCoil: [RelayFlybackDiodePlacementSolver],
@@ -110,8 +110,8 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
 
   pipelineDef: PipelineStep<any>[] = [
     definePipelineStep(
-      "RepeatedBranchPlacementSolver",
-      RepeatedBranchPlacementSolver,
+      "RepeatedResistorThreePinBranchPlacementSolver",
+      RepeatedResistorThreePinBranchPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

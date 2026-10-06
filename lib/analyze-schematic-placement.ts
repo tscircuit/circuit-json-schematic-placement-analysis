@@ -1,4 +1,4 @@
-import { RepeatedBranchPlacementSolver } from "./solvers/RepeatedBranchPlacementSolver/RepeatedBranchPlacementSolver"
+import { RepeatedResistorThreePinBranchPlacementSolver } from "./solvers/RepeatedResistorThreePinBranchPlacementSolver/RepeatedResistorThreePinBranchPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "./solvers/ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "./solvers/RailPathVisibilitySolver/RailPathVisibilitySolver"
 import { ChipPinPairCapacitorPlacementSolver } from "./solvers/ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
@@ -144,7 +144,9 @@ export class SchematicPlacementAnalysis {
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
       case "RepeatedBranchesStaggered":
-        return RepeatedBranchPlacementSolver.issueToString(issue)
+        return RepeatedResistorThreePinBranchPlacementSolver.issueToString(
+          issue,
+        )
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
       case "PiFilterComponentsNotGrouped":

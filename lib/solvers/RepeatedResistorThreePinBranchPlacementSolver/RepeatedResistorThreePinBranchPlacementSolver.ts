@@ -22,8 +22,11 @@ type Branch = {
   externalNet: string
 }
 
-/** Compare parallel branch placement without assigning electrical roles to chip pins. */
-export class RepeatedBranchPlacementSolver extends BaseSolver {
+/**
+ * Compare three or more repeated host-pin → resistor → three-pin-component
+ * branches sharing an explicit ground net, without inferring terminal roles.
+ */
+export class RepeatedResistorThreePinBranchPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly hostIds: string[]
   private readonly unpopulated = new Set<string>()
