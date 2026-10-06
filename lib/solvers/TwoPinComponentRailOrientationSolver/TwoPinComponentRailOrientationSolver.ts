@@ -211,6 +211,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         type === "simple_inductor")
     )
       return true
+    if (this.isDiodeResistorRailBranch(id, otherNet, railType)) return true
     if (this.switchPullComponentIds.has(id)) return true
     if (
       type !== "simple_resistor" ||
@@ -242,6 +243,58 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
             ? port.needs_external_pullup && !port.needs_external_pulldown
             : port.needs_external_pulldown && !port.needs_external_pullup),
       )
+    )
+  }
+
+  /** Identify the whole supply-to-ground branch before orienting either member. */
+  private isDiodeResistorRailBranch(
+    id: string,
+    junction: string,
+    railType: "power" | "ground",
+  ): boolean {
+    const index = this.index
+    if (this.powerNets.has(junction) || this.groundNets.has(junction))
+      return false
+    const ports = index.portsByNet.get(junction)
+    if (ports?.length !== 2) return false
+    const peer = ports.find((port) => port.source_component_id !== id)
+    if (!peer) return false
+    const peerId = peer.source_component_id
+    const type = index.components.get(id)?.ftype
+    const peerType = index.components.get(peerId)?.ftype
+    const isDiode = (ftype: typeof type) =>
+      ftype === "simple_diode" || ftype === "simple_led"
+    if (
+      !(
+        (type === "simple_resistor" && isDiode(peerType)) ||
+        (isDiode(type) && peerType === "simple_resistor")
+      )
+    )
+      return false
+    const otherRail = index
+      .twoTerminalNets(peerId)
+      ?.find((net) => net !== junction)
+    if (!otherRail) return false
+    if (
+      railType === "power"
+        ? !this.groundNets.has(otherRail) || this.powerNets.has(otherRail)
+        : !this.powerNets.has(otherRail) || this.groundNets.has(otherRail)
+    )
+      return false
+    const component = index.placement(id)
+    const partner = index.placement(peerId)
+    if (!component || !partner || !index.sameLocalScope(component, partner))
+      return false
+    // Both members must have usable, unambiguous pins in the same schematic block.
+    return [id, peerId].every((componentId) =>
+      index.portsByComponent.get(componentId)?.every((port) => {
+        const schematicPort = index.port(port)
+        return (
+          !port.do_not_connect &&
+          !!schematicPort &&
+          schematicPort.schematic_sheet_id === component.schematicSheetId
+        )
+      }),
     )
   }
 

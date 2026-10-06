@@ -8,6 +8,30 @@ test("plain diode misaligned with resistor — same X, different Y, trace has co
   const analysis = analyzeSchematicPlacement(circuitJson)
 
   expect(
+    analysis.getIssues({ issueTypes: ["DiodeResistorNotAligned"] }),
+  ).toHaveLength(1)
+  const rotations = analysis.getIssues({
+    issueTypes: ["TwoPinComponentShouldBeVertical"],
+  })
+  expect(rotations).toHaveLength(2)
+  expect(rotations).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        schematicBox: expect.objectContaining({ sourceComponentName: "D1" }),
+        railType: "power",
+        suggestedRailFacingDirection: "up",
+        deltaSchRotation: -90,
+      }),
+      expect.objectContaining({
+        schematicBox: expect.objectContaining({ sourceComponentName: "R1" }),
+        railType: "ground",
+        suggestedRailFacingDirection: "down",
+        deltaSchRotation: -90,
+      }),
+    ]),
+  )
+
+  expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
   ).toMatchSvgSnapshot(import.meta.path)
 })
