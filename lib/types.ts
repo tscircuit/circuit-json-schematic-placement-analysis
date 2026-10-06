@@ -56,7 +56,7 @@ export interface DecouplingCapacitorsNotCloseTogether {
   groundName: string
   /** All capacitors in this bank, sharing supply, return, and schematic scope. */
   capacitorSchematicBoxes: SchematicBoxPlacement[]
-  /** Largest gap between any two component bounds in the bank. */
+  /** Largest body gap required to connect the bank through neighboring capacitors. */
   maxBodyGap: number
   maxRecommendedBodyGap: number
   message: string
@@ -137,6 +137,15 @@ export interface DiodeResistorNotAligned {
   resistorPin?: string
   diodePinFacingDirection?: string
   resistorPinFacingDirection?: string
+  message: string
+}
+
+/** Readability advisory for a local diode/resistor pair across the same two nets. */
+export interface ParallelDiodeResistorNotAligned {
+  lineItemType: "ParallelDiodeResistorNotAligned"
+  diodeSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  reason: "different_axes" | "crossed_connections" | "staggered"
   message: string
 }
 
@@ -522,6 +531,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ParallelDiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors

@@ -15,9 +15,12 @@ interface CapacitorBank {
 }
 
 export class DecouplingCapacitorGroupingSolver extends BaseSolver {
-  // Schematic readability heuristic, measured between component bounds.
-  // Larger symbols get proportionally more room; PCB distances do not apply.
-  private static readonly MIN_BODY_GAP = 4
+  // Schematic readability heuristic, not a PCB distance or an industry limit.
+  // TI SLUUCB5E Fig. 4-5 C18-C23 use ~3.12 plate widths between centres:
+  // ~1.0 centre pitch / 0.1 bounds gap for the standard tscircuit capacitor.
+  // Allow extra label room, but do not reuse the old four-unit bank-diameter
+  // budget for EVERY neighbour. See the published-reference TSX regression.
+  private static readonly MIN_BODY_GAP = 1
   private readonly banks: CapacitorBank[] = []
   private readonly netNames = new Map<string, string>()
   private bankIndex = 0
@@ -98,23 +101,34 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
     if (bank.capacitors.length < 2) return
     const maxRecommendedBodyGap = Math.max(
       DecouplingCapacitorGroupingSolver.MIN_BODY_GAP,
-      ...bank.capacitors.map((box) => 3 * Math.max(box.width, box.height)),
+      ...bank.capacitors.map((box) => Math.max(box.width, box.height)),
     )
     let maxBodyGap = 0
-    for (let i = 0; i < bank.capacitors.length; i++) {
-      for (const b of bank.capacitors.slice(i + 1)) {
-        const a = bank.capacitors[i]!
-        const gap = Math.hypot(
-          Math.max(0, Math.abs(a.schX - b.schX) - (a.width + b.width) / 2),
-          Math.max(0, Math.abs(a.schY - b.schY) - (a.height + b.height) / 2),
+    // Prim's minimum spanning tree measures the largest required neighbor link,
+    // not the bank's diameter. Two detached clusters still require a long link,
+    // even when every individual capacitor has a close neighbor.
+    const pending = bank.capacitors.slice(1).map((box) => ({
+      box,
+      gap: DecouplingCapacitorGroupingSolver.bodyGap(bank.capacitors[0]!, box),
+    }))
+    while (pending.length > 0) {
+      let closest = 0
+      for (let i = 1; i < pending.length; i++) {
+        if (pending[i]!.gap < pending[closest]!.gap) closest = i
+      }
+      const next = pending.splice(closest, 1)[0]!
+      maxBodyGap = Math.max(maxBodyGap, next.gap)
+      for (const candidate of pending) {
+        candidate.gap = Math.min(
+          candidate.gap,
+          DecouplingCapacitorGroupingSolver.bodyGap(next.box, candidate.box),
         )
-        maxBodyGap = Math.max(maxBodyGap, gap)
       }
     }
     if (maxBodyGap <= maxRecommendedBodyGap + 1e-6) return
     const railName = this.netNames.get(bank.power) ?? "power"
     const groundName = this.netNames.get(bank.ground) ?? "ground"
-    // Report the entire bank once, including long rows of nearby neighbors.
+    // Report one finding for a bank whose neighboring members cannot stay close.
     this.params.issues.push({
       lineItemType: "DecouplingCapacitorsNotCloseTogether",
       railName,
@@ -124,6 +138,16 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
       maxRecommendedBodyGap,
       message: `Group the decoupling capacitors between ${railName} and ${groundName} closer together in this schematic block. Preserve their net connections.`,
     })
+  }
+
+  private static bodyGap(
+    a: SchematicBoxPlacement,
+    b: SchematicBoxPlacement,
+  ): number {
+    return Math.hypot(
+      Math.max(0, Math.abs(a.schX - b.schX) - (a.width + b.width) / 2),
+      Math.max(0, Math.abs(a.schY - b.schY) - (a.height + b.height) / 2),
+    )
   }
 
   static issueToString(issue: DecouplingCapacitorsNotCloseTogether): string {

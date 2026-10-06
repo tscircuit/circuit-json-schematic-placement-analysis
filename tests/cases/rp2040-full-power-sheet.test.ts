@@ -22,7 +22,7 @@ test("records the full power sheet's findings without rotating its series induct
     SchematicPinPaddingToEdgeTooLarge: 2,
     SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 8,
-    DecouplingCapacitorsNotCloseTogether: 1,
+    DecouplingCapacitorsNotCloseTogether: 2,
     CurrentSenseShuntSeparatedFromInputs: 1,
   })
   // R_BUS_SHUNT is above the amplifier, with one sense branch split by labels.

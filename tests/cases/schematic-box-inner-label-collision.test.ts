@@ -26,8 +26,7 @@ test("generates an inner label collision issue for a chip", async () => {
         height: 2,
       },
       overlappingSides: ["top", "bottom"],
-      message:
-        "Inner labels are colliding. Increase the schWidth or schHeight.",
+      message: "Inner labels are colliding. Increase the schHeight.",
     },
   ])
   expect(collisionIssues[0]).not.toHaveProperty("suggestedWidth")
@@ -40,7 +39,7 @@ test("generates an inner label collision issue for a chip", async () => {
   )
 
   expect(analysis.toString()).toContain(
-    '<SchematicBoxInnerLabelCollision message="Inner labels are colliding. Increase the schWidth or schHeight." componentName="U2" currentSchWidth="3" currentSchHeight="2" overlappingSides="top,bottom" />',
+    '<SchematicBoxInnerLabelCollision message="Inner labels are colliding. Increase the schHeight." componentName="U2" currentSchWidth="3" currentSchHeight="2" overlappingSides="top,bottom" />',
   )
 
   expect(

@@ -1,4 +1,4 @@
-<svg width="1800" height="2996" viewBox="0 0 1800 2996" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="3304" viewBox="0 0 1800 3304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -250,6 +250,8 @@
     <tspan x="18" dy="22">  schY=&quot;-19&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C10_VDDR_1U&quot; positionAnchor=&quot;center&quot; schX=&quot;-20.5&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;-22.5&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C11_VDDR_100N&quot; positionAnchor=&quot;center&quot; schX=&quot;-23&quot;</tspan>
+    <tspan x="18" dy="22">  schY=&quot;-22.5&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C13_VDDS_1&quot; positionAnchor=&quot;center&quot; schX=&quot;-23.589&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;-24.46&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C14_VDDS_2&quot; positionAnchor=&quot;center&quot; schX=&quot;-23.525&quot;</tspan>
@@ -260,6 +262,10 @@
     <tspan x="18" dy="22">  schY=&quot;-30.34&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R11_RESET_PU&quot; positionAnchor=&quot;center&quot; schX=&quot;-20.544&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;-24.087&quot; width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C18_ACCEL_VDD&quot; positionAnchor=&quot;center&quot; schX=&quot;3.337&quot;</tspan>
+    <tspan x="18" dy="22">  schY=&quot;-1&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C19_ACCEL_VDDIO&quot; positionAnchor=&quot;center&quot; schX=&quot;5.982&quot;</tspan>
+    <tspan x="18" dy="22">  schY=&quot;-1&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R13_I2C_SDA&quot; positionAnchor=&quot;center&quot; schX=&quot;-4.497&quot;</tspan>
     <tspan x="18" dy="22">  schY=&quot;-21.501&quot; width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C20_DISPLAY_BULK&quot; positionAnchor=&quot;center&quot; schX=&quot;6.4&quot;</tspan>
@@ -308,10 +314,18 @@
     <tspan x="18" dy="22">    &lt;Move componentName=&quot;C9_VDDR_10U&quot; newSchX=&quot;-23.18&quot; newSchY=&quot;-19&quot; /&gt;</tspan>
     <tspan x="18" dy="22">  &lt;/SuggestedFix&gt;</tspan>
     <tspan x="18" dy="22">&lt;/ComponentNetLabelCollision&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VDDR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C9_VDDR_10U,</tspan>
+    <tspan x="18" dy="22">  C10_VDDR_1U, C11_VDDR_100N&quot; maxBodyGap=&quot;2.9&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the</tspan>
+    <tspan x="18" dy="22">  decoupling capacitors between VDDR and GND closer together in this schematic block. Preserve</tspan>
+    <tspan x="18" dy="22">  their net connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;SYS_VDD&quot; ground=&quot;GND&quot; capacitorNames=&quot;C13_VDDS_1,</tspan>
-    <tspan x="18" dy="22">  C14_VDDS_2, C15_VDDS_3, C16_VDDS_BULK&quot; maxBodyGap=&quot;5.28&quot; maxRecommendedBodyGap=&quot;4&quot;</tspan>
+    <tspan x="18" dy="22">  C14_VDDS_2, C15_VDDS_3, C16_VDDS_BULK&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot;</tspan>
     <tspan x="18" dy="22">  message=&quot;Group the decoupling capacitors between SYS_VDD and GND closer together in this</tspan>
     <tspan x="18" dy="22">  schematic block. Preserve their net connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;SYS_VDD&quot; ground=&quot;GND&quot; capacitorNames=&quot;C18_ACCEL_VDD,</tspan>
+    <tspan x="18" dy="22">  C19_ACCEL_VDDIO&quot; maxBodyGap=&quot;1.745&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling</tspan>
+    <tspan x="18" dy="22">  capacitors between SYS_VDD and GND closer together in this schematic block. Preserve their net</tspan>
+    <tspan x="18" dy="22">  connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

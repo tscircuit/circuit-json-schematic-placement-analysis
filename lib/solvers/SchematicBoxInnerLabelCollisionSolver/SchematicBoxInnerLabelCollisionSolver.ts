@@ -4,8 +4,9 @@ import {
   type LabelRect,
 } from "../../utils/schematic-box-labels"
 import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
+import { getSchematicTextWidth } from "../../utils/schematic-text-geometry"
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicPort, SourcePort } from "circuit-json"
+import type { CircuitJson, SchematicPort } from "circuit-json"
 import type {
   SchematicBoxPlacement,
   SchematicBoxInnerLabelCollision,
@@ -20,14 +21,8 @@ interface CollisionSummary {
 }
 
 export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
-  private readonly MESSAGE =
-    "Inner labels are colliding. Increase the schWidth or schHeight."
-  private readonly PIN_NAME_CHARACTER_WIDTH = 0.095
-  private readonly FALLBACK_CHARACTER_WIDTH = 0.13
-
   private entries: Array<[string, SchematicPort[]]>
   private readonly placementById: Map<string, SchematicBoxPlacement>
-  private readonly sourcePortById: Map<string, SourcePort>
   private currentIndex = 0
 
   constructor(
@@ -40,7 +35,6 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     const { circuitJson, componentPlacements } = params.ctx
     this.placementById =
       this.getPlacementBySchematicComponentId(componentPlacements)
-    this.sourcePortById = this.getSourcePortById(circuitJson)
     const boxIds = getSchematicBoxComponentIds(circuitJson)
     this.entries = Array.from(
       this.getPortsBySchematicComponentId(circuitJson),
@@ -60,11 +54,10 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     const schematicBox = this.placementById.get(schematicComponentId)
     if (!schematicBox) return
 
+    // Box labels use the renderer's default 0.15-unit sans-serif font.
+    // Glyph widths matter even when opposing banks are staggered by half a pin.
     const labelRects = getSchematicBoxLabelRects(schematicBox, ports, (port) =>
-      this.estimateLabelLength(
-        port.display_pin_label!,
-        this.sourcePortById.get(port.source_port_id),
-      ),
+      getSchematicTextWidth(port.display_pin_label!, 0.15),
     )
     if (labelRects.length === 0) return
 
@@ -75,7 +68,7 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
       lineItemType: "SchematicBoxInnerLabelCollision",
       schematicBox,
       overlappingSides: collisionSummary.overlappingSides,
-      message: this.MESSAGE,
+      message: this.getMessage(collisionSummary.overlappingSides),
     })
   }
 
@@ -89,12 +82,17 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     return `<SchematicBoxInnerLabelCollision ${attrs.join(" ")} />`
   }
 
-  private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {
-    return el.type === "schematic_port"
+  private getMessage(sides: SchematicSide[]): string {
+    const dimension = sides.every((side) => side === "left" || side === "right")
+      ? "schWidth"
+      : sides.every((side) => side === "top" || side === "bottom")
+        ? "schHeight"
+        : "schWidth or schHeight"
+    return `Inner labels are colliding. Increase the ${dimension}.`
   }
 
-  private isSourcePort(el: CircuitJson[number]): el is SourcePort {
-    return el.type === "source_port"
+  private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {
+    return el.type === "schematic_port"
   }
 
   private isSchematicSide(
@@ -102,38 +100,6 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
   ): side is SchematicSide {
     return (
       side === "left" || side === "right" || side === "top" || side === "bottom"
-    )
-  }
-
-  private isPinNameLabel(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): boolean {
-    if (!sourcePort) return false
-    return (
-      label === sourcePort.name ||
-      label === String(sourcePort.pin_number) ||
-      (sourcePort.port_hints ?? []).includes(label)
-    )
-  }
-
-  private estimateLabelLength(
-    label: string,
-    sourcePort: SourcePort | undefined,
-  ): number {
-    return (
-      Array.from(label).length *
-      (this.isPinNameLabel(label, sourcePort)
-        ? this.PIN_NAME_CHARACTER_WIDTH
-        : this.FALLBACK_CHARACTER_WIDTH)
-    )
-  }
-
-  private getSourcePortById(circuitJson: CircuitJson): Map<string, SourcePort> {
-    return new Map(
-      circuitJson
-        .filter((el) => this.isSourcePort(el))
-        .map((sp) => [sp.source_port_id, sp]),
     )
   }
 

@@ -51,7 +51,21 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
       amplifierSchematicBox: { sourceComponentName: "U_CURRENT_B" },
     },
   ])
-  expect(analysis.getIssues()).toHaveLength(2)
+  expect(analysis.getIssues()).toHaveLength(3)
+  expect(
+    analysis.getIssues({
+      issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+    }),
+  ).toMatchObject([
+    {
+      capacitorSchematicBoxes: [
+        { sourceComponentName: "C_CURRENT_A" },
+        { sourceComponentName: "C_CURRENT_B" },
+      ],
+      maxBodyGap: 1.6,
+      maxRecommendedBodyGap: 1,
+    },
+  ])
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,
@@ -67,12 +81,12 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([1, 1, 2, 2])
+  ).toEqual([2, 2, 3, 3])
   expect(
     [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([1, 2])
+  ).toEqual([2, 3])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

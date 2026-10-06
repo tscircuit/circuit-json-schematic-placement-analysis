@@ -30,6 +30,11 @@ const advance = (character: string): number => {
 const widthInEm = (text: string): number =>
   Array.from(text).reduce((width, character) => width + advance(character), 0)
 
+/** Approximate sans-serif line width in schematic units. Shared by explicit
+ * schematic text and box pin labels; electrical names do not set font metrics. */
+export const getSchematicTextWidth = (text: string, fontSize: number): number =>
+  widthInEm(text) * fontSize
+
 export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
   const size = text.font_size
   if (

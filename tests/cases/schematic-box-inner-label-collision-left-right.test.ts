@@ -29,12 +29,11 @@ test("generates a left-right inner label collision issue", async () => {
         height: 4,
       },
       overlappingSides: ["left", "right"],
-      message:
-        "Inner labels are colliding. Increase the schWidth or schHeight.",
+      message: "Inner labels are colliding. Increase the schWidth.",
     },
   ])
   expect(analysis.toString()).toContain(
-    '<SchematicBoxInnerLabelCollision message="Inner labels are colliding. Increase the schWidth or schHeight." componentName="U2" currentSchWidth="1.25" currentSchHeight="4" overlappingSides="left,right" />',
+    '<SchematicBoxInnerLabelCollision message="Inner labels are colliding. Increase the schWidth." componentName="U2" currentSchWidth="1.25" currentSchHeight="4" overlappingSides="left,right" />',
   )
 
   expect(

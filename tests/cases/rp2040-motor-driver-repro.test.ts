@@ -13,7 +13,7 @@ import {
 // endpoints, plus its schematic geometry, routing, labels, and section text.
 const circuitJson = published as unknown as CircuitJson
 
-test("records the motor-driver sheet's crowded labels with no placement issues reported", async () => {
+test("reports the motor-driver sheet's inner pin-label collision", async () => {
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 19)
   expect(
@@ -34,8 +34,13 @@ test("records the motor-driver sheet's crowded labels with no placement issues r
   })
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  // Capture the current blind spot; this is a reproduction, not a layout fix.
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toMatchObject([
+    {
+      lineItemType: "SchematicBoxInnerLabelCollision",
+      schematicBox: { sourceComponentName: "DRIVER" },
+      overlappingSides: ["left", "top"],
+    },
+  ])
   await expect(
     createIssueReproSnapshot({
       circuitJson,

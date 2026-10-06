@@ -30,7 +30,23 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issueTypes = ["CapacitorSeparatedFromChipPins"] as const
   const issues = analysis.getIssues({ issueTypes })
-  expect(analysis.getIssues()).toHaveLength(4)
+  expect(analysis.getIssues()).toHaveLength(5)
+  // The unchanged VM row has a 1.1-unit neighbour gap, above the 1-unit limit.
+  expect(
+    analysis.getIssues({
+      issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
+    }),
+  ).toMatchObject([
+    {
+      capacitorSchematicBoxes: [
+        { sourceComponentName: "C_VM1" },
+        { sourceComponentName: "C_VM2" },
+        { sourceComponentName: "C_VM3" },
+      ],
+      maxBodyGap: 1.1,
+      maxRecommendedBodyGap: 1,
+    },
+  ])
   expect(
     analysis.getIssues({ issueTypes: ["TwoPinComponentHasInvertedRails"] }),
   ).toMatchObject(

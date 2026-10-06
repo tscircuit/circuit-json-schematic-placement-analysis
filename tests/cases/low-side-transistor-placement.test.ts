@@ -41,7 +41,8 @@ test("places a grounded-emitter NPN below its load with collector up and emitter
   })
   // Four component badges, plus a matching numbered badge in the listing.
   expect([...beforeSvg.matchAll(/class="issue-marker"/g)]).toHaveLength(4)
-  expect(beforeSvg).toContain('data-listing-issue-number="1"')
+  const issueNumber = analysis.getIssues().indexOf(issues[0]!) + 1
+  expect(beforeSvg).toContain(`data-listing-issue-number="${issueNumber}"`)
   expect(beforeSvg).toMatchSvgSnapshot(import.meta.path, "before")
 
   const rotated = structuredClone(driver.after) as CircuitJson
