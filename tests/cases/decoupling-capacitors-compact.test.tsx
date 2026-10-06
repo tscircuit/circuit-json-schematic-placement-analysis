@@ -4,12 +4,12 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
 test("accepts compact decouplers and reports spacing just beyond the body-gap limit", async () => {
-  // The installed vertical capacitor is 0.9 units wide: 4.9 center spacing
-  // leaves exactly the four-unit recommended gap between its bounds.
+  // The standard vertical capacitor is 0.9 units wide: 1.9 centre spacing
+  // leaves exactly the one-unit recommended gap between its bounds.
   for (const [name, spacing, count] of [
-    ["compact", 2, 0],
-    ["boundary", 4.9, 0],
-    ["beyond-boundary", 4.91, 1],
+    ["compact", 1.4, 0],
+    ["boundary", 1.9, 0],
+    ["beyond-boundary", 1.91, 1],
   ] as const) {
     const circuit = new Circuit()
     circuit.pcbDisabled = true

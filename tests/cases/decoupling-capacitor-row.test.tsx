@@ -3,10 +3,11 @@ import { Circuit } from "@tscircuit/core"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("accepts rows of nearby neighbors and reports gaps within a bank", async () => {
-  // The bank's total span does not measure the spacing between its neighbors.
+test("reports a spread-out capacitor row as one bank and accepts a compact row", async () => {
+  // A four-unit centre pitch leaves a 3.1-unit bounds gap. That is still too
+  // loose under a neighbour-based check; a 1.4-unit pitch leaves a compact 0.5 gap.
   for (const [name, positions, count] of [
-    ["spread-out", [-6, -2, 2, 6], 0],
+    ["spread-out", [-6, -2, 2, 6], 1],
     ["compact", [-2.1, -0.7, 0.7, 2.1], 0],
     ["separated", [-9, -3, 3, 9], 1],
   ] as const) {

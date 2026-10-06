@@ -33,6 +33,7 @@ test("records the separated gate network on the complete smart-switch sheet", ()
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
+    "DecouplingCapacitorsNotCloseTogether",
     "MosfetGateNetworkNotGrouped",
   ])
   expect(
@@ -56,12 +57,12 @@ test("records the separated gate network on the complete smart-switch sheet", ()
   })
   expect(
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
-  ).toEqual([4, 4, 4])
+  ).toEqual([5, 5, 5])
   expect(
     [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((m) =>
       Number(m[1]),
     ),
-  ).toEqual([4])
+  ).toEqual([5])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

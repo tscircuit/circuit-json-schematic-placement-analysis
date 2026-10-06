@@ -26,7 +26,7 @@
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
     <tspan x="18" dy="22">&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VCC&quot; ground=&quot;GND&quot; capacitorNames=&quot;C1, C2&quot;</tspan>
-    <tspan x="18" dy="22">  maxBodyGap=&quot;24.535&quot; maxRecommendedBodyGap=&quot;4&quot; message=&quot;Group the decoupling capacitors between</tspan>
+    <tspan x="18" dy="22">  maxBodyGap=&quot;24.535&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between</tspan>
     <tspan x="18" dy="22">  VCC and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;RailPathTooSpreadOut hostName=&quot;U1&quot; pinName=&quot;VCC&quot; railType=&quot;power&quot; pathSpan=&quot;8.9&quot;</tspan>
     <tspan x="18" dy="22">  pathLength=&quot;17.18&quot; message=&quot;Visible path from U1.VCC to power spans 8.90 schematic units; move</tspan>

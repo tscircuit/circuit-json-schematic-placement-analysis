@@ -15,9 +15,12 @@ interface CapacitorBank {
 }
 
 export class DecouplingCapacitorGroupingSolver extends BaseSolver {
-  // Schematic readability heuristic, measured between component bounds.
-  // Larger symbols get proportionally more room; PCB distances do not apply.
-  private static readonly MIN_BODY_GAP = 4
+  // Schematic readability heuristic, not a PCB distance or an industry limit.
+  // TI SLUUCB5E Fig. 4-5 C18-C23 use ~3.12 plate widths between centres:
+  // ~1.0 centre pitch / 0.1 bounds gap for the standard tscircuit capacitor.
+  // Allow extra label room, but do not reuse the old four-unit bank-diameter
+  // budget for EVERY neighbour. See the published-reference TSX regression.
+  private static readonly MIN_BODY_GAP = 1
   private readonly banks: CapacitorBank[] = []
   private readonly netNames = new Map<string, string>()
   private bankIndex = 0
@@ -98,7 +101,7 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
     if (bank.capacitors.length < 2) return
     const maxRecommendedBodyGap = Math.max(
       DecouplingCapacitorGroupingSolver.MIN_BODY_GAP,
-      ...bank.capacitors.map((box) => 3 * Math.max(box.width, box.height)),
+      ...bank.capacitors.map((box) => Math.max(box.width, box.height)),
     )
     let maxBodyGap = 0
     // Prim's minimum spanning tree measures the largest required neighbor link,

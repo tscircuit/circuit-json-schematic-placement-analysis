@@ -19,7 +19,7 @@
 <tspan x="18" dy="0">Emitted issue counts (all sheets):</tspan>
 <tspan x="18" dy="22">TwoPinComponentCouldBeFlipped: 2</tspan>
 <tspan x="18" dy="22">TwoPinComponentShouldBeVertical: 2</tspan>
-<tspan x="18" dy="22">DecouplingCapacitorsNotCloseTogether: 2</tspan>
+<tspan x="18" dy="22">DecouplingCapacitorsNotCloseTogether: 3</tspan>
 <tspan x="18" dy="22">RailPathTooSpreadOut: 1</tspan>
 <tspan x="18" dy="22">Selected type(s): TraceCanBeSimplifiedByMovingComponent</tspan>
 <tspan x="18" dy="22">Matching issues: 0</tspan>
