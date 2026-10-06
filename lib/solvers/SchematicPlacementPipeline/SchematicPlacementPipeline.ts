@@ -1,3 +1,4 @@
+import { ParallelDiodeResistorPlacementSolver } from "../ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "../RailPathVisibilitySolver/RailPathVisibilitySolver"
 import { ChipPinPairCapacitorPlacementSolver } from "../ChipPinPairCapacitorPlacementSolver/ChipPinPairCapacitorPlacementSolver"
 import { PiFilterPlacementSolver } from "../PiFilterPlacementSolver/PiFilterPlacementSolver"
@@ -68,6 +69,7 @@ const solversByIssueType = {
   SchematicBoxInnerLabelCollision: [SchematicBoxInnerLabelCollisionSolver],
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
   TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
   CrystalNotCenteredOverLoadCapacitors: [CrystalLoadCapacitorPlacementSolver],
@@ -105,6 +107,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "ParallelDiodeResistorPlacementSolver",
+      ParallelDiodeResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SchematicTextClearanceSolver",
       SchematicTextClearanceSolver,

@@ -10,7 +10,7 @@ import {
 
 // D2 and R2 are parallel between VM and REVERSE_GATE in the published source.
 // Their vertical pin spans are disjoint: the schematic hides their parallelism.
-test("reproduces the missed parallel D2/R2 layout on the published PA25 Power sheet", async () => {
+test("reports the staggered parallel D2/R2 layout on the published PA25 Power sheet", async () => {
   const circuitJson = await createPa25MotorControllerPower()
   expectReproRendered(circuitJson, 14)
   expectReproNets(circuitJson, [
@@ -27,7 +27,7 @@ test("reproduces the missed parallel D2/R2 layout on the published PA25 Power sh
   })
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
-  // Baseline: the analyser misses this pair. The fix PR changes this assertion.
+  // The published positions and nets are unchanged; the new check reports the pair.
   expect(
     analysis
       .getIssues()
@@ -38,7 +38,14 @@ test("reproduces the missed parallel D2/R2 layout on the published PA25 Power sh
           issue.diodeSchematicBox.sourceComponentName === "D2" &&
           issue.resistorSchematicBox.sourceComponentName === "R2",
       ),
-  ).toEqual([])
+  ).toMatchObject([
+    {
+      lineItemType: "ParallelDiodeResistorNotAligned",
+      diodeSchematicBox: { sourceComponentName: "D2" },
+      resistorSchematicBox: { sourceComponentName: "R2" },
+      reason: "staggered",
+    },
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson,

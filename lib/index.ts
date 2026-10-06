@@ -1,3 +1,4 @@
+export { ParallelDiodeResistorPlacementSolver } from "./solvers/ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 export {
   analyzeSchematicPlacement,
   SchematicPlacementAnalysis,

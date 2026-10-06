@@ -140,6 +140,15 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+/** Readability advisory for a local diode/resistor pair across the same two nets. */
+export interface ParallelDiodeResistorNotAligned {
+  lineItemType: "ParallelDiodeResistorNotAligned"
+  diodeSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  reason: "different_axes" | "crossed_connections" | "staggered"
+  message: string
+}
+
 export interface ComponentPinsWouldAlignWithVerticalShift {
   lineItemType: "ComponentPinsWouldAlignWithVerticalShift"
   firstComponent: SchematicBoxPlacement
@@ -522,6 +531,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ParallelDiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors
