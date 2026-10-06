@@ -511,7 +511,20 @@ export interface RailPathTooSpreadOut {
   message: string
 }
 
+/** Substantial staggering of three or more topologically matching resistor branches. */
+export interface RepeatedBranchesStaggered {
+  lineItemType: "RepeatedBranchesStaggered"
+  hostSchematicBox: SchematicBoxPlacement
+  resistorSchematicBoxes: SchematicBoxPlacement[]
+  endpointSchematicBoxes: SchematicBoxPlacement[]
+  branchAxis: "horizontal" | "vertical"
+  resistorDepthSpread: number
+  endpointDepthSpread: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | RepeatedBranchesStaggered
   | RailPathTooSpreadOut
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
