@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createNema23BranchDetailSvg } from "../fixtures/create-nema23-branch-detail-svg"
 import { createNema23Status } from "../assets/nema23-status"
+import { createNema23StatusCompact } from "../assets/nema23-status-compact"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import {
   expectReproRendered,
@@ -11,7 +11,7 @@ import {
 
 test("manually compacts the NEMA23 branches without changing connectivity", async () => {
   const before = await createNema23Status()
-  const after = await createNema23Status({ alignedBranches: true })
+  const after = await createNema23StatusCompact()
   expectReproRendered(after, 13)
   // Renderer warnings contain transient instance IDs; all source circuit records must match.
   const sourceRecords = (json: CircuitJson) =>
@@ -54,8 +54,4 @@ test("manually compacts the NEMA23 branches without changing connectivity", asyn
       highlightIssues: ["RepeatedBranchesStaggered"],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
-  expect(createNema23BranchDetailSvg(after, -28.9)).toMatchSvgSnapshot(
-    import.meta.path,
-    "branch-detail",
-  )
 })

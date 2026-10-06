@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createNema23Status } from "../assets/nema23-status"
+import { createNema23StatusCompact } from "../assets/nema23-status-compact"
 import {
   getReproSourcePort,
   getReproSchematicComponent,
@@ -70,7 +71,7 @@ test("uses branch topology and geometry, tolerates offsets, and skips ambiguous 
     expect(issues(rotated)).toHaveLength(1)
   }
 
-  const aligned = await createNema23Status({ alignedBranches: true })
+  const aligned = await createNema23StatusCompact()
   // Modest staggering for text clearance is accepted; exact coordinate equality is unnecessary.
   const offset = structuredClone(aligned)
   for (const name of ["R_STATUS_G", "Q_STATUS_G"]) {
