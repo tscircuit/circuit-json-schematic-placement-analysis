@@ -4,10 +4,10 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import { expectReproNets } from "../fixtures/placement-repro-assertions"
 
-test("records false series-alignment warnings on parallel and shared-supply branches", async () => {
+test("checks alignment only for a series pair, preserving parallel and shared-supply branches", async () => {
   for (const [topology, diode, resistor, count] of [
-    ["parallel", "D1", "R4", 2],
-    ["branched", "D4", "R30", 1],
+    ["parallel", "D1", "R4", 0],
+    ["branched", "D4", "R30", 0],
     ["series", "D2", "R2", 1],
   ] as const) {
     const circuit = new Circuit()
@@ -63,7 +63,7 @@ test("records false series-alignment warnings on parallel and shared-supply bran
     ])
     const issueTypes = ["DiodeResistorNotAligned"] as const
     const analysis = analyzeSchematicPlacement(circuitJson, { issueTypes })
-    // Baseline: sharing a net is treated as a series connection, even in the first two cases.
+    // Only the private series junction supports an alignment recommendation.
     expect(analysis.getIssues()).toHaveLength(count)
     expect(
       createIssueReproSnapshot({

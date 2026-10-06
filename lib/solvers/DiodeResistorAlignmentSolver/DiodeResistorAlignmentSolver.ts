@@ -1,143 +1,97 @@
-import type { CircuitJson, SchematicTrace, SchematicPort } from "circuit-json"
 import { BaseSolver } from "@tscircuit/solver-utils"
-import { getSourcePortConnectivityMapFromCircuitJson } from "circuit-json-to-connectivity-map"
 import type { SolverContext } from "../SolverContext"
 import type {
   DiodeResistorNotAligned,
-  SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr } from "../../utils/format"
+import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 
+/** Alignment applies only after a private two-terminal series junction is established. */
 export class DiodeResistorAlignmentSolver extends BaseSolver {
   private static readonly DIODE_FTYPES = new Set(["simple_led", "simple_diode"])
-
-  private readonly ctx: SolverContext
-  private readonly out: SchematicPlacementIssue[]
-  private readonly schematicTraces: SchematicTrace[]
+  private readonly index: PlacementNetworkIndex
+  private readonly nets: string[]
   private currentIndex = 0
-  private readonly sourceConnectivity: ReturnType<
-    typeof getSourcePortConnectivityMapFromCircuitJson
-  >
 
-  private readonly sourceComponentFtypeById: Map<string, string>
-  private readonly sourceComponentIdBySourcePortId: Map<string, string>
-  private readonly schematicPorts: SchematicPort[]
-  private readonly schematicBoxBySourceComponentId: Map<
-    string,
-    SchematicBoxPlacement
-  >
-
-  constructor({
-    ctx,
-    issues,
-  }: {
-    ctx: SolverContext
-    issues: SchematicPlacementIssue[]
-  }) {
+  constructor(
+    private readonly params: {
+      ctx: SolverContext
+      issues: SchematicPlacementIssue[]
+    },
+  ) {
     super()
-    this.ctx = ctx
-    this.out = issues
-
-    const { circuitJson } = ctx
-    this.sourceConnectivity =
-      getSourcePortConnectivityMapFromCircuitJson(circuitJson)
-
-    this.sourceComponentFtypeById =
-      this.buildSourceComponentFtypeById(circuitJson)
-    this.sourceComponentIdBySourcePortId =
-      this.buildSourceComponentIdBySourcePortId(circuitJson)
-    this.schematicPorts = circuitJson.filter(
-      (el): el is SchematicPort => el.type === "schematic_port",
-    )
-    this.schematicBoxBySourceComponentId =
-      this.buildSchematicBoxBySourceComponentId()
-
-    this.schematicTraces = circuitJson.filter(
-      (el): el is SchematicTrace => el.type === "schematic_trace",
-    )
-    this.solved = this.schematicTraces.length === 0
+    this.index = new PlacementNetworkIndex(params.ctx)
+    this.nets = [...this.index.portsByNet.keys()]
+    this.solved = this.nets.length === 0
   }
 
   override _step(): void {
-    const trace = this.schematicTraces[this.currentIndex]
-    if (!trace) {
-      this.solved = true
-      return
-    }
-    this.currentIndex++
-    this.solved = this.currentIndex >= this.schematicTraces.length
-
-    if (!trace.edges || trace.edges.length === 0) return
-
-    const firstEdge = trace.edges[0]
-    const lastEdge = trace.edges[trace.edges.length - 1]
-    if (!firstEdge || !lastEdge) return
-    const start = firstEdge.from
-    const end = lastEdge.to
-
-    const schematicSheetId = trace.schematic_sheet_id
-    const startSourceCompId = this.findSourceComponentIdNearPoint(
-      start,
-      schematicSheetId,
+    const net = this.nets[this.currentIndex++]!
+    this.solved = this.currentIndex >= this.nets.length
+    const index = this.index
+    const ports = index.portsByNet.get(net)
+    // A shared rail or a junction with a third terminal does not establish a series pair.
+    if (!ports || ports.length !== 2 || index.isRail(net)) return
+    const diodeSourcePort = ports.find((port) =>
+      DiodeResistorAlignmentSolver.DIODE_FTYPES.has(
+        index.components.get(port.source_component_id)?.ftype ?? "",
+      ),
     )
-    const endSourceCompId = this.findSourceComponentIdNearPoint(
-      end,
-      schematicSheetId,
+    const resistorSourcePort = ports.find(
+      (port) =>
+        index.components.get(port.source_component_id)?.ftype ===
+        "simple_resistor",
     )
-    if (!startSourceCompId || !endSourceCompId) return
-
-    const startFtype = this.sourceComponentFtypeById.get(startSourceCompId)
-    const endFtype = this.sourceComponentFtypeById.get(endSourceCompId)
-
-    const { DIODE_FTYPES } = DiodeResistorAlignmentSolver
-
-    const isDiodeResistorPair =
-      (DIODE_FTYPES.has(startFtype!) && endFtype === "simple_resistor") ||
-      (startFtype === "simple_resistor" && DIODE_FTYPES.has(endFtype!))
-    if (!isDiodeResistorPair) return
-
-    const diodeCompId = DIODE_FTYPES.has(startFtype!)
-      ? startSourceCompId
-      : endSourceCompId
-    const resistorCompId =
-      startFtype === "simple_resistor" ? startSourceCompId : endSourceCompId
-
-    const diodeBox = this.schematicBoxBySourceComponentId.get(diodeCompId)
-    const resistorBox = this.schematicBoxBySourceComponentId.get(resistorCompId)
-    if (!diodeBox || !resistorBox) return
-
-    const diodePort = this.findNearestPort(
-      DIODE_FTYPES.has(startFtype!) ? start : end,
-      schematicSheetId,
-    )
-    const resistorPort = this.findNearestPort(
-      startFtype === "simple_resistor" ? start : end,
-      schematicSheetId,
-    )
-
-    if (!diodePort?.center || !resistorPort?.center) return
+    if (!diodeSourcePort || !resistorSourcePort) return
+    const diodeId = diodeSourcePort.source_component_id
+    const resistorId = resistorSourcePort.source_component_id
+    const diodeNets = index.twoTerminalNets(diodeId)
+    const resistorNets = index.twoTerminalNets(resistorId)
+    if (!diodeNets || !resistorNets) return
+    // Sharing both nets is parallel, even if a rendered wire directly joins the symbols.
     if (
-      !this.sourceConnectivity.areIdsConnected(
-        diodePort.source_port_id,
-        resistorPort.source_port_id,
+      diodeNets.find((id) => id !== net) ===
+      resistorNets.find((id) => id !== net)
+    )
+      return
+    if (
+      [diodeId, resistorId].some((id) =>
+        index.portsByComponent.get(id)?.some((port) => port.do_not_connect),
       )
+    )
+      return
+    const diodeBox = index.placement(diodeId)
+    const resistorBox = index.placement(resistorId)
+    if (
+      !diodeBox ||
+      !resistorBox ||
+      diodeBox.schematicSheetId !== resistorBox.schematicSheetId
+    )
+      return
+    // Resolve the actual connected terminals by source IDs, independent of trace shape and labels.
+    const diodePort = index.port(diodeSourcePort)
+    const resistorPort = index.port(resistorSourcePort)
+    if (
+      !diodePort ||
+      !resistorPort ||
+      diodePort.schematic_sheet_id !== diodeBox.schematicSheetId ||
+      resistorPort.schematic_sheet_id !== resistorBox.schematicSheetId
     )
       return
 
     const diodeName = diodeBox.sourceComponentName || "component"
     const resistorName = resistorBox.sourceComponentName || "component"
     const diodePin =
-      diodePort?.display_pin_label ?? diodePort?.pin_number?.toString()
+      diodePort.display_pin_label ?? diodePort.pin_number?.toString()
     const resistorPin =
-      resistorPort?.display_pin_label ?? resistorPort?.pin_number?.toString()
-    const diodeFacing = diodePort?.facing_direction
-    const resistorFacing = resistorPort?.facing_direction
+      resistorPort.display_pin_label ?? resistorPort.pin_number?.toString()
+    const diodeFacing = diodePort.facing_direction
+    const resistorFacing = resistorPort.facing_direction
     const diodePinDesc = diodePin ? `${diodeName}.${diodePin}` : diodeName
     const resistorPinDesc = resistorPin
       ? `${resistorName}.${resistorPin}`
       : resistorName
-
     const makeIssue = (message: string): DiodeResistorNotAligned => ({
       lineItemType: "DiodeResistorNotAligned",
       diodeSchematicBox: diodeBox,
@@ -148,22 +102,18 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
       resistorPinFacingDirection: resistorFacing,
       message,
     })
-
     if (
       !DiodeResistorAlignmentSolver.isCoLinear(
         diodePort.center,
         resistorPort.center,
       )
     ) {
-      this.out.push(
+      this.params.issues.push(
         makeIssue(
-          `trace has corners — align ${diodeName} and ${resistorName} on same axis and rotate so ${diodePinDesc} faces ${resistorPinDesc}`,
+          `series pins are not aligned — align ${diodeName} and ${resistorName} on the same axis so ${diodePinDesc} faces ${resistorPinDesc}`,
         ),
       )
-      return
-    }
-
-    if (
+    } else if (
       diodeFacing &&
       resistorFacing &&
       !DiodeResistorAlignmentSolver.pinsFacingEachOther(
@@ -173,7 +123,7 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
         resistorFacing,
       )
     ) {
-      this.out.push(
+      this.params.issues.push(
         makeIssue(
           `${diodePinDesc} and ${resistorPinDesc} face away from each other — rotate ${diodeName} so ${diodePinDesc} faces ${resistorPinDesc}`,
         ),
@@ -208,94 +158,6 @@ export class DiodeResistorAlignmentSolver extends BaseSolver {
       (bFacing === "up" && dy < 0) ||
       (bFacing === "down" && dy > 0)
     return aToward && bToward
-  }
-
-  private static dist(
-    a: { x: number; y: number },
-    b: { x: number; y: number },
-  ): number {
-    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
-  }
-
-  private findNearestPort(
-    point: {
-      x: number
-      y: number
-    },
-    schematicSheetId?: string,
-  ): SchematicPort | undefined {
-    let nearest: SchematicPort | undefined
-    let minDist = Infinity
-    for (const port of this.schematicPorts) {
-      if (port.schematic_sheet_id !== schematicSheetId) continue
-      if (!port.center) continue
-      const d = DiodeResistorAlignmentSolver.dist(point, port.center)
-      if (d < minDist) {
-        minDist = d
-        nearest = port
-      }
-    }
-    return nearest
-  }
-
-  private findSourceComponentIdNearPoint(
-    point: {
-      x: number
-      y: number
-    },
-    schematicSheetId?: string,
-  ): string | undefined {
-    const nearest = this.findNearestPort(point, schematicSheetId)
-    if (!nearest || !nearest.source_port_id) return undefined
-    return this.sourceComponentIdBySourcePortId.get(nearest.source_port_id)
-  }
-
-  private buildSourceComponentFtypeById(
-    circuitJson: CircuitJson,
-  ): Map<string, string> {
-    const map = new Map<string, string>()
-    for (const el of circuitJson) {
-      if (
-        el.type === "source_component" &&
-        "source_component_id" in el &&
-        "ftype" in el &&
-        typeof el.ftype === "string"
-      ) {
-        map.set(el.source_component_id as string, el.ftype)
-      }
-    }
-    return map
-  }
-
-  private buildSourceComponentIdBySourcePortId(
-    circuitJson: CircuitJson,
-  ): Map<string, string> {
-    const map = new Map<string, string>()
-    for (const el of circuitJson) {
-      if (
-        el.type === "source_port" &&
-        "source_port_id" in el &&
-        "source_component_id" in el &&
-        typeof el.source_port_id === "string" &&
-        typeof el.source_component_id === "string"
-      ) {
-        map.set(el.source_port_id, el.source_component_id)
-      }
-    }
-    return map
-  }
-
-  private buildSchematicBoxBySourceComponentId(): Map<
-    string,
-    SchematicBoxPlacement
-  > {
-    const map = new Map<string, SchematicBoxPlacement>()
-    for (const placement of this.ctx.componentPlacements) {
-      if (placement.sourceComponentId) {
-        map.set(placement.sourceComponentId, placement)
-      }
-    }
-    return map
   }
 
   static issueToString(issue: DiodeResistorNotAligned): string {
