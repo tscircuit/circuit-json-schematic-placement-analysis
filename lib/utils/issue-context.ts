@@ -66,6 +66,14 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "RepeatedBranchesStaggered":
+        addPlacement(issue.hostSchematicBox)
+        for (const box of [
+          ...issue.resistorSchematicBoxes,
+          ...issue.endpointSchematicBoxes,
+        ])
+          addPlacement(box)
+        break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)

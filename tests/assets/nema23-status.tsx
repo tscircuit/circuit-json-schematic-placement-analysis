@@ -12,7 +12,11 @@ import {
 // https://tscircuit.com/imrishabh18/nema-23-stepper-controller?version=1.2.5
 // Freeze the published component positions in TSX; this repo regenerates traces.
 // The off-sheet USB supply connection is represented by its original VBUS net.
-export default function Nema23Status() {
+export default function Nema23Status({
+  alignedBranches = false,
+}: {
+  alignedBranches?: boolean
+} = {}) {
   const rgb = { schSheetName: "status", schSectionName: "rgb" }
   const alarm = { schSheetName: "status", schSectionName: "alarm" }
   return (
@@ -47,32 +51,32 @@ export default function Nema23Status() {
       </chip>
       {(
         [
-          ["R", -1.3575, -27.3, -32.1],
-          ["G", 5.6025, -26.6, -27.7],
-          ["B", 5.5525, -30.2, -36.5],
+          ["R", -1.3575, -27.3, -32.1, -4],
+          ["G", 5.6025, -26.6, -27.7, 1],
+          ["B", 5.5525, -30.2, -36.5, 6],
         ] as const
-      ).map(([color, resistorX, resistorY, transistorY]) => (
+      ).map(([color, resistorX, resistorY, transistorY, alignedX]) => (
         <Fragment key={color}>
           <chip
             name={`Q_STATUS_${color}`}
             manufacturerPartNumber="DTC114EU3HZGT106"
-            schX={2.4975}
-            schY={transistorY}
+            schX={alignedBranches ? alignedX : 2.4975}
+            schY={alignedBranches ? -29.5 : transistorY}
             {...rgb}
             connections={{ pin2: `net.LED_${color}`, pin1: "net.GND" }}
           >
             <DTC114EU3HZGT106Symbol
               name={`Q_STATUS_${color}`}
-              x={2.4975}
-              y={transistorY}
+              x={alignedBranches ? alignedX : 2.4975}
+              y={alignedBranches ? -29.5 : transistorY}
             />
           </chip>
           <resistor
             name={`R_STATUS_${color}`}
             resistance="1k"
             schOrientation="vertical"
-            schX={resistorX}
-            schY={resistorY}
+            schX={alignedBranches ? alignedX + 0.2 : resistorX}
+            schY={alignedBranches ? -26.6 : resistorY}
             {...rgb}
             connections={{
               pin1: `.D_STATUS > .${color}_NEG`,
@@ -146,10 +150,12 @@ export default function Nema23Status() {
   )
 }
 
-export async function createNema23Status() {
+export async function createNema23Status(
+  options: { alignedBranches?: boolean } = {},
+) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<Nema23Status />)
+  circuit.add(<Nema23Status {...options} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

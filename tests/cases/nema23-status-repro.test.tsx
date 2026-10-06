@@ -1,3 +1,4 @@
+import { analyzeSchematicPlacement } from "lib/index"
 import { expect, test } from "bun:test"
 import { createNema23Status } from "../assets/nema23-status"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
@@ -64,11 +65,37 @@ test("reproduces the complete NEMA23 status sheet with scattered RGB branches", 
     ["Q_STATUS_B.B", "net.LED_B"],
     ["R_BUZZER_GATE.pin1", "net.BUZZER_PWM"],
   ])
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      width: 1600,
-      height: 1100,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  const analysis = analyzeSchematicPlacement(circuitJson)
+  const issueTypes = ["RepeatedBranchesStaggered"] as const
+  expect(analysis.getIssues({ issueTypes })).toMatchObject([
+    {
+      hostSchematicBox: { sourceComponentName: "D_STATUS" },
+      resistorSchematicBoxes: [
+        { sourceComponentName: "R_STATUS_R" },
+        { sourceComponentName: "R_STATUS_G" },
+        { sourceComponentName: "R_STATUS_B" },
+      ],
+      endpointSchematicBoxes: [
+        { sourceComponentName: "Q_STATUS_R" },
+        { sourceComponentName: "Q_STATUS_G" },
+        { sourceComponentName: "Q_STATUS_B" },
+      ],
+    },
+  ])
+  expect(analysis.getIssueCounts().RepeatedBranchesStaggered).toBe(1)
+  expect(analysis.getIssues({ issueTypes, schematicSheetId: "other" })).toEqual(
+    [],
+  )
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    highlightIssues: [...issueTypes],
+    width: 1600,
+    height: 1100,
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(7)
+  expect([...svg.matchAll(/data-listing-issue-number="(\d+)"/g)]).toHaveLength(
+    1,
+  )
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })
