@@ -3,12 +3,12 @@ import { Circuit } from "@tscircuit/core"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("reports a spread-out capacitor row as one bank and accepts a compact row", async () => {
-  // PR #41 incorrectly accepted the row at -6, -2, 2, 6 because each adjacent
-  // pair was close. The review requires checking how far the entire bank spans.
+test("accepts rows of nearby neighbors and reports gaps within a bank", async () => {
+  // The bank's total span does not measure the spacing between its neighbors.
   for (const [name, positions, count] of [
-    ["spread-out", [-6, -2, 2, 6], 1],
+    ["spread-out", [-6, -2, 2, 6], 0],
     ["compact", [-2.1, -0.7, 0.7, 2.1], 0],
+    ["separated", [-9, -3, 3, 9], 1],
   ] as const) {
     const circuit = new Circuit()
     circuit.pcbDisabled = true

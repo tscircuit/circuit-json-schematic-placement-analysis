@@ -56,7 +56,7 @@ export interface DecouplingCapacitorsNotCloseTogether {
   groundName: string
   /** All capacitors in this bank, sharing supply, return, and schematic scope. */
   capacitorSchematicBoxes: SchematicBoxPlacement[]
-  /** Largest gap between any two component bounds in the bank. */
+  /** Largest body gap required to connect the bank through neighboring capacitors. */
   maxBodyGap: number
   maxRecommendedBodyGap: number
   message: string
