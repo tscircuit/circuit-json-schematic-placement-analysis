@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
+import { createNema23BranchDetailSvg } from "../fixtures/create-nema23-branch-detail-svg"
 import { createNema23Status } from "../assets/nema23-status"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import {
@@ -8,7 +9,7 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("aligns the NEMA23 branches by moving six components without changing connectivity", async () => {
+test("manually compacts the NEMA23 branches without changing connectivity", async () => {
   const before = await createNema23Status()
   const after = await createNema23Status({ alignedBranches: true })
   expectReproRendered(after, 13)
@@ -30,6 +31,18 @@ test("aligns the NEMA23 branches by moving six components without changing conne
     expect(getReproSchematicComponent(after, name)).toEqual(
       getReproSchematicComponent(before, name),
     )
+  // Every source record is unchanged, including all resistor/transistor nets.
+  // Explicit ground labels affect only the schematic drawing.
+  expect(
+    after
+      .filter((e) => e.type === "schematic_net_label" && e.text === "GND")
+      .filter(
+        (e) =>
+          "anchor_position" in e &&
+          e.anchor_position !== undefined &&
+          Math.abs(e.anchor_position.y + 28.1) < 0.01,
+      ),
+  ).toHaveLength(3)
   const analysis = analyzeSchematicPlacement(after)
   expect(analysis.getIssues()).toEqual([])
   expect(
@@ -41,4 +54,8 @@ test("aligns the NEMA23 branches by moving six components without changing conne
       highlightIssues: ["RepeatedBranchesStaggered"],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  expect(createNema23BranchDetailSvg(after, -28.9)).toMatchSvgSnapshot(
+    import.meta.path,
+    "branch-detail",
+  )
 })

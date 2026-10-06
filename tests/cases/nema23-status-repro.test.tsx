@@ -1,5 +1,6 @@
 import { analyzeSchematicPlacement } from "lib/index"
 import { expect, test } from "bun:test"
+import { createNema23BranchDetailSvg } from "../fixtures/create-nema23-branch-detail-svg"
 import { createNema23Status } from "../assets/nema23-status"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import {
@@ -98,4 +99,8 @@ test("reproduces the complete NEMA23 status sheet with scattered RGB branches", 
     1,
   )
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  expect(createNema23BranchDetailSvg(circuitJson, -37.9)).toMatchSvgSnapshot(
+    import.meta.path,
+    "branch-detail",
+  )
 })

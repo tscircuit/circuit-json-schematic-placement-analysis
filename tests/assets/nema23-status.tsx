@@ -12,10 +12,17 @@ import {
 // https://tscircuit.com/imrishabh18/nema-23-stepper-controller?version=1.2.5
 // Freeze the published component positions in TSX; this repo regenerates traces.
 // The off-sheet USB supply connection is represented by its original VBUS net.
+// alignedBranches is a manually authored comparison, NOT output from the solver.
+// It brings the six branch parts closer and gives each emitter a local ground
+// symbol, following the legible repeated paths in Microchip SAMA7D65 Fig. 3-46.
+// Default rendering preserves the published repro's positions and connections.
 export default function Nema23Status({
   alignedBranches = false,
+  branchOffset = 0,
 }: {
   alignedBranches?: boolean
+  /** Small offset in the middle branch demonstrates that exact alignment is optional. */
+  branchOffset?: number
 } = {}) {
   const rgb = { schSheetName: "status", schSectionName: "rgb" }
   const alarm = { schSheetName: "status", schSectionName: "alarm" }
@@ -45,15 +52,24 @@ export default function Nema23Status({
         schX={2.0075}
         schY={-23.7}
         {...rgb}
-        connections={{ pin4: "net.VBUS" }}
+        connections={alignedBranches ? undefined : { pin4: "net.VBUS" }}
       >
         <LTST_C19HE1WTSymbol name="D_STATUS" x={2.0075} y={-23.7} />
       </chip>
+      {alignedBranches && (
+        <netlabel
+          net="VBUS"
+          connectsTo=".D_STATUS > .pin4"
+          schX={2.0075}
+          schY={-23.05}
+          anchorSide="bottom"
+        />
+      )}
       {(
         [
-          ["R", -1.3575, -27.3, -32.1, -4],
-          ["G", 5.6025, -26.6, -27.7, 1],
-          ["B", 5.5525, -30.2, -36.5, 6],
+          ["R", -1.3575, -27.3, -32.1, -2.2],
+          ["G", 5.6025, -26.6, -27.7, 1.8],
+          ["B", 5.5525, -30.2, -36.5, 5.8],
         ] as const
       ).map(([color, resistorX, resistorY, transistorY, alignedX]) => (
         <Fragment key={color}>
@@ -61,22 +77,46 @@ export default function Nema23Status({
             name={`Q_STATUS_${color}`}
             manufacturerPartNumber="DTC114EU3HZGT106"
             schX={alignedBranches ? alignedX : 2.4975}
-            schY={alignedBranches ? -29.5 : transistorY}
+            schY={
+              alignedBranches
+                ? -27 + (color === "G" ? branchOffset : 0)
+                : transistorY
+            }
             {...rgb}
-            connections={{ pin2: `net.LED_${color}`, pin1: "net.GND" }}
+            connections={{
+              pin2: `net.LED_${color}`,
+              ...(!alignedBranches ? { pin1: "net.GND" } : {}),
+            }}
           >
             <DTC114EU3HZGT106Symbol
               name={`Q_STATUS_${color}`}
               x={alignedBranches ? alignedX : 2.4975}
-              y={alignedBranches ? -29.5 : transistorY}
+              y={
+                alignedBranches
+                  ? -27 + (color === "G" ? branchOffset : 0)
+                  : transistorY
+              }
             />
           </chip>
+          {alignedBranches && (
+            <netlabel
+              net="GND"
+              connectsTo={`.Q_STATUS_${color} > .pin1`}
+              schX={alignedX + 0.2}
+              schY={-28.1 + (color === "G" ? branchOffset : 0)}
+              anchorSide="top"
+            />
+          )}
           <resistor
             name={`R_STATUS_${color}`}
             resistance="1k"
             schOrientation="vertical"
             schX={alignedBranches ? alignedX + 0.2 : resistorX}
-            schY={alignedBranches ? -26.6 : resistorY}
+            schY={
+              alignedBranches
+                ? -25.5 + (color === "G" ? branchOffset : 0)
+                : resistorY
+            }
             {...rgb}
             connections={{
               pin1: `.D_STATUS > .${color}_NEG`,
@@ -151,7 +191,7 @@ export default function Nema23Status({
 }
 
 export async function createNema23Status(
-  options: { alignedBranches?: boolean } = {},
+  options: { alignedBranches?: boolean; branchOffset?: number } = {},
 ) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
