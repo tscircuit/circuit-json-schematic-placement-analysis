@@ -40,16 +40,31 @@ test("preserves the complete speaker charger sheet with R17 across U6 from its c
   ).toBe(true)
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(
+    analysis.getIssues({ issueTypes: ["ResistorSeparatedFromChipPin"] }),
+  ).toMatchObject([
+    {
+      hostSchematicBox: { sourceComponentName: "U6" },
+      resistorSchematicBox: { sourceComponentName: "R17" },
+    },
+  ])
+  expect(
     analysis.getIssues({
       issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
     }),
   ).toEqual([])
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    width: 1800,
+    height: 1200,
+    highlightIssues: ["ResistorSeparatedFromChipPin"],
+  })
+  const issue = analysis.getIssues({
+    issueTypes: ["ResistorSeparatedFromChipPin"],
+  })[0]!
+  const number = analysis.getIssues().indexOf(issue) + 1
+  expect(svg).toContain(`data-listing-issue-number="${number}"`)
+  expect(svg).toContain(`data-issue-number="${number}"`)
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

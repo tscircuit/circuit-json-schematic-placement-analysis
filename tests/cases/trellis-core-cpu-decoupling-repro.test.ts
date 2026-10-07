@@ -62,6 +62,7 @@ test("reports the four scattered decoupling banks in Trellis Core's CPU sheet", 
     // SW1/R11 are an accepted horizontal pushbutton pair.
     ["TwoPinComponentShouldBeVertical", 3],
     ["DecouplingCapacitorsNotCloseTogether", 4],
+    ["ResistorSeparatedFromChipPin", 1],
   ])
   const banks = analysis.getIssues({
     issueTypes: ["DecouplingCapacitorsNotCloseTogether"],

@@ -468,6 +468,18 @@ export interface CurrentSenseShuntSeparatedFromInputs {
   message: string
 }
 
+/** A chip-to-ground resistor placed far across its host chip from its connected pin. */
+export interface ResistorSeparatedFromChipPin {
+  lineItemType: "ResistorSeparatedFromChipPin"
+  hostSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  chipSourcePortId: string
+  resistorSourcePortId: string
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** A capacitor placed far across its host chip from its two connected pins. */
 export interface CapacitorSeparatedFromChipPins {
   lineItemType: "CapacitorSeparatedFromChipPins"
@@ -513,6 +525,7 @@ export interface RailPathTooSpreadOut {
 
 export type SchematicPlacementIssue =
   | RailPathTooSpreadOut
+  | ResistorSeparatedFromChipPin
   | CapacitorSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped

@@ -38,7 +38,11 @@ const TP4056_42_ESOP8 = (props: ChipProps<typeof pinLabels>) => {
   )
 }
 
-export default function SpeakerChargerResistorRepro() {
+export default function SpeakerChargerResistorRepro({
+  nearPin = false,
+}: {
+  nearPin?: boolean
+}) {
   return (
     <board schSheetName="charger">
       <schematicsheet
@@ -115,9 +119,10 @@ export default function SpeakerChargerResistorRepro() {
         resistance="1.2k"
         name="R17"
         schSheetName="charger"
-        schX={5.0432}
-        schY={-3.482}
-        schOrientation="vertical"
+        schX={nearPin ? -1.1 : 5.0432}
+        schY={nearPin ? -2.65 : -3.482}
+        schOrientation={nearPin ? undefined : "vertical"}
+        schRotation={nearPin ? 90 : undefined}
         connections={{
           pin1: "net.GND",
           pin2: "net.Net_U6_PROG",
@@ -162,10 +167,10 @@ export default function SpeakerChargerResistorRepro() {
     </board>
   )
 }
-export async function createSpeakerChargerResistorRepro() {
+export async function createSpeakerChargerResistorRepro(nearPin = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<SpeakerChargerResistorRepro />)
+  circuit.add(<SpeakerChargerResistorRepro nearPin={nearPin} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
