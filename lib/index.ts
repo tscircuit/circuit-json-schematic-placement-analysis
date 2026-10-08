@@ -44,3 +44,5 @@ export { PiFilterPlacementSolver } from "./solvers/PiFilterPlacementSolver/PiFil
 export { RailPathVisibilitySolver } from "./solvers/RailPathVisibilitySolver/RailPathVisibilitySolver"
 
 export { ChipPinResistorPlacementSolver } from "./solvers/ChipPinResistorPlacementSolver/ChipPinResistorPlacementSolver"
+
+export { SeriesLedChainPlacementSolver } from "./solvers/SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"

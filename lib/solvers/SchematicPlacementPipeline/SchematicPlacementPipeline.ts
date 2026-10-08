@@ -1,4 +1,5 @@
 import { DiodeCapacitorStagePlacementSolver } from "../DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
+import { SeriesLedChainPlacementSolver } from "../SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
 import { ChipPinResistorPlacementSolver } from "../ChipPinResistorPlacementSolver/ChipPinResistorPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "../ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "../RailPathVisibilitySolver/RailPathVisibilitySolver"
@@ -53,6 +54,7 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  SeriesLedChainNotOrdered: [SeriesLedChainPlacementSolver],
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
@@ -111,6 +113,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "SeriesLedChainPlacementSolver",
+      SeriesLedChainPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "ParallelDiodeResistorPlacementSolver",
       ParallelDiodeResistorPlacementSolver,

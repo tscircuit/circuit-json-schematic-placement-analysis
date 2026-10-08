@@ -533,8 +533,22 @@ export interface DiodeCapacitorJunctionTooSpreadOut {
   message: string
 }
 
+/** A series LED chain with remote links that run behind their connected pins. */
+export interface SeriesLedChainNotOrdered {
+  lineItemType: "SeriesLedChainNotOrdered"
+  /** Traversal order through exclusive LED-to-LED junctions, not inferred polarity. */
+  ledSchematicBoxes: SchematicBoxPlacement[]
+  backtrackingConnections: Array<{
+    firstSourcePortId: string
+    secondSourcePortId: string
+    pinDistance: number
+  }>
+  message: string
+}
+
 export type SchematicPlacementIssue =
   | DiodeCapacitorJunctionTooSpreadOut
+  | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
   | CapacitorSeparatedFromChipPins

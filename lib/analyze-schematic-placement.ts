@@ -1,4 +1,5 @@
 import { DiodeCapacitorStagePlacementSolver } from "./solvers/DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
+import { SeriesLedChainPlacementSolver } from "./solvers/SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
 import { ChipPinResistorPlacementSolver } from "./solvers/ChipPinResistorPlacementSolver/ChipPinResistorPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "./solvers/ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "./solvers/RailPathVisibilitySolver/RailPathVisibilitySolver"
@@ -121,6 +122,7 @@ export class SchematicPlacementAnalysis {
       CapacitorSeparatedFromChipPins: 0,
       ResistorSeparatedFromChipPin: 0,
       RailPathTooSpreadOut: 0,
+      SeriesLedChainNotOrdered: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
     return counts
@@ -145,6 +147,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "SeriesLedChainNotOrdered":
+        return SeriesLedChainPlacementSolver.issueToString(issue)
       case "ResistorSeparatedFromChipPin":
         return ChipPinResistorPlacementSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":

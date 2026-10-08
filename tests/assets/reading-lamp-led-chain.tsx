@@ -6,7 +6,11 @@ import { Circuit } from "@tscircuit/core"
 // Source index.circuit.tsx + schematic-layout.tsx; PCB-only data omitted.
 // Native LED/diode terminal selectors preserve anode/cathode connections without
 // importing the package's reversed physical pin numbering into the old test core.
-export default function ReadingLampLedChain() {
+export default function ReadingLampLedChain({
+  ordered = false,
+}: {
+  ordered?: boolean
+}) {
   return (
     <board
       schAutoLayoutEnabled={false}
@@ -63,9 +67,9 @@ export default function ReadingLampLedChain() {
           key={i}
           name={`LED${i + 1}`}
           manufacturerPartNumber="XL-3216WWC"
-          schX={24 + (i % 3) * 5}
-          schY={i < 3 ? 19 : 22}
-          schRotation={i === 5 ? 180 : 0}
+          schX={ordered ? 38 : 24 + (i % 3) * 5}
+          schY={ordered ? 21 - i * 2 : i < 3 ? 19 : 22}
+          schRotation={ordered ? -90 : i === 5 ? 180 : 0}
           connections={{
             anode: i === 0 ? "net.LED_ANODE" : `net.LED_LINK_${i}`,
             cathode: i === 5 ? "net.LED_SENSE" : `net.LED_LINK_${i + 1}`,
@@ -145,10 +149,10 @@ export default function ReadingLampLedChain() {
   )
 }
 
-export async function createReadingLampLedChain() {
+export async function createReadingLampLedChain(ordered = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<ReadingLampLedChain />)
+  circuit.add(<ReadingLampLedChain ordered={ordered} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

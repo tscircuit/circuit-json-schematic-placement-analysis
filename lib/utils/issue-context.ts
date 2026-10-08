@@ -66,6 +66,9 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "SeriesLedChainNotOrdered":
+        for (const placement of issue.ledSchematicBoxes) addPlacement(placement)
+        break
       case "ResistorSeparatedFromChipPin":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.resistorSchematicBox)

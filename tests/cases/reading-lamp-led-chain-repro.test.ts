@@ -50,13 +50,33 @@ test("reproduces the complete reading-lamp Light sheet with a scattered six-LED 
     "led_left",
   )
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toHaveLength(1)
+  const issue = analysis.getIssues()[0]!
+  if (issue.lineItemType !== "SeriesLedChainNotOrdered")
+    throw new Error("Missing LED chain issue")
+  expect(issue.ledSchematicBoxes.map((box) => box.sourceComponentName)).toEqual(
+    ["LED1", "LED2", "LED3", "LED4", "LED5", "LED6"],
+  )
+  expect(issue.backtrackingConnections).toHaveLength(2)
+  expect(issue.backtrackingConnections[0]!.pinDistance).toBeCloseTo(11.479, 3)
+  expect(issue.backtrackingConnections[1]!.pinDistance).toBeCloseTo(5, 3)
   expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1600,
-      height: 1400,
+    analysis.getIssues({
+      issueTypes: [
+        "TraceCanBeSimplifiedByMovingComponent",
+        "DiodeResistorNotAligned",
+      ],
     }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  ).toEqual([])
+  expect(analysis.getIssueCounts().SeriesLedChainNotOrdered).toBe(1)
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    width: 1600,
+    height: 1400,
+    highlightIssues: ["SeriesLedChainNotOrdered"],
+  })
+  expect(svg).toContain('data-listing-issue-number="1"')
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(6)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })
