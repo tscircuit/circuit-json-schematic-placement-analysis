@@ -74,6 +74,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
+      case "DiodeCapacitorJunctionTooSpreadOut":
+        addPlacement(issue.capacitorSchematicBox)
+        for (const diode of issue.diodeSchematicBoxes) addPlacement(diode)
+        break
       case "PiFilterComponentsNotGrouped":
         addPlacement(issue.inductorSchematicBox)
         addPlacement(issue.firstCapacitorSchematicBox)

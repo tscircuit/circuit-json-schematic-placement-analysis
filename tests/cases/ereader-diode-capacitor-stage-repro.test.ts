@@ -170,12 +170,27 @@ test("reproduces the complete E-Reader display sheet with separated D2/D3/C16", 
     expect(port.facing_direction).toBe(facing)
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  const issues = analysis.getIssues()
+  expect(issues).toHaveLength(1)
+  const issue = issues[0]!
+  expect(issue.lineItemType).toBe("DiodeCapacitorJunctionTooSpreadOut")
+  if (issue.lineItemType !== "DiodeCapacitorJunctionTooSpreadOut")
+    throw new Error("Unexpected issue")
+  expect(issue.capacitorSchematicBox.sourceComponentName).toBe("C16")
+  expect(
+    issue.diodeSchematicBoxes.map((p) => p.sourceComponentName).sort(),
+  ).toEqual(["D2", "D3"])
+  expect(issue.maxJunctionPinDistance).toBeCloseTo(5.25456, 4)
   const svg = createSchematicAnalysisFixtureSvg({
     circuitJson,
     analysis,
+    highlightIssues: ["DiodeCapacitorJunctionTooSpreadOut"],
     width: 1800,
     height: 1200,
   })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(3)
+  expect([...svg.matchAll(/data-listing-issue-number="(\d+)"/g)]).toHaveLength(
+    1,
+  )
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

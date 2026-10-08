@@ -5,7 +5,11 @@ import { Circuit } from "@tscircuit/core"
 // Source TSX expanded in place; PCB/CAD data and other sheets omitted.
 // This core uses absolute custom-symbol port coordinates and native diode
 // terminal aliases (the source import numbers cathode=1, anode=2).
-export default function EreaderDisplay() {
+export default function EreaderDisplay({
+  compactStage = false,
+}: {
+  compactStage?: boolean
+}) {
   return (
     <board schMaxTraceDistance={4} schSheetName="display_power">
       <schematicsheet
@@ -50,7 +54,7 @@ export default function EreaderDisplay() {
         supplierPartNumbers={{ jlcpcb: ["C1779"] }}
         schRotation={-90}
         schX={19.5}
-        schY={8}
+        schY={compactStage ? 7 : 8}
         schSheetName={"display_power"}
       />
       <capacitor
@@ -104,7 +108,7 @@ export default function EreaderDisplay() {
         supplierPartNumbers={{ jlcpcb: ["C1779"] }}
         schRotation={90}
         schX={25}
-        schY={4}
+        schY={compactStage ? 7 : 4}
         schSheetName={"display_power"}
       />
       <capacitor
@@ -149,7 +153,7 @@ export default function EreaderDisplay() {
         supplierPartNumbers={{ jlcpcb: ["C49678"] }}
         schRotation={-90}
         schX={27.5}
-        schY={4}
+        schY={compactStage ? 7 : 4}
         schSheetName={"display_power"}
       />
       <resistor
@@ -211,7 +215,8 @@ export default function EreaderDisplay() {
         supplierPartNumbers={{ jlcpcb: ["C82046"] }}
         manufacturerPartNumber={"MBR0530T1G"}
         schX={22}
-        schY={4}
+        schY={compactStage ? 7 : 4}
+        schRotation={compactStage ? 180 : 0}
         schSheetName={"display_power"}
       />
       <diode
@@ -219,8 +224,8 @@ export default function EreaderDisplay() {
         supplierPartNumbers={{ jlcpcb: ["C82046"] }}
         manufacturerPartNumber={"MBR0530T1G"}
         schX={22}
-        schY={7}
-        schRotation={90}
+        schY={compactStage ? 9 : 7}
+        schRotation={compactStage ? 0 : 90}
         schSheetName={"display_power"}
       />
       <diode
@@ -845,7 +850,7 @@ export default function EreaderDisplay() {
         padDiameter={"1.5mm"}
         doNotPlace={true}
         schX={29.5}
-        schY={4.8}
+        schY={compactStage ? 7.8 : 4.8}
         schSheetName={"display_power"}
       />
       <testpoint
@@ -979,10 +984,10 @@ export default function EreaderDisplay() {
   )
 }
 
-export async function createEreaderDisplay() {
+export async function createEreaderDisplay(compactStage = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<EreaderDisplay />)
+  circuit.add(<EreaderDisplay compactStage={compactStage} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

@@ -523,7 +523,18 @@ export interface RailPathTooSpreadOut {
   message: string
 }
 
+/** The three connected terminals of a diode-capacitor stage are spread apart. */
+export interface DiodeCapacitorJunctionTooSpreadOut {
+  lineItemType: "DiodeCapacitorJunctionTooSpreadOut"
+  capacitorSchematicBox: SchematicBoxPlacement
+  diodeSchematicBoxes: [SchematicBoxPlacement, SchematicBoxPlacement]
+  maxJunctionPinDistance: number
+  maxRecommendedJunctionPinDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | DiodeCapacitorJunctionTooSpreadOut
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
   | CapacitorSeparatedFromChipPins
