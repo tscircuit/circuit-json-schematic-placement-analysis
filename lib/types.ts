@@ -140,6 +140,16 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+/** A unique grounded resistor/capacitor pair drawn with nonmatching branch ends. */
+export interface ParallelRcNotAligned {
+  lineItemType: "ParallelRcNotAligned"
+  resistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  chipSourcePortId: string
+  reason: "different_axes" | "crossed_connections" | "staggered"
+  message: string
+}
+
 /** Readability advisory for a local diode/resistor pair across the same two nets. */
 export interface ParallelDiodeResistorNotAligned {
   lineItemType: "ParallelDiodeResistorNotAligned"
@@ -569,6 +579,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent

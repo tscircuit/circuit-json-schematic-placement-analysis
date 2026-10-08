@@ -1,5 +1,6 @@
 import { DiodeCapacitorStagePlacementSolver } from "../DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
 import { SeriesLedChainPlacementSolver } from "../SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
+import { ParallelRcPlacementSolver } from "../ParallelRcPlacementSolver/ParallelRcPlacementSolver"
 import { ChipPinResistorPlacementSolver } from "../ChipPinResistorPlacementSolver/ChipPinResistorPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "../ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "../RailPathVisibilitySolver/RailPathVisibilitySolver"
@@ -75,6 +76,7 @@ const solversByIssueType = {
   SchematicBoxInnerLabelCollision: [SchematicBoxInnerLabelCollisionSolver],
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
   TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
@@ -116,6 +118,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SeriesLedChainPlacementSolver",
       SeriesLedChainPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelRcPlacementSolver",
+      ParallelRcPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

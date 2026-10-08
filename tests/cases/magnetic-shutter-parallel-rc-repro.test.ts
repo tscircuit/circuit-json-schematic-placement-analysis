@@ -89,17 +89,26 @@ test("reproduces the complete magnetic-shutter Power sheet with separated parall
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
+    "ParallelRcNotAligned",
     "ResistorSeparatedFromChipPin",
   ])
-  expect(analysis.getIssues()[0]).toMatchObject({
+  expect(analysis.getIssues()[1]).toMatchObject({
     resistorSchematicBox: { sourceComponentName: "R9" },
   })
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1600,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  expect(analysis.getIssues()[0]).toMatchObject({
+    lineItemType: "ParallelRcNotAligned",
+    reason: "staggered",
+    resistorSchematicBox: { sourceComponentName: "R3" },
+    capacitorSchematicBox: { sourceComponentName: "C9" },
+  })
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    width: 1600,
+    height: 1200,
+    highlightIssues: ["ParallelRcNotAligned"],
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
+  expect(svg).toContain('data-listing-issue-number="1"')
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

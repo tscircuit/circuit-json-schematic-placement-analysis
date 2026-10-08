@@ -3,7 +3,11 @@ import { Circuit } from "@tscircuit/core"
 // https://tscircuit.com/AnasSarkiz/magnetic-shutter-remote-r8?version=0.3.20
 // Source: src/remote-circuit.tsx and its component imports; PCB/CAD/fanouts omitted.
 // The installed core predates sheetSize and isInput/isOutput/isBidirectional props.
-export default function MagneticShutterPower() {
+export default function MagneticShutterPower({
+  alignParallelRc = false,
+}: {
+  alignParallelRc?: boolean
+}) {
   return (
     <board
       schSheetName="Power"
@@ -430,17 +434,17 @@ export default function MagneticShutterPower() {
         capacitance={"47pF"}
         manufacturerPartNumber={"TCC0603COG470J500CT"}
         schRotation={-90}
-        schX={1}
-        schY={-3}
+        schX={alignParallelRc ? 0 : 1}
+        schY={alignParallelRc ? 1 : -3}
         connections={{ pin1: "net.PROG", pin2: "net.GND" }}
       />
     </board>
   )
 }
-export async function createMagneticShutterPower() {
+export async function createMagneticShutterPower(alignParallelRc = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<MagneticShutterPower />)
+  circuit.add(<MagneticShutterPower alignParallelRc={alignParallelRc} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

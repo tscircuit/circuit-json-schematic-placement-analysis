@@ -1,5 +1,6 @@
 import { DiodeCapacitorStagePlacementSolver } from "./solvers/DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
 import { SeriesLedChainPlacementSolver } from "./solvers/SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
+import { ParallelRcPlacementSolver } from "./solvers/ParallelRcPlacementSolver/ParallelRcPlacementSolver"
 import { ChipPinResistorPlacementSolver } from "./solvers/ChipPinResistorPlacementSolver/ChipPinResistorPlacementSolver"
 import { ParallelDiodeResistorPlacementSolver } from "./solvers/ParallelDiodeResistorPlacementSolver/ParallelDiodeResistorPlacementSolver"
 import { RailPathVisibilitySolver } from "./solvers/RailPathVisibilitySolver/RailPathVisibilitySolver"
@@ -95,6 +96,7 @@ export class SchematicPlacementAnalysis {
       SchematicBoxInnerLabelCollision: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
+      ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
       TraceCanBeSimplifiedByMovingComponent: 0,
@@ -176,6 +178,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "ParallelRcNotAligned":
+        return ParallelRcPlacementSolver.issueToString(issue)
       case "ParallelDiodeResistorNotAligned":
         return ParallelDiodeResistorPlacementSolver.issueToString(issue)
       case "DiodeResistorNotAligned":
