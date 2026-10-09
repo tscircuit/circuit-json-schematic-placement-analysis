@@ -6,7 +6,11 @@ import { createElement } from "react"
 // Expanded source TSX; PCB/CAD data, unsupported ANSI_B frame and other sheets omitted. The repository's
 // core regenerates wires and uses absolute custom-symbol port coordinates. Imported diode pin numbers are expressed through their
 // original anode/cathode aliases for this core's native diode terminal mapping.
-export function Rp2040LogicPower() {
+export function Rp2040LogicPower({
+  parallelDiodes = false,
+}: {
+  parallelDiodes?: boolean
+} = {}) {
   return (
     <board schTraceAutoLabelEnabled schMaxTraceDistance={12}>
       <schematictext
@@ -467,8 +471,8 @@ export function Rp2040LogicPower() {
         manufacturerPartNumber={"B560C-13-F"}
         variant={"schottky"}
         schRotation={90}
-        schX={-10}
-        schY={7.5}
+        schX={parallelDiodes ? -12 : -10}
+        schY={parallelDiodes ? 4.5 : 7.5}
         connections={{ anode: "net.VBUS_RAW", cathode: "net.LOGIC_IN" }}
       />
       <capacitor
@@ -522,17 +526,17 @@ export function Rp2040LogicPower() {
         variant={"schottky"}
         schRotation={90}
         schX={-10}
-        schY={2.5}
+        schY={parallelDiodes ? 4.5 : 2.5}
         connections={{ anode: "net.PROG_VBUS", cathode: "net.LOGIC_IN" }}
       />
     </board>
   )
 }
 
-export async function createRp2040LogicPower() {
+export async function createRp2040LogicPower(parallelDiodes = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<Rp2040LogicPower />)
+  circuit.add(<Rp2040LogicPower parallelDiodes={parallelDiodes} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

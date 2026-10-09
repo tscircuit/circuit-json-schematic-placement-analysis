@@ -1,3 +1,4 @@
+import { SharedNodeDiodePlacementSolver } from "../SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
 import { DiodeCapacitorStagePlacementSolver } from "../DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
 import { SeriesLedChainPlacementSolver } from "../SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
 import { ParallelRcPlacementSolver } from "../ParallelRcPlacementSolver/ParallelRcPlacementSolver"
@@ -59,6 +60,7 @@ const solversByIssueType = {
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
+  SharedNodeDiodesInline: [SharedNodeDiodePlacementSolver],
   DiodeCapacitorJunctionTooSpreadOut: [DiodeCapacitorStagePlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
   MosfetGateNetworkNotGrouped: [MosfetGateNetworkPlacementSolver],
@@ -314,6 +316,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "RelayFlybackDiodePlacementSolver",
       RelayFlybackDiodePlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SharedNodeDiodePlacementSolver",
+      SharedNodeDiodePlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

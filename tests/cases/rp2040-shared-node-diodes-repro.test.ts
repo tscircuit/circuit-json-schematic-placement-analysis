@@ -37,13 +37,23 @@ test("reproduces the complete RP2040 logic power sheet with inline diode branche
     })
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(6)
+  expect(analysis.getIssues()).toHaveLength(7)
+  const [issue] = analysis.getIssues({ issueTypes: ["SharedNodeDiodesInline"] })
+  expect(issue?.lineItemType).toBe("SharedNodeDiodesInline")
+  if (issue?.lineItemType !== "SharedNodeDiodesInline")
+    throw new Error("Missing diode finding")
   expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1800,
-      height: 1200,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    issue.diodeSchematicBoxes.map((box) => box.sourceComponentName).sort(),
+  ).toEqual(["D2", "D5"])
+  expect(issue.inlinePinSeparation).toBeCloseTo(5)
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    highlightIssues: ["SharedNodeDiodesInline"],
+    analysis,
+    width: 1800,
+    height: 1200,
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
+  expect([...svg.matchAll(/data-listing-issue-number=/g)]).toHaveLength(1)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

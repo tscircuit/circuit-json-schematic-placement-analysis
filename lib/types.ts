@@ -556,7 +556,17 @@ export interface SeriesLedChainNotOrdered {
   message: string
 }
 
+/** Two diode branches sharing a power node are placed one behind the other. */
+export interface SharedNodeDiodesInline {
+  lineItemType: "SharedNodeDiodesInline"
+  diodeSchematicBoxes: [SchematicBoxPlacement, SchematicBoxPlacement]
+  sharedSourcePortIds: [string, string]
+  inlinePinSeparation: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | SharedNodeDiodesInline
   | DiodeCapacitorJunctionTooSpreadOut
   | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
