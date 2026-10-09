@@ -47,13 +47,24 @@ test("reproduces the complete Stride sheet with L1 separated from U1", async () 
     ),
   ).toBe(true)
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(36)
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1800,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  expect(analysis.getIssues()).toHaveLength(37)
+  const [issue] = analysis.getIssues({
+    issueTypes: ["InductorSeparatedFromChipPin"],
+  })
+  expect(issue?.lineItemType).toBe("InductorSeparatedFromChipPin")
+  if (issue?.lineItemType !== "InductorSeparatedFromChipPin")
+    throw new Error("Missing inductor finding")
+  expect(issue.inductorSchematicBox.sourceComponentName).toBe("L1")
+  expect(issue.hostSchematicBox.sourceComponentName).toBe("U1")
+  expect(issue.pinDistance).toBeGreaterThan(43)
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    highlightIssues: ["InductorSeparatedFromChipPin"],
+    width: 1800,
+    height: 1600,
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
+  expect([...svg.matchAll(/data-listing-issue-number=/g)]).toHaveLength(1)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

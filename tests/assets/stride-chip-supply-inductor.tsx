@@ -5,7 +5,11 @@ import { Circuit } from "@tscircuit/core"
 // PCB/CAD-only data omitted. This repository's core regenerates routes; custom
 // symbol ports use its absolute-coordinate API and carry their original aliases.
 // Labels already declared by custom-symbol ports are not also declared on the chip.
-export function StridePedometer() {
+export function StridePedometer({
+  nearbyInductor = false,
+}: {
+  nearbyInductor?: boolean
+} = {}) {
   return (
     <board schTraceAutoLabelEnabled schMaxTraceDistance={2}>
       <net name={"V3"} isPowerNet={true} />
@@ -1111,8 +1115,8 @@ export function StridePedometer() {
       <inductor
         name={"L1"}
         supplierPartNumbers={{ jlcpcb: ["C162582"] }}
-        schX={0}
-        schY={-44}
+        schX={nearbyInductor ? 3.5 : 0}
+        schY={nearbyInductor ? -0.3 : -44}
         doNotPlace={false}
         connections={{ pin1: "net.DCDC", pin2: "net.VDDR" }}
         inductance={"10uH"}
@@ -1221,10 +1225,10 @@ export function StridePedometer() {
   )
 }
 
-export async function createStridePedometer() {
+export async function createStridePedometer(nearbyInductor = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<StridePedometer />)
+  circuit.add(<StridePedometer nearbyInductor={nearbyInductor} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

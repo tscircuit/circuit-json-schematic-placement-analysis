@@ -556,7 +556,21 @@ export interface SeriesLedChainNotOrdered {
   message: string
 }
 
+/** A chip's private inductor branch returns to that chip through an explicit power net. */
+export interface InductorSeparatedFromChipPin {
+  lineItemType: "InductorSeparatedFromChipPin"
+  hostSchematicBox: SchematicBoxPlacement
+  inductorSchematicBox: SchematicBoxPlacement
+  chipSourcePortId: string
+  inductorSourcePortId: string
+  powerSourcePortIds: string[]
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | InductorSeparatedFromChipPin
   | DiodeCapacitorJunctionTooSpreadOut
   | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
