@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
+import { createCorrectedUsbHubCrystalNetwork } from "../assets/usb-hub-four-pin-crystal-corrected"
 import usbHubCrystalNetwork from "../assets/usb-hub-four-pin-crystal-network.circuit.json"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
@@ -10,7 +11,7 @@ import {
 
 // The USB2244 clock circuit uses one capacitor from each crystal signal to ground.
 // https://ww1.microchip.com/downloads/aemDocuments/documents/UNG/ProductDocuments/DesignChecklist/USB2244-HW-Design-Checklist-00004319.pdf#page=8
-test("records the real USB hub four-pin crystal load network", () => {
+test("records the real USB hub four-pin crystal load network", async () => {
   const circuitJson = usbHubCrystalNetwork as CircuitJson
   const original = JSON.stringify(circuitJson)
   expectReproRendered(circuitJson, 5)
@@ -49,13 +50,22 @@ test("records the real USB hub four-pin crystal load network", () => {
   ).toMatchObject({ symbol_name: "crystal_4pin_right" })
 
   const analysis = analyzeSchematicPlacement(circuitJson)
+  const crystalPlacementIssues = analysis.getIssues({
+    issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
+  })
+  expect(crystalPlacementIssues).toHaveLength(1)
+  expect(crystalPlacementIssues[0]).toMatchObject({
+    crystalSchematicBox: { sourceComponentName: "Y2" },
+    firstLoadCapacitorSchematicBox: { sourceComponentName: "C32" },
+    secondLoadCapacitorSchematicBox: { sourceComponentName: "C31" },
+    deltaSchX: -0.95,
+    deltaSchY: 0,
+    newSchX: 0.66,
+    newSchY: 2.2,
+  })
   expect(
-    analysis.getIssues({
-      issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
-    }),
-  ).toEqual([])
-
-  expect(analysis.getIssues()).toMatchObject([
+    analysis.getIssues({ issueTypes: ["SchematicBoxInnerLabelCollision"] }),
+  ).toMatchObject([
     {
       lineItemType: "SchematicBoxInnerLabelCollision",
       schematicBox: { sourceComponentName: "U13" },
@@ -63,6 +73,7 @@ test("records the real USB hub four-pin crystal load network", () => {
       message: "Inner labels are colliding. Increase the schWidth.",
     },
   ])
+  expect(analysis.getIssues()).toHaveLength(2)
   expect(
     createIssueReproSnapshot({
       circuitJson,
@@ -73,5 +84,30 @@ test("records the real USB hub four-pin crystal load network", () => {
       height: 700,
     }),
   ).toMatchSvgSnapshot(import.meta.path, "focused")
+
+  const correctedCircuitJson = await createCorrectedUsbHubCrystalNetwork()
+  expectReproRendered(correctedCircuitJson, 5)
+  const correctedAnalysis = analyzeSchematicPlacement(correctedCircuitJson)
+  expect(
+    correctedAnalysis.getIssues({
+      issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
+    }),
+  ).toEqual([])
+  expect(correctedAnalysis.getIssues()).toEqual([])
+  expectReproNets(correctedCircuitJson, [
+    ["U13.XTAL1", "Y2.pin1", "R33.pin1", "C31.pin1"],
+    ["U13.XTAL2", "Y2.pin3", "R33.pin2", "C32.pin1"],
+    ["Y2.pin2", "Y2.pin4", "C31.pin2", "C32.pin2", "net.GND"],
+  ])
+  expect(
+    createIssueReproSnapshot({
+      circuitJson: correctedCircuitJson,
+      analysis: correctedAnalysis,
+      issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
+      showOverlay: true,
+      width: 1200,
+      height: 700,
+    }),
+  ).toMatchSvgSnapshot(import.meta.path, "corrected")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

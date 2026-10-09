@@ -1,5 +1,5 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson, SchematicPort } from "circuit-json"
+import type { SchematicPort } from "circuit-json"
 import type {
   CrystalNotCenteredOverLoadCapacitors,
   SchematicBoxPlacement,
@@ -11,6 +11,7 @@ import type { SolverContext } from "../SolverContext"
 interface SourceComponentInfo {
   sourceComponentId: string
   ftype?: string
+  pinVariant?: "two_pin" | "four_pin"
 }
 
 interface SourcePortInfo {
@@ -80,6 +81,11 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
     const secondCapacitorName =
       network.secondLoadCapacitor.sourceComponentName ??
       "the second load capacitor"
+    const placementGoal =
+      Math.abs(deltaSchY) <=
+      CrystalLoadCapacitorPlacementSolver.ALIGNMENT_TOLERANCE
+        ? `horizontally centered between ${firstCapacitorName} and ${secondCapacitorName} while preserving its vertical placement`
+        : `centered between ${firstCapacitorName} and ${secondCapacitorName} and aligned with their load-side pins`
 
     this.issues.push({
       lineItemType: "CrystalNotCenteredOverLoadCapacitors",
@@ -90,7 +96,7 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
       deltaSchY,
       newSchX: network.newSchX,
       newSchY: network.newSchY,
-      message: `move ${crystalName} to schX=${network.newSchX}, schY=${network.newSchY} so it is centered between ${firstCapacitorName} and ${secondCapacitorName} and aligned with their load-side pins`,
+      message: `move ${crystalName} to schX=${network.newSchX}, schY=${network.newSchY} so it is ${placementGoal}`,
     })
   }
 
@@ -113,6 +119,12 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
           ftype:
             "ftype" in element && typeof element.ftype === "string"
               ? element.ftype
+              : undefined,
+          pinVariant:
+            "pin_variant" in element &&
+            (element.pin_variant === "two_pin" ||
+              element.pin_variant === "four_pin")
+              ? element.pin_variant
               : undefined,
         })
       }
@@ -190,61 +202,76 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
 
       const crystalPorts =
         sourcePortsByComponentId.get(sourceComponent.sourceComponentId) ?? []
-      if (
-        crystalPorts.length !== 2 ||
-        crystalPorts[0]!.connectivityKey === crystalPorts[1]!.connectivityKey
-      ) {
-        continue
-      }
-      const firstCrystalConnectivityKey = crystalPorts[0]!.connectivityKey
-      const secondCrystalConnectivityKey = crystalPorts[1]!.connectivityKey
-      const hasOscillatorHost = [...sourcePortsByComponentId.entries()].some(
-        ([sourceComponentId, sourcePorts]) =>
-          sourceComponentId !== sourceComponent.sourceComponentId &&
-          sourcePorts.length > 2 &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === firstCrystalConnectivityKey,
-          ) &&
-          sourcePorts.some(
-            (port) => port.connectivityKey === secondCrystalConnectivityKey,
-          ),
-      )
-      if (!hasOscillatorHost) continue
+      // Preserve the existing two-port generic-chip fallback. Multi-port
+      // detection is only enabled for components typed as crystals.
+      const crystalConnectivityKeyPairs =
+        sourceComponent.ftype === "simple_chip"
+          ? crystalPorts.length === 2 &&
+            crystalPorts[0]!.connectivityKey !==
+              crystalPorts[1]!.connectivityKey
+            ? [
+                [
+                  crystalPorts[0]!.connectivityKey,
+                  crystalPorts[1]!.connectivityKey,
+                ] as const,
+              ]
+            : []
+          : getDistinctConnectivityKeyPairs(crystalPorts)
+      if (crystalConnectivityKeyPairs.length === 0) continue
 
       const crystalPlacement = placementBySourceComponentId.get(
         sourceComponent.sourceComponentId,
       )
       if (!crystalPlacement) continue
 
-      const firstConnections =
-        capacitorConnectionsByConnectivityKey.get(
-          crystalPorts[0]!.connectivityKey,
-        ) ?? []
-      const secondConnections =
-        capacitorConnectionsByConnectivityKey.get(
-          crystalPorts[1]!.connectivityKey,
-        ) ?? []
+      const candidatePairs = crystalConnectivityKeyPairs.flatMap(
+        ([firstCrystalConnectivityKey, secondCrystalConnectivityKey]) => {
+          const hasOscillatorHost = [
+            ...sourcePortsByComponentId.entries(),
+          ].some(
+            ([sourceComponentId, sourcePorts]) =>
+              sourceComponentId !== sourceComponent.sourceComponentId &&
+              sourcePorts.length > 2 &&
+              sourcePorts.some(
+                (port) => port.connectivityKey === firstCrystalConnectivityKey,
+              ) &&
+              sourcePorts.some(
+                (port) => port.connectivityKey === secondCrystalConnectivityKey,
+              ),
+          )
+          if (!hasOscillatorHost) return []
 
-      const candidatePairs = firstConnections.flatMap((firstConnection) =>
-        secondConnections.flatMap((secondConnection) => {
-          if (
-            firstConnection.capacitor.sourceComponentId ===
-              secondConnection.capacitor.sourceComponentId ||
-            firstConnection.returnConnectivityKey !==
-              secondConnection.returnConnectivityKey ||
-            firstConnection.returnConnectivityKey ===
-              firstCrystalConnectivityKey ||
-            firstConnection.returnConnectivityKey ===
-              secondCrystalConnectivityKey ||
-            firstConnection.capacitor.schematicSheetId !==
-              crystalPlacement.schematicSheetId ||
-            secondConnection.capacitor.schematicSheetId !==
-              crystalPlacement.schematicSheetId
-          ) {
-            return []
-          }
-          return [{ firstConnection, secondConnection }]
-        }),
+          const firstConnections =
+            capacitorConnectionsByConnectivityKey.get(
+              firstCrystalConnectivityKey,
+            ) ?? []
+          const secondConnections =
+            capacitorConnectionsByConnectivityKey.get(
+              secondCrystalConnectivityKey,
+            ) ?? []
+
+          return firstConnections.flatMap((firstConnection) =>
+            secondConnections.flatMap((secondConnection) => {
+              if (
+                firstConnection.capacitor.sourceComponentId ===
+                  secondConnection.capacitor.sourceComponentId ||
+                firstConnection.returnConnectivityKey !==
+                  secondConnection.returnConnectivityKey ||
+                firstConnection.returnConnectivityKey ===
+                  firstCrystalConnectivityKey ||
+                firstConnection.returnConnectivityKey ===
+                  secondCrystalConnectivityKey ||
+                firstConnection.capacitor.schematicSheetId !==
+                  crystalPlacement.schematicSheetId ||
+                secondConnection.capacitor.schematicSheetId !==
+                  crystalPlacement.schematicSheetId
+              ) {
+                return []
+              }
+              return [{ firstConnection, secondConnection }]
+            }),
+          )
+        },
       )
       if (candidatePairs.length === 0) continue
 
@@ -260,13 +287,18 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
         bestPair.firstConnection.capacitor,
         bestPair.secondConnection.capacitor,
       ].toSorted((a, b) => a.schX - b.schX)
+      const isFourPinCrystal =
+        sourceComponent.ftype === "simple_crystal" &&
+        (sourceComponent.pinVariant === "four_pin" || crystalPorts.length > 2)
 
       networks.push({
         crystal: crystalPlacement,
         firstLoadCapacitor: capacitors[0]!,
         secondLoadCapacitor: capacitors[1]!,
         newSchX: round((loadPorts[0]!.center.x + loadPorts[1]!.center.x) / 2),
-        newSchY: round((loadPorts[0]!.center.y + loadPorts[1]!.center.y) / 2),
+        newSchY: isFourPinCrystal
+          ? crystalPlacement.schY
+          : round((loadPorts[0]!.center.y + loadPorts[1]!.center.y) / 2),
       })
     }
 
@@ -293,6 +325,22 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
     addAttr(attrs, "message", issue.message)
     return `<CrystalNotCenteredOverLoadCapacitors ${attrs.join(" ")} />`
   }
+}
+
+const getDistinctConnectivityKeyPairs = (
+  ports: SourcePortInfo[],
+): Array<readonly [string, string]> => {
+  const connectivityKeys = [
+    ...new Set(ports.map((port) => port.connectivityKey)),
+  ]
+  return connectivityKeys.flatMap((firstConnectivityKey, firstIndex) =>
+    connectivityKeys
+      .slice(firstIndex + 1)
+      .map(
+        (secondConnectivityKey) =>
+          [firstConnectivityKey, secondConnectivityKey] as const,
+      ),
+  )
 }
 
 const pairDistance = (
