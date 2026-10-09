@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import type { CircuitJson } from "circuit-json"
+import { pcb_component, type CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createRp2040LogicPower } from "../assets/rp2040-shared-node-diodes"
 import {
@@ -134,17 +134,19 @@ test("shared-node diode placement uses typed topology and rejects ambiguous bran
   })
   reject((c) => {
     const p = getReproSourcePort(c, "D5", "cathode")
-    c.push({
-      type: "pcb_component",
-      pcb_component_id: "unpopulated",
-      source_component_id: p.source_component_id!,
-      center: { x: 0, y: 0 },
-      width: 1,
-      height: 1,
-      rotation: 0,
-      layer: "top",
-      do_not_place: true,
-    })
+    c.push(
+      pcb_component.parse({
+        type: "pcb_component",
+        pcb_component_id: "unpopulated",
+        source_component_id: p.source_component_id!,
+        center: { x: 0, y: 0 },
+        width: 1,
+        height: 1,
+        rotation: 0,
+        layer: "top",
+        do_not_place: true,
+      }),
+    )
   })
   expect(issues(await createRp2040LogicPower(true))).toEqual([])
 })
