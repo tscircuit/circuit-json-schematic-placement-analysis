@@ -26,17 +26,12 @@ const PowerVerboseLabelBlock = (props: SubcircuitProps) => (
       schY="0"
       connections={{ pin1: "CP1.pin2", pin2: "RP1.pin2" }}
     />
-    <chip footprint="soic8" name="UP2" schX="-4.86" schY="-0.4" />
-    {/* Preserve the legacy verbose labels independently of core auto-naming. */}
-    <trace
-      from=".UP1 .pin3"
-      to=".UP2 .pin1"
-      schDisplayLabel="UP1_pin3/UP2_pin1"
-    />
-    <trace
-      from=".UP1 .pin4"
-      to=".UP2 .pin2"
-      schDisplayLabel="UP1_pin4/UP2_pin2"
+    <chip
+      footprint="soic8"
+      name="UP2"
+      schX="-4.86"
+      schY="-0.4"
+      connections={{ pin1: "UP1.pin3", pin2: "UP1.pin4" }}
     />
   </subcircuit>
 )
@@ -66,17 +61,12 @@ const LogicVerboseLabelBlock = (props: SubcircuitProps) => (
       schY="-0.15"
       connections={{ pin1: "CL1.pin2", pin2: "RL1.pin2" }}
     />
-    <chip footprint="soic8" name="UL2" schX="-4.45" schY="-0.65" />
-    {/* Preserve the legacy verbose labels independently of core auto-naming. */}
-    <trace
-      from=".UL1 .pin3"
-      to=".UL2 .pin1"
-      schDisplayLabel="UL1_pin3/UL2_pin1"
-    />
-    <trace
-      from=".UL1 .pin4"
-      to=".UL2 .pin2"
-      schDisplayLabel="UL1_pin4/UL2_pin2"
+    <chip
+      footprint="soic8"
+      name="UL2"
+      schX="-4.45"
+      schY="-0.65"
+      connections={{ pin1: "UL1.pin3", pin2: "UL1.pin4" }}
     />
   </subcircuit>
 )
