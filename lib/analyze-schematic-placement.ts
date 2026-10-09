@@ -1,4 +1,5 @@
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
+import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
 import { DiodeCapacitorStagePlacementSolver } from "./solvers/DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
 import { SeriesLedChainPlacementSolver } from "./solvers/SeriesLedChainPlacementSolver/SeriesLedChainPlacementSolver"
 import { ParallelRcPlacementSolver } from "./solvers/ParallelRcPlacementSolver/ParallelRcPlacementSolver"
@@ -120,6 +121,7 @@ export class SchematicPlacementAnalysis {
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
       DiodeCapacitorJunctionTooSpreadOut: 0,
+      SharedNodeDiodesInline: 0,
       PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
@@ -159,6 +161,8 @@ export class SchematicPlacementAnalysis {
         return ChipPinResistorPlacementSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
+      case "SharedNodeDiodesInline":
+        return SharedNodeDiodePlacementSolver.issueToString(issue)
       case "DiodeCapacitorJunctionTooSpreadOut":
         return DiodeCapacitorStagePlacementSolver.issueToString(issue)
       case "PiFilterComponentsNotGrouped":

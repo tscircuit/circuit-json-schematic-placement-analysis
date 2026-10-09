@@ -81,6 +81,9 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
+      case "SharedNodeDiodesInline":
+        for (const diode of issue.diodeSchematicBoxes) addPlacement(diode)
+        break
       case "DiodeCapacitorJunctionTooSpreadOut":
         addPlacement(issue.capacitorSchematicBox)
         for (const diode of issue.diodeSchematicBoxes) addPlacement(diode)
