@@ -1,3 +1,4 @@
+import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
 import { DiodeCapacitorStagePlacementSolver } from "./solvers/DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
@@ -88,6 +89,7 @@ export class SchematicPlacementAnalysis {
   /** Counts emitted issue objects, including zero counts for known types. */
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
+      TransistorHasIncorrectRailOrientation: 0,
       FlybackDiodeSeparatedFromRelayCoil: 0,
       ComponentOverlap: 0,
       SchematicBoxHasALotOfSurroundingWhitespace: 0,
@@ -153,6 +155,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "TransistorHasIncorrectRailOrientation":
+        return TransistorRailOrientationSolver.issueToString(issue)
       case "SeriesLedChainNotOrdered":
         return SeriesLedChainPlacementSolver.issueToString(issue)
       case "InductorSeparatedFromChipPin":

@@ -578,7 +578,20 @@ export interface SharedNodeDiodesInline {
   message: string
 }
 
+/** A native transistor's opposing resistor-fed positive/ground branches face away from the rails. */
+export interface TransistorHasIncorrectRailOrientation {
+  lineItemType: "TransistorHasIncorrectRailOrientation"
+  transistorSchematicBox: SchematicBoxPlacement
+  supplyResistorSchematicBox: SchematicBoxPlacement
+  groundResistorSchematicBox: SchematicBoxPlacement
+  supplyConnectedSourcePortId: string
+  groundConnectedSourcePortId: string
+  deltaSchRotation: 90 | 180 | 270
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | TransistorHasIncorrectRailOrientation
   | InductorSeparatedFromChipPin
   | SharedNodeDiodesInline
   | DiodeCapacitorJunctionTooSpreadOut

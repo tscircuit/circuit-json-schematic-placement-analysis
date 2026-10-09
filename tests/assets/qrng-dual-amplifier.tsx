@@ -4,7 +4,11 @@ import { Circuit } from "@tscircuit/core"
 // https://tscircuit.com/AndyAguilo/qrng_optimized_dual-amp?version=0.0.1
 // Published schematic positions/rotations are made explicit; wires are regenerated.
 // PCB/supplier data omitted; legacy power attributes use their current camelCase API.
-export const QrngDualAmplifier = () => (
+export const QrngDualAmplifier = ({
+  alignedRails = false,
+}: {
+  alignedRails?: boolean
+} = {}) => (
   <board schAutoLayoutEnabled={false}>
     <chip
       name="PWR_IN"
@@ -51,9 +55,9 @@ export const QrngDualAmplifier = () => (
 
     <capacitor
       name="C1"
-      schX={0.38}
-      schY={0.595}
-      schRotation={90}
+      schX={alignedRails ? -2.585 : 0.38}
+      schY={alignedRails ? 2.765 : 0.595}
+      schRotation={alignedRails ? 0 : 90}
       capacitance="100nF"
     />
 
@@ -61,71 +65,71 @@ export const QrngDualAmplifier = () => (
       name="Q1"
       schX={-0.27500000000000024}
       schY={2.765}
-      schRotation={0}
+      schRotation={alignedRails ? 270 : 0}
       type="npn"
     />
 
     <resistor
       name="R1C"
-      schX={-2.5850000000000004}
-      schY={2.53945535}
-      schRotation={0}
+      schX={alignedRails ? 0.015 : -2.5850000000000004}
+      schY={alignedRails ? 5.2 : 2.53945535}
+      schRotation={alignedRails ? 270 : 0}
       resistance="10k"
     />
 
     <resistor
       name="R1E"
-      schX={1.525}
-      schY={3.0549999999999997}
-      schRotation={0}
+      schX={alignedRails ? 0.015 : 1.525}
+      schY={alignedRails ? 1.1 : 3.0549999999999997}
+      schRotation={alignedRails ? 270 : 0}
       resistance="1k"
     />
 
     <resistor
       name="R1B"
-      schX={-2.5850000000000004}
-      schY={4.128366049999999}
-      schRotation={0}
+      schX={alignedRails ? -2.585 : -2.5850000000000004}
+      schY={alignedRails ? 4.3 : 4.128366049999999}
+      schRotation={alignedRails ? 270 : 0}
       resistance="100k"
     />
 
     <capacitor
       name="C2"
-      schX={-3.18}
-      schY={0.7249999999999996}
-      schRotation={0}
+      schX={alignedRails ? 2.1 : -3.18}
+      schY={alignedRails ? -2.82945535 : 0.7249999999999996}
+      schRotation={alignedRails ? 0 : 0}
       capacitance="100nF"
     />
 
     <transistor
       name="Q2"
-      schX={-0.6024999999999999}
+      schX={alignedRails ? 4.5 : -0.6024999999999999}
       schY={-2.82945535}
-      schRotation={0}
+      schRotation={alignedRails ? 270 : 0}
       type="npn"
     />
 
     <resistor
       name="R2C"
-      schX={-2.9125}
-      schY={-2.5394553500000003}
-      schRotation={0}
+      schX={alignedRails ? 4.79 : -2.9125}
+      schY={alignedRails ? -0.8 : -2.5394553500000003}
+      schRotation={alignedRails ? 270 : 0}
       resistance="10k"
     />
 
     <resistor
       name="R2E"
-      schX={1.1975000000000002}
-      schY={-2.5394553500000003}
-      schRotation={0}
+      schX={alignedRails ? 4.79 : 1.1975000000000002}
+      schY={alignedRails ? -4.8 : -2.5394553500000003}
+      schRotation={alignedRails ? 270 : 0}
       resistance="1k"
     />
 
     <resistor
       name="R2B"
-      schX={-2.9074999999999998}
-      schY={-4.1283660499999995}
-      schRotation={0}
+      schX={alignedRails ? 2.1 : -2.9074999999999998}
+      schY={alignedRails ? -1.3 : -4.1283660499999995}
+      schRotation={alignedRails ? 270 : 0}
       resistance="100k"
     />
 
@@ -198,10 +202,10 @@ export const QrngDualAmplifier = () => (
   </board>
 )
 
-export async function createQrngDualAmplifier() {
+export async function createQrngDualAmplifier(alignedRails = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<QrngDualAmplifier />)
+  circuit.add(<QrngDualAmplifier alignedRails={alignedRails} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

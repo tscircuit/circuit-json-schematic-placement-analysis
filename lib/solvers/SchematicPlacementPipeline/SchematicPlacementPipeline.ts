@@ -1,3 +1,4 @@
+import { TransistorRailOrientationSolver } from "../TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "../ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "../SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
 import { DiodeCapacitorStagePlacementSolver } from "../DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
@@ -57,6 +58,7 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  TransistorHasIncorrectRailOrientation: [TransistorRailOrientationSolver],
   SeriesLedChainNotOrdered: [SeriesLedChainPlacementSolver],
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
@@ -234,6 +236,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "FeedbackNetworkPlacementSolver",
       FeedbackNetworkPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "TransistorRailOrientationSolver",
+      TransistorRailOrientationSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

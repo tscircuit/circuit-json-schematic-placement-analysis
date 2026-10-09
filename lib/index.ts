@@ -1,3 +1,4 @@
+export { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 export { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
 export { DiodeCapacitorStagePlacementSolver } from "./solvers/DiodeCapacitorStagePlacementSolver/DiodeCapacitorStagePlacementSolver"
 export { ParallelRcPlacementSolver } from "./solvers/ParallelRcPlacementSolver/ParallelRcPlacementSolver"

@@ -81,6 +81,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
+      case "TransistorHasIncorrectRailOrientation":
+        addPlacement(issue.transistorSchematicBox)
+        addPlacement(issue.supplyResistorSchematicBox)
+        addPlacement(issue.groundResistorSchematicBox)
+        break
       case "SharedNodeDiodesInline":
         for (const diode of issue.diodeSchematicBoxes) addPlacement(diode)
         break

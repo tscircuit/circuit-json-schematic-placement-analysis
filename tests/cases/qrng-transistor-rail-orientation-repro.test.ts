@@ -80,17 +80,19 @@ test("reproduces the full QRNG sheet with two sideways transistor stages", async
     }
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(18)
+  expect(analysis.getIssues()).toHaveLength(20)
   expect(analysis.getIssueCounts().TraceCanBeSimplifiedByMovingComponent).toBe(
     0,
   )
   expect(analysis.getIssueCounts().LowSideTransistorNotAlignedWithLoad).toBe(0)
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 1500,
-      height: 1500,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    highlightIssues: ["TransistorHasIncorrectRailOrientation"],
+    width: 1500,
+    height: 1500,
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(6)
+  expect([...svg.matchAll(/data-listing-issue-number=/g)]).toHaveLength(2)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })
