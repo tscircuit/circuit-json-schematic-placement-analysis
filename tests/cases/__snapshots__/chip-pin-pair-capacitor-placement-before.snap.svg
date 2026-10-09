@@ -1,6 +1,6 @@
 <svg width="1200" height="956" viewBox="0 0 1200 956" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
-    <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1200" height="700" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(88.2723833544,0,0,-88.2723833544,484.4073139975,541.1097099622)" data-software-used-string="@tscircuit/core@0.0.1382"><style>
+    <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1200" height="700" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(88.2723833544,0,0,-88.2723833544,484.4073139975,541.1097099622)" data-software-used-string="@tscircuit/core@0.0.1509"><style>
               .boundary { fill: rgb(245, 241, 237); }
               .schematic-boundary { fill: none; stroke: #fff; }
               .component { fill: none; stroke: rgb(132, 0, 0); }
@@ -19,13 +19,13 @@
     L 356.0592686002024,523.4552332913199
     Z
   " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="1.7654476670880002px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_0" x="352.881462799444" y="532.28247162676" fill="rgb(132, 0, 0)" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="15.889029003792px" transform="">T2</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_1" d="
-    M 837.4968474151001,133.29129886487198
-    L 846.3240857505401,138.05800756600956
-    L 846.3240857505401,165.97562000822782
-    L 828.6696090796601,165.97562000822782
-    L 828.6696090796601,138.05800756600956
+    M 837.4968474151001,126.22950819651993
+    L 846.3240857505401,130.99621689765752
+    L 846.3240857505401,158.91382933987578
+    L 828.6696090796601,158.91382933987578
+    L 828.6696090796601,130.99621689765752
     Z
-  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="1.7654476670880002px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_1" x="837.4968474151001" y="141.23581336676799" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="15.889029003792px" transform="rotate(90 837.4968474151001 141.23581336676799)">T2</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_2" d="
+  " fill="rgba(255, 255, 255, 0.6)" stroke="rgb(132, 0, 0)" stroke-width="1.7654476670880002px"/><text class="net-label-text sch-net-label-text" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_1" x="837.4968474151001" y="134.17402269841594" fill="rgb(132, 0, 0)" text-anchor="start" dominant-baseline="central" font-family="sans-serif" font-variant-numeric="tabular-nums" font-size="15.889029003792px" transform="rotate(90 837.4968474151001 134.17402269841594)">T2</text><path class="net-label sch-net-label" data-circuit-json-type="schematic_net_label" data-schematic-net-label-id="schematic_net_label_2" d="
     M 343.17150063046,549.93694829764
     L 351.9987389659,554.7036569987777
     L 351.99873896590003,582.6212694409959
