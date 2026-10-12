@@ -31,6 +31,7 @@ test("reproduces the complete Smartwatch Motion & RTC sheet with its crystal opp
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
     "DecouplingCapacitorsNotCloseTogether",
+    "CrystalSeparatedFromChipPins",
   ])
   expect(
     createSchematicAnalysisFixtureSvg({
@@ -38,6 +39,7 @@ test("reproduces the complete Smartwatch Motion & RTC sheet with its crystal opp
       analysis,
       width: 1600,
       height: 1000,
+      highlightIssues: ["CrystalSeparatedFromChipPins"],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

@@ -7,7 +7,11 @@ import { PCF8563TS } from "./PCF8563TS"
 // Original component props and sheet settings; other sheets and saved PCB routing omitted.
 const cap100n = { mpn: "CC0402KRX7R7BB104", jlc: "C60474" } as const
 
-export default function SmartwatchMotionRtc() {
+export default function SmartwatchMotionRtc({
+  crystalBesidePins = false,
+}: {
+  crystalBesidePins?: boolean
+} = {}) {
   return (
     <board
       name="SMARTWATCH_V1_STM32"
@@ -101,8 +105,9 @@ export default function SmartwatchMotionRtc() {
           }}
           pcbX={5}
           pcbY={-4}
-          schX={10.5}
-          schY={3}
+          schX={crystalBesidePins ? 3 : 10.5}
+          schY={crystalBesidePins ? 3.1 : 3}
+          schRotation={crystalBesidePins ? 270 : 0}
           connections={{ pin1: "net.RTC_OSCI", pin2: "net.RTC_OSCO" }}
           footprint={
             <footprint>
@@ -156,10 +161,12 @@ export default function SmartwatchMotionRtc() {
   )
 }
 
-export async function createSmartwatchMotionRtcRepro() {
+export async function createSmartwatchMotionRtcRepro(
+  crystalBesidePins = false,
+) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<SmartwatchMotionRtc />)
+  circuit.add(<SmartwatchMotionRtc crystalBesidePins={crystalBesidePins} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
