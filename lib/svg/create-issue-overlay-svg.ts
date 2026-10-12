@@ -202,6 +202,10 @@ export function renderIssueOverlay(input: {
         rect(issue.textBounds)
         rect(issue.collidingObjectBounds)
         break
+      case "SchematicBoxInnerLabelOutOfBounds":
+        for (const label of issue.overflowingLabels)
+          rect(label.bounds, false, label)
+        break
       case "SchematicBoxInnerLabelCollision":
         if (issue.labelPairs?.length) {
           for (const pair of issue.labelPairs) {

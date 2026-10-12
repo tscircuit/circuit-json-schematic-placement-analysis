@@ -173,6 +173,7 @@ export const getRelevantPlacementsForIssues = ({
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
       case "SchematicBoxInnerLabelCollision":
+      case "SchematicBoxInnerLabelOutOfBounds":
       case "SchematicPinPaddingToEdgeTooLarge":
         addPlacement(issue.schematicBox)
         break

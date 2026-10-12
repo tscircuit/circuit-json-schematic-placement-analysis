@@ -1,4 +1,5 @@
 import { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
+import { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
@@ -99,6 +100,7 @@ export class SchematicPlacementAnalysis {
       PinHeaderSchematicBoxTooWide: 0,
       GenericSchematicBoxTooWide: 0,
       SchematicBoxInnerLabelCollision: 0,
+      SchematicBoxInnerLabelOutOfBounds: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
       ParallelRcNotAligned: 0,
@@ -190,6 +192,8 @@ export class SchematicPlacementAnalysis {
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
         return SchematicBoxTooWideSolver.issueToString(issue)
+      case "SchematicBoxInnerLabelOutOfBounds":
+        return SchematicBoxInnerLabelBoundsSolver.issueToString(issue)
       case "SchematicBoxInnerLabelCollision":
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":

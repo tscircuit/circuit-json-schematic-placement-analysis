@@ -25,9 +25,26 @@ test("reproduces reading-lamp pin labels crossing their chip's top and bottom ed
     )
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  // Baseline: all current rules miss the four overflowing inner labels.
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toHaveLength(1)
+  const issue = analysis.getIssues()[0]!
+  if (issue.lineItemType !== "SchematicBoxInnerLabelOutOfBounds")
+    throw Error("Missing label containment diagnostic")
   expect(
-    createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),
+    issue.overflowingLabels.map((label) => [label.text, label.outsideEdges]),
+  ).toEqual([
+    ["VCCA", ["top"]],
+    ["GND1", ["bottom"]],
+    ["GND2", ["bottom"]],
+    ["VCCB2", ["top"]],
+  ])
+  expect(issue.suggestedSchHeight).toBe(2.55)
+  expect(issue.suggestedSchWidth).toBeUndefined()
+  expect(analysis.getIssueCounts().SchematicBoxInnerLabelOutOfBounds).toBe(1)
+  expect(
+    createSchematicAnalysisFixtureSvg({
+      circuitJson,
+      analysis,
+      highlightIssues: true,
+    }),
   ).toMatchSvgSnapshot(import.meta.path)
 })

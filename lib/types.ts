@@ -110,6 +110,19 @@ export interface SchematicBoxInnerLabelCollision {
   message: string
 }
 
+/** Inner pin-label text crosses the boundary of its own schematic box. */
+export interface SchematicBoxInnerLabelOutOfBounds {
+  lineItemType: "SchematicBoxInnerLabelOutOfBounds"
+  schematicBox: SchematicBoxPlacement
+  overflowingLabels: Array<
+    SchematicPinLabelBounds & { outsideEdges: SchematicSide[] }
+  >
+  /** Apply together at the same center, preserving pin positions along each edge. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
+  message: string
+}
+
 export interface SchematicPinLabelCollisionPair {
   firstLabel: SchematicPinLabelBounds
   secondLabel: SchematicPinLabelBounds
@@ -650,6 +663,7 @@ export type SchematicPlacementIssue =
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision
+  | SchematicBoxInnerLabelOutOfBounds
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | ParallelRcNotAligned
