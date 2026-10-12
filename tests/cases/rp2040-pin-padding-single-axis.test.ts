@@ -78,7 +78,7 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
       height: height ?? issue.schematicBox.height,
     })
     const resizedAnalysis = analyzeSchematicPlacement(resized)
-    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
+    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.1)
     expect(
       resizedAnalysis
         .getIssues()
@@ -111,7 +111,7 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
       )
     } else {
       expect(followup.suggestedSchWidth).toBeUndefined()
-      expect(followup.suggestedSchHeight).toBeCloseTo(3.1)
+      expect(followup.suggestedSchHeight).toBeCloseTo(2.9)
     }
     const compact = await renderRp2040InputSymbol(variant.name, {
       width: followup.suggestedSchWidth ?? width ?? issue.schematicBox.width,
@@ -120,7 +120,7 @@ test("retains safe single-axis suggestions when a joint shrink collides at a cor
     })
     const compactAnalysis = analyzeSchematicPlacement(compact)
     expect(compactAnalysis.getIssues()).toHaveLength(0)
-    expect(measureLabelBankGap(compact) + 1e-9).toBeGreaterThanOrEqual(0.2)
+    expect(measureLabelBankGap(compact) + 1e-9).toBeGreaterThanOrEqual(0.1)
     if (variant.axis === "width") {
       expect(
         resizedAnalysis.getIssues({

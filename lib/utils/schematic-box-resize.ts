@@ -2,22 +2,31 @@ import type { SchematicPort } from "circuit-json"
 import type { SchematicBoxPlacement } from "../types"
 import type { GraphicBounds } from "./schematic-box-graphics"
 import {
+  getLabelMovementFactor,
   getSchematicBoxLabelRects,
+  getSchematicPinLabelWidth,
+  getSchematicPinLabelText,
+  getSchematicPinLabelFontSize,
   INNER_LABEL_COLLISION_PADDING,
+  MINIMUM_LABEL_BANK_GAP,
   schematicLabelIntervalsOverlap,
   schematicLabelRectsOverlap,
   type LabelRect,
 } from "./schematic-box-labels"
 
-// Schematic units: leave readable space between label banks on different sides.
-// Same-side labels retain their pin spacing; resizing does not separate them.
-const MINIMUM_RESIZE_LABEL_BANK_GAP = 0.2
 type ContentRect = GraphicBounds & Partial<Pick<LabelRect, "side">>
 
-/** Native pin labels use the renderer's 0.15-unit font. Measure their displayed
- * text uniformly; names and electrical roles do not determine text geometry. */
+/** Scale the conservative column estimate with the rendered font size.
+ * Names and electrical roles do not determine text geometry. */
 export const getPinLabelLength = (port: SchematicPort): number =>
-  Array.from(port.display_pin_label ?? "").length * 0.095
+  Array.from(getSchematicPinLabelText(port)).length *
+  0.095 *
+  (getSchematicPinLabelFontSize(port) / 0.15)
+
+// Keep the existing conservative column estimate, but never shrink below the
+// glyph bounds used by collision detection (for example, wide uppercase text).
+const getResizePinLabelWidth = (port: SchematicPort): number =>
+  Math.max(getPinLabelLength(port), getSchematicPinLabelWidth(port))
 
 /** Validate joint and single-axis proposals while preserving every pin's position
  * along its edge. Missing side metadata cannot establish a safe resize. */
@@ -31,7 +40,7 @@ export function getSafeSchematicBoxResize(
 ): { width?: number; height?: number } | undefined {
   if (!Number.isFinite(pinSpacing) || pinSpacing <= 0) return
   if (ports.some((port) => !port.side_of_component)) return
-  if (!contentsFit(box, ports, INNER_LABEL_COLLISION_PADDING, graphics)) return
+  if (!contentsFit(box, ports, MINIMUM_LABEL_BANK_GAP, graphics)) return
 
   let minWidth = 0
   let minHeight = 0
@@ -99,7 +108,7 @@ export function getSafeSchematicBoxResize(
         height: candidate.height ?? box.height,
       },
       ports,
-      MINIMUM_RESIZE_LABEL_BANK_GAP,
+      MINIMUM_LABEL_BANK_GAP,
       graphics,
     ),
   )
@@ -120,12 +129,6 @@ function getContentLimitedDimension(
   const maxKey = dimension === "width" ? "xMax" : "yMax"
   const otherMinKey = dimension === "width" ? "yMin" : "xMin"
   const otherMaxKey = dimension === "width" ? "yMax" : "xMax"
-  const speed = (label: ContentRect): number => {
-    if (dimension === "width") {
-      return label.side === "left" ? -0.5 : label.side === "right" ? 0.5 : 0
-    }
-    return label.side === "bottom" ? -0.5 : label.side === "top" ? 0.5 : 0
-  }
   let minimum = 0
   const constrainGap = (gap: number, rate: number, requiredGap = 0) => {
     // A gap with zero/negative rate cannot get smaller during a shrink.
@@ -137,18 +140,19 @@ function getContentLimitedDimension(
   const labels: ContentRect[] = getSchematicBoxLabelRects(
     box,
     ports,
-    getPinLabelLength,
+    getResizePinLabelWidth,
   )
   if (graphics) labels.push(graphics)
   for (let i = 0; i < labels.length; i++) {
     const a = labels[i]!
-    constrainGap(a[minKey] - (center - current / 2), speed(a) + 0.5)
-    constrainGap(center + current / 2 - a[maxKey], 0.5 - speed(a))
+    const movement = getLabelMovementFactor(a.side, dimension)
+    constrainGap(a[minKey] - (center - current / 2), movement + 0.5)
+    constrainGap(center + current / 2 - a[maxKey], 0.5 - movement)
     for (let j = i + 1; j < labels.length; j++) {
       const b = labels[j]!
       const requiredGap =
         a.side && b.side && a.side !== b.side
-          ? MINIMUM_RESIZE_LABEL_BANK_GAP
+          ? MINIMUM_LABEL_BANK_GAP
           : INNER_LABEL_COLLISION_PADDING
       if (
         !schematicLabelIntervalsOverlap(
@@ -165,7 +169,8 @@ function getContentLimitedDimension(
       const [first, second] = a[maxKey] <= b[minKey] ? [a, b] : [b, a]
       constrainGap(
         second[minKey] - first[maxKey],
-        speed(second) - speed(first),
+        getLabelMovementFactor(second.side, dimension) -
+          getLabelMovementFactor(first.side, dimension),
         requiredGap,
       )
     }
@@ -184,7 +189,7 @@ function contentsFit(
   const labels: ContentRect[] = getSchematicBoxLabelRects(
     resized,
     ports,
-    getPinLabelLength,
+    getResizePinLabelWidth,
   )
   if (graphics) labels.push(graphics)
   for (let i = 0; i < labels.length; i++) {

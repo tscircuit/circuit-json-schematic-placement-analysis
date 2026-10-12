@@ -43,7 +43,7 @@ test("generates schematic pin padding to edge issues for labels on all sides", a
     schWidth: issue.suggestedSchWidth,
   })
   const narrowerAnalysis = analyzeSchematicPlacement(narrower)
-  expect(measureLabelBankGap(narrower) + 1e-9).toBeGreaterThanOrEqual(0.2)
+  expect(measureLabelBankGap(narrower) + 1e-9).toBeGreaterThanOrEqual(0.1)
   const remaining = narrowerAnalysis
     .getIssues()
     .filter(
@@ -51,7 +51,7 @@ test("generates schematic pin padding to edge issues for labels on all sides", a
     )
   expect(remaining).toHaveLength(1)
   expect(remaining[0]!.suggestedSchWidth).toBeUndefined()
-  expect(remaining[0]!.suggestedSchHeight).toBeCloseTo(2.09)
+  expect(remaining[0]!.suggestedSchHeight).toBeCloseTo(1.956)
   expect(
     new Set(remaining[0]!.paddingDetails!.map((detail) => detail.pinSide)),
   ).toEqual(new Set(["left", "right"]))
@@ -60,7 +60,7 @@ test("generates schematic pin padding to edge issues for labels on all sides", a
     schHeight: remaining[0]!.suggestedSchHeight,
   })
   const compactAnalysis = analyzeSchematicPlacement(compact)
-  expect(measureLabelBankGap(compact) + 1e-9).toBeGreaterThanOrEqual(0.2)
+  expect(measureLabelBankGap(compact) + 1e-9).toBeGreaterThanOrEqual(0.1)
   expect(compactAnalysis.getIssues()).toHaveLength(0)
   await expect(
     stackSvgsVertically(

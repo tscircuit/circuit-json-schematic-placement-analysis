@@ -1,6 +1,8 @@
 import type { CircuitJson } from "circuit-json"
-import { getSchematicBoxLabelRects } from "lib/utils/schematic-box-labels"
-import { getPinLabelLength } from "lib/utils/schematic-box-resize"
+import {
+  getSchematicBoxLabelRects,
+  getSchematicPinLabelWidth,
+} from "lib/utils/schematic-box-labels"
 
 /** Measure separation in the rendered Circuit JSON, independently of the
  * resize solver's proposed dimensions and clearance-constraint calculation. */
@@ -23,7 +25,7 @@ export function measureLabelBankGap(circuitJson: CircuitJson): number {
         height: component.size.height,
       },
       ports,
-      getPinLabelLength,
+      getSchematicPinLabelWidth,
     )
     for (let i = 0; i < labels.length; i++) {
       const a = labels[i]!

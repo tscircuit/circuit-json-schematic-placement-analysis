@@ -99,7 +99,30 @@ export interface SchematicBoxInnerLabelCollision {
   lineItemType: "SchematicBoxInnerLabelCollision"
   schematicBox: SchematicBoxPlacement
   overlappingSides: SchematicSide[]
+  /** Required clearance between different-side pin labels, in schematic units. */
+  minimumLabelGap: number
+  /** Exact reported pairs, with displayed text and bounds for highlighting.
+   * Optional for previously serialized reports. */
+  labelPairs?: SchematicPinLabelCollisionPair[]
+  /** Apply the suggested dimensions together, keeping pins along their edges. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
   message: string
+}
+
+export interface SchematicPinLabelCollisionPair {
+  firstLabel: SchematicPinLabelBounds
+  secondLabel: SchematicPinLabelBounds
+  /** Largest separating-axis gap; zero when the label bounds overlap. */
+  measuredGap: number
+  kind: "overlap" | "clearance"
+}
+
+export interface SchematicPinLabelBounds {
+  schematicPortId: string
+  text: string
+  side: SchematicSide
+  bounds: SchematicIssueBounds
 }
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"

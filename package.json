@@ -1,6 +1,6 @@
 {
   "name": "@tscircuit/circuit-json-schematic-placement-analysis",
-  "version": "0.0.55",
+  "version": "0.0.57",
   "type": "module",
   "main": "lib/index.ts",
   "module": "lib/index.ts",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@tscircuit/circuit-json-util": "^0.0.121",
+    "@tscircuit/math-utils": "^0.0.36",
     "@tscircuit/solver-utils": "^0.0.19",
     "calculate-elbow": "^0.0.13",
     "circuit-json-to-connectivity-map": "^0.0.33",
@@ -53,7 +54,6 @@
     "@tscircuit/infgrid-ijump-astar": "^0.0.35",
     "@tscircuit/log-soup": "^1.0.2",
     "@tscircuit/matchpack": "^0.0.97",
-    "@tscircuit/math-utils": "^0.0.36",
     "@tscircuit/miniflex": "^0.0.4",
     "@tscircuit/ngspice-spice-engine": "^0.0.8",
     "@tscircuit/props": "^0.0.700",

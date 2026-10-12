@@ -51,7 +51,7 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
       amplifierSchematicBox: { sourceComponentName: "U_CURRENT_B" },
     },
   ])
-  expect(analysis.getIssues()).toHaveLength(3)
+  expect(analysis.getIssues()).toHaveLength(5)
   expect(
     analysis.getIssues({
       issueTypes: ["DecouplingCapacitorsNotCloseTogether"],
@@ -81,12 +81,12 @@ test("records displaced current-sense shunts on the complete NEMA17 telemetry sh
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([2, 2, 3, 3])
+  ).toEqual([4, 4, 5, 5])
   expect(
     [...svg.matchAll(/data-listing-issue-number="(\d+)"/g)].map((match) =>
       Number(match[1]),
     ),
-  ).toEqual([2, 3])
+  ).toEqual([4, 5])
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

@@ -1,4 +1,4 @@
-<svg width="1200" height="834" viewBox="0 0 1200 834" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -35,9 +35,13 @@
     <tspan x="18" dy="22">  height=&quot;0.8&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
-    <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Inner labels are colliding. Increase the schHeight.&quot;</tspan>
-    <tspan x="18" dy="22">  componentName=&quot;BZ1&quot; currentSchWidth=&quot;0.5&quot; currentSchHeight=&quot;0.8&quot; overlappingSides=&quot;top,bottom&quot;</tspan>
-    <tspan x="18" dy="22">  /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Labels POS (top) and NEG (bottom) overlap. Increase</tspan>
+    <tspan x="18" dy="22">  the schHeight to leave at least 0.1 schematic units between these labels.&quot; componentName=&quot;BZ1&quot;</tspan>
+    <tspan x="18" dy="22">  currentSchWidth=&quot;0.5&quot; currentSchHeight=&quot;0.8&quot; overlappingSides=&quot;top,bottom&quot;</tspan>
+    <tspan x="18" dy="22">  minimumLabelGap=&quot;0.1&quot; suggestedSchHeight=&quot;0.903&quot;&gt;</tspan>
+    <tspan x="18" dy="22">  &lt;PinLabelPair label1=&quot;POS&quot; label2=&quot;NEG&quot; port1=&quot;schematic_port_5&quot; port2=&quot;schematic_port_6&quot;</tspan>
+    <tspan x="18" dy="22">  side1=&quot;top&quot; side2=&quot;bottom&quot; kind=&quot;overlap&quot; measuredGap=&quot;0&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;/SchematicBoxInnerLabelCollision&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
