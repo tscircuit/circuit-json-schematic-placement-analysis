@@ -33,10 +33,10 @@ test("does not report corner padding for centered supply pins", async () => {
   await circuit.renderUntilSettled()
   const circuitJson = circuit.getCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
-  const issuesLineItem = analysis
-    .getLineItems()
-    .find((lineItem) => lineItem.lineItemType === "SchematicPlacementIssues")
-  expect(issuesLineItem).toBeUndefined()
+  expect(
+    analysis.getIssues({ issueTypes: ["SchematicPinPaddingToEdgeTooLarge"] }),
+  ).toHaveLength(0)
+  expect(analysis.getIssues()).toEqual([])
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,

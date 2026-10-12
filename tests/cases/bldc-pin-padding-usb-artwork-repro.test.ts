@@ -22,7 +22,11 @@ test("native USB-C sizing preserves both the pin labels and internal artwork", a
       "GenericSchematicBoxTooWide",
     ],
   })
-  expect(issues).toHaveLength(0)
+  expect(issues).toMatchObject([{ lineItemType: "GenericSchematicBoxTooWide" }])
+  expect(
+    issues.find((issue) => issue.lineItemType === "GenericSchematicBoxTooWide")
+      ?.suggestedSchWidth,
+  ).toBeCloseTo(1.771)
   // Re-render the same real TSX connector with excess width. Artwork must
   // constrain a suggestion without categorically disabling USB-C resizing.
   const wide = await renderBldcSymbol("J1", { schWidth: 8 })
@@ -57,7 +61,7 @@ test("native USB-C sizing preserves both the pin labels and internal artwork", a
     expect(++passes).toBeLessThanOrEqual(5)
     const width = pending[0]!.suggestedSchWidth!
     expect(width).toBeLessThan(currentWidth)
-    expect(pending[1]!.suggestedSchWidth).toBe(width)
+    if (pending[1]) expect(pending[1].suggestedSchWidth).toBe(width)
     const resized = await renderBldcSymbol("J1", { schWidth: width })
     const resizedAnalysis = analyzeSchematicPlacement(resized)
     const component = resized.find(

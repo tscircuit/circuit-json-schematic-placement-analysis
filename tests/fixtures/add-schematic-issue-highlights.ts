@@ -12,11 +12,18 @@ import {
 } from "lib/utils/issue-context"
 import { buildSolverContext } from "lib/utils/placements"
 import { parseSync, stringify, type INode } from "svgson"
+import { getPinLabelHighlightBounds } from "lib/utils/schematic-box-labels"
 
 type Bounds = { left: number; right: number; top: number; bottom: number }
 type Point = { x: number; y: number }
 type Shape = { suggested?: boolean } & (
-  | { type: "box"; bounds: Bounds; componentId?: string }
+  | {
+      type: "box"
+      bounds: Bounds
+      componentId?: string
+      schematicPortId?: string
+      labelText?: string
+    }
   | { type: "line"; from: Point; to: Point }
 )
 interface IssueHighlight {
@@ -116,7 +123,20 @@ function getIssueHighlights(
           shapes.push({ type: "line", from: edge.from, to: edge.to })
         }
       }
-      if (issue.lineItemType === "SchematicTextCollision") {
+      if (
+        issue.lineItemType === "SchematicBoxInnerLabelCollision" &&
+        issue.labelPairs?.length
+      ) {
+        for (const pair of issue.labelPairs) {
+          for (const label of [pair.firstLabel, pair.secondLabel])
+            shapes.push({
+              type: "box",
+              bounds: getPinLabelHighlightBounds(label),
+              schematicPortId: label.schematicPortId,
+              labelText: label.text,
+            })
+        }
+      } else if (issue.lineItemType === "SchematicTextCollision") {
         box(issue.textBounds)
         if (issue.collidingObject.type === "trace")
           trace(issue.collidingObject.id, issue.textBounds)
@@ -287,7 +307,10 @@ function createHighlightLayer(
             return `<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${shape.suggested ? "#16a34a" : "#e11d48"}" stroke-width="5" stroke-opacity="0.55" />`
           }
           const r = screenBounds(shape)
-          return `<rect${shape.componentId ? ` data-highlight-component-id="${escapeAttr(shape.componentId)}"` : ""} x="${r.left}" y="${r.top}" width="${Math.max(r.right - r.left, 2)}" height="${Math.max(r.bottom - r.top, 2)}" fill="${shape.suggested ? "#16a34a" : "#ef4444"}" fill-opacity="0.16" stroke="${shape.suggested ? "#16a34a" : "#dc2626"}" stroke-width="1.5" />`
+          const labelAttrs = shape.schematicPortId
+            ? ` class="pin-label-collision-highlight" data-highlight-schematic-port-id="${escapeAttr(shape.schematicPortId)}" data-highlight-label="${escapeAttr(shape.labelText ?? "")}"`
+            : ""
+          return `<rect${labelAttrs}${shape.componentId ? ` data-highlight-component-id="${escapeAttr(shape.componentId)}"` : ""} x="${r.left}" y="${r.top}" width="${Math.max(r.right - r.left, 2)}" height="${Math.max(r.bottom - r.top, 2)}" fill="${shape.suggested ? "#16a34a" : "#ef4444"}" fill-opacity="0.16" stroke="${shape.suggested ? "#16a34a" : "#dc2626"}" stroke-width="1.5" />`
         })
         .join("")
       // Repeat the issue number on every box. A trace-only issue gets one marker.

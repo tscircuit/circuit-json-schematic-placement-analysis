@@ -5,12 +5,14 @@ import type {
   SchematicPlacementIssue,
   SchematicBoxPlacement,
   SchematicIssueBounds,
+  SchematicPinLabelBounds,
 } from "../index"
 import {
   getIssueSchematicSheetContext,
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
 import { centeredRect } from "../utils/geometry"
+import { getPinLabelHighlightBounds } from "../utils/schematic-box-labels"
 import {
   createIssueMarkerPlacer,
   ISSUE_MARKER_RADIUS,
@@ -144,7 +146,11 @@ export function renderIssueOverlay(input: {
     const geometry: string[] = []
     let anchor: { x: number; y: number } | undefined
     const markerAnchors = new Map<string, { x: number; y: number }>()
-    const rect = (bounds: SchematicIssueBounds, isContext = false) => {
+    const rect = (
+      bounds: SchematicIssueBounds,
+      isContext = false,
+      label?: SchematicPinLabelBounds,
+    ) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
       const key = [
@@ -159,7 +165,11 @@ export function renderIssueOverlay(input: {
       if (!isContext) markerAnchors.set(key, { x: bounds.left, y: bounds.top })
       if (drawnRectangles.has(key)) return
       drawnRectangles.add(key)
-      const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
+      const labelAttrs = label
+        ? ` class="pin-label-collision-highlight" data-highlight-schematic-port-id="${escapeXml(label.schematicPortId)}" data-highlight-label="${escapeXml(label.text)}"`
+        : ""
+      const drawnBounds = label ? getPinLabelHighlightBounds(label) : bounds
+      const markup = `<rect${labelAttrs} x="${drawnBounds.left}" y="${drawnBounds.bottom}" width="${drawnBounds.right - drawnBounds.left}" height="${drawnBounds.top - drawnBounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
       geometry.push(markup)
     }
     for (const placement of context) rect(boxBounds(placement), true)
@@ -191,6 +201,16 @@ export function renderIssueOverlay(input: {
       case "SchematicTextCollision":
         rect(issue.textBounds)
         rect(issue.collidingObjectBounds)
+        break
+      case "SchematicBoxInnerLabelCollision":
+        if (issue.labelPairs?.length) {
+          for (const pair of issue.labelPairs) {
+            rect(pair.firstLabel.bounds, false, pair.firstLabel)
+            rect(pair.secondLabel.bounds, false, pair.secondLabel)
+          }
+        } else {
+          for (const placement of context) rect(boxBounds(placement))
+        }
         break
       case "ComponentNetLabelCollision":
         rect(issue.overlappingLabel1Bounds)
