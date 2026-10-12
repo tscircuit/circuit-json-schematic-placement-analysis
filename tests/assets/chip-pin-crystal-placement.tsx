@@ -30,7 +30,7 @@ export async function createChipPinCrystalPlacement({
       schY: x * Math.sin(angle) + y * Math.cos(angle),
     }
   }
-  const cap = crystalPosition ?? (nearPins ? { x: -3, y: 0 } : { x: 4, y: 5 })
+  const cap = crystalPosition ?? (nearPins ? { x: -4, y: 0 } : { x: 4, y: 5 })
   const turns = rotation / 90
   const sides = ["leftSide", "bottomSide", "rightSide", "topSide"] as const
   const pair = (pins: string[], side: (typeof sides)[number]) => ({
