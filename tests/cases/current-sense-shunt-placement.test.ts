@@ -10,7 +10,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-test("groups a displaced current-sense shunt without requiring vertical orientation or direct wiring everywhere", async () => {
+test("accepts the shunt layouts when current core draws both sense branches", async () => {
   const before = await createCurrentSenseShuntPlacement()
   const after = await createCurrentSenseShuntPlacement("beside-inputs")
   const horizontal = await createCurrentSenseShuntPlacement("horizontal-direct")
@@ -18,7 +18,8 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
     analyzeSchematicPlacement(json, {
       issueTypes: ["CurrentSenseShuntSeparatedFromInputs"],
     }).getIssues()
-  expect(issues(before)).toHaveLength(1)
+  // Current core renders both sense connections visibly even in the displaced layout.
+  expect(issues(before)).toEqual([])
   expect(issues(after)).toEqual([])
   // TI INA241 Figure 8-1 uses a horizontal shunt with two visible sense branches.
   expect(issues(horizontal)).toEqual([])
@@ -57,10 +58,8 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
       circuitJson: json,
       highlightIssues: ["CurrentSenseShuntSeparatedFromInputs"],
     })
-    if (variant === "before") {
-      expect(svg).toContain('data-listing-issue-number="1"')
-      expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(2)
-    }
+    expect(svg).not.toContain("data-listing-issue-number=")
+    expect(svg).not.toContain('class="issue-marker"')
     expect(svg).toMatchSvgSnapshot(import.meta.path, variant)
     expect(JSON.stringify(json)).toBe(original)
   }
@@ -190,7 +189,7 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
     )
       delete e.subcircuit_connectivity_map_key
   }
-  expect(issues(renamed)).toHaveLength(1)
+  expect(issues(renamed)).toEqual([])
 
   // Trace records may be split at a T junction instead of containing both ports.
   const branched = structuredClone(horizontal)
@@ -242,5 +241,5 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
       e.center = rotate(e.center)
     }
   }
-  expect(issues(rotated)).toHaveLength(1)
+  expect(issues(rotated)).toEqual([])
 })

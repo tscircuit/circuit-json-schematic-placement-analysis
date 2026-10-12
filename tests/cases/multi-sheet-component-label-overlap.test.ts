@@ -3,7 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createMultiSheetComponentLabelOverlapCircuitJson } from "../assets/multi-sheet-component-label-overlap"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test("groups net-label collision issues and relevant boxes by sheet", async () => {
+test("renders both sheets without collision markers after core routes the connections directly", async () => {
   const circuitJson = await createMultiSheetComponentLabelOverlapCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issues = analysis
@@ -17,18 +17,18 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
     (issue) => issue.lineItemType === "NetLabelCollision",
   )
 
-  expect(collisionIssues).toHaveLength(2)
-  expect(collisionIssues.map((issue) => issue.schematicSheetName)).toEqual([
-    "Power",
-    "Logic",
-  ])
+  expect(collisionIssues).toEqual([])
+  const sheets = circuitJson.filter(
+    (element) => element.type === "schematic_sheet",
+  )
+  expect(sheets.map((sheet) => sheet.name)).toEqual(["Power", "Logic"])
+  for (const sheet of sheets) {
+    expect(
+      analysis.getIssues({ schematicSheetId: sheet.schematic_sheet_id }),
+    ).toEqual([])
+  }
   const output = analysis.toString()
-  const powerSheetStart = output.indexOf('<SchematicSheet name="Power"')
-  const logicSheetStart = output.indexOf('<SchematicSheet name="Logic"')
-  expect(powerSheetStart).toBeGreaterThanOrEqual(0)
-  expect(logicSheetStart).toBeGreaterThan(powerSheetStart)
-  expect(output.slice(powerSheetStart, logicSheetStart)).not.toContain("UL")
-  expect(output.slice(logicSheetStart)).not.toContain("UP")
+  expect(output).toBe("")
 
   const original = createSchematicAnalysisFixtureSvg({ circuitJson, analysis })
   const highlighted = createSchematicAnalysisFixtureSvg({
@@ -40,6 +40,8 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
     svg
       .match(/<text[^>]*fill="#d00"[^>]*>[\s\S]*?<\/text>/)?.[0]
       .replaceAll('x="52"', 'x="18"')
+  expect(original).toContain("UP1")
+  expect(original).toContain("UL1")
   expect(listing(original)).toBeDefined()
   expect(listing(highlighted)).toBe(listing(original))
   const highlightedSheetIds = [
@@ -54,7 +56,7 @@ test("groups net-label collision issues and relevant boxes by sheet", async () =
     [...highlighted.matchAll(/data-listing-issue-number="(\d+)"/g)].map(
       (match) => Number(match[1]),
     ),
-  ).toEqual([1, 2])
+  ).toEqual([])
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,
