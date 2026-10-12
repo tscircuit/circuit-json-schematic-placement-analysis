@@ -159,6 +159,14 @@ export interface ParallelDiodeResistorNotAligned {
   message: string
 }
 
+/** Two resistors across the same nets are drawn end-to-end instead of as branches. */
+export interface ParallelResistorsDrawnInline {
+  lineItemType: "ParallelResistorsDrawnInline"
+  firstResistorSchematicBox: SchematicBoxPlacement
+  secondResistorSchematicBox: SchematicBoxPlacement
+  message: string
+}
+
 export interface ComponentPinsWouldAlignWithVerticalShift {
   lineItemType: "ComponentPinsWouldAlignWithVerticalShift"
   firstComponent: SchematicBoxPlacement
@@ -616,6 +624,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelCollision
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | ParallelResistorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift

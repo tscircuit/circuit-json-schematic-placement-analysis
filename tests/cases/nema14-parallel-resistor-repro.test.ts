@@ -23,6 +23,7 @@ test("reproduces the complete NEMA14 USB-PD sheet with inline parallel resistors
   ])
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ParallelResistorsDrawnInline",
     "TwoPinComponentShouldBeVertical",
     "ResistorSeparatedFromChipPin",
   ])
@@ -32,6 +33,7 @@ test("reproduces the complete NEMA14 USB-PD sheet with inline parallel resistors
       analysis,
       width: 2400,
       height: 1700,
+      highlightIssues: ["ParallelResistorsDrawnInline"],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

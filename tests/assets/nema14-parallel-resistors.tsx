@@ -3,7 +3,11 @@ import { Circuit } from "@tscircuit/core"
 // Complete USB-PD sheet from AnasSarkiz/smart-nema14-motor-controller--01a0fd9b v0.0.54-alpha.0.
 // https://tscircuit.com/AnasSarkiz/smart-nema14-motor-controller--01a0fd9b?version=0.0.54-alpha.0
 // TSX component imports are inlined; original schematic props retained, PCB/CAD data omitted.
-export default function Nema14ParallelResistors() {
+export default function Nema14ParallelResistors({
+  aligned = false,
+}: {
+  aligned?: boolean
+} = {}) {
   return (
     <board schLayout={{ layoutMode: "none" }}>
       <net name="PD_LOAD_ENABLE_N" />
@@ -339,8 +343,8 @@ export default function Nema14ParallelResistors() {
           resistance={"1kohm"}
           supplierPartNumbers={{ jlcpcb: ["C4261071"] }}
           manufacturerPartNumber={"ERJ-P08F1001V"}
-          schX={-7.5}
-          schY={-7}
+          schX={aligned ? -5.5 : -7.5}
+          schY={aligned ? -5.5 : -7}
           schRotation={270}
           connections={{ pin1: "net.VM", pin2: "net.PD_DISCH" }}
         />
@@ -646,10 +650,10 @@ export default function Nema14ParallelResistors() {
   )
 }
 
-export async function createNema14ParallelResistorRepro() {
+export async function createNema14ParallelResistorRepro(aligned = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<Nema14ParallelResistors />)
+  circuit.add(<Nema14ParallelResistors aligned={aligned} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
