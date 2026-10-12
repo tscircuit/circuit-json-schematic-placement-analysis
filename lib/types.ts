@@ -590,7 +590,20 @@ export interface TransistorHasIncorrectRailOrientation {
   message: string
 }
 
+/** A discrete diode is separated from its switch in a repeated matrix branch. */
+export interface SwitchMatrixDiodeSeparatedFromSwitch {
+  lineItemType: "SwitchMatrixDiodeSeparatedFromSwitch"
+  switchSchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  switchSourcePortId: string
+  diodeSourcePortId: string
+  connectedPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | SwitchMatrixDiodeSeparatedFromSwitch
   | TransistorHasIncorrectRailOrientation
   | InductorSeparatedFromChipPin
   | SharedNodeDiodesInline

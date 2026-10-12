@@ -1,3 +1,4 @@
+import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
@@ -130,6 +131,7 @@ export class SchematicPlacementAnalysis {
       ResistorSeparatedFromChipPin: 0,
       InductorSeparatedFromChipPin: 0,
       RailPathTooSpreadOut: 0,
+      SwitchMatrixDiodeSeparatedFromSwitch: 0,
       SeriesLedChainNotOrdered: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
@@ -157,6 +159,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "TransistorHasIncorrectRailOrientation":
         return TransistorRailOrientationSolver.issueToString(issue)
+      case "SwitchMatrixDiodeSeparatedFromSwitch":
+        return SwitchMatrixDiodePlacementSolver.issueToString(issue)
       case "SeriesLedChainNotOrdered":
         return SeriesLedChainPlacementSolver.issueToString(issue)
       case "InductorSeparatedFromChipPin":

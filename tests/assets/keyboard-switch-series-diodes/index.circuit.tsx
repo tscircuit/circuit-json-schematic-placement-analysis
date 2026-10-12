@@ -146,7 +146,11 @@ const OFFLINE_PARTS_ENGINE: PartsEngine = {
   fetchPartCircuitJson: () => undefined,
 }
 
-export default () => (
+export default ({
+  groupedMatrixDiodes = false,
+}: {
+  groupedMatrixDiodes?: boolean
+} = {}) => (
   <board
     width="94mm"
     height="94mm"
@@ -1106,8 +1110,9 @@ export default () => (
           name={k.d}
           layer="bottom"
           schSectionName="Keys"
-          schX={24 + k.c * 7 + 3}
-          schY={14 - k.r * 9 - 3}
+          schX={24 + k.c * 7 + (groupedMatrixDiodes ? -3 : 3)}
+          schY={14 - k.r * 9 - (groupedMatrixDiodes ? 0 : 3)}
+          schRotation={groupedMatrixDiodes ? 180 : 0}
           pcbX={k.x - 7.2}
           pcbY={k.y - 1.4}
           pcbRotation="270deg"

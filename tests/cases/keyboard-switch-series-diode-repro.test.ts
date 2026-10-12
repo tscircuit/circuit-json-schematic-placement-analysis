@@ -52,18 +52,21 @@ test("reproduces the complete key-pcb sheet with separated switch series diodes"
   expectReproNets(circuitJson, branches)
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    ...Array(12).fill("SwitchMatrixDiodeSeparatedFromSwitch"),
     ...Array(9).fill("TwoPinComponentShouldBeVertical"),
     "NetLabelCollision",
     ...Array(3).fill("DecouplingCapacitorsNotCloseTogether"),
     "ResistorSeparatedFromChipPin",
     "RailPathTooSpreadOut",
   ])
-  expect(
-    createSchematicAnalysisFixtureSvg({
-      circuitJson,
-      analysis,
-      width: 2400,
-      height: 1600,
-    }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+  const svg = createSchematicAnalysisFixtureSvg({
+    circuitJson,
+    analysis,
+    width: 2400,
+    height: 1600,
+    highlightIssues: ["SwitchMatrixDiodeSeparatedFromSwitch"],
+  })
+  expect([...svg.matchAll(/class="issue-marker"/g)]).toHaveLength(24)
+  expect([...svg.matchAll(/data-listing-issue-number=/g)]).toHaveLength(12)
+  expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

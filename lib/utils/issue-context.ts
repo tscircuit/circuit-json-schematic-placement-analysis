@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "SwitchMatrixDiodeSeparatedFromSwitch":
+        addPlacement(issue.switchSchematicBox)
+        addPlacement(issue.diodeSchematicBox)
+        break
       case "SeriesLedChainNotOrdered":
         for (const placement of issue.ledSchematicBoxes) addPlacement(placement)
         break
