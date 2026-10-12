@@ -52,11 +52,16 @@ export async function createCurrentSenseShuntPlacement(
         to=".U1 > .IN_POS"
         schDisplayLabel="DRIVE"
       />
-      <trace
-        name="T2"
-        from=".RSHUNT > .pin2"
-        to=".U1 > .IN_NEG"
-        schDisplayLabel="WINDING"
+      {/* Keep the displaced sense branch explicitly labeled under current core. */}
+      <netlabel
+        net="WINDING"
+        connectsTo=".RSHUNT > .pin2"
+        inline={layout !== "displaced"}
+      />
+      <netlabel
+        net="WINDING"
+        connectsTo=".U1 > .IN_NEG"
+        inline={layout !== "displaced"}
       />
       <trace name="T3" from=".U1 > .VS" to="net.V3V3" />
       <trace name="T4" from=".U1 > .REF1" to="net.V3V3" />

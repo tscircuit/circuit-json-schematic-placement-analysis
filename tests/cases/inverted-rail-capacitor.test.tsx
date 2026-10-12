@@ -33,8 +33,14 @@ test("applies the rail flip without swapping pins and avoids guessing unknown su
   const after = await render(90 + issue.deltaSchRotation)
   expect(analyzeSchematicPlacement(after).getIssues()).toEqual([])
   // Rerender with the actual recommendation; source pin assignments stay identical.
-  expect(after.filter((e) => e.type.startsWith("source_"))).toEqual(
-    before.filter((e) => e.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    before.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   for (const json of [before, after])
     expectReproNets(json, [

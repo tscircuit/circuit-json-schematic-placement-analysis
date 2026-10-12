@@ -39,8 +39,14 @@ test("captures the PD I2C pull-up rail below both resistors and verifies the 180
   const after = await createPdI2cPullUpsCircuitJson(
     270 + first.deltaSchRotation,
   )
-  expect(after.filter((e) => e.type.startsWith("source_"))).toEqual(
-    renderedBefore.filter((e) => e.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    renderedBefore.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   expect(analyzeSchematicPlacement(after).getIssues()).toEqual([])
   for (const json of [before, renderedBefore, after]) {

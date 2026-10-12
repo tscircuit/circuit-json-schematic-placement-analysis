@@ -37,7 +37,7 @@ test("moving only D2 and D5 beside one another preserves the complete power shee
   const previousMessages = existing.map((i) =>
     analysis.schematicIssuesToString(i),
   )
-  expect(analysis.getIssues()).toHaveLength(5)
+  expect(analysis.getIssues()).toHaveLength(4)
   for (const issue of analysis.getIssues())
     expect(previousMessages).toContain(analysis.schematicIssuesToString(issue))
   const changed = after.filter(

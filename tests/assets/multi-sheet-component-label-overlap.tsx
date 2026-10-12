@@ -13,7 +13,7 @@ const LabelCollisionBlock = ({
   prefix,
   ...props
 }: SubcircuitProps & { prefix: string }) => (
-  <subcircuit {...props}>
+  <subcircuit {...props} schMaxTraceDistance={0}>
     <chip name={`${prefix}1`} schX="-2.2" schY="1" pinLabels={PIN_LABELS} />
     <chip name={`${prefix}2`} schX="1.5" schY="1" pinLabels={PIN_LABELS} />
     <chip name={`${prefix}3`} schX="0" schY="-1" pinLabels={PIN_LABELS} />
@@ -43,6 +43,7 @@ const LabelCollisionBlock = ({
 
 export async function createMultiSheetComponentLabelOverlapCircuitJson(): Promise<CircuitJson> {
   const circuit = new Circuit()
+  circuit.pcbDisabled = true
   circuit.add(
     <board>
       <schematicsheet name="Power" displayName="Power" sheetIndex={0} />

@@ -3,8 +3,8 @@ import { Circuit } from "@tscircuit/core"
 // Complete display sheet from rushabhcodes/ESP32-E-Reader v1.0.58.
 // https://tscircuit.com/rushabhcodes/ESP32-E-Reader?version=1.0.58
 // Source TSX expanded in place; PCB/CAD data and other sheets omitted.
-// This core uses absolute custom-symbol port coordinates and native diode
-// terminal aliases (the source import numbers cathode=1, anode=2).
+// Custom-symbol ports use local coordinates. Native diode terminal aliases
+// preserve the source import's cathode=1, anode=2 connections.
 export default function EreaderDisplay({
   compactStage = false,
 }: {
@@ -273,8 +273,8 @@ export default function EreaderDisplay({
               aliases={["GDR"]}
               pinNumber={2}
               direction={"right"}
-              schX={8.75}
-              schY={10.25}
+              schX={1.75}
+              schY={2.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -288,8 +288,8 @@ export default function EreaderDisplay({
               aliases={["RESE"]}
               pinNumber={3}
               direction={"right"}
-              schX={8.75}
-              schY={9.75}
+              schX={1.75}
+              schY={1.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -303,8 +303,8 @@ export default function EreaderDisplay({
               aliases={["NC4"]}
               pinNumber={4}
               direction={"left"}
-              schX={5.25}
-              schY={9.75}
+              schX={-1.75}
+              schY={1.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -318,8 +318,8 @@ export default function EreaderDisplay({
               aliases={["VSH2"]}
               pinNumber={5}
               direction={"right"}
-              schX={8.75}
-              schY={9.25}
+              schX={1.75}
+              schY={1.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -333,8 +333,8 @@ export default function EreaderDisplay({
               aliases={["TSCL"]}
               pinNumber={6}
               direction={"down"}
-              schX={6.55}
-              schY={4.3}
+              schX={-0.45}
+              schY={-3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -348,8 +348,8 @@ export default function EreaderDisplay({
               aliases={["TSDA"]}
               pinNumber={7}
               direction={"down"}
-              schX={6.85}
-              schY={4.3}
+              schX={-0.15}
+              schY={-3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -363,8 +363,8 @@ export default function EreaderDisplay({
               aliases={["GND8"]}
               pinNumber={8}
               direction={"down"}
-              schX={7.15}
-              schY={4.3}
+              schX={0.15}
+              schY={-3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -378,8 +378,8 @@ export default function EreaderDisplay({
               aliases={["NC1"]}
               pinNumber={1}
               direction={"left"}
-              schX={5.25}
-              schY={10.25}
+              schX={-1.75}
+              schY={2.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -393,8 +393,8 @@ export default function EreaderDisplay({
               aliases={["BUSY"]}
               pinNumber={9}
               direction={"left"}
-              schX={5.25}
-              schY={9.25}
+              schX={-1.75}
+              schY={1.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -408,8 +408,8 @@ export default function EreaderDisplay({
               aliases={["RST"]}
               pinNumber={10}
               direction={"left"}
-              schX={5.25}
-              schY={8.75}
+              schX={-1.75}
+              schY={0.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -423,8 +423,8 @@ export default function EreaderDisplay({
               aliases={["DC"]}
               pinNumber={11}
               direction={"left"}
-              schX={5.25}
-              schY={8.25}
+              schX={-1.75}
+              schY={0.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -438,8 +438,8 @@ export default function EreaderDisplay({
               aliases={["CS"]}
               pinNumber={12}
               direction={"left"}
-              schX={5.25}
-              schY={7.75}
+              schX={-1.75}
+              schY={-0.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -453,8 +453,8 @@ export default function EreaderDisplay({
               aliases={["SCLK"]}
               pinNumber={13}
               direction={"left"}
-              schX={5.25}
-              schY={7.25}
+              schX={-1.75}
+              schY={-0.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -468,8 +468,8 @@ export default function EreaderDisplay({
               aliases={["MOSI"]}
               pinNumber={14}
               direction={"left"}
-              schX={5.25}
-              schY={6.75}
+              schX={-1.75}
+              schY={-1.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -483,8 +483,8 @@ export default function EreaderDisplay({
               aliases={["VDDIO"]}
               pinNumber={15}
               direction={"up"}
-              schX={6.85}
-              schY={11.7}
+              schX={-0.15}
+              schY={3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -498,8 +498,8 @@ export default function EreaderDisplay({
               aliases={["VDD"]}
               pinNumber={16}
               direction={"up"}
-              schX={7.15}
-              schY={11.7}
+              schX={0.15}
+              schY={3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -513,8 +513,8 @@ export default function EreaderDisplay({
               aliases={["GND17"]}
               pinNumber={17}
               direction={"down"}
-              schX={7.45}
-              schY={4.3}
+              schX={0.45}
+              schY={-3.7}
               schStemLength={0.35}
             />
             <schematictext
@@ -528,8 +528,8 @@ export default function EreaderDisplay({
               aliases={["VDD1"]}
               pinNumber={18}
               direction={"right"}
-              schX={8.75}
-              schY={8.75}
+              schX={1.75}
+              schY={0.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -543,8 +543,8 @@ export default function EreaderDisplay({
               aliases={["NC19"]}
               pinNumber={19}
               direction={"right"}
-              schX={8.75}
-              schY={8.25}
+              schX={1.75}
+              schY={0.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -558,8 +558,8 @@ export default function EreaderDisplay({
               aliases={["VSH1"]}
               pinNumber={20}
               direction={"right"}
-              schX={8.75}
-              schY={7.75}
+              schX={1.75}
+              schY={-0.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -573,8 +573,8 @@ export default function EreaderDisplay({
               aliases={["PREVGH"]}
               pinNumber={21}
               direction={"right"}
-              schX={8.75}
-              schY={7.25}
+              schX={1.75}
+              schY={-0.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -588,8 +588,8 @@ export default function EreaderDisplay({
               aliases={["VSL"]}
               pinNumber={22}
               direction={"right"}
-              schX={8.75}
-              schY={6.75}
+              schX={1.75}
+              schY={-1.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -603,8 +603,8 @@ export default function EreaderDisplay({
               aliases={["PREVGL"]}
               pinNumber={23}
               direction={"right"}
-              schX={8.75}
-              schY={6.25}
+              schX={1.75}
+              schY={-1.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -618,8 +618,8 @@ export default function EreaderDisplay({
               aliases={["VCOM"]}
               pinNumber={24}
               direction={"right"}
-              schX={8.75}
-              schY={5.75}
+              schX={1.75}
+              schY={-2.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -633,8 +633,8 @@ export default function EreaderDisplay({
               aliases={["SHIELD1"]}
               pinNumber={25}
               direction={"left"}
-              schX={5.25}
-              schY={6.25}
+              schX={-1.75}
+              schY={-1.75}
               schStemLength={0.35}
             />
             <schematictext
@@ -648,8 +648,8 @@ export default function EreaderDisplay({
               aliases={["SHIELD2"]}
               pinNumber={26}
               direction={"left"}
-              schX={5.25}
-              schY={5.75}
+              schX={-1.75}
+              schY={-2.25}
               schStemLength={0.35}
             />
             <schematictext
@@ -762,8 +762,8 @@ export default function EreaderDisplay({
               pinNumber={3}
               aliases={["D"]}
               direction={"up"}
-              schX={16.1}
-              schY={8.5}
+              schX={0}
+              schY={0.4}
               schStemLength={0.2}
             />
             <port
@@ -771,8 +771,8 @@ export default function EreaderDisplay({
               pinNumber={1}
               aliases={["G"]}
               direction={"left"}
-              schX={15.500000000000002}
-              schY={8.1}
+              schX={-0.6}
+              schY={0}
               schStemLength={0.2}
             />
             <port
@@ -780,8 +780,8 @@ export default function EreaderDisplay({
               pinNumber={2}
               aliases={["S"]}
               direction={"down"}
-              schX={16.1}
-              schY={7.5}
+              schX={0}
+              schY={-0.6}
               schStemLength={0.2}
             />
             <schematicpath

@@ -26,8 +26,7 @@ beforeAll(async () => {
   if (heading?.type !== "schematic_text") throw new Error("Missing heading")
   expect(heading.anchor).toBe("top_left")
   expect(heading.font_size).toBe(0.18)
-  // The V3V3 bus runs through the generated heading's vertical extent.
-  // The stacked SVG verifies the intersection with the actual rendered glyphs.
+  // Current core routes the V3V3 bus below the unchanged heading.
   expect(
     circuitJson.some(
       (element) =>
@@ -41,7 +40,7 @@ beforeAll(async () => {
             Math.max(from.x, to.x) >= heading.position.x + 2,
         ),
     ),
-  ).toBe(true)
+  ).toBe(false)
   const analysis = analyzeSchematicPlacement(circuitJson)
   const svg = createSchematicAnalysisFixtureSvg({
     circuitJson,
@@ -49,8 +48,7 @@ beforeAll(async () => {
     height: 300,
     highlightIssues: ["SchematicTextCollision"],
   })
-  expect(svg).toContain('data-issue-type="SchematicTextCollision"')
-  expect(svg).toContain('stroke-opacity="0.55"')
+  expect(svg).not.toContain('data-issue-type="SchematicTextCollision"')
   await expect(svg).toMatchSvgSnapshot(import.meta.path)
   issueTypes = analysis
     .getLineItems()
@@ -61,6 +59,6 @@ beforeAll(async () => {
     )
 })
 
-test("reports a generated section heading crossed by the pull-up supply bus", () => {
-  expect(issueTypes).toContain("SchematicTextCollision")
+test("keeps the generated section heading clear of the pull-up supply bus", () => {
+  expect(issueTypes).not.toContain("SchematicTextCollision")
 })

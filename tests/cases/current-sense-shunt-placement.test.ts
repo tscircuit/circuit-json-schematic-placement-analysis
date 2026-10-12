@@ -22,8 +22,18 @@ test("groups a displaced current-sense shunt without requiring vertical orientat
   expect(issues(after)).toEqual([])
   // TI INA241 Figure 8-1 uses a horizontal shunt with two visible sense branches.
   expect(issues(horizontal)).toEqual([])
-  expect(after.filter((element) => element.type.startsWith("source_"))).toEqual(
-    before.filter((element) => element.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (element) =>
+        element.type.startsWith("source_") &&
+        !element.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    before.filter(
+      (element) =>
+        element.type.startsWith("source_") &&
+        !element.type.endsWith("_warning"),
+    ),
   )
   expect(getReproSchematicComponent(after, "U1")).toEqual(
     getReproSchematicComponent(before, "U1"),

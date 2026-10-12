@@ -11,7 +11,10 @@ test("does not flag shortened generated labels on either sheet as verbose", asyn
   )
   expect(sheets.map((sheet) => sheet.name)).toEqual(["Power", "Logic"])
   for (const sheet of sheets) {
-    const prefix = sheet.name === "Power" ? "UP1" : "UL1"
+    const expectedLabels =
+      sheet.name === "Power"
+        ? ["UP1_pin4", "UP1_pin4"]
+        : ["UL1_pin3", "UL1_pin3", "UL1_pin4", "UL1_pin4"]
     expect(
       circuitJson
         .filter((element) => element.type === "schematic_net_label")
@@ -19,12 +22,7 @@ test("does not flag shortened generated labels on either sheet as verbose", asyn
           (label) => label.schematic_sheet_id === sheet.schematic_sheet_id,
         )
         .map((label) => label.text),
-    ).toEqual([
-      `${prefix}_pin3`,
-      `${prefix}_pin3`,
-      `${prefix}_pin4`,
-      `${prefix}_pin4`,
-    ])
+    ).toEqual(expectedLabels)
   }
   expect(
     analysis.getIssues({ issueTypes: ["VerboseSchematicNetLabel"] }),

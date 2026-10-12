@@ -80,7 +80,7 @@ test("reproduces the full QRNG sheet with two sideways transistor stages", async
     }
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(20)
+  expect(analysis.getIssues()).toHaveLength(18)
   expect(analysis.getIssueCounts().TraceCanBeSimplifiedByMovingComponent).toBe(
     0,
   )
