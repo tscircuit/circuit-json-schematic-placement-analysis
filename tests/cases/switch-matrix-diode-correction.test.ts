@@ -112,11 +112,13 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     before: { circuitJson: before, analysis: baseline },
     after: { circuitJson: after, analysis },
     issues,
-    afterDiagnostic: (issue: (typeof issues)[number]) => {
+    beforeDiagnostic: (issue: (typeof issues)[number]) => {
       if (issue.lineItemType !== "SwitchMatrixDiodeSeparatedFromSwitch")
         throw new Error("Expected a switch/diode finding")
-      return `${issue.switchSchematicBox.sourceComponentName} / ${issue.diodeSchematicBox.sourceComponentName}: no placement finding.\nDirect wire; original pin connections preserved.`
+      return `${issue.switchSchematicBox.sourceComponentName} / ${issue.diodeSchematicBox.sourceComponentName}: diode separated from switch.`
     },
+    afterDiagnostic:
+      "All 12 diodes are beside their switches.\nAll 12 switch/diode connections are continuous straight wires.\nOriginal pin connections preserved; full analysis reports 0 findings.",
     note: "Complete 92-component TSX circuit; unchanged electrical connections.\nFull analysis: 0 findings on the rearranged sheet.",
   }
   expect(() =>
@@ -126,33 +128,62 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     }),
   ).toThrow("After layout still has 29 unresolved findings")
   const svg = createPlacementComparisonSvg(comparison)
-  // Equal physical scale in both panels, even when the full render transforms differ.
-  const pixelsPerUnit = [
+  // Both panels must show the whole matrix at the same scale and world coordinates.
+  const panels = [
     ...svg.matchAll(/<svg[^>]*data-real-to-screen-transform=[^>]*>/g),
   ].map(([root]) => {
-    const scale = Math.abs(Number(root.match(/matrix\(([^, ]+)/)![1]))
+    const [a, , , d, tx, ty] = root
+      .match(/matrix\(([^)]+)\)/)![1]!
+      .split(/[\s,]+/)
+      .map(Number) as [number, number, number, number, number, number]
     const viewBox = root
       .match(/viewBox="([^"]+)"/)![1]!
       .split(" ")
       .map(Number)
-    return scale * Math.min(600 / viewBox[2]!, 360 / viewBox[3]!)
+    const width = Number(root.match(/\bwidth="([\d.]+)"/)![1])
+    const height = Number(root.match(/\bheight="([\d.]+)"/)![1])
+    return {
+      pixelsPerUnit: a * Math.min(width / viewBox[2]!, height / viewBox[3]!),
+      left: (viewBox[0]! - tx) / a,
+      right: (viewBox[0]! + viewBox[2]! - tx) / a,
+      bottom: (viewBox[1]! + viewBox[3]! - ty) / d,
+      top: (viewBox[1]! - ty) / d,
+    }
   })
-  expect(pixelsPerUnit).toHaveLength(24)
-  for (let i = 0; i < pixelsPerUnit.length; i += 2)
-    expect(pixelsPerUnit[i]).toBeCloseTo(pixelsPerUnit[i + 1]!, 6)
+  expect(panels).toHaveLength(2)
+  for (const key of [
+    "pixelsPerUnit",
+    "left",
+    "right",
+    "bottom",
+    "top",
+  ] as const)
+    expect(panels[0]![key]).toBeCloseTo(panels[1]![key], 6)
   expect(svg).not.toContain('stroke="#2563eb"')
-  expect(svg.match(/data-comparison-issue-number=/g)).toHaveLength(12)
+  expect(svg.match(/data-comparison-panel=/g)).toHaveLength(2)
   for (let number = 1; number <= 12; number++) {
+    for (const [index, circuitJson] of [before, after].entries()) {
+      const panel = panels[index]!
+      for (const name of [`SW${number}`, `D${number}`]) {
+        const component = getReproSchematicComponent(circuitJson, name)
+        expect(
+          component.center.x - component.size.width / 2 >= panel.left &&
+            component.center.x + component.size.width / 2 <= panel.right &&
+            component.center.y - component.size.height / 2 >= panel.bottom &&
+            component.center.y + component.size.height / 2 <= panel.top,
+        ).toBe(true)
+      }
+    }
     expect(
       svg.match(new RegExp(`data-issue-number="${number}"`, "g")),
     ).toHaveLength(2)
     expect(
       svg.match(new RegExp(`data-listing-issue-number="${number}"`, "g")),
     ).toHaveLength(1)
-    expect(svg).toContain(`SW${number} / D${number}: no placement finding.`)
+    expect(svg).toContain(
+      `SW${number} / D${number}: diode separated from switch.`,
+    )
   }
-  // Every crop reuses one of the two full-sheet drawings instead of embedding it again.
-  expect(svg.match(/<g id="comparison-sheet-\d+">/g)).toHaveLength(2)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "comparison")
   const sections = [
     {

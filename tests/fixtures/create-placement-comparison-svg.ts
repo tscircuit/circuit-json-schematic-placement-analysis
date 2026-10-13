@@ -2,7 +2,6 @@ import type { CircuitJson } from "circuit-json"
 import type {
   SchematicPlacementAnalysis,
   SchematicPlacementIssue,
-  SchematicIssueBounds,
 } from "lib/index"
 import { renderIssueOverlay } from "lib/svg/create-issue-overlay-svg"
 import { createAnalyzerTextSvg } from "lib/svg/create-analyzer-text-svg"
@@ -13,157 +12,131 @@ import {
 
 type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 
-/** Render the complete circuits, then frame the same components at equal scale.
- * Keep diagnostics below each panel; never label filtered analysis as a clean sheet.
- */
+/** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
   before: State
   after: State
   issues: readonly SchematicPlacementIssue[]
-  afterDiagnostic: (issue: SchematicPlacementIssue) => string
+  beforeDiagnostic: (issue: SchematicPlacementIssue) => string
+  afterDiagnostic: string
   note: string
 }) {
-  const { before, after } = input
+  const { before, after, issues } = input
   const unresolved = after.analysis.getIssues()
   if (unresolved.length)
     throw new Error(
       `After layout still has ${unresolved.length} unresolved findings`,
     )
-  if (!input.issues.length) throw new Error("Comparison has no issues")
-  const sheets = new Map<string, string>()
-  const definitions: string[] = []
-  const reuseSheet = (svg: string) => {
-    const root = svg.match(/^<svg\b[^>]*>/)![0]
-    const closing = svg.lastIndexOf("</svg>")
-    const overlay = svg.indexOf('<g class="placement-issue-overlays">')
-    const body = svg.slice(root.length, overlay < 0 ? closing : overlay)
-    let id = sheets.get(body)
-    if (!id) {
-      id = `comparison-sheet-${sheets.size}`
-      sheets.set(body, id)
-      // Scope renderer IDs to each definition when both sheets share one SVG.
-      const content = body
-        .replace(/\sid="([^"]+)"/g, ` id="${id}-$1"`)
-        .replace(/url\(#([^)]+)\)/g, `url(#${id}-$1)`)
-        .replace(/href="#([^"]+)"/g, `href="#${id}-$1"`)
-      definitions.push(`<g id="${id}">${content}</g>`)
-    }
-    return `${root}<use href="#${id}" />${overlay < 0 ? "" : svg.slice(overlay, closing)}</svg>`
-  }
-  let offset = 0
-  const rows = input.issues.map((issue) => {
-    const issueIndex = before.analysis.getIssues().indexOf(issue)
-    if (issueIndex < 0)
-      throw new Error("Comparison issue is not in before analysis")
-    const schematicSheetId =
-      getIssueSchematicSheetContext(issue).schematicSheetId ?? ""
-    const width = 600
-    const height = 360
-    const original = renderIssueOverlay({
-      ...before,
-      schematicSheetId,
-      issueIndex,
-      width,
-      height,
-    })
-    if (!original.bounds) throw new Error("Comparison issue has no bounds")
-    const placements = getRelevantPlacementsForIssues({
-      issues: [issue],
-      componentPlacements: before.analysis
-        .getLineItems()
-        .filter((item) => item.lineItemType === "SchematicBoxPlacement"),
-      circuitJson: before.circuitJson,
-    })
-    const corrected = placements.map((placement) => {
-      const component = after.circuitJson.find(
-        (e) =>
-          e.type === "schematic_component" &&
-          e.source_component_id === placement.sourceComponentId,
-      )
-      if (component?.type !== "schematic_component")
-        throw new Error(
-          `Missing corrected component ${placement.sourceComponentId}`,
-        )
-      return {
-        left: component.center.x - component.size.width / 2,
-        right: component.center.x + component.size.width / 2,
-        bottom: component.center.y - component.size.height / 2,
-        top: component.center.y + component.size.height / 2,
-      }
-    })
-    if (!corrected.length) throw new Error("Comparison issue has no components")
-    const afterBounds = {
-      left: Math.min(...corrected.map((b) => b.left)),
-      right: Math.max(...corrected.map((b) => b.right)),
-      bottom: Math.min(...corrected.map((b) => b.bottom)),
-      top: Math.max(...corrected.map((b) => b.top)),
-    }
-    // Leave 0.8 schematic units around the components for labels and numbered markers.
-    const commonWidth =
-      Math.max(
-        original.bounds.right - original.bounds.left,
-        afterBounds.right - afterBounds.left,
-      ) + 1.6
-    // Keep the same vertical window so stationary neighbors do not jump between panels.
-    const bottom = Math.min(original.bounds.bottom, afterBounds.bottom) - 0.8
-    const top = Math.max(original.bounds.top, afterBounds.top) + 0.8
-    const frame = (bounds: SchematicIssueBounds) => ({
-      left: (bounds.left + bounds.right - commonWidth) / 2,
-      right: (bounds.left + bounds.right + commonWidth) / 2,
-      bottom,
-      top,
-    })
-    const beforeSvg = renderIssueOverlay({
-      ...before,
-      schematicSheetId,
-      issueIndex,
-      viewportBounds: frame(original.bounds),
-      showIssueGeometry: false,
-      width,
-      height,
-    }).svg
-    const afterSvg = renderIssueOverlay({
-      ...after,
-      schematicSheetId,
-      viewportBounds: frame(afterBounds),
-      showOverlay: false,
-      width,
-      height,
-    }).svg
-    const diagnostic =
-      "message" in issue && issue.message
-        ? issue.message
-        : before.analysis.schematicIssuesToString(issue)
-    const beforeText = createAnalyzerTextSvg(diagnostic, width, [
-      { number: issueIndex + 1, text: diagnostic, sheetId: schematicSheetId },
-    ])
-    const afterText = createAnalyzerTextSvg(input.afterDiagnostic(issue), width)
-    const textHeight = Math.max(
-      ...[beforeText, afterText].map((svg) =>
-        Number(svg.match(/height="([\d.]+)"/)![1]),
-      ),
-    )
-    const headerHeight = 56
-    const rowHeight = headerHeight + height + textHeight
-    const result = `<g data-comparison-issue-number="${issueIndex + 1}" transform="translate(0 ${offset})">
-<text x="18" y="35" font-family="sans-serif" font-size="24" fill="#172b3a">Before — finding #${issueIndex + 1}</text>
-<text x="${width + 18}" y="35" font-family="sans-serif" font-size="24" fill="#172b3a">After — corrected placement</text>
-<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${reuseSheet(beforeSvg)}</svg>
-<svg x="${width}" y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${reuseSheet(afterSvg)}</svg>
-<g transform="translate(0 ${headerHeight + height})">${beforeText}</g>
-<g transform="translate(${width} ${headerHeight + height})">${afterText}</g>
-</g>`
-    offset += rowHeight
-    return result
-  })
+  if (!issues.length) throw new Error("Comparison has no issues")
+  const schematicSheetId =
+    getIssueSchematicSheetContext(issues[0]!).schematicSheetId ?? ""
+  const issueTypes = [...new Set(issues.map((issue) => issue.lineItemType))]
+  const selected = before.analysis.getIssues({ issueTypes, schematicSheetId })
+  if (
+    selected.length !== issues.length ||
+    issues.some((issue) => !selected.includes(issue))
+  )
+    throw new Error("Comparison must include all matching issues on one sheet")
   const width = 1200
-  const note = createAnalyzerTextSvg(input.note, width)
+  const height = 900
+  const original = renderIssueOverlay({
+    ...before,
+    schematicSheetId,
+    issueTypes,
+    width,
+    height,
+  })
+  if (!original.bounds) throw new Error("Comparison issues have no bounds")
+  const placements = getRelevantPlacementsForIssues({
+    issues: [...issues],
+    componentPlacements: before.analysis
+      .getLineItems()
+      .filter((item) => item.lineItemType === "SchematicBoxPlacement"),
+    circuitJson: before.circuitJson,
+  })
+  const corrected = placements.map((placement) => {
+    const component = after.circuitJson.find(
+      (e) =>
+        e.type === "schematic_component" &&
+        e.source_component_id === placement.sourceComponentId,
+    )
+    if (component?.type !== "schematic_component")
+      throw new Error(
+        `Missing corrected component ${placement.sourceComponentId}`,
+      )
+    return {
+      left: component.center.x - component.size.width / 2,
+      right: component.center.x + component.size.width / 2,
+      bottom: component.center.y - component.size.height / 2,
+      top: component.center.y + component.size.height / 2,
+    }
+  })
+  if (!corrected.length) throw new Error("Comparison issues have no components")
+  // Include both layouts and leave room for labels and numbered markers.
+  // One shared window keeps stationary components in the same place in both panels.
+  const bounds = [original.bounds, ...corrected]
+  const viewportBounds = {
+    left: Math.min(...bounds.map((b) => b.left)) - 1.2,
+    right: Math.max(...bounds.map((b) => b.right)) + 1.2,
+    bottom: Math.min(...bounds.map((b) => b.bottom)) - 1.2,
+    top: Math.max(...bounds.map((b) => b.top)) + 1.2,
+  }
+  const beforeSvg = renderIssueOverlay({
+    ...before,
+    schematicSheetId,
+    issueTypes,
+    viewportBounds,
+    showIssueGeometry: false,
+    width,
+    height,
+  }).svg
+  const afterSvg = renderIssueOverlay({
+    ...after,
+    schematicSheetId,
+    viewportBounds,
+    showOverlay: false,
+    width,
+    height,
+  }).svg
+  // Each complete drawing is embedded once; keep renderer IDs unique across panels.
+  const scopeIds = (svg: string, prefix: string) =>
+    svg
+      .replace(/\sid="([^"]+)"/g, ` id="${prefix}-$1"`)
+      .replace(/url\(#([^)]+)\)/g, `url(#${prefix}-$1)`)
+      .replace(/href="#([^"]+)"/g, `href="#${prefix}-$1"`)
+  const markers = issues.map((issue) => ({
+    number: before.analysis.getIssues().indexOf(issue) + 1,
+    text: input.beforeDiagnostic(issue),
+    sheetId: schematicSheetId,
+  }))
+  const beforeText = createAnalyzerTextSvg(
+    markers.map((marker) => marker.text).join("\n"),
+    width,
+    markers,
+  )
+  const afterText = createAnalyzerTextSvg(input.afterDiagnostic, width)
+  const textHeight = Math.max(
+    ...[beforeText, afterText].map((svg) =>
+      Number(svg.match(/height="([\d.]+)"/)![1]),
+    ),
+  )
+  const headerHeight = 56
+  const note = createAnalyzerTextSvg(input.note, width * 2)
   const noteHeight = Number(note.match(/height="([\d.]+)"/)![1])
-  const totalHeight = offset + noteHeight
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${totalHeight}" viewBox="0 0 ${width} ${totalHeight}">
+  const noteY = headerHeight + height + textHeight
+  const totalHeight = noteY + noteHeight
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width * 2}" height="${totalHeight}" viewBox="0 0 ${width * 2} ${totalHeight}">
 <rect width="100%" height="100%" fill="white" />
-<defs>${definitions.join("\n")}</defs>
-${rows.join("\n")}
-<g transform="translate(0 ${offset})">${note}</g>
+<g data-comparison-panel="before">
+<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">Before — complete matrix, ${issues.length} findings</text>
+<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(beforeSvg, "before")}</svg>
+<g transform="translate(0 ${headerHeight + height})">${beforeText}</g>
+</g>
+<g data-comparison-panel="after" transform="translate(${width} 0)">
+<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">After — complete matrix, 0 findings</text>
+<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(afterSvg, "after")}</svg>
+<g transform="translate(0 ${headerHeight + height})">${afterText}</g>
+</g>
+<g transform="translate(0 ${noteY})">${note}</g>
 </svg>`.replace(/[ \t]+$/gm, "")
 }
