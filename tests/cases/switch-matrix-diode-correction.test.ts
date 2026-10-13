@@ -105,15 +105,18 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       ),
     ).toBe(true)
   }
-  const issue = baseline
-    .getIssues()
-    .find((i) => i.lineItemType === "SwitchMatrixDiodeSeparatedFromSwitch")!
+  const issues = baseline.getIssues({
+    issueTypes: ["SwitchMatrixDiodeSeparatedFromSwitch"],
+  })
   const comparison = {
     before: { circuitJson: before, analysis: baseline },
     after: { circuitJson: after, analysis },
-    issue,
-    afterDiagnostic:
-      "SW1 / D1: no placement finding.\nAll 12 switch/diode pairs pass.",
+    issues,
+    afterDiagnostic: (issue: (typeof issues)[number]) => {
+      if (issue.lineItemType !== "SwitchMatrixDiodeSeparatedFromSwitch")
+        throw new Error("Expected a switch/diode finding")
+      return `${issue.switchSchematicBox.sourceComponentName} / ${issue.diodeSchematicBox.sourceComponentName}: no placement finding.\nDirect wire; original pin connections preserved.`
+    },
     note: "Complete 92-component TSX circuit; unchanged electrical connections.\nFull analysis: 0 findings on the rearranged sheet.",
   }
   expect(() =>
@@ -132,13 +135,24 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       .match(/viewBox="([^"]+)"/)![1]!
       .split(" ")
       .map(Number)
-    return scale * Math.min(600 / viewBox[2]!, 540 / viewBox[3]!)
+    return scale * Math.min(600 / viewBox[2]!, 360 / viewBox[3]!)
   })
-  expect(pixelsPerUnit).toHaveLength(2)
-  expect(pixelsPerUnit[0]).toBeCloseTo(pixelsPerUnit[1]!, 6)
+  expect(pixelsPerUnit).toHaveLength(24)
+  for (let i = 0; i < pixelsPerUnit.length; i += 2)
+    expect(pixelsPerUnit[i]).toBeCloseTo(pixelsPerUnit[i + 1]!, 6)
   expect(svg).not.toContain('stroke="#2563eb"')
-  expect(svg.match(/data-issue-number="1"/g)).toHaveLength(2)
-  expect(svg.match(/data-listing-issue-number="1"/g)).toHaveLength(1)
+  expect(svg.match(/data-comparison-issue-number=/g)).toHaveLength(12)
+  for (let number = 1; number <= 12; number++) {
+    expect(
+      svg.match(new RegExp(`data-issue-number="${number}"`, "g")),
+    ).toHaveLength(2)
+    expect(
+      svg.match(new RegExp(`data-listing-issue-number="${number}"`, "g")),
+    ).toHaveLength(1)
+    expect(svg).toContain(`SW${number} / D${number}: no placement finding.`)
+  }
+  // Every crop reuses one of the two full-sheet drawings instead of embedding it again.
+  expect(svg.match(/<g id="comparison-sheet-\d+">/g)).toHaveLength(2)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "comparison")
   expect(
     createIssueReproSnapshot({
