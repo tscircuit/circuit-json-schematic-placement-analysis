@@ -155,6 +155,7 @@ export function createPlacementComparisonSvg(input: {
 <svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(afterSvg, "after")}</svg>
 <g transform="translate(0 ${headerHeight + height})">${afterText}</g>
 </g>
+<line x1="${width}" y1="0" x2="${width}" y2="${noteY}" stroke="#9ca3af" stroke-width="2" />
 <g transform="translate(0 ${noteY})">${note}</g>
 </svg>`.replace(/[ \t]+$/gm, "")
 }
