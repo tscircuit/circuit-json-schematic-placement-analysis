@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createKeyboardSwitchDiodeRepro } from "../assets/keyboard-switch-series-diodes"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
+import { createSectionedSchematicSnapshot } from "../fixtures/create-sectioned-schematic-snapshot"
 import { createPlacementComparisonSvg } from "../fixtures/create-placement-comparison-svg"
 import {
   expectReproRendered,
@@ -154,13 +154,103 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
   // Every crop reuses one of the two full-sheet drawings instead of embedding it again.
   expect(svg.match(/<g id="comparison-sheet-\d+">/g)).toHaveLength(2)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "comparison")
-  expect(
-    createIssueReproSnapshot({
-      circuitJson: after,
-      analysis,
-      showFullSchematic: true,
-      width: 2400,
-      height: 800,
+  const sections = [
+    {
+      title: "Battery input and charger",
+      componentNames: [
+        "J_BAT",
+        "U3",
+        "R_VPCC_H",
+        "R_VPCC_L",
+        "C_VUSB",
+        "C_VBAT",
+        "R_PROG1",
+        "R_PROG3",
+        "R_THERM",
+      ],
+    },
+    {
+      title: "Boost converter and VSYS capacitors",
+      componentNames: ["U4", "L1", "R_FBH", "R_FBL", "C_VSYS", "C_BVIN"],
+      padding: { left: 1, top: 1, right: 1.2 },
+    },
+    {
+      title: "USB input and protection",
+      componentNames: ["USBC", "R_CC1", "R_CC2", "U6"],
+      padding: { left: 1 },
+    },
+    { title: "3.3 V regulator", componentNames: ["U2"] },
+    {
+      title: "Rotary encoder",
+      componentNames: ["ENC1"],
+      padding: { left: 3, right: 3, top: 1, bottom: 1 },
+    },
+    { title: "Microcontroller", componentNames: ["U1"] },
+    { title: "Reset controls", componentNames: ["SW_RST", "R_EN", "C_EN"] },
+    { title: "Boot controls", componentNames: ["SW_BOOT", "R_BOOT"] },
+    {
+      title: "3.3 V capacitor bank",
+      componentNames: ["C_OUT", "C_BULK", "C_DEC"],
+    },
+    {
+      title: "VBUS capacitor bank — first half",
+      padding: { right: 0.45, top: 1, bottom: 1 },
+      componentNames: [
+        "C_BVOUT",
+        "C_BVOUT2",
+        "C_IN",
+        "C_LS",
+        "C_LED1",
+        "C_LED2",
+        "C_LED3",
+        "C_LED4",
+      ],
+    },
+    {
+      title: "VBUS capacitor bank — second half",
+      componentNames: Array.from({ length: 8 }, (_, i) => `C_LED${i + 5}`),
+      padding: { left: 0.45, top: 1, bottom: 1 },
+    },
+    ...Array.from({ length: 6 }, (_, i) => {
+      const first = i * 2 + 1
+      return {
+        title: `Keys ${first}–${first + 1}, diodes and RGB LEDs`,
+        // Keep the adjacent keyboard row outside this viewport.
+        padding: { top: 0.6, bottom: 0.6 },
+        componentNames: [first, first + 1].flatMap((n) => [
+          `SW${n}`,
+          `D${n}`,
+          `LED${n}`,
+        ]),
+      }
     }),
-  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
+    {
+      title: "LED data level shifter",
+      componentNames: ["U5", "R_LED"],
+      padding: { bottom: 0.5 },
+    },
+    {
+      title: "Debug test points",
+      componentNames: [
+        "TP_GND1",
+        "TP_GND2",
+        "TP_VBAT",
+        "TP_VUSB",
+        "TP_5V",
+        "TP_3V3",
+        "TP_EN",
+        "TP_LED",
+      ],
+    },
+  ]
+  const sectioned = createSectionedSchematicSnapshot({
+    circuitJson: after,
+    analysis,
+    sections,
+  })
+  expect(sectioned.match(/data-schematic-section=/g)).toHaveLength(
+    sections.length,
+  )
+  expect(sectioned).toContain("Complete sheet: 92 schematic components")
+  expect(sectioned).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })
