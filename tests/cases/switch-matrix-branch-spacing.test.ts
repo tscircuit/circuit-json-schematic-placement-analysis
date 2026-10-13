@@ -44,7 +44,7 @@ test("the same solver detects excess space between adjacent-pair matrix rows", a
     beforeDiagnostic: () =>
       "Pairs are adjacent, but connected rows have 5.1 units of unused space.",
     afterDiagnostic:
-      "Rows compacted into a 3 × 4 matrix.\nRGB symbols preserved and moved below the matrix.\nFull-sheet analysis: 0 reported issues.",
+      "Rows compacted into a 3 × 4 matrix.\nFull-sheet analysis: 0 reported issues.",
     note: "Same 92-component TSX circuit and pin connections.\nMatrix spacing is checked after each diode is beside its switch.",
   })
   expect(svg).toContain("SwitchMatrixBranchesTooSpreadOut")
