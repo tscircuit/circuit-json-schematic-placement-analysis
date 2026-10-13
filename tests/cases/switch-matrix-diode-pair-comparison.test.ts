@@ -76,6 +76,7 @@ test("shows SW1 and D1 before and after at the same close-up scale", async () =>
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width * 2}" height="${totalHeight}" viewBox="0 0 ${width * 2} ${totalHeight}">
 <rect width="100%" height="100%" fill="white" />
 ${panels.join("\n")}
+<line x1="${width}" y1="0" x2="${width}" y2="${totalHeight}" stroke="#9ca3af" stroke-width="2" />
 </svg>`
   expect(drawings[0]!.match(/data-issue-number=/g)).toHaveLength(2)
   expect(drawings[1]).not.toContain("data-issue-number=")
