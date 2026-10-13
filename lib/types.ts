@@ -99,7 +99,43 @@ export interface SchematicBoxInnerLabelCollision {
   lineItemType: "SchematicBoxInnerLabelCollision"
   schematicBox: SchematicBoxPlacement
   overlappingSides: SchematicSide[]
+  /** Required clearance between different-side pin labels, in schematic units. */
+  minimumLabelGap: number
+  /** Exact reported pairs, with displayed text and bounds for highlighting.
+   * Optional for previously serialized reports. */
+  labelPairs?: SchematicPinLabelCollisionPair[]
+  /** Apply the suggested dimensions together, keeping pins along their edges. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
   message: string
+}
+
+/** Inner pin-label text crosses the boundary of its own schematic box. */
+export interface SchematicBoxInnerLabelOutOfBounds {
+  lineItemType: "SchematicBoxInnerLabelOutOfBounds"
+  schematicBox: SchematicBoxPlacement
+  overflowingLabels: Array<
+    SchematicPinLabelBounds & { outsideEdges: SchematicSide[] }
+  >
+  /** Apply together at the same center, preserving pin positions along each edge. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
+  message: string
+}
+
+export interface SchematicPinLabelCollisionPair {
+  firstLabel: SchematicPinLabelBounds
+  secondLabel: SchematicPinLabelBounds
+  /** Largest separating-axis gap; zero when the label bounds overlap. */
+  measuredGap: number
+  kind: "overlap" | "clearance"
+}
+
+export interface SchematicPinLabelBounds {
+  schematicPortId: string
+  text: string
+  side: SchematicSide
+  bounds: SchematicIssueBounds
 }
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"
@@ -502,6 +538,18 @@ export interface CapacitorSeparatedFromChipPins {
   message: string
 }
 
+/** A crystal placed far across its host chip from its two connected pins. */
+export interface CrystalSeparatedFromChipPins {
+  lineItemType: "CrystalSeparatedFromChipPins"
+  hostSchematicBox: SchematicBoxPlacement
+  crystalSchematicBox: SchematicBoxPlacement
+  /** Connected chip pins, in the order of the crystal's source ports. */
+  chipSourcePortIds: [string, string]
+  maxPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** The series element and grounded shunt branches of a signal pi filter are separated. */
 export interface PiFilterComponentsNotGrouped {
   lineItemType: "PiFilterComponentsNotGrouped"
@@ -612,6 +660,7 @@ export type SchematicPlacementIssue =
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
   | CapacitorSeparatedFromChipPins
+  | CrystalSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
@@ -627,6 +676,7 @@ export type SchematicPlacementIssue =
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision
+  | SchematicBoxInnerLabelOutOfBounds
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | ParallelRcNotAligned

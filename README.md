@@ -192,3 +192,12 @@ issue per component, with combined affected sides and width/height guidance.
 largest excess. Box width, pin padding and inner-label checks skip built-in
 symbols and custom components with `is_box_with_pins: false`. Older box exports
 that omit the flag remain supported.
+
+`SchematicBoxInnerLabelOutOfBounds` reports inner pin labels extending beyond
+any edge of their own box, even when no other label collides with them. Each
+issue identifies the `overflowingLabels`, their rendered text bounds and
+`outsideEdges`; SVG artifacts highlight those labels. Suggested dimensions
+leave 0.1 schematic units of edge clearance when applied together at the same
+center with pin positions preserved along each edge. Reference/value text and
+external pin numbers are excluded. This check uses the same displayed text and
+font-size geometry as the inner-label collision check.
