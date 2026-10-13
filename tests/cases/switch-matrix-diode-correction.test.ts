@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test"
+import { beforeAll, expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createKeyboardSwitchDiodeRepro } from "../assets/keyboard-switch-series-diodes"
@@ -9,8 +9,13 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
+let before: CircuitJson
+
+beforeAll(async () => {
+  before = await createKeyboardSwitchDiodeRepro()
+})
+
 test("grouping the matrix diodes clears all twelve findings and preserves the complete circuit", async () => {
-  const before = await createKeyboardSwitchDiodeRepro()
   const after = await createKeyboardSwitchDiodeRepro(true)
   expectReproRendered(after, 92)
   // Compare electrical records; generated source warnings contain render-specific IDs.
@@ -58,6 +63,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
         "C_DEC",
         "C_LS",
         ...Array.from({ length: 12 }, (_, i) => `C_LED${i + 1}`),
+        ...Array.from({ length: 12 }, (_, i) => `LED${i + 1}`),
       ].includes(component.name!)
     ) {
       expect(next).toEqual(original)
@@ -112,6 +118,21 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     before: { circuitJson: before, analysis: baseline },
     after: { circuitJson: after, analysis },
     issues,
+    contextSourceComponentIds: [
+      "U5",
+      "R_LED",
+      "TP_EN",
+      "TP_LED",
+      "TP_5V",
+      "TP_3V3",
+      "TP_VBAT",
+      "TP_VUSB",
+      "TP_GND1",
+      "TP_GND2",
+      ...Array.from({ length: 12 }, (_, i) => `LED${i + 1}`),
+    ].map(
+      (name) => getReproSchematicComponent(before, name).source_component_id!,
+    ),
     beforeDiagnostic: (issue: (typeof issues)[number]) => {
       if (issue.lineItemType !== "SwitchMatrixDiodeSeparatedFromSwitch")
         throw new Error("Expected a switch/diode finding")
@@ -159,6 +180,30 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     "top",
   ] as const)
     expect(panels[0]![key]).toBeCloseTo(panels[1]![key], 6)
+  for (const [index, circuitJson] of [before, after].entries()) {
+    const panel = panels[index]!
+    for (const component of circuitJson) {
+      if (
+        component.type !== "schematic_component" ||
+        !comparison.contextSourceComponentIds.includes(
+          component.source_component_id!,
+        )
+      )
+        continue
+      expect(
+        component.center.x - component.size.width / 2,
+      ).toBeGreaterThanOrEqual(panel.left)
+      expect(component.center.x + component.size.width / 2).toBeLessThanOrEqual(
+        panel.right,
+      )
+      expect(
+        component.center.y - component.size.height / 2,
+      ).toBeGreaterThanOrEqual(panel.bottom)
+      expect(
+        component.center.y + component.size.height / 2,
+      ).toBeLessThanOrEqual(panel.top)
+    }
+  }
   expect(svg).not.toContain('stroke="#2563eb"')
   expect(svg.match(/data-comparison-panel=/g)).toHaveLength(2)
   for (let number = 1; number <= 12; number++) {
@@ -187,7 +232,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
   expect(svg).toMatchSvgSnapshot(import.meta.path, "comparison")
   const sections = [
     {
-      title: "Battery input and charger",
+      title: "Power, USB and rotary encoder",
       componentNames: [
         "J_BAT",
         "U3",
@@ -198,71 +243,49 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
         "R_PROG1",
         "R_PROG3",
         "R_THERM",
-      ],
-    },
-    {
-      title: "Boost converter and VSYS capacitors",
-      componentNames: ["U4", "L1", "R_FBH", "R_FBL", "C_VSYS", "C_BVIN"],
-      padding: { left: 1, top: 1, right: 1.2 },
-    },
-    {
-      title: "USB input and protection",
-      componentNames: ["USBC", "R_CC1", "R_CC2", "U6"],
-      padding: { left: 1 },
-    },
-    { title: "3.3 V regulator", componentNames: ["U2"] },
-    {
-      title: "Rotary encoder",
-      componentNames: ["ENC1"],
-      padding: { left: 3, right: 3, top: 1, bottom: 1 },
-    },
-    { title: "Microcontroller", componentNames: ["U1"] },
-    { title: "Reset controls", componentNames: ["SW_RST", "R_EN", "C_EN"] },
-    { title: "Boot controls", componentNames: ["SW_BOOT", "R_BOOT"] },
-    {
-      title: "3.3 V capacitor bank",
-      componentNames: ["C_OUT", "C_BULK", "C_DEC"],
-    },
-    {
-      title: "VBUS capacitor bank — first half",
-      padding: { right: 0.45, top: 1, bottom: 1 },
-      componentNames: [
+        "U4",
+        "L1",
+        "R_FBH",
+        "R_FBL",
+        "C_VSYS",
+        "C_BVIN",
+        "USBC",
+        "R_CC1",
+        "R_CC2",
+        "U6",
+        "ENC1",
         "C_BVOUT",
         "C_BVOUT2",
         "C_IN",
         "C_LS",
-        "C_LED1",
-        "C_LED2",
-        "C_LED3",
-        "C_LED4",
+        ...Array.from({ length: 12 }, (_, i) => `C_LED${i + 1}`),
       ],
     },
     {
-      title: "VBUS capacitor bank — second half",
-      componentNames: Array.from({ length: 8 }, (_, i) => `C_LED${i + 5}`),
-      padding: { left: 0.45, top: 1, bottom: 1 },
+      title: "3.3 V regulator and microcontroller",
+      componentNames: [
+        "U2",
+        "U1",
+        "SW_RST",
+        "R_EN",
+        "C_EN",
+        "SW_BOOT",
+        "R_BOOT",
+        "C_OUT",
+        "C_BULK",
+        "C_DEC",
+      ],
     },
-    ...Array.from({ length: 6 }, (_, i) => {
-      const first = i * 2 + 1
-      return {
-        title: `Keys ${first}–${first + 1}, diodes and RGB LEDs`,
-        // Keep the adjacent keyboard row outside this viewport.
-        padding: { top: 0.6, bottom: 0.6 },
-        componentNames: [first, first + 1].flatMap((n) => [
+    {
+      title: "Complete switch / diode matrix, RGB LEDs and test points",
+      componentNames: [
+        ...Array.from({ length: 12 }, (_, i) => i + 1).flatMap((n) => [
           `SW${n}`,
           `D${n}`,
           `LED${n}`,
         ]),
-      }
-    }),
-    {
-      title: "LED data level shifter",
-      componentNames: ["U5", "R_LED"],
-      padding: { bottom: 0.5 },
-    },
-    {
-      title: "Debug test points",
-      componentNames: [
+        "U5",
+        "R_LED",
         "TP_GND1",
         "TP_GND2",
         "TP_VBAT",
@@ -283,5 +306,18 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     sections.length,
   )
   expect(sectioned).toContain("Complete sheet: 92 schematic components")
+  expect(sectioned).not.toContain("Could not match ports")
+  for (const [type, count] of Object.entries(analysis.getIssueCounts()))
+    expect(sectioned).toContain(`${type}: ${count}`)
+  for (let n = 1; n <= 12; n++) {
+    const component = getReproSchematicComponent(after, `LED${n}`)
+    expect(
+      after.filter(
+        (e) =>
+          e.type === "schematic_port" &&
+          e.schematic_component_id === component.schematic_component_id,
+      ),
+    ).toHaveLength(4)
+  }
   expect(sectioned).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

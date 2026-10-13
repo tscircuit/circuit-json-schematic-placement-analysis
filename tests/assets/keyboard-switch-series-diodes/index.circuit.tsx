@@ -276,7 +276,7 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Power"
-      schX={correctedLayout ? -38.4 : -30}
+      schX={correctedLayout ? -64.4 : -30}
       schY={correctedLayout ? -13 : -5}
       pcbX={-9}
       pcbY={27.9}
@@ -514,7 +514,7 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Battery"
-      schX={-42}
+      schX={correctedLayout ? -68 : -42}
       schY={correctedLayout ? -13 : -6}
       pcbX={-2.6}
       pcbY={21.5}
@@ -527,7 +527,7 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Battery"
-      schX={correctedLayout ? -40.2 : -39}
+      schX={correctedLayout ? -66.2 : -39}
       schY={correctedLayout ? -13 : -9}
       pcbX={1.6}
       pcbY={20.2}
@@ -784,6 +784,8 @@ export default ({
         key={k.sw}
         swName={k.sw}
         ledName={k.led}
+        correctedLayout={correctedLayout}
+        ledDataFlowsLeft={k.r % 2 === 0}
         pcbX={k.x}
         pcbY={k.y}
         schX={24 + k.c * 7}
@@ -1200,7 +1202,7 @@ export default ({
           supplierPartNumbers={{ jlcpcb: ["C1525"] }}
           schSectionName="LEDs"
           schX={
-            correctedLayout ? -34.8 + (k.r * 4 + k.c) * 1.8 : 24 + k.c * 7 + 3
+            correctedLayout ? -60.8 + (k.r * 4 + k.c) * 1.8 : 24 + k.c * 7 + 3
           }
           schY={correctedLayout ? -13 : 14 - k.r * 9 - 7}
           pcbX={k.x}
@@ -1238,11 +1240,12 @@ export default ({
     <resistor
       name="R_LED"
       resistance="470"
+      schRotation={correctedLayout ? 180 : 0}
       footprint="0402"
       layer="bottom"
       schSectionName="LEDs"
-      schX={correctedLayout ? 42.5 : 43.4}
-      schY={7}
+      schX={correctedLayout ? 50 : 43.4}
+      schY={correctedLayout ? 10 : 7}
       pcbX={16.2}
       pcbY={22}
       pcbRotation="90deg"
@@ -1255,7 +1258,7 @@ export default ({
       layer="bottom"
       schOrientation="vertical"
       schSectionName="LEDs"
-      schX={correctedLayout ? -36.6 : 30}
+      schX={correctedLayout ? -62.6 : 30}
       schY={correctedLayout ? -13 : 4}
       pcbX={14}
       pcbY={26.5}
@@ -1267,8 +1270,9 @@ export default ({
       schSectionName="LEDs"
       layer="bottom"
       schHeight={0.6}
-      schX={30}
+      schX={correctedLayout ? 54.5 : 30}
       schY={correctedLayout ? 10 : 8}
+      schRotation={correctedLayout ? 180 : 0}
       pcbX={10.5}
       pcbY={26.5}
     />

@@ -25,6 +25,8 @@ export const HotswapKey = ({
   pcbY = 0,
   schX = 0,
   schY = 0,
+  correctedLayout = false,
+  ledDataFlowsLeft = false,
 }: {
   swName: string
   ledName: string
@@ -32,6 +34,8 @@ export const HotswapKey = ({
   pcbY?: number
   schX?: number
   schY?: number
+  correctedLayout?: boolean
+  ledDataFlowsLeft?: boolean
 }) => (
   <>
     {/* MX plate cutouts (mechanical, both layers) */}
@@ -77,7 +81,73 @@ export const HotswapKey = ({
       pcbX={pcbX}
       pcbY={pcbY - 4.7}
       schX={schX}
-      schY={schY - 7}
+      schY={schY - (correctedLayout ? 4 : 7)}
+      symbol={
+        correctedLayout ? (
+          <symbol>
+            {/* This addressable RGB package has four terminals, not a two-pin LED symbol. */}
+            <schematicrect
+              width={2}
+              height={1.6}
+              color="#880000"
+              strokeWidth={0.03}
+            />
+            <schematictext
+              text="{REF}"
+              schX={-0.8}
+              schY={1.15}
+              fontSize={0.22}
+            />
+            <schematictext text="RGB" schY={0} fontSize={0.22} />
+            <schematictext
+              text="DIN"
+              schX={ledDataFlowsLeft ? 0.65 : -0.65}
+              schY={0.25}
+              fontSize={0.18}
+            />
+            <schematictext
+              text="DOUT"
+              schX={ledDataFlowsLeft ? -0.6 : 0.6}
+              schY={0.25}
+              fontSize={0.18}
+            />
+            <schematictext text="VDD" schY={0.55} fontSize={0.18} />
+            <schematictext text="GND" schY={-0.55} fontSize={0.18} />
+            <port
+              name="pin1"
+              pinNumber={1}
+              direction="down"
+              schX={0}
+              schY={-1.1}
+              schStemLength={0.3}
+            />
+            <port
+              name="pin2"
+              pinNumber={2}
+              direction={ledDataFlowsLeft ? "right" : "left"}
+              schX={ledDataFlowsLeft ? 1.3 : -1.3}
+              schY={0}
+              schStemLength={0.3}
+            />
+            <port
+              name="pin3"
+              pinNumber={3}
+              direction="up"
+              schX={0}
+              schY={1.1}
+              schStemLength={0.3}
+            />
+            <port
+              name="pin4"
+              pinNumber={4}
+              direction={ledDataFlowsLeft ? "left" : "right"}
+              schX={ledDataFlowsLeft ? -1.3 : 1.3}
+              schY={0}
+              schStemLength={0.3}
+            />
+          </symbol>
+        ) : undefined
+      }
     />
   </>
 )

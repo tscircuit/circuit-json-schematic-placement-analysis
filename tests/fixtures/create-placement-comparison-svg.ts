@@ -17,6 +17,8 @@ export function createPlacementComparisonSvg(input: {
   before: State
   after: State
   issues: readonly SchematicPlacementIssue[]
+  /** Keep neighboring parts fully visible rather than clipping them at the issue bounds. */
+  contextSourceComponentIds?: readonly string[]
   beforeDiagnostic: (issue: SchematicPlacementIssue) => string
   afterDiagnostic: string
   note: string
@@ -74,7 +76,23 @@ export function createPlacementComparisonSvg(input: {
   if (!corrected.length) throw new Error("Comparison issues have no components")
   // Include both layouts and leave room for labels and numbered markers.
   // One shared window keeps stationary components in the same place in both panels.
-  const bounds = [original.bounds, ...corrected]
+  const context = [before, after].flatMap((state) =>
+    state.circuitJson.flatMap((component) =>
+      component.type === "schematic_component" &&
+      component.source_component_id &&
+      input.contextSourceComponentIds?.includes(component.source_component_id)
+        ? [
+            {
+              left: component.center.x - component.size.width / 2,
+              right: component.center.x + component.size.width / 2,
+              bottom: component.center.y - component.size.height / 2,
+              top: component.center.y + component.size.height / 2,
+            },
+          ]
+        : [],
+    ),
+  )
+  const bounds = [original.bounds, ...corrected, ...context]
   const viewportBounds = {
     left: Math.min(...bounds.map((b) => b.left)) - 1.2,
     right: Math.max(...bounds.map((b) => b.right)) + 1.2,
