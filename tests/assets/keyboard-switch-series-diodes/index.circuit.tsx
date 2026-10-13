@@ -784,8 +784,6 @@ export default ({
         key={k.sw}
         swName={k.sw}
         ledName={k.led}
-        correctedLayout={correctedLayout}
-        ledDataFlowsLeft={k.r % 2 === 0}
         pcbX={k.x}
         pcbY={k.y}
         schX={24 + k.c * 7}
@@ -1168,13 +1166,12 @@ export default ({
 
     {/* RGB rails per the C5149201 reverse-mount pad numbering — the EasyEDA
         footprint pads are NOT datasheet pin numbers: 1=GND, 2=DIN, 3=VDD
-        (5V=VBUS), 4=DOUT. Daisy-chained pin4 → next pin2.
-        Descendant selectors also reach the corrected ports inside <symbol>. */}
+        (5V=VBUS), 4=DOUT. Daisy-chained pin4 → next pin2. */}
     {KEYS.map((k) => (
       <Fragment key={`${k.led}-v`}>
         <NamedTrace
           name={`${k.led}__VBUS`}
-          from={`.${k.led} .pin3`}
+          from={`${k.led}.pin3`}
           to="net.VBUS"
           thickness="0.3mm"
         />
@@ -1184,7 +1181,7 @@ export default ({
       <Fragment key={`${k.led}-g`}>
         <NamedTrace
           name={`${k.led}__GND`}
-          from={`.${k.led} .pin1`}
+          from={`${k.led}.pin1`}
           to="net.GND"
         />
       </Fragment>
@@ -1293,7 +1290,7 @@ export default ({
       name={`R_LED__LED${LED_CHAIN[0]}`}
       schDisplayLabel="LED_DIN"
       from="R_LED.pin2"
-      to={`.LED${LED_CHAIN[0]} .pin2`}
+      to={`LED${LED_CHAIN[0]}.pin2`}
     />
     <NamedTrace name="U5_OE__GND" from="U5.OE" to="net.GND" />
     <NamedTrace name="U5_VCC__VBUS" from="U5.VCC" to="net.VBUS" />
@@ -1306,8 +1303,8 @@ export default ({
       <Fragment key={`led-chain-${n}`}>
         <NamedTrace
           name={`LED${n}__LED${LED_CHAIN[i + 1]}`}
-          from={`.LED${n} .pin4`}
-          to={`.LED${LED_CHAIN[i + 1]} .pin2`}
+          from={`LED${n}.pin4`}
+          to={`LED${LED_CHAIN[i + 1]}.pin2`}
         />
       </Fragment>
     ))}
@@ -1318,7 +1315,7 @@ export default ({
         nothing to route). */}
     <NamedTrace
       name={`LED${LED_CHAIN[LED_CHAIN.length - 1]}__CHAIN_OUT`}
-      from={`.LED${LED_CHAIN[LED_CHAIN.length - 1]} .pin4`}
+      from={`LED${LED_CHAIN[LED_CHAIN.length - 1]}.pin4`}
       to="net.LED_CHAIN_OUT"
     />
 

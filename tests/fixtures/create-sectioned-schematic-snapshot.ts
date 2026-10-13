@@ -133,14 +133,7 @@ export function createSectionedSchematicSnapshot(input: {
     width,
   )
   const diagnosticHeight = Number(diagnostics.match(/height="([\d.]+)"/)![1])
-  const counts = Object.entries(analysis.getIssueCounts())
-  const rows = Math.ceil(counts.length / 2)
-  const countHeight = 56 + rows * 24
-  const countTable = `<g transform="translate(0 ${offset + diagnosticHeight})">
-<text x="18" y="28" font-family="sans-serif" font-size="20" fill="#172b3a">All analyzer counts (including zeros)</text>
-${counts.map(([type, count], index) => `<text x="${18 + Math.floor(index / rows) * (width / 2)}" y="${56 + (index % rows) * 24}" font-family="Menlo, Consolas, monospace" font-size="13" fill="#172b3a">${escape(type)}: ${count}</text>`).join("\n")}
-</g>`
-  const height = offset + diagnosticHeight + countHeight + 18
+  const height = offset + diagnosticHeight + 18
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
 <rect width="100%" height="100%" fill="white" />
 <defs><g id="sectioned-sheet">${body}</g></defs>
@@ -148,6 +141,5 @@ ${counts.map(([type, count], index) => `<text x="${18 + Math.floor(index / rows)
 <text x="18" y="64" font-family="sans-serif" font-size="16" fill="#172b3a">Views of the same rendered sheet; wires can continue beyond a section boundary.</text>
 ${panels.join("\n")}
 <g transform="translate(0 ${offset})">${diagnostics}</g>
-${countTable}
 </svg>`.replace(/[ \t]+$/gm, "")
 }
