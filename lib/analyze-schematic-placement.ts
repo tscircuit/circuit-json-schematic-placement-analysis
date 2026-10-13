@@ -1,4 +1,5 @@
 import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
+import { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
 import { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 import { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
@@ -104,6 +105,7 @@ export class SchematicPlacementAnalysis {
       SchematicBoxInnerLabelOutOfBounds: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
+      ParallelResistorsDrawnInline: 0,
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
@@ -202,6 +204,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "ParallelResistorsDrawnInline":
+        return ParallelResistorPlacementSolver.issueToString(issue)
       case "ParallelRcNotAligned":
         return ParallelRcPlacementSolver.issueToString(issue)
       case "ParallelDiodeResistorNotAligned":

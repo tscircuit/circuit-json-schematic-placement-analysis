@@ -1,4 +1,5 @@
 import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
+import { ParallelResistorPlacementSolver } from "../ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
 import { ChipPinCrystalPlacementSolver } from "../ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 import { SchematicBoxInnerLabelBoundsSolver } from "../SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "../TransistorRailOrientationSolver/TransistorRailOrientationSolver"
@@ -88,6 +89,7 @@ const solversByIssueType = {
   SchematicBoxInnerLabelOutOfBounds: [SchematicBoxInnerLabelBoundsSolver],
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
@@ -130,6 +132,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SwitchMatrixDiodePlacementSolver",
       SwitchMatrixDiodePlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelResistorPlacementSolver",
+      ParallelResistorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

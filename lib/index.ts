@@ -53,6 +53,7 @@ export { SeriesLedChainPlacementSolver } from "./solvers/SeriesLedChainPlacement
 export { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 
 export { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
+export { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
 export { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 
 export { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"

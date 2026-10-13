@@ -53,6 +53,7 @@ test("reproduces the complete key-pcb sheet with separated switch series diodes"
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
     ...Array(12).fill("SwitchMatrixDiodeSeparatedFromSwitch"),
+    ...Array(2).fill("SchematicBoxInnerLabelCollision"),
     ...Array(9).fill("TwoPinComponentShouldBeVertical"),
     "NetLabelCollision",
     ...Array(3).fill("DecouplingCapacitorsNotCloseTogether"),
