@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import type { CircuitJson } from "circuit-json"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createKeyboardSwitchDiodeRepro } from "../assets/keyboard-switch-series-diodes"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import { createPlacementComparisonSvg } from "../fixtures/create-placement-comparison-svg"
 import {
   expectReproRendered,
@@ -38,6 +39,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       ![
         "USBC",
         "U2",
+        "U5",
         "R_CC1",
         "R_CC2",
         "R_VPCC_H",
@@ -48,6 +50,14 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
         "R_FBH",
         "R_FBL",
         "R_LED",
+        "C_IN",
+        "C_OUT",
+        "C_BVIN",
+        "C_BVOUT",
+        "C_BVOUT2",
+        "C_DEC",
+        "C_LS",
+        ...Array.from({ length: 12 }, (_, i) => `C_LED${i + 1}`),
       ].includes(component.name!)
     ) {
       expect(next).toEqual(original)
@@ -59,25 +69,8 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     12,
   )
   expect(analysis.getIssueCounts().SwitchMatrixDiodeSeparatedFromSwitch).toBe(0)
-  // Only the existing cross-block decoupling findings are deferred to a separate PR.
-  // The complete circuit is analyzed; no solver is disabled for this comparison.
-  expect(analysis.getIssues()).toHaveLength(3)
-  expect(
-    analysis
-      .getIssues()
-      .every(
-        (issue) =>
-          issue.lineItemType === "DecouplingCapacitorsNotCloseTogether",
-      ),
-  ).toBe(true)
-  expect(
-    analysis.getIssues().map((i) => analysis.schematicIssuesToString(i)),
-  ).toEqual(
-    baseline
-      .getIssues()
-      .filter((i) => i.lineItemType === "DecouplingCapacitorsNotCloseTogether")
-      .map((i) => baseline.schematicIssuesToString(i)),
-  )
+  expect(baseline.getIssueCounts().DecouplingCapacitorsNotCloseTogether).toBe(3)
+  expect(analysis.getIssues()).toEqual([])
   // Every private switch/diode connection must actually be drawn as a straight wire.
   for (let n = 1; n <= 12; n++) {
     const components = [`SW${n}`, `D${n}`].map((name) =>
@@ -121,15 +114,15 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     issue,
     afterDiagnostic:
       "SW1 / D1: no placement finding.\nAll 12 switch/diode pairs pass.",
-    note: "Complete 92-component TSX circuit; unchanged electrical connections.\nFull analysis: only 3 unchanged decoupling-grouping findings remain (deferred to a separate PR).",
+    note: "Complete 92-component TSX circuit; unchanged electrical connections.\nFull analysis: 0 findings on the rearranged sheet.",
   }
-  expect(() => createPlacementComparisonSvg(comparison)).toThrow(
-    "After layout still has 3 unresolved findings",
-  )
-  const svg = createPlacementComparisonSvg({
-    ...comparison,
-    deferredIssueTypes: ["DecouplingCapacitorsNotCloseTogether"],
-  })
+  expect(() =>
+    createPlacementComparisonSvg({
+      ...comparison,
+      after: comparison.before,
+    }),
+  ).toThrow("After layout still has 29 unresolved findings")
+  const svg = createPlacementComparisonSvg(comparison)
   // Equal physical scale in both panels, even when the full render transforms differ.
   const pixelsPerUnit = [
     ...svg.matchAll(/<svg[^>]*data-real-to-screen-transform=[^>]*>/g),
@@ -147,4 +140,13 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
   expect(svg.match(/data-issue-number="1"/g)).toHaveLength(2)
   expect(svg.match(/data-listing-issue-number="1"/g)).toHaveLength(1)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "comparison")
+  expect(
+    createIssueReproSnapshot({
+      circuitJson: after,
+      analysis,
+      showFullSchematic: true,
+      width: 2400,
+      height: 800,
+    }),
+  ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
 })

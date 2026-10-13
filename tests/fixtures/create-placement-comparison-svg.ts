@@ -4,10 +4,7 @@ import type {
   SchematicPlacementIssue,
   SchematicIssueBounds,
 } from "lib/index"
-import {
-  renderIssueOverlay,
-  type IssueType,
-} from "lib/svg/create-issue-overlay-svg"
+import { renderIssueOverlay } from "lib/svg/create-issue-overlay-svg"
 import { createAnalyzerTextSvg } from "lib/svg/create-analyzer-text-svg"
 import {
   getIssueSchematicSheetContext,
@@ -25,17 +22,9 @@ export function createPlacementComparisonSvg(input: {
   issue: SchematicPlacementIssue
   afterDiagnostic: string
   note: string
-  /** Known findings handled separately; explain them in the visible note. */
-  deferredIssueTypes?: readonly IssueType[]
 }) {
   const { before, after, issue } = input
-  const unresolved = after.analysis
-    .getIssues()
-    .filter(
-      (i) =>
-        i.lineItemType === issue.lineItemType ||
-        !input.deferredIssueTypes?.includes(i.lineItemType),
-    )
+  const unresolved = after.analysis.getIssues()
   if (unresolved.length)
     throw new Error(
       `After layout still has ${unresolved.length} unresolved findings`,

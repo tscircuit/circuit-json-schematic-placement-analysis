@@ -276,8 +276,8 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Power"
-      schX={-30}
-      schY={-5}
+      schX={correctedLayout ? -38.4 : -30}
+      schY={correctedLayout ? -13 : -5}
       pcbX={-9}
       pcbY={27.9}
       supplierPartNumbers={{ jlcpcb: ["C15850"] }}
@@ -289,8 +289,8 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Power"
-      schX={-22}
-      schY={-5}
+      schX={correctedLayout ? 8.6 : -22}
+      schY={correctedLayout ? -6 : -5}
       pcbX={-5.5}
       pcbY={33}
       supplierPartNumbers={{ jlcpcb: ["C15850"] }}
@@ -499,7 +499,7 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Battery"
-      schX={-50}
+      schX={correctedLayout ? -52.6 : -50}
       schY={-6}
       pcbX={-4.6}
       pcbY={25.2}
@@ -515,7 +515,7 @@ export default ({
       layer="bottom"
       schSectionName="Battery"
       schX={-42}
-      schY={-6}
+      schY={correctedLayout ? -13 : -6}
       pcbX={-2.6}
       pcbY={21.5}
       supplierPartNumbers={{ jlcpcb: ["C45783"] }}
@@ -527,8 +527,8 @@ export default ({
       footprint="0805"
       layer="bottom"
       schSectionName="Battery"
-      schX={-39}
-      schY={-9}
+      schX={correctedLayout ? -40.2 : -39}
+      schY={correctedLayout ? -13 : -9}
       pcbX={1.6}
       pcbY={20.2}
       supplierPartNumbers={{ jlcpcb: ["C45783"] }}
@@ -606,7 +606,7 @@ export default ({
       footprint="0402"
       layer="bottom"
       schSectionName="MCU"
-      schX={13}
+      schX={correctedLayout ? 11.4 : 13}
       schY={-6}
       pcbX={12.8}
       pcbY={21.5}
@@ -1199,8 +1199,10 @@ export default ({
           schOrientation="vertical"
           supplierPartNumbers={{ jlcpcb: ["C1525"] }}
           schSectionName="LEDs"
-          schX={24 + k.c * 7 + 3}
-          schY={14 - k.r * 9 - 7}
+          schX={
+            correctedLayout ? -34.8 + (k.r * 4 + k.c) * 1.8 : 24 + k.c * 7 + 3
+          }
+          schY={correctedLayout ? -13 : 14 - k.r * 9 - 7}
           pcbX={k.x}
           pcbY={k.y - 8.2}
         />
@@ -1253,8 +1255,8 @@ export default ({
       layer="bottom"
       schOrientation="vertical"
       schSectionName="LEDs"
-      schX={30}
-      schY={4}
+      schX={correctedLayout ? -36.6 : 30}
+      schY={correctedLayout ? -13 : 4}
       pcbX={14}
       pcbY={26.5}
       pcbRotation="90deg"
@@ -1266,7 +1268,7 @@ export default ({
       layer="bottom"
       schHeight={0.6}
       schX={30}
-      schY={8}
+      schY={correctedLayout ? 10 : 8}
       pcbX={10.5}
       pcbY={26.5}
     />

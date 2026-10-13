@@ -176,6 +176,18 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+/** A separated series signal resistor and its grounded shunt capacitor. */
+export interface SeriesRcFilterComponentsNotGrouped {
+  lineItemType: "SeriesRcFilterComponentsNotGrouped"
+  resistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSourcePortId: string
+  capacitorSourcePortId: string
+  signalPinDistance: number
+  maxRecommendedSignalPinDistance: number
+  message: string
+}
+
 /** A unique grounded resistor/capacitor pair drawn with nonmatching branch ends. */
 export interface ParallelRcNotAligned {
   lineItemType: "ParallelRcNotAligned"
@@ -687,6 +699,7 @@ export type SchematicPlacementIssue =
   | SchematicBoxInnerLabelOutOfBounds
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | SeriesRcFilterComponentsNotGrouped
   | ParallelResistorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
