@@ -136,6 +136,14 @@ function getIssueHighlights(
               labelText: label.text,
             })
         }
+      } else if (issue.lineItemType === "SchematicBoxInnerLabelOutOfBounds") {
+        for (const label of issue.overflowingLabels)
+          shapes.push({
+            type: "box",
+            bounds: getPinLabelHighlightBounds(label),
+            schematicPortId: label.schematicPortId,
+            labelText: label.text,
+          })
       } else if (issue.lineItemType === "SchematicTextCollision") {
         box(issue.textBounds)
         if (issue.collidingObject.type === "trace")

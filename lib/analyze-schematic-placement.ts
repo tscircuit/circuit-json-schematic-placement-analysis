@@ -1,4 +1,6 @@
 import { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+import { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
+import { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
@@ -99,6 +101,7 @@ export class SchematicPlacementAnalysis {
       PinHeaderSchematicBoxTooWide: 0,
       GenericSchematicBoxTooWide: 0,
       SchematicBoxInnerLabelCollision: 0,
+      SchematicBoxInnerLabelOutOfBounds: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
       ParallelResistorsDrawnInline: 0,
@@ -129,6 +132,7 @@ export class SchematicPlacementAnalysis {
       PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
+      CrystalSeparatedFromChipPins: 0,
       ResistorSeparatedFromChipPin: 0,
       InductorSeparatedFromChipPin: 0,
       RailPathTooSpreadOut: 0,
@@ -165,6 +169,8 @@ export class SchematicPlacementAnalysis {
         return ChipSupplyInductorPlacementSolver.issueToString(issue)
       case "ResistorSeparatedFromChipPin":
         return ChipPinResistorPlacementSolver.issueToString(issue)
+      case "CrystalSeparatedFromChipPins":
+        return ChipPinCrystalPlacementSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
       case "SharedNodeDiodesInline":
@@ -188,6 +194,8 @@ export class SchematicPlacementAnalysis {
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
         return SchematicBoxTooWideSolver.issueToString(issue)
+      case "SchematicBoxInnerLabelOutOfBounds":
+        return SchematicBoxInnerLabelBoundsSolver.issueToString(issue)
       case "SchematicBoxInnerLabelCollision":
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":

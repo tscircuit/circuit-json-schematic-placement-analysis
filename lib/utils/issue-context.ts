@@ -77,6 +77,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.resistorSchematicBox)
         break
+      case "CrystalSeparatedFromChipPins":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.crystalSchematicBox)
+        break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
@@ -169,6 +173,7 @@ export const getRelevantPlacementsForIssues = ({
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
       case "SchematicBoxInnerLabelCollision":
+      case "SchematicBoxInnerLabelOutOfBounds":
       case "SchematicPinPaddingToEdgeTooLarge":
         addPlacement(issue.schematicBox)
         break
