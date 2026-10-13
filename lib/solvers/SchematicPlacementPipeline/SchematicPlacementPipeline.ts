@@ -64,6 +64,7 @@ type SolverParams = {
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
   SwitchMatrixDiodeSeparatedFromSwitch: [SwitchMatrixDiodePlacementSolver],
+  SwitchMatrixBranchesTooSpreadOut: [SwitchMatrixDiodePlacementSolver],
   TransistorHasIncorrectRailOrientation: [TransistorRailOrientationSolver],
   SeriesLedChainNotOrdered: [SeriesLedChainPlacementSolver],
   RailPathTooSpreadOut: [RailPathVisibilitySolver],

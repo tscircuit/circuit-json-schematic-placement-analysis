@@ -670,7 +670,18 @@ export interface SwitchMatrixDiodeSeparatedFromSwitch {
   message: string
 }
 
+/** Excessive unused space between bus-connected rows/columns of a complete matrix. */
+export interface SwitchMatrixBranchesTooSpreadOut {
+  lineItemType: "SwitchMatrixBranchesTooSpreadOut"
+  branchSchematicBoxes: SchematicBoxPlacement[]
+  axis: "x" | "y"
+  emptyGap: number
+  maxRecommendedEmptyGap: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | SwitchMatrixBranchesTooSpreadOut
   | SwitchMatrixDiodeSeparatedFromSwitch
   | TransistorHasIncorrectRailOrientation
   | InductorSeparatedFromChipPin

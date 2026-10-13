@@ -148,8 +148,10 @@ const OFFLINE_PARTS_ENGINE: PartsEngine = {
 
 export default ({
   correctedLayout = false,
+  compactMatrix = correctedLayout,
 }: {
   correctedLayout?: boolean
+  compactMatrix?: boolean
 } = {}) => (
   <board
     width="94mm"
@@ -787,7 +789,8 @@ export default ({
         pcbX={k.x}
         pcbY={k.y}
         schX={24 + k.c * 7}
-        schY={14 - k.r * 9}
+        schY={14 - k.r * (compactMatrix ? 4 : 9)}
+        ledSchY={compactMatrix ? 3 - k.r * 3 : undefined}
       />
     ))}
 
@@ -1122,7 +1125,7 @@ export default ({
           layer="bottom"
           schSectionName="Keys"
           schX={24 + k.c * 7 + (correctedLayout ? -3 : 3)}
-          schY={14 - k.r * 9 - (correctedLayout ? 0 : 3)}
+          schY={14 - k.r * (compactMatrix ? 4 : 9) - (correctedLayout ? 0 : 3)}
           schRotation={correctedLayout ? 180 : 0}
           pcbX={k.x - 7.2}
           pcbY={k.y - 1.4}

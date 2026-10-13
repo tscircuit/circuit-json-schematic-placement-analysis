@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "SwitchMatrixBranchesTooSpreadOut":
+        for (const placement of issue.branchSchematicBoxes)
+          addPlacement(placement)
+        break
       case "SwitchMatrixDiodeSeparatedFromSwitch":
         addPlacement(issue.switchSchematicBox)
         addPlacement(issue.diodeSchematicBox)

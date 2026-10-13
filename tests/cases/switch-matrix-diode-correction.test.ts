@@ -37,8 +37,31 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     if (component.ftype === "simple_diode") {
       expect(next).toEqual({
         ...original,
-        center: { x: original.center.x - 6, y: original.center.y + 3 },
+        center: {
+          x: original.center.x - 6,
+          y:
+            original.center.y +
+            3 +
+            Math.floor((Number(component.name!.slice(1)) - 1) / 4) * 5,
+        },
         symbol_name: "diode_left",
+      })
+    } else if (
+      Array.from({ length: 12 }, (_, i) => `SW${i + 1}`).includes(
+        component.name!,
+      )
+    ) {
+      const row = Math.floor((Number(component.name!.slice(2)) - 1) / 4)
+      expect(next).toEqual({
+        ...original,
+        center: { x: original.center.x, y: 14 - row * 4 },
+      })
+    } else if (component.ftype === "simple_led") {
+      const row = Math.floor((Number(component.name!.slice(3)) - 1) / 4)
+      // Move only the original RGB symbol; do not replace it with a custom chip.
+      expect(next).toEqual({
+        ...original,
+        center: { x: original.center.x, y: 3 - row * 3 },
       })
     } else if (
       ![
@@ -138,7 +161,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       return `${issue.switchSchematicBox.sourceComponentName} / ${issue.diodeSchematicBox.sourceComponentName}: diode separated from switch.`
     },
     afterDiagnostic:
-      "All 12 diodes are beside their switches.\nAll 12 switch/diode connections are continuous straight wires.\nOriginal pin connections preserved; full analysis reports 0 findings.",
+      "All 12 diodes are beside their switches.\nCompact 3 × 4 matrix; unchanged RGB symbols below it.\nAll 12 switch/diode connections are continuous straight wires.\nOriginal pin connections preserved; full analysis reports 0 findings.",
     note: "Complete 92-component TSX circuit; unchanged electrical connections.\nFull analysis: 0 findings on the rearranged sheet.",
   }
   expect(() =>

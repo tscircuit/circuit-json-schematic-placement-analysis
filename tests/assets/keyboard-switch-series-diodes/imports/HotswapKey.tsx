@@ -25,6 +25,7 @@ export const HotswapKey = ({
   pcbY = 0,
   schX = 0,
   schY = 0,
+  ledSchY = schY - 7,
 }: {
   swName: string
   ledName: string
@@ -32,6 +33,7 @@ export const HotswapKey = ({
   pcbY?: number
   schX?: number
   schY?: number
+  ledSchY?: number
 }) => (
   <>
     {/* MX plate cutouts (mechanical, both layers) */}
@@ -77,7 +79,7 @@ export const HotswapKey = ({
       pcbX={pcbX}
       pcbY={pcbY - 4.7}
       schX={schX}
-      schY={schY - 7}
+      schY={ledSchY}
     />
   </>
 )
