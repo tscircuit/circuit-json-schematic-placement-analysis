@@ -207,6 +207,16 @@ export interface ParallelDiodeResistorNotAligned {
   message: string
 }
 
+/** A capacitor across a grounded switch is far from its local parallel branch. */
+export interface CapacitorSeparatedFromSwitch {
+  lineItemType: "CapacitorSeparatedFromSwitch"
+  switchSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  bodyGap: number
+  maxRecommendedBodyGap: number
+  message: string
+}
+
 /** Two resistors across the same nets are drawn end-to-end instead of as branches. */
 export interface ParallelResistorsDrawnInline {
   lineItemType: "ParallelResistorsDrawnInline"
@@ -711,6 +721,7 @@ export type SchematicPlacementIssue =
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | SeriesRcFilterComponentsNotGrouped
+  | CapacitorSeparatedFromSwitch
   | ParallelResistorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned

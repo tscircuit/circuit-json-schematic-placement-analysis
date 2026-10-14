@@ -6,7 +6,8 @@ import { Circuit } from "@tscircuit/core"
 import { TSA010A2026B } from "./TSA010A2026B"
 import { A_0402WGF5101TCE } from "./A_0402WGF5101TCE"
 import { CL05B104KB54PNC } from "./CL05B104KB54PNC"
-export default function Controls() {
+type Layout = "original" | "orientation-only" | "grouped"
+export default function Controls({ layout = "original" }: { layout?: Layout }) {
   return (
     <board schLayout={{ layoutMode: "relative" }} routingDisabled>
       <schematicsheet
@@ -16,13 +17,15 @@ export default function Controls() {
         sheetHeight={500}
       >
         <schematicsection
+          sectionTitleFontSize={layout === "grouped" ? 0.12 : undefined}
           name="controls"
           displayName="GAME INPUTS / GPIO FILTERS"
         />
         <TSA010A2026B
           name="SW3"
-          schX={-18}
-          schY={14}
+          schX={layout === "grouped" ? -12 : -18}
+          schY={layout === "grouped" ? 12 : 14}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-36}
           pcbY={34}
@@ -31,8 +34,9 @@ export default function Controls() {
         <silkscreentext text="UP" pcbX={-36} pcbY={38} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R26"
-          schX={-13}
-          schY={14}
+          schX={layout === "grouped" ? -9.8 : -13}
+          schY={layout === "grouped" ? 13.6 : 14}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-37}
           pcbY={30.5}
@@ -40,8 +44,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C45"
-          schX={-8}
-          schY={14}
+          schX={layout === "grouped" ? -9.8 : -8}
+          schY={layout === "grouped" ? 12 : 14}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-35}
           pcbY={30.5}
@@ -49,8 +54,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW4"
-          schX={6}
-          schY={14}
+          schX={layout === "grouped" ? -5 : 6}
+          schY={layout === "grouped" ? 12 : 14}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-36}
           pcbY={16}
@@ -59,8 +65,9 @@ export default function Controls() {
         <silkscreentext text="DOWN" pcbX={-36} pcbY={20} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R27"
-          schX={11}
-          schY={14}
+          schX={layout === "grouped" ? -2.8 : 11}
+          schY={layout === "grouped" ? 13.6 : 14}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-37}
           pcbY={12.5}
@@ -68,8 +75,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C46"
-          schX={16}
-          schY={14}
+          schX={layout === "grouped" ? -2.8 : 16}
+          schY={layout === "grouped" ? 12 : 14}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-35}
           pcbY={12.5}
@@ -77,8 +85,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW5"
-          schX={-18}
-          schY={8}
+          schX={layout === "grouped" ? -12 : -18}
+          schY={layout === "grouped" ? 7.5 : 8}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-45}
           pcbY={25}
@@ -87,8 +96,9 @@ export default function Controls() {
         <silkscreentext text="LEFT" pcbX={-45} pcbY={29} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R28"
-          schX={-13}
-          schY={8}
+          schX={layout === "grouped" ? -9.8 : -13}
+          schY={layout === "grouped" ? 9.1 : 8}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-46}
           pcbY={21.5}
@@ -96,8 +106,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C47"
-          schX={-8}
-          schY={8}
+          schX={layout === "grouped" ? -9.8 : -8}
+          schY={layout === "grouped" ? 7.5 : 8}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-44}
           pcbY={21.5}
@@ -105,8 +116,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW6"
-          schX={6}
-          schY={8}
+          schX={layout === "grouped" ? -5 : 6}
+          schY={layout === "grouped" ? 7.5 : 8}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-27}
           pcbY={25}
@@ -115,8 +127,9 @@ export default function Controls() {
         <silkscreentext text="RIGHT" pcbX={-27} pcbY={29} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R29"
-          schX={11}
-          schY={8}
+          schX={layout === "grouped" ? -2.8 : 11}
+          schY={layout === "grouped" ? 9.1 : 8}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-28}
           pcbY={21.5}
@@ -124,8 +137,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C48"
-          schX={16}
-          schY={8}
+          schX={layout === "grouped" ? -2.8 : 16}
+          schY={layout === "grouped" ? 7.5 : 8}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-26}
           pcbY={21.5}
@@ -133,8 +147,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW7"
-          schX={-18}
-          schY={2}
+          schX={layout === "grouped" ? -12 : -18}
+          schY={layout === "grouped" ? 3 : 2}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={38}
           pcbY={31}
@@ -143,8 +158,9 @@ export default function Controls() {
         <silkscreentext text="A" pcbX={38} pcbY={35} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R30"
-          schX={-13}
-          schY={2}
+          schX={layout === "grouped" ? -9.8 : -13}
+          schY={layout === "grouped" ? 4.6 : 2}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={37}
           pcbY={27.5}
@@ -152,8 +168,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C49"
-          schX={-8}
-          schY={2}
+          schX={layout === "grouped" ? -9.8 : -8}
+          schY={layout === "grouped" ? 3 : 2}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={39}
           pcbY={27.5}
@@ -161,8 +178,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW8"
-          schX={6}
-          schY={2}
+          schX={layout === "grouped" ? -5 : 6}
+          schY={layout === "grouped" ? 3 : 2}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={27}
           pcbY={23}
@@ -171,8 +189,9 @@ export default function Controls() {
         <silkscreentext text="B" pcbX={27} pcbY={27} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R31"
-          schX={11}
-          schY={2}
+          schX={layout === "grouped" ? -2.8 : 11}
+          schY={layout === "grouped" ? 4.6 : 2}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={26}
           pcbY={19.5}
@@ -180,8 +199,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C50"
-          schX={16}
-          schY={2}
+          schX={layout === "grouped" ? -2.8 : 16}
+          schY={layout === "grouped" ? 3 : 2}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={28}
           pcbY={19.5}
@@ -189,8 +209,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW9"
-          schX={-18}
-          schY={-4}
+          schX={layout === "grouped" ? -12 : -18}
+          schY={layout === "grouped" ? -1.5 : -4}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={7}
           pcbY={42}
@@ -199,8 +220,9 @@ export default function Controls() {
         <silkscreentext text="START" pcbX={7} pcbY={46} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R32"
-          schX={-13}
-          schY={-4}
+          schX={layout === "grouped" ? -9.8 : -13}
+          schY={layout === "grouped" ? 0.1 : -4}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={6}
           pcbY={38.5}
@@ -208,8 +230,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C51"
-          schX={-8}
-          schY={-4}
+          schX={layout === "grouped" ? -9.8 : -8}
+          schY={layout === "grouped" ? -1.5 : -4}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={8}
           pcbY={38.5}
@@ -217,8 +240,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW10"
-          schX={6}
-          schY={-4}
+          schX={layout === "grouped" ? -5 : 6}
+          schY={layout === "grouped" ? -1.5 : -4}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-7}
           pcbY={42}
@@ -227,8 +251,9 @@ export default function Controls() {
         <silkscreentext text="SELECT" pcbX={-7} pcbY={46} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R33"
-          schX={11}
-          schY={-4}
+          schX={layout === "grouped" ? -2.8 : 11}
+          schY={layout === "grouped" ? 0.1 : -4}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-8}
           pcbY={38.5}
@@ -236,8 +261,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C52"
-          schX={16}
-          schY={-4}
+          schX={layout === "grouped" ? -2.8 : 16}
+          schY={layout === "grouped" ? -1.5 : -4}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-6}
           pcbY={38.5}
@@ -245,8 +271,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW11"
-          schX={-18}
-          schY={-10}
+          schX={layout === "grouped" ? -12 : -18}
+          schY={layout === "grouped" ? -6 : -10}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={-44}
           pcbY={46}
@@ -255,8 +282,9 @@ export default function Controls() {
         <silkscreentext text="L" pcbX={-44} pcbY={50} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R34"
-          schX={-13}
-          schY={-10}
+          schX={layout === "grouped" ? -9.8 : -13}
+          schY={layout === "grouped" ? -4.4 : -10}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-45}
           pcbY={42.5}
@@ -264,8 +292,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C53"
-          schX={-8}
-          schY={-10}
+          schX={layout === "grouped" ? -9.8 : -8}
+          schY={layout === "grouped" ? -6 : -10}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={-43}
           pcbY={42.5}
@@ -273,8 +302,9 @@ export default function Controls() {
         />
         <TSA010A2026B
           name="SW12"
-          schX={6}
-          schY={-10}
+          schX={layout === "grouped" ? -5 : 6}
+          schY={layout === "grouped" ? -6 : -10}
+          schRotation={layout === "grouped" ? 90 : undefined}
           schSectionName="controls"
           pcbX={44}
           pcbY={46}
@@ -283,8 +313,9 @@ export default function Controls() {
         <silkscreentext text="R" pcbX={44} pcbY={50} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R35"
-          schX={11}
-          schY={-10}
+          schX={layout === "grouped" ? -2.8 : 11}
+          schY={layout === "grouped" ? -4.4 : -10}
+          schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"
           pcbX={43}
           pcbY={42.5}
@@ -292,8 +323,9 @@ export default function Controls() {
         />
         <CL05B104KB54PNC
           name="C54"
-          schX={16}
-          schY={-10}
+          schX={layout === "grouped" ? -2.8 : 16}
+          schY={layout === "grouped" ? -6 : -10}
+          schRotation={layout !== "original" ? -90 : undefined}
           schSectionName="controls"
           pcbX={45}
           pcbY={42.5}
@@ -496,10 +528,12 @@ export default function Controls() {
   )
 }
 
-export async function createGameboySwitchCapacitorRepro() {
+export async function createGameboySwitchCapacitorRepro(
+  layout: Layout = "original",
+) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<Controls />)
+  circuit.add(<Controls layout={layout} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

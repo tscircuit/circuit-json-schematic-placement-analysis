@@ -1,3 +1,4 @@
+import { SwitchCapacitorPlacementSolver } from "../SwitchCapacitorPlacementSolver/SwitchCapacitorPlacementSolver"
 import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "../SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
 import { ParallelResistorPlacementSolver } from "../ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
@@ -92,6 +93,7 @@ const solversByIssueType = {
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
+  CapacitorSeparatedFromSwitch: [SwitchCapacitorPlacementSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
@@ -132,6 +134,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "SwitchCapacitorPlacementSolver",
+      SwitchCapacitorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SwitchMatrixDiodePlacementSolver",
       SwitchMatrixDiodePlacementSolver,

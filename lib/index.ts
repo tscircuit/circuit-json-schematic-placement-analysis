@@ -58,3 +58,5 @@ export { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlace
 export { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 
 export { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
+
+export { SwitchCapacitorPlacementSolver } from "./solvers/SwitchCapacitorPlacementSolver/SwitchCapacitorPlacementSolver"

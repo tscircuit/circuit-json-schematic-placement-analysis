@@ -126,7 +126,7 @@ export function createSectionedSchematicSnapshot(input: {
   const issues = analysis.getIssues()
   const diagnostics = createAnalyzerTextSvg(
     [
-      `Complete sheet: ${covered.size} schematic components shown in ${sections.length} sections.`,
+      `Complete sheet: ${covered.size} schematic components shown in ${sections.length} section${sections.length === 1 ? "" : "s"}.`,
       `Full-sheet analysis: ${issues.length} reported issues.`,
       ...issues.map((issue) => analysis.schematicIssuesToString(issue)),
     ].join("\n"),

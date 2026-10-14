@@ -14,6 +14,7 @@ type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 
 /** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
+  subject?: string
   before: State
   after: State
   issues: readonly SchematicPlacementIssue[]
@@ -146,12 +147,12 @@ export function createPlacementComparisonSvg(input: {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width * 2}" height="${totalHeight}" viewBox="0 0 ${width * 2} ${totalHeight}">
 <rect width="100%" height="100%" fill="white" />
 <g data-comparison-panel="before">
-<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">Before — complete matrix, ${issues.length} ${issues.length === 1 ? "finding" : "findings"}</text>
+<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">Before — ${input.subject ?? "complete matrix"}, ${issues.length} ${issues.length === 1 ? "finding" : "findings"}</text>
 <svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(beforeSvg, "before")}</svg>
 <g transform="translate(0 ${headerHeight + height})">${beforeText}</g>
 </g>
 <g data-comparison-panel="after" transform="translate(${width} 0)">
-<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">After — complete matrix, 0 findings</text>
+<text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">After — ${input.subject ?? "complete matrix"}, 0 findings</text>
 <svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(afterSvg, "after")}</svg>
 <g transform="translate(0 ${headerHeight + height})">${afterText}</g>
 </g>
