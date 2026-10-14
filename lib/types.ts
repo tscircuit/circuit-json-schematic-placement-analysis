@@ -228,6 +228,14 @@ export interface ParallelResistorsDrawnInline {
   message: string
 }
 
+/** Two capacitors across the same nets are drawn end-to-end instead of as branches. */
+export interface ParallelCapacitorsDrawnInline {
+  lineItemType: "ParallelCapacitorsDrawnInline"
+  firstCapacitorSchematicBox: SchematicBoxPlacement
+  secondCapacitorSchematicBox: SchematicBoxPlacement
+  message: string
+}
+
 export interface ComponentPinsWouldAlignWithVerticalShift {
   lineItemType: "ComponentPinsWouldAlignWithVerticalShift"
   firstComponent: SchematicBoxPlacement
@@ -726,6 +734,7 @@ export type SchematicPlacementIssue =
   | SeriesRcFilterComponentsNotGrouped
   | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
+  | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift

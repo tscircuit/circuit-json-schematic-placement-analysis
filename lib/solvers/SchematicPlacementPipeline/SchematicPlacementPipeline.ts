@@ -2,6 +2,7 @@ import { SwitchRcNetworkGroupingSolver } from "../SwitchRcNetworkGroupingSolver/
 import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "../SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
 import { ParallelResistorPlacementSolver } from "../ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+import { ParallelCapacitorAlignmentSolver } from "../ParallelCapacitorAlignmentSolver/ParallelCapacitorAlignmentSolver"
 import { ChipPinCrystalPlacementSolver } from "../ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 import { SchematicBoxInnerLabelBoundsSolver } from "../SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "../TransistorRailOrientationSolver/TransistorRailOrientationSolver"
@@ -95,6 +96,7 @@ const solversByIssueType = {
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
   SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
+  ParallelCapacitorsDrawnInline: [ParallelCapacitorAlignmentSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
@@ -443,6 +445,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SeriesRcFilterPlacementSolver",
       SeriesRcFilterPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelCapacitorAlignmentSolver",
+      ParallelCapacitorAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

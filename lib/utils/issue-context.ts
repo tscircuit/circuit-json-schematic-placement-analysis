@@ -195,6 +195,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.capacitorSchematicBox)
         if (issue.resistorSchematicBox) addPlacement(issue.resistorSchematicBox)
         break
+      case "ParallelCapacitorsDrawnInline":
+        addPlacement(issue.firstCapacitorSchematicBox)
+        addPlacement(issue.secondCapacitorSchematicBox)
+        break
       case "ParallelResistorsDrawnInline":
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)

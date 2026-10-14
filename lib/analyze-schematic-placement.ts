@@ -2,6 +2,7 @@ import { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGrouping
 import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "./solvers/SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
 import { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+import { ParallelCapacitorAlignmentSolver } from "./solvers/ParallelCapacitorAlignmentSolver/ParallelCapacitorAlignmentSolver"
 import { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 import { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
@@ -110,6 +111,7 @@ export class SchematicPlacementAnalysis {
       SeriesRcFilterComponentsNotGrouped: 0,
       SwitchRcNetworkNotGrouped: 0,
       ParallelResistorsDrawnInline: 0,
+      ParallelCapacitorsDrawnInline: 0,
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
@@ -214,6 +216,8 @@ export class SchematicPlacementAnalysis {
         return SeriesRcFilterPlacementSolver.issueToString(issue)
       case "SwitchRcNetworkNotGrouped":
         return SwitchRcNetworkGroupingSolver.issueToString(issue)
+      case "ParallelCapacitorsDrawnInline":
+        return ParallelCapacitorAlignmentSolver.issueToString(issue)
       case "ParallelResistorsDrawnInline":
         return ParallelResistorPlacementSolver.issueToString(issue)
       case "ParallelRcNotAligned":

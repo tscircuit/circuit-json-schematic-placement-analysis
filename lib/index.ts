@@ -55,6 +55,7 @@ export { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorP
 
 export { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 export { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+export { ParallelCapacitorAlignmentSolver } from "./solvers/ParallelCapacitorAlignmentSolver/ParallelCapacitorAlignmentSolver"
 export { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
 
 export { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"

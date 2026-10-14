@@ -15,6 +15,8 @@ type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 /** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
   subject?: string
+  /** Override a crop margin when the default would cut through an unrelated block. */
+  padding?: Partial<Record<"left" | "right" | "bottom" | "top", number>>
   before: State
   after: State
   issues: readonly SchematicPlacementIssue[]
@@ -95,10 +97,12 @@ export function createPlacementComparisonSvg(input: {
   )
   const bounds = [original.bounds, ...corrected, ...context]
   const viewportBounds = {
-    left: Math.min(...bounds.map((b) => b.left)) - 1.2,
-    right: Math.max(...bounds.map((b) => b.right)) + 1.2,
-    bottom: Math.min(...bounds.map((b) => b.bottom)) - 1.2,
-    top: Math.max(...bounds.map((b) => b.top)) + 1.2,
+    left: Math.min(...bounds.map((b) => b.left)) - (input.padding?.left ?? 1.2),
+    right:
+      Math.max(...bounds.map((b) => b.right)) + (input.padding?.right ?? 1.2),
+    bottom:
+      Math.min(...bounds.map((b) => b.bottom)) - (input.padding?.bottom ?? 1.2),
+    top: Math.max(...bounds.map((b) => b.top)) + (input.padding?.top ?? 1.2),
   }
   const beforeSvg = renderIssueOverlay({
     ...before,

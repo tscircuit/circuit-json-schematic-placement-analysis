@@ -30,7 +30,9 @@ test("reproduces the complete microSD sheet with inline parallel capacitors", as
     ["net.SD_CARD_DETECT_N", "J_SD.pin9", "TP_SD_CD.pin1", "R_SD_CD_PU.pin1"],
   ])
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
+    "ParallelCapacitorsDrawnInline",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson,
