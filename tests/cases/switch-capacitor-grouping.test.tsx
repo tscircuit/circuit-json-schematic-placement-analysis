@@ -7,7 +7,7 @@ import {
   createSchematicPlacementIssueArtifacts,
 } from "lib/index"
 
-const issueTypes = ["CapacitorSeparatedFromSwitch"] as const
+const issueTypes = ["SwitchCapacitorNotGrouped"] as const
 const findings = (json: CircuitJson) =>
   analyzeSchematicPlacement(json, { issueTypes }).getIssues()
 
@@ -134,7 +134,7 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
       expect(artifacts).toHaveLength(1)
       expect(artifacts[0]!.bounds).toBeDefined()
       expect(artifacts[0]!.descriptionXml).toContain(
-        "CapacitorSeparatedFromSwitch",
+        "SwitchCapacitorNotGrouped",
       )
       const renamed = structuredClone(json)
       for (const e of renamed) {

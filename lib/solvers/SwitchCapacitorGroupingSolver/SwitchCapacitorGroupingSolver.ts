@@ -1,6 +1,6 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
-  CapacitorSeparatedFromSwitch,
+  SwitchCapacitorNotGrouped,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
@@ -9,7 +9,7 @@ import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
 /** Keep an unambiguous local capacitor across a grounded switch near that switch. */
-export class SwitchCapacitorPlacementSolver extends BaseSolver {
+export class SwitchCapacitorGroupingSolver extends BaseSolver {
   constructor(
     private readonly params: {
       ctx: SolverContext
@@ -144,7 +144,7 @@ export class SwitchCapacitorPlacementSolver extends BaseSolver {
       )
         continue
       issues.push({
-        lineItemType: "CapacitorSeparatedFromSwitch",
+        lineItemType: "SwitchCapacitorNotGrouped",
         switchSchematicBox: sw,
         capacitorSchematicBox: cap,
         bodyGap,
@@ -155,7 +155,7 @@ export class SwitchCapacitorPlacementSolver extends BaseSolver {
     this.solved = true
   }
 
-  static issueToString(issue: CapacitorSeparatedFromSwitch): string {
+  static issueToString(issue: SwitchCapacitorNotGrouped): string {
     const attrs: string[] = []
     addAttr(attrs, "switchName", issue.switchSchematicBox.sourceComponentName)
     addAttr(
@@ -164,7 +164,7 @@ export class SwitchCapacitorPlacementSolver extends BaseSolver {
       issue.capacitorSchematicBox.sourceComponentName,
     )
     addAttr(attrs, "message", issue.message)
-    return `<CapacitorSeparatedFromSwitch ${attrs.join(" ")} />`
+    return `<SwitchCapacitorNotGrouped ${attrs.join(" ")} />`
   }
 }
 

@@ -190,7 +190,7 @@ export const getRelevantPlacementsForIssues = ({
           addComponentName(getComponentNameFromPin(pin), issue.schematicSheetId)
         }
         break
-      case "CapacitorSeparatedFromSwitch":
+      case "SwitchCapacitorNotGrouped":
         addPlacement(issue.switchSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break

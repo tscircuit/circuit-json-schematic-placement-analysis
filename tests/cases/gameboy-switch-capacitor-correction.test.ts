@@ -112,7 +112,7 @@ test("groups all ten switch/capacitor branches with unchanged connections and ze
   const baseline = analyzeSchematicPlacement(before)
   const analysis = analyzeSchematicPlacement(after)
   const issues = baseline.getIssues({
-    issueTypes: ["CapacitorSeparatedFromSwitch"],
+    issueTypes: ["SwitchCapacitorNotGrouped"],
   })
   expect(issues).toHaveLength(10)
   expect(baseline.getIssueCounts().TwoPinComponentShouldBeVertical).toBe(10)
@@ -127,7 +127,7 @@ test("groups all ten switch/capacitor branches with unchanged connections and ze
         .filter((e) => e.type === "source_component")
         .map((e) => e.source_component_id),
       beforeDiagnostic: (issue) => {
-        if (issue.lineItemType !== "CapacitorSeparatedFromSwitch")
+        if (issue.lineItemType !== "SwitchCapacitorNotGrouped")
           throw new Error("Expected switch/capacitor issue")
         return `${issue.switchSchematicBox.sourceComponentName} / ${issue.capacitorSchematicBox.sourceComponentName}: parallel branches separated.`
       },

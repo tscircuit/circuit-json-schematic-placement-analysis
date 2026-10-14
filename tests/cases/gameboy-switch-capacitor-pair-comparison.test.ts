@@ -14,7 +14,7 @@ test("shows one complete switch/capacitor/pull branch before and after at equal 
     .getIssues()
     .findIndex(
       (issue) =>
-        issue.lineItemType === "CapacitorSeparatedFromSwitch" &&
+        issue.lineItemType === "SwitchCapacitorNotGrouped" &&
         issue.switchSchematicBox.sourceComponentName === "SW3",
     )
   expect(issueIndex).toBeGreaterThanOrEqual(0)

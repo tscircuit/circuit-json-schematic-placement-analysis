@@ -8,9 +8,7 @@ test("rotating the ten capacitors clears existing findings but leaves all ten gr
   const issues = analysis.getIssues()
   expect(issues).toHaveLength(10)
   expect(
-    issues.every(
-      (issue) => issue.lineItemType === "CapacitorSeparatedFromSwitch",
-    ),
+    issues.every((issue) => issue.lineItemType === "SwitchCapacitorNotGrouped"),
   ).toBe(true)
   expect(analysis.getIssueCounts().TwoPinComponentShouldBeVertical).toBe(0)
 })

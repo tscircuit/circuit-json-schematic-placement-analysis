@@ -208,8 +208,8 @@ export interface ParallelDiodeResistorNotAligned {
 }
 
 /** A capacitor across a grounded switch is far from its local parallel branch. */
-export interface CapacitorSeparatedFromSwitch {
-  lineItemType: "CapacitorSeparatedFromSwitch"
+export interface SwitchCapacitorNotGrouped {
+  lineItemType: "SwitchCapacitorNotGrouped"
   switchSchematicBox: SchematicBoxPlacement
   capacitorSchematicBox: SchematicBoxPlacement
   bodyGap: number
@@ -721,7 +721,7 @@ export type SchematicPlacementIssue =
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | SeriesRcFilterComponentsNotGrouped
-  | CapacitorSeparatedFromSwitch
+  | SwitchCapacitorNotGrouped
   | ParallelResistorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
