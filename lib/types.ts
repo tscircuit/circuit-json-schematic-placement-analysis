@@ -207,13 +207,16 @@ export interface ParallelDiodeResistorNotAligned {
   message: string
 }
 
-/** A capacitor across a grounded switch is far from its local parallel branch. */
-export interface SwitchCapacitorNotGrouped {
-  lineItemType: "SwitchCapacitorNotGrouped"
+/** A local grounded switch/capacitor network or its pull resistor is spread out. */
+export interface SwitchRcNetworkNotGrouped {
+  lineItemType: "SwitchRcNetworkNotGrouped"
   switchSchematicBox: SchematicBoxPlacement
   capacitorSchematicBox: SchematicBoxPlacement
-  bodyGap: number
-  maxRecommendedBodyGap: number
+  resistorSchematicBox?: SchematicBoxPlacement
+  switchCapacitorBodyGap: number
+  maxRecommendedSwitchCapacitorBodyGap: number
+  resistorBodyGap?: number
+  maxRecommendedResistorBodyGap?: number
   message: string
 }
 
@@ -721,7 +724,7 @@ export type SchematicPlacementIssue =
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
   | SeriesRcFilterComponentsNotGrouped
-  | SwitchCapacitorNotGrouped
+  | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned

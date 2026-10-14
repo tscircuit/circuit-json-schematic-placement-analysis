@@ -1,4 +1,4 @@
-import { SwitchCapacitorGroupingSolver } from "../SwitchCapacitorGroupingSolver/SwitchCapacitorGroupingSolver"
+import { SwitchRcNetworkGroupingSolver } from "../SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
 import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "../SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
 import { ParallelResistorPlacementSolver } from "../ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
@@ -93,7 +93,7 @@ const solversByIssueType = {
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
-  SwitchCapacitorNotGrouped: [SwitchCapacitorGroupingSolver],
+  SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
@@ -135,8 +135,8 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
 
   pipelineDef: PipelineStep<any>[] = [
     definePipelineStep(
-      "SwitchCapacitorGroupingSolver",
-      SwitchCapacitorGroupingSolver,
+      "SwitchRcNetworkGroupingSolver",
+      SwitchRcNetworkGroupingSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

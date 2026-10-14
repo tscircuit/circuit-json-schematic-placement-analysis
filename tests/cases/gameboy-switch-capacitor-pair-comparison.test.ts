@@ -14,7 +14,7 @@ test("shows one complete switch/capacitor/pull branch before and after at equal 
     .getIssues()
     .findIndex(
       (issue) =>
-        issue.lineItemType === "SwitchCapacitorNotGrouped" &&
+        issue.lineItemType === "SwitchRcNetworkNotGrouped" &&
         issue.switchSchematicBox.sourceComponentName === "SW3",
     )
   expect(issueIndex).toBeGreaterThanOrEqual(0)
@@ -57,7 +57,7 @@ test("shows one complete switch/capacitor/pull branch before and after at equal 
       .replace(/href="#([^"]+)"/g, `href="#detail-${i}-$1"`)
     return `<svg width="${width}" height="${height}"><rect width="100%" height="100%" fill="#f3f0eb"/><svg x="${(width - w) / 2}" y="${(height - h) / 2}" width="${w}" height="${h}" overflow="hidden">${scoped}</svg></svg>`
   })
-  const diagnostic = "SW3 / C45: parallel branches separated."
+  const diagnostic = "SW3 / C45 / R26: network spread out."
   const descriptions = [
     createAnalyzerTextSvg(diagnostic, width, [
       {
@@ -82,6 +82,6 @@ test("shows one complete switch/capacitor/pull branch before and after at equal 
       `<g transform="translate(${i * width} 0)"><text x="18" y="35" font-family="sans-serif" font-size="24" fill="#172b3a">${i === 0 ? "Before" : "After"} — SW3 / C45 / R26</text><svg y="56" width="${width}" height="${height}">${drawing}</svg><g transform="translate(0 ${56 + height})">${descriptions[i]}</g></g>`,
   )
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${2 * width}" height="${totalHeight}" viewBox="0 0 ${2 * width} ${totalHeight}"><rect width="100%" height="100%" fill="white"/>${panels.join("\n")}<line x1="${width}" y1="0" x2="${width}" y2="${totalHeight}" stroke="#9ca3af" stroke-width="2"/></svg>`
-  expect(drawings[0]!.match(/data-issue-number=/g)).toHaveLength(2)
+  expect(drawings[0]!.match(/data-issue-number=/g)).toHaveLength(3)
   expect(svg.replace(/[ \t]+$/gm, "")).toMatchSvgSnapshot(import.meta.path)
 })

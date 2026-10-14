@@ -15,7 +15,7 @@
 <text x="18" y="34" font-family="sans-serif" font-size="26" fill="#172b3a">Complete after layout — section by section</text>
 <text x="18" y="64" font-family="sans-serif" font-size="16" fill="#172b3a">Views of the same rendered sheet; wires can continue beyond a section boundary.</text>
 <g data-schematic-section="1" transform="translate(0 88)">
-<text x="18" y="32" font-family="sans-serif" font-size="24" fill="#172b3a">1. Complete controls sheet — ten switch/capacitor branches</text>
+<text x="18" y="32" font-family="sans-serif" font-size="24" fill="#172b3a">1. Complete controls sheet — ten switch RC networks</text>
 <svg x="39.62178600000004" y="48" width="1120.756428" height="1949.6000000000001" viewBox="391.6422931221292 169.288774636 203.2791578918708 353.61211082520003" overflow="hidden"><use href="#sectioned-sheet" /></svg>
 </g>
 <g transform="translate(0 2109.6000000000004)"><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="80" viewBox="0 0 1200 80">

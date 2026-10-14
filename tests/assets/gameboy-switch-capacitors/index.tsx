@@ -6,8 +6,13 @@ import { Circuit } from "@tscircuit/core"
 import { TSA010A2026B } from "./TSA010A2026B"
 import { A_0402WGF5101TCE } from "./A_0402WGF5101TCE"
 import { CL05B104KB54PNC } from "./CL05B104KB54PNC"
-type Layout = "original" | "orientation-only" | "grouped"
-export default function Controls({ layout = "original" }: { layout?: Layout }) {
+type Layout = "original" | "orientation-only" | "grouped" | "resistor-separated"
+export default function Controls({
+  layout: variant = "original",
+}: {
+  layout?: Layout
+}) {
+  const layout = variant === "resistor-separated" ? "grouped" : variant
   return (
     <board schLayout={{ layoutMode: "relative" }} routingDisabled>
       <schematicsheet
@@ -34,7 +39,13 @@ export default function Controls({ layout = "original" }: { layout?: Layout }) {
         <silkscreentext text="UP" pcbX={-36} pcbY={38} fontSize="1.2mm" />
         <A_0402WGF5101TCE
           name="R26"
-          schX={layout === "grouped" ? -9.8 : -13}
+          schX={
+            variant === "resistor-separated"
+              ? -20
+              : layout === "grouped"
+                ? -9.8
+                : -13
+          }
           schY={layout === "grouped" ? 13.6 : 14}
           schRotation={layout === "grouped" ? -90 : undefined}
           schSectionName="controls"

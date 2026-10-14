@@ -10,7 +10,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-test("groups all ten switch/capacitor branches with unchanged connections and zero full-sheet findings", async () => {
+test("groups all ten switch/resistor/capacitor networks with unchanged connections and zero full-sheet findings", async () => {
   const before = await createGameboySwitchCapacitorRepro()
   const after = await createGameboySwitchCapacitorRepro("grouped")
   expectReproRendered(after, 30)
@@ -112,14 +112,19 @@ test("groups all ten switch/capacitor branches with unchanged connections and ze
   const baseline = analyzeSchematicPlacement(before)
   const analysis = analyzeSchematicPlacement(after)
   const issues = baseline.getIssues({
-    issueTypes: ["SwitchCapacitorNotGrouped"],
+    issueTypes: ["SwitchRcNetworkNotGrouped"],
   })
   expect(issues).toHaveLength(10)
+  for (const [i, issue] of issues.entries()) {
+    if (issue.lineItemType !== "SwitchRcNetworkNotGrouped")
+      throw new Error("Expected RC network")
+    expect(issue.resistorSchematicBox?.sourceComponentName).toBe(`R${i + 26}`)
+  }
   expect(baseline.getIssueCounts().TwoPinComponentShouldBeVertical).toBe(10)
   expect(analysis.getIssues()).toEqual([])
   expect(
     createPlacementComparisonSvg({
-      subject: "switch/capacitor grouping",
+      subject: "switch RC network grouping",
       before: { circuitJson: before, analysis: baseline },
       after: { circuitJson: after, analysis },
       issues,
@@ -127,9 +132,9 @@ test("groups all ten switch/capacitor branches with unchanged connections and ze
         .filter((e) => e.type === "source_component")
         .map((e) => e.source_component_id),
       beforeDiagnostic: (issue) => {
-        if (issue.lineItemType !== "SwitchCapacitorNotGrouped")
-          throw new Error("Expected switch/capacitor issue")
-        return `${issue.switchSchematicBox.sourceComponentName} / ${issue.capacitorSchematicBox.sourceComponentName}: parallel branches separated.`
+        if (issue.lineItemType !== "SwitchRcNetworkNotGrouped")
+          throw new Error("Expected switch RC network issue")
+        return `${issue.switchSchematicBox.sourceComponentName} / ${issue.capacitorSchematicBox.sourceComponentName} / ${issue.resistorSchematicBox?.sourceComponentName}: network spread out.`
       },
       afterDiagnostic:
         "Ten adjacent switch/capacitor branches, with pull resistors above.\nAll local signal and ground wires are continuous.\nFull-sheet analysis: 0 reported issues.",
@@ -142,7 +147,7 @@ test("groups all ten switch/capacitor branches with unchanged connections and ze
       analysis,
       sections: [
         {
-          title: "Complete controls sheet — ten switch/capacitor branches",
+          title: "Complete controls sheet — ten switch RC networks",
           componentNames: names,
         },
       ],

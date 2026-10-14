@@ -190,9 +190,10 @@ export const getRelevantPlacementsForIssues = ({
           addComponentName(getComponentNameFromPin(pin), issue.schematicSheetId)
         }
         break
-      case "SwitchCapacitorNotGrouped":
+      case "SwitchRcNetworkNotGrouped":
         addPlacement(issue.switchSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
+        if (issue.resistorSchematicBox) addPlacement(issue.resistorSchematicBox)
         break
       case "ParallelResistorsDrawnInline":
         addPlacement(issue.firstResistorSchematicBox)

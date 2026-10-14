@@ -7,11 +7,11 @@ import {
   createSchematicPlacementIssueArtifacts,
 } from "lib/index"
 
-const issueTypes = ["SwitchCapacitorNotGrouped"] as const
+const issueTypes = ["SwitchRcNetworkNotGrouped"] as const
 const findings = (json: CircuitJson) =>
   analyzeSchematicPlacement(json, { issueTypes }).getIssues()
 
-test("reports only isolated grounded parallel switch/capacitor pairs, independent of names and drawing axis", async () => {
+test("reports isolated switch RC networks including separated pull resistors, independent of names and drawing axis", async () => {
   for (const vertical of [false, true]) {
     for (const variant of [
       "distant",
@@ -28,6 +28,10 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
       "zero-pull",
       "non-power-pull",
       "no-pull",
+      "distant-pull",
+      "pull-obstacle",
+      "second-pull",
+      "pull-near-cap",
     ] as const) {
       const circuit = new Circuit()
       circuit.pcbDisabled = true
@@ -38,7 +42,16 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
           name="other"
           capacitance="100nF"
           {...point(
-            variant === "near" || variant === "offset" ? 2 : 10,
+            [
+              "near",
+              "offset",
+              "distant-pull",
+              "pull-obstacle",
+              "second-pull",
+              "pull-near-cap",
+            ].includes(variant)
+              ? 2
+              : 10,
             variant === "offset" ? 2 : 0,
           )}
           schRotation={vertical ? 90 : 0}
@@ -69,10 +82,27 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
               <resistor
                 name="pull"
                 resistance={variant === "zero-pull" ? 0 : 5100}
-                {...point(5, 0)}
+                {...point(
+                  ["distant-pull", "pull-obstacle", "second-pull"].includes(
+                    variant,
+                  )
+                    ? 10
+                    : variant === "pull-near-cap"
+                      ? 4.5
+                      : 5,
+                  0,
+                )}
                 connections={{ pin1: "net.supply", pin2: "net.otherNet" }}
               />
             </>
+          )}
+          {variant === "second-pull" && (
+            <resistor
+              name="extraPull"
+              resistance="10k"
+              {...point(6, 4)}
+              connections={{ pin1: "net.supply", pin2: "net.otherNet" }}
+            />
           )}
           {variant === "second-cap" && (
             <capacitor
@@ -97,7 +127,7 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
               connections={{ pin1: "net.otherNet" }}
             />
           )}
-          {variant === "obstacle" && (
+          {(variant === "obstacle" || variant === "pull-obstacle") && (
             <resistor name="unrelated" resistance="10k" {...point(7, 0)} />
           )}
         </board>,
@@ -108,8 +138,57 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
         json.filter((e) => e.type.endsWith("_error")),
         variant,
       ).toEqual([])
-      const expected = variant === "distant" || variant === "no-pull" ? 1 : 0
+      const expected = ["distant", "no-pull", "distant-pull"].includes(variant)
+        ? 1
+        : 0
       expect(findings(json), `${vertical}:${variant}`).toHaveLength(expected)
+      if (variant === "distant-pull") {
+        const issue = findings(json)[0]!
+        if (issue.lineItemType !== "SwitchRcNetworkNotGrouped")
+          throw new Error("Expected RC network")
+        expect(issue.switchCapacitorBodyGap).toBeLessThanOrEqual(
+          issue.maxRecommendedSwitchCapacitorBodyGap,
+        )
+        expect(issue.resistorBodyGap!).toBeGreaterThan(
+          issue.maxRecommendedResistorBodyGap!,
+        )
+        expect(issue.message).toContain("pull is too far")
+        // Exclusion/placement guards also apply to the resistor we would move.
+        const part = json.find(
+          (e) => e.type === "source_component" && e.name === "pull",
+        )!
+        if (part.type !== "source_component") throw new Error("Missing pull")
+        for (const invalid of ["missing-placement", "dnc", "dnp"] as const) {
+          const altered = structuredClone(json)
+          const boxIndex = altered.findIndex(
+            (e) =>
+              e.type === "schematic_component" &&
+              e.source_component_id === part.source_component_id,
+          )
+          if (invalid === "missing-placement") altered.splice(boxIndex, 1)
+          if (invalid === "dnc")
+            for (const e of altered)
+              if (
+                e.type === "source_port" &&
+                e.source_component_id === part.source_component_id
+              )
+                e.do_not_connect = true
+          if (invalid === "dnp")
+            altered.push({
+              type: "pcb_component",
+              pcb_component_id: "excluded-pull",
+              source_component_id: part.source_component_id,
+              center: { x: 0, y: 0 },
+              width: 1,
+              height: 1,
+              rotation: 0,
+              layer: "top",
+              do_not_place: true,
+              obstructs_within_bounds: true,
+            })
+          expect(findings(altered), invalid).toEqual([])
+        }
+      }
       if (variant === "host") {
         const remote = structuredClone(json)
         const host = remote.find(
@@ -134,7 +213,7 @@ test("reports only isolated grounded parallel switch/capacitor pairs, independen
       expect(artifacts).toHaveLength(1)
       expect(artifacts[0]!.bounds).toBeDefined()
       expect(artifacts[0]!.descriptionXml).toContain(
-        "SwitchCapacitorNotGrouped",
+        "SwitchRcNetworkNotGrouped",
       )
       const renamed = structuredClone(json)
       for (const e of renamed) {
