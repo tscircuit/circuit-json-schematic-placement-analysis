@@ -43,6 +43,9 @@ test("recognizes separated USB series pairs and accepts nearby offset paths with
     expect(
       createSchematicAnalysisFixtureSvg({
         circuitJson: json,
+        analysis: analyzeSchematicPlacement(json, {
+          issueTypes: ["UsbSeriesResistorsNotAligned"],
+        }),
         highlightIssues: ["UsbSeriesResistorsNotAligned"],
       }).replace(/[ \t]+$/gm, ""),
     ).toMatchSvgSnapshot(import.meta.path, name)

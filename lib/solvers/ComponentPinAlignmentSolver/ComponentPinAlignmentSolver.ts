@@ -6,6 +6,8 @@ import type {
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr, fmtDelta } from "../../utils/format"
+import { getSinglePinAlignmentTarget } from "./get-single-pin-alignment-target"
+import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
 interface ConnectedPinPair {
@@ -18,6 +20,7 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
 
   private readonly ctx: SolverContext
   private readonly out: SchematicPlacementIssue[]
+  private readonly index: PlacementNetworkIndex
 
   constructor({
     ctx,
@@ -29,6 +32,7 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
     super()
     this.ctx = ctx
     this.out = issues
+    this.index = new PlacementNetworkIndex(ctx)
   }
 
   override _step(): void {
@@ -87,7 +91,19 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
         pinPairs,
         placementBySchematicComponentId,
       )
-      if (issue) this.out.push(issue)
+      if (!issue) continue
+      // Multiple connections can recommend the same vertical move.
+      const duplicate = this.out.some(
+        (existing) =>
+          existing.lineItemType === issue.lineItemType &&
+          existing.alignedPinCount === 1 &&
+          issue.alignedPinCount === 1 &&
+          existing.targetComponent.schematicComponentId ===
+            issue.targetComponent.schematicComponentId &&
+          Math.abs(existing.deltaSchY - issue.deltaSchY) <=
+            ComponentPinAlignmentSolver.ALIGNMENT_EPSILON,
+      )
+      if (!duplicate) this.out.push(issue)
     }
 
     this.solved = true
@@ -162,7 +178,21 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
         ? [{ leftPort, rightPort }]
         : []
     })
-    if (horizontalPairs.length < 2) return
+    let targetComponent = rightPlacement
+    let minimumAlignedPinCount = 2
+    if (horizontalPairs.length === 1 && pinPairs.length === 1) {
+      const target = getSinglePinAlignmentTarget(
+        {
+          ...firstPair,
+          placements: [firstPlacement, secondPlacement],
+        },
+        this.index,
+      )
+      if (!target) return
+      targetComponent = target
+      minimumAlignedPinCount = 1
+    }
+    if (horizontalPairs.length < minimumAlignedPinCount) return
 
     const { ALIGNMENT_EPSILON } = ComponentPinAlignmentSolver
     const currentlyAlignedPinCount = horizontalPairs.filter(
@@ -192,21 +222,26 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
     )[0]
     if (
       !bestCandidate ||
-      bestCandidate.pairs.length < 2 ||
+      bestCandidate.pairs.length < minimumAlignedPinCount ||
       bestCandidate.pairs.length <= currentlyAlignedPinCount
     ) {
       return
     }
 
-    const targetName = rightPlacement.sourceComponentName || "component"
-    const deltaSchY = bestCandidate.deltaSchY
-    const newSchY = rightPlacement.schY + deltaSchY
+    const targetName = targetComponent.sourceComponentName || "component"
+    let deltaSchY = bestCandidate.deltaSchY
+    if (targetComponent === leftPlacement) deltaSchY = -deltaSchY
+    const newSchY = targetComponent.schY + deltaSchY
+    let message = `shift ${targetName} vertically by ${fmtDelta(deltaSchY)} to align ${bestCandidate.pairs.length} connected pin pairs`
+    if (minimumAlignedPinCount === 1) {
+      message = `shift ${targetName} vertically by ${fmtDelta(deltaSchY)} so the connected pins share the same Y coordinate (a horizontal line); preserve connections and reroute the trace`
+    }
 
     return {
       lineItemType: "ComponentPinsWouldAlignWithVerticalShift",
       firstComponent: leftPlacement,
       secondComponent: rightPlacement,
-      targetComponent: rightPlacement,
+      targetComponent,
       deltaSchY,
       newSchY,
       currentlyAlignedPinCount,
@@ -215,7 +250,7 @@ export class ComponentPinAlignmentSolver extends BaseSolver {
         firstPin: this.getPinLabel(leftPort),
         secondPin: this.getPinLabel(rightPort),
       })),
-      message: `shift ${targetName} vertically by ${fmtDelta(deltaSchY)} to align ${bestCandidate.pairs.length} connected pin pairs`,
+      message,
     }
   }
 
