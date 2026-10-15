@@ -31,7 +31,7 @@ test("reproduces the complete audio-player Clock sheet with a separated crystal 
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
     "RailPathTooSpreadOut",
-    "CrystalSeriesResistorNotGrouped",
+    "ResistorSeparatedFromCrystal",
   ])
   expect(
     createIssueReproSnapshot({

@@ -7,7 +7,7 @@ import {
 } from "lib/index"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-const issueTypes = ["CrystalSeriesResistorNotGrouped"] as const
+const issueTypes = ["ResistorSeparatedFromCrystal"] as const
 const issues = (json: CircuitJson) =>
   analyzeSchematicPlacement(json, { issueTypes }).getIssues()
 
@@ -159,9 +159,7 @@ test("groups typed crystal series resistors independent of names and orientation
         if (variant !== "separated") continue
         const saved = JSON.stringify(json)
         const analysis = analyzeSchematicPlacement(json, { issueTypes })
-        expect(analysis.getIssueCounts().CrystalSeriesResistorNotGrouped).toBe(
-          1,
-        )
+        expect(analysis.getIssueCounts().ResistorSeparatedFromCrystal).toBe(1)
         const artifacts = createSchematicPlacementIssueArtifacts(json, {
           analysis,
           issueTypes,
@@ -169,7 +167,7 @@ test("groups typed crystal series resistors independent of names and orientation
         expect(artifacts).toHaveLength(1)
         expect(artifacts[0]!.bounds).toBeDefined()
         expect(artifacts[0]!.descriptionXml).toContain(
-          "CrystalSeriesResistorNotGrouped",
+          "ResistorSeparatedFromCrystal",
         )
         const svg = createSchematicAnalysisFixtureSvg({
           circuitJson: json,

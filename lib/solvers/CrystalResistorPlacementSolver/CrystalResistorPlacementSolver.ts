@@ -1,7 +1,7 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type { SourcePort } from "circuit-json"
 import type {
-  CrystalSeriesResistorNotGrouped,
+  ResistorSeparatedFromCrystal,
   SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
@@ -10,7 +10,7 @@ import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
 /** Keep a crystal's series resistor in the same visible local branch. */
-export class CrystalSeriesResistorGroupingSolver extends BaseSolver {
+export class CrystalResistorPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly crystalIds: string[]
   private readonly unpopulated = new Set<string>()
@@ -183,7 +183,7 @@ export class CrystalSeriesResistorGroupingSolver extends BaseSolver {
       )
       if (pinDistance <= maxRecommendedPinDistance) continue
       this.params.issues.push({
-        lineItemType: "CrystalSeriesResistorNotGrouped",
+        lineItemType: "ResistorSeparatedFromCrystal",
         crystalSchematicBox: crystal,
         resistorSchematicBox: resistor,
         pinDistance,
@@ -219,7 +219,7 @@ export class CrystalSeriesResistorGroupingSolver extends BaseSolver {
     )
   }
 
-  static issueToString(issue: CrystalSeriesResistorNotGrouped): string {
+  static issueToString(issue: ResistorSeparatedFromCrystal): string {
     const attrs: string[] = []
     addAttr(attrs, "crystalName", issue.crystalSchematicBox.sourceComponentName)
     addAttr(
@@ -230,7 +230,7 @@ export class CrystalSeriesResistorGroupingSolver extends BaseSolver {
     addAttr(attrs, "pinDistance", issue.pinDistance)
     addAttr(attrs, "maxRecommendedPinDistance", issue.maxRecommendedPinDistance)
     addAttr(attrs, "message", issue.message)
-    return `<CrystalSeriesResistorNotGrouped ${attrs.join(" ")} />`
+    return `<ResistorSeparatedFromCrystal ${attrs.join(" ")} />`
   }
 }
 

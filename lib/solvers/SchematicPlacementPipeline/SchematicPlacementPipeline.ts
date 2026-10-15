@@ -1,4 +1,4 @@
-import { CrystalSeriesResistorGroupingSolver } from "../CrystalSeriesResistorGroupingSolver/CrystalSeriesResistorGroupingSolver"
+import { CrystalResistorPlacementSolver } from "../CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
 import { SwitchRcNetworkGroupingSolver } from "../SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
 import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "../SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
@@ -97,7 +97,7 @@ const solversByIssueType = {
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
   SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
-  CrystalSeriesResistorNotGrouped: [CrystalSeriesResistorGroupingSolver],
+  ResistorSeparatedFromCrystal: [CrystalResistorPlacementSolver],
   ParallelCapacitorsDrawnInline: [ParallelCapacitorAlignmentSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
@@ -452,8 +452,8 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ],
     ),
     definePipelineStep(
-      "CrystalSeriesResistorGroupingSolver",
-      CrystalSeriesResistorGroupingSolver,
+      "CrystalResistorPlacementSolver",
+      CrystalResistorPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

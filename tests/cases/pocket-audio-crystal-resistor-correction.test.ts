@@ -77,11 +77,11 @@ test("groups the crystal series resistor with a complete zero-finding Clock shee
   const analysis = analyzeSchematicPlacement(after)
   expect(baseline.getIssues().map((i) => i.lineItemType)).toEqual([
     "RailPathTooSpreadOut",
-    "CrystalSeriesResistorNotGrouped",
+    "ResistorSeparatedFromCrystal",
   ])
   // Removing the old ground-route finding still leaves the new resistor finding.
   expect(afterCaps.getIssues().map((i) => i.lineItemType)).toEqual([
-    "CrystalSeriesResistorNotGrouped",
+    "ResistorSeparatedFromCrystal",
   ])
   expect(analysis.getIssues()).toEqual([])
 
@@ -124,7 +124,7 @@ test("groups the crystal series resistor with a complete zero-finding Clock shee
         e.type === "source_component" ? [e.source_component_id] : [],
       ),
       beforeDiagnostic: (issue) =>
-        issue.lineItemType === "CrystalSeriesResistorNotGrouped"
+        issue.lineItemType === "ResistorSeparatedFromCrystal"
           ? "R_XOUT is separated from the crystal's signal branch."
           : "Y1's ground route is spread out across the sheet.",
       afterDiagnostic:

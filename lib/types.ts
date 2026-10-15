@@ -229,8 +229,8 @@ export interface ParallelResistorsDrawnInline {
 }
 
 /** A crystal's series resistor is separated from its local signal branch. */
-export interface CrystalSeriesResistorNotGrouped {
-  lineItemType: "CrystalSeriesResistorNotGrouped"
+export interface ResistorSeparatedFromCrystal {
+  lineItemType: "ResistorSeparatedFromCrystal"
   crystalSchematicBox: SchematicBoxPlacement
   resistorSchematicBox: SchematicBoxPlacement
   pinDistance: number
@@ -744,7 +744,7 @@ export type SchematicPlacementIssue =
   | SeriesRcFilterComponentsNotGrouped
   | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
-  | CrystalSeriesResistorNotGrouped
+  | ResistorSeparatedFromCrystal
   | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned

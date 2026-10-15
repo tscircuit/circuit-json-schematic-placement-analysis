@@ -195,7 +195,7 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.capacitorSchematicBox)
         if (issue.resistorSchematicBox) addPlacement(issue.resistorSchematicBox)
         break
-      case "CrystalSeriesResistorNotGrouped":
+      case "ResistorSeparatedFromCrystal":
         addPlacement(issue.crystalSchematicBox)
         addPlacement(issue.resistorSchematicBox)
         break
