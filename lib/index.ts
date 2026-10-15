@@ -61,3 +61,5 @@ export { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacement
 export { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 
 export { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
+
+export { CrystalSeriesResistorGroupingSolver } from "./solvers/CrystalSeriesResistorGroupingSolver/CrystalSeriesResistorGroupingSolver"

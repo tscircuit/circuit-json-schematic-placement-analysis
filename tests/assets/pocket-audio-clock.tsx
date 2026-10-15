@@ -6,7 +6,16 @@ import { Circuit } from "@tscircuit/core"
 // imports/ABM8_272_T3.tsx. The MCU is represented by its two-pin Clock-sheet
 // projection, retaining its pin numbers, arrangement, dimensions and placement.
 // Other sheets, unused MCU pins, PCB and CAD definitions are omitted.
-export default function PocketAudioClock() {
+type Placement = { schX: number; schY: number; schRotation?: number }
+export type ClockPlacements = Partial<
+  Record<"R_XOUT" | "C_XIN" | "C_XOUT", Placement>
+>
+
+export default function PocketAudioClock({
+  placements = {},
+}: {
+  placements?: ClockPlacements
+}) {
   return (
     <board schLayout={{ layoutMode: "relative" }}>
       <schematicsheet name="Clock" displayName="Clock">
@@ -53,6 +62,7 @@ export default function PocketAudioClock() {
         schSectionName="Clock"
         schSheetName="Clock"
         connections={{ pin1: "net.XOUT", pin2: "net.XTAL_OUT" }}
+        {...placements.R_XOUT}
       />
       <capacitor
         name="C_XIN"
@@ -64,6 +74,7 @@ export default function PocketAudioClock() {
         schSheetName="Clock"
         schOrientation="pos_top"
         connections={{ pin1: "net.XIN", pin2: "net.GND" }}
+        {...placements.C_XIN}
       />
       <capacitor
         name="C_XOUT"
@@ -75,6 +86,7 @@ export default function PocketAudioClock() {
         schSheetName="Clock"
         schOrientation="pos_top"
         connections={{ pin1: "net.XTAL_OUT", pin2: "net.GND" }}
+        {...placements.C_XOUT}
       />
       {[2, 4].map((pin) => (
         <group key={pin} schSheetName="Clock">
@@ -115,10 +127,10 @@ export default function PocketAudioClock() {
   )
 }
 
-export async function createPocketAudioClock() {
+export async function createPocketAudioClock(placements: ClockPlacements = {}) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<PocketAudioClock />)
+  circuit.add(<PocketAudioClock placements={placements} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
