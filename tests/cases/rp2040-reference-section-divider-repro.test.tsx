@@ -1,4 +1,4 @@
-import { beforeAll, expect, test } from "bun:test"
+import { expect, test } from "bun:test"
 import type { AnyCircuitElement } from "circuit-json"
 import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 import { analyzeSchematicPlacement } from "lib/index"
@@ -367,7 +367,6 @@ const circuitJson = JSON.parse(String.raw`[
 const sheetId = "schematic_sheet_2"
 const reference = "R_DRV_ENABLE_PU"
 const dividerId = "schematic_line_104"
-let detectedReferenceCollision = false
 
 function heading(title: string, detail: string) {
   const escape = (text: string) =>
@@ -379,7 +378,7 @@ function heading(title: string, detail: string) {
   </svg>`
 }
 
-beforeAll(() => {
+test("detects the actual RP2040 motor_driver reference crossing a section divider (#241)", () => {
   const component = circuitJson.find(
     (r) =>
       r.type === "schematic_component" &&
@@ -425,15 +424,107 @@ beforeAll(() => {
   ).toHaveLength(0)
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  detectedReferenceCollision = analysis
+  const getReferenceCollision = (input: AnyCircuitElement[]) =>
+    analyzeSchematicPlacement(input)
+      .getIssues()
+      .find(
+        (issue) =>
+          issue.lineItemType === "SchematicTextCollision" &&
+          issue.schematicComponentId === component.schematic_component_id &&
+          issue.schematicSheetId === sheetId &&
+          issue.collidingObject.id === dividerId,
+      )
+  const collision = analysis
     .getIssues()
-    .some(
+    .find(
       (issue) =>
         issue.lineItemType === "SchematicTextCollision" &&
         issue.text === reference &&
-        issue.schematicSheetId === sheetId &&
         issue.collidingObject.id === dividerId,
     )
+  expect(collision).toMatchObject({
+    lineItemType: "SchematicTextCollision",
+    schematicSheetId: sheetId,
+    schematicComponentId: component.schematic_component_id,
+    collidingObject: { type: "line", id: dividerId },
+    suggestedMove: undefined,
+    schematicTextId: undefined,
+  })
+  // The same board becomes clear when the divider moves or the reference shortens.
+  expect(
+    getReferenceCollision(
+      circuitJson.map((r) => (r === divider ? { ...r, x1: 12, x2: 12 } : r)),
+    ),
+  ).toBeUndefined()
+  expect(
+    getReferenceCollision(
+      circuitJson.map((r) =>
+        r === source ? { ...r, name: "R1", display_name: "R1" } : r,
+      ),
+    ),
+  ).toBeUndefined()
+  // Labels and dividers on different sheets must never collide.
+  expect(
+    getReferenceCollision(
+      circuitJson.map((r) =>
+        r === divider ? { ...r, schematic_sheet_id: "other_sheet" } : r,
+      ),
+    ),
+  ).toBeUndefined()
+  // Match the renderer's display-name override, even when the underlying name is short.
+  expect(
+    getReferenceCollision(
+      circuitJson.map((r) =>
+        r === source ? { ...r, name: "R1", display_name: reference } : r,
+      ),
+    ),
+  ).toBeDefined()
+
+  // Component artwork is not a section divider.
+  expect(
+    getReferenceCollision(
+      circuitJson.map((r) =>
+        r === divider
+          ? { ...r, schematic_component_id: component.schematic_component_id }
+          : r,
+      ),
+    ),
+  ).toBeUndefined()
+  // Port spacing scales symbol anchors; the font size stays fixed in the renderer.
+  const scaled = getReferenceCollision(
+    circuitJson.map((r) => {
+      if (
+        r.type !== "schematic_port" ||
+        r.schematic_component_id !== component.schematic_component_id
+      )
+        return r
+      return {
+        ...r,
+        center: {
+          x: component.center.x + 2 * (r.center.x - component.center.x),
+          y: component.center.y + 2 * (r.center.y - component.center.y),
+        },
+      }
+    }),
+  )
+  expect(
+    scaled?.lineItemType === "SchematicTextCollision" && scaled.textBounds.left,
+  ).toBeCloseTo(8.29)
+  // Values use the same symbol-text geometry as references.
+  const longValue = "12345678901234567890Ω"
+  const valueCollision = getReferenceCollision(
+    circuitJson.map((r) =>
+      r === source
+        ? { ...r, name: "R1", display_name: "R1" }
+        : r === component
+          ? { ...r, symbol_display_value: longValue }
+          : r,
+    ),
+  )
+  expect(valueCollision).toMatchObject({
+    text: longValue,
+    suggestedMove: undefined,
+  })
 
   // Omit only the paper-frame record from viewport fitting; analyze the complete recording.
   const svg = convertCircuitJsonToSchematicSvg(
@@ -447,7 +538,7 @@ beforeAll(() => {
     throw new Error("Invalid schematic coordinate transform")
   const screen = (x: number, y: number) => ({
     x: a! * x + c! * y + e!,
-    y: b! * x + d! * y + f!,
+    y: b! * y + d! * y + f!,
   })
   // {REF} is at center + (0.16, 0.16) in the recorded boxresistor_up symbol.
   const crossing = screen(divider.x1, component.center.y + 0.16)
@@ -475,7 +566,7 @@ beforeAll(() => {
       crop,
       heading(
         "Current analyzer output",
-        `Reference/divider collision reported: ${detectedReferenceCollision ? "YES" : "NO"} | Actual findings below (unrelated DRIVER warning)`,
+        `Reference/divider collision reported: ${collision ? "YES" : "NO"} | Component reference crossing and existing DRIVER warning below`,
       ),
       createAnalyzerTextSvg(analysis.toString(), 1200),
     ],
@@ -489,16 +580,5 @@ beforeAll(() => {
       },
     },
   )
-  // Snapshot/fixture failures must never be swallowed by test.failing.
   expect(evidence).toMatchSvgSnapshot(import.meta.path)
 })
-
-// Normal mode proves the missing warning; default mode keeps the known-bug repro green.
-const reproTest =
-  process.env.TSCIRCUIT_VERIFY_DIVIDER_REPRO === "1" ? test : test.failing
-reproTest(
-  "actual RP2040 motor_driver reference crossing a section divider should be reported (#241)",
-  () => {
-    expect(detectedReferenceCollision).toBe(true)
-  },
-)

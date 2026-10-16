@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test"
-import { parseSync, type INode } from "svgson"
 import { analyzeSchematicPlacement } from "lib/index"
+import { type INode, parseSync } from "svgson"
 import { getRp2040BldcSheet } from "../assets/rp2040-bldc-controller"
-import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
+import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
 // Compare the ORing power paths with LM74700-Q1 Figure 10-1.
 // https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf#page=16
@@ -24,6 +24,7 @@ test("records the full input sheet's local trace suggestions without rearranging
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
+    SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 6,
   })
   expect(
@@ -168,7 +169,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 14 }, (_, index) => index + 1),
+      Array.from({ length: 15 }, (_, index) => index + 1),
     )
     expect(
       markers.every(
