@@ -80,6 +80,7 @@ test("records the real USB hub four-pin crystal load network", async () => {
       analysis,
       issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
       showOverlay: true,
+      showFullSchematic: true,
       width: 1200,
       height: 700,
     }),
