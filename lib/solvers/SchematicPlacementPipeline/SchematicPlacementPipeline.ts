@@ -1,3 +1,4 @@
+import { HighPassRcFilterPlacementSolver } from "../HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "../ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "../ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
 import { CrystalResistorPlacementSolver } from "../CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
@@ -97,6 +98,7 @@ const solversByIssueType = {
   SchematicBoxInnerLabelOutOfBounds: [SchematicBoxInnerLabelBoundsSolver],
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  HighPassRcFilterComponentsNotGrouped: [HighPassRcFilterPlacementSolver],
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
   SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
@@ -460,6 +462,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
           maxSpan: p.railPathVisibility?.maxSpan,
           maxLength: p.railPathVisibility?.maxPathLength,
         },
+      ],
+    ),
+    definePipelineStep(
+      "HighPassRcFilterPlacementSolver",
+      HighPassRcFilterPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
     definePipelineStep(

@@ -208,6 +208,7 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)
         break
+      case "HighPassRcFilterComponentsNotGrouped":
       case "SeriesRcFilterComponentsNotGrouped":
       case "ParallelRcNotAligned":
         addPlacement(issue.resistorSchematicBox)

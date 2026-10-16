@@ -1,3 +1,4 @@
+import { HighPassRcFilterPlacementSolver } from "./solvers/HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "./solvers/ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
 import { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
@@ -111,6 +112,7 @@ export class SchematicPlacementAnalysis {
       SchematicBoxInnerLabelOutOfBounds: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
+      HighPassRcFilterComponentsNotGrouped: 0,
       SeriesRcFilterComponentsNotGrouped: 0,
       SwitchRcNetworkNotGrouped: 0,
       ParallelResistorsDrawnInline: 0,
@@ -220,6 +222,8 @@ export class SchematicPlacementAnalysis {
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "HighPassRcFilterComponentsNotGrouped":
+        return HighPassRcFilterPlacementSolver.issueToString(issue)
       case "SeriesRcFilterComponentsNotGrouped":
         return SeriesRcFilterPlacementSolver.issueToString(issue)
       case "SwitchRcNetworkNotGrouped":

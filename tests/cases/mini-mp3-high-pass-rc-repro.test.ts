@@ -43,6 +43,8 @@ test("reproduces both separated capacitor/resistor pairs in the complete MP3 hea
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
     "TwoPinComponentCouldBeFlipped",
+    "HighPassRcFilterComponentsNotGrouped",
+    "HighPassRcFilterComponentsNotGrouped",
   ])
   expect(
     createIssueReproSnapshot({
