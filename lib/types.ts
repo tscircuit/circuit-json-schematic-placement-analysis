@@ -237,6 +237,16 @@ export interface ParallelResistorsDrawnInline {
   message: string
 }
 
+/** A crystal's series resistor is separated from its local signal branch. */
+export interface ResistorSeparatedFromCrystal {
+  lineItemType: "ResistorSeparatedFromCrystal"
+  crystalSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** Two capacitors across the same nets are drawn end-to-end instead of as branches. */
 export interface ParallelCapacitorsDrawnInline {
   lineItemType: "ParallelCapacitorsDrawnInline"
@@ -641,6 +651,14 @@ export interface DiodeCapacitorJunctionTooSpreadOut {
   message: string
 }
 
+/** Complete parallel resistor/LED branches drawn end-to-end. */
+export interface ParallelLedBranchesDrawnInline {
+  lineItemType: "ParallelLedBranchesDrawnInline"
+  branchSchematicBoxes: SchematicBoxPlacement[]
+  branchCount: number
+  message: string
+}
+
 /** A series LED chain with remote links that run behind their connected pins. */
 export interface SeriesLedChainNotOrdered {
   lineItemType: "SeriesLedChainNotOrdered"
@@ -717,6 +735,7 @@ export type SchematicPlacementIssue =
   | InductorSeparatedFromChipPin
   | SharedNodeDiodesInline
   | DiodeCapacitorJunctionTooSpreadOut
+  | ParallelLedBranchesDrawnInline
   | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
@@ -743,6 +762,7 @@ export type SchematicPlacementIssue =
   | SeriesRcFilterComponentsNotGrouped
   | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
+  | ResistorSeparatedFromCrystal
   | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned

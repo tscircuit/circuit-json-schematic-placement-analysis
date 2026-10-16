@@ -1,4 +1,6 @@
 import { ParallelDiodeCapacitorAlignmentSolver } from "./solvers/ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
+import { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
+import { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
 import { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
 import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "./solvers/SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
@@ -112,6 +114,7 @@ export class SchematicPlacementAnalysis {
       SeriesRcFilterComponentsNotGrouped: 0,
       SwitchRcNetworkNotGrouped: 0,
       ParallelResistorsDrawnInline: 0,
+      ResistorSeparatedFromCrystal: 0,
       ParallelCapacitorsDrawnInline: 0,
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
@@ -147,6 +150,7 @@ export class SchematicPlacementAnalysis {
       RailPathTooSpreadOut: 0,
       SwitchMatrixDiodeSeparatedFromSwitch: 0,
       SwitchMatrixBranchesTooSpreadOut: 0,
+      ParallelLedBranchesDrawnInline: 0,
       SeriesLedChainNotOrdered: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
@@ -177,6 +181,8 @@ export class SchematicPlacementAnalysis {
       case "SwitchMatrixBranchesTooSpreadOut":
       case "SwitchMatrixDiodeSeparatedFromSwitch":
         return SwitchMatrixDiodePlacementSolver.issueToString(issue)
+      case "ParallelLedBranchesDrawnInline":
+        return ParallelLedBranchPlacementSolver.issueToString(issue)
       case "SeriesLedChainNotOrdered":
         return SeriesLedChainPlacementSolver.issueToString(issue)
       case "InductorSeparatedFromChipPin":
@@ -218,6 +224,8 @@ export class SchematicPlacementAnalysis {
         return SeriesRcFilterPlacementSolver.issueToString(issue)
       case "SwitchRcNetworkNotGrouped":
         return SwitchRcNetworkGroupingSolver.issueToString(issue)
+      case "ResistorSeparatedFromCrystal":
+        return CrystalResistorPlacementSolver.issueToString(issue)
       case "ParallelCapacitorsDrawnInline":
         return ParallelCapacitorAlignmentSolver.issueToString(issue)
       case "ParallelResistorsDrawnInline":
