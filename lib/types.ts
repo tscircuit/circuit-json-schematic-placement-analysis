@@ -228,6 +228,16 @@ export interface ParallelResistorsDrawnInline {
   message: string
 }
 
+/** A crystal's series resistor is separated from its local signal branch. */
+export interface ResistorSeparatedFromCrystal {
+  lineItemType: "ResistorSeparatedFromCrystal"
+  crystalSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** Two capacitors across the same nets are drawn end-to-end instead of as branches. */
 export interface ParallelCapacitorsDrawnInline {
   lineItemType: "ParallelCapacitorsDrawnInline"
@@ -743,6 +753,7 @@ export type SchematicPlacementIssue =
   | SeriesRcFilterComponentsNotGrouped
   | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
+  | ResistorSeparatedFromCrystal
   | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
