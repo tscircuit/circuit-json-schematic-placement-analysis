@@ -207,6 +207,15 @@ export interface ParallelDiodeResistorNotAligned {
   message: string
 }
 
+/** A local diode/capacitor pair has nonmatching parallel branch ends. */
+export interface ParallelDiodeCapacitorNotAligned {
+  lineItemType: "ParallelDiodeCapacitorNotAligned"
+  diodeSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  reason: "different_axes" | "crossed_connections" | "staggered"
+  message: string
+}
+
 /** A local grounded switch/capacitor network or its pull resistor is spread out. */
 export interface SwitchRcNetworkNotGrouped {
   lineItemType: "SwitchRcNetworkNotGrouped"
@@ -757,6 +766,7 @@ export type SchematicPlacementIssue =
   | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
+  | ParallelDiodeCapacitorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors

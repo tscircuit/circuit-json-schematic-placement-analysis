@@ -41,6 +41,7 @@ test("reproduces all four parallel diode/capacitor branches on the complete dron
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((issue) => issue.lineItemType)).toEqual([
+    ...Array(4).fill("ParallelDiodeCapacitorNotAligned"),
     "DecouplingCapacitorsNotCloseTogether",
     "DecouplingCapacitorsNotCloseTogether",
     "RailPathTooSpreadOut",

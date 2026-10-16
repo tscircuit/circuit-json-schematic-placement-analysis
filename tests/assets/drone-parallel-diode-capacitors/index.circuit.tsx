@@ -63,7 +63,18 @@ function schematic(section: string) {
 const connection = (from: string, to: string) => (
   <trace key={`${from}-${to}`} from={from} to={`net.${to}`} />
 )
-export default function Drone() {
+export type DronePlacement = {
+  schX?: number
+  schY?: number
+  schRotation?: number
+  schSectionName?: string
+}
+
+export default function Drone({
+  placements = {},
+}: {
+  placements?: Record<string, DronePlacement>
+} = {}) {
   Object.keys(counts).forEach((k) => delete counts[k])
   return (
     <board
@@ -130,6 +141,7 @@ export default function Drone() {
           pcbY={y}
           {...schematic(section)}
           connections={{ pin1: `net.${a}`, pin2: `net.${b}` }}
+          {...placements[name]}
         />
       ))}
       {resistors.map(([name, value, x, y, a, b, section]) => (
@@ -216,6 +228,7 @@ export default function Drone() {
           schY={-20}
           schSectionName="Programming"
           connections={{ pin1: `net.${net}` }}
+          {...placements[`TP${i + 1}`]}
         />
       ))}
       {["VBAT", "GND"].map((net, i) => (
@@ -258,6 +271,7 @@ export default function Drone() {
                 S: "net.GND",
                 D: `net.M${n}_NEG`,
               }}
+              {...placements[`Q${n}`]}
             />
             <SS34
               schRotation={-90}
@@ -269,6 +283,7 @@ export default function Drone() {
               schY={-32}
               schSectionName={sec}
               connections={{ cathode: "net.VBAT", anode: `net.M${n}_NEG` }}
+              {...placements[`D${n}`]}
             />
             <resistor
               name={`RG${n}`}
@@ -282,6 +297,7 @@ export default function Drone() {
               schSectionName={sec}
               supplierPartNumbers={{ jlcpcb: ["C22775"] }}
               connections={{ pin1: `net.M${n}_PWM`, pin2: `net.M${n}_GATE` }}
+              {...placements[`RG${n}`]}
             />
             <resistor
               name={`RPD${n}`}
@@ -296,6 +312,7 @@ export default function Drone() {
               schSectionName={sec}
               supplierPartNumbers={{ jlcpcb: ["C25803"] }}
               connections={{ pin1: `net.M${n}_GATE`, pin2: "net.GND" }}
+              {...placements[`RPD${n}`]}
             />
             <capacitor
               name={`CM${n}`}
@@ -310,6 +327,7 @@ export default function Drone() {
               schY={-35}
               schSectionName={sec}
               connections={{ pin1: "net.VBAT", pin2: `net.M${n}_NEG` }}
+              {...placements[`CM${n}`]}
             />
             {["VBAT", `M${n}_NEG`].map((net, j) => (
               <testpoint
@@ -323,6 +341,7 @@ export default function Drone() {
                 schY={-39}
                 schSectionName={sec}
                 connections={{ pin1: `net.${net}` }}
+                {...placements[`M${n}_${j === 0 ? "POS" : "NEG"}`]}
               />
             ))}
           </Fragment>
