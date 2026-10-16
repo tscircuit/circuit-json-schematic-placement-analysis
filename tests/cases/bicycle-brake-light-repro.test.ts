@@ -48,6 +48,7 @@ test("reproduces the complete bicycle Lights sheet with six parallel LED branche
   ])
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ParallelLedBranchesDrawnInline",
     ...Array(7).fill("TwoPinComponentShouldBeVertical"),
     "MosfetGateNetworkNotGrouped",
   ])

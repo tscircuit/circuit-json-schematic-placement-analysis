@@ -66,6 +66,7 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "ParallelLedBranchesDrawnInline":
       case "SwitchMatrixBranchesTooSpreadOut":
         for (const placement of issue.branchSchematicBoxes)
           addPlacement(placement)

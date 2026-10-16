@@ -62,4 +62,5 @@ export { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerL
 
 export { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
 
+export { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
 export { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"

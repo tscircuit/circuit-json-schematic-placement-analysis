@@ -4,9 +4,25 @@ import { XL_1608SURC_06 } from "./bicycle-brake-light/XL_1608SURC_06"
 
 // Complete Lights sheet: https://tscircuit.com/Devesh36/bicycle-brake-light?version=0.1.3
 // Freeze the published grid placements; preserve the imported LED and Q1 pinout.
-export function BicycleBrakeLights() {
+export type BicycleLightPlacements = Record<
+  string,
+  { schX: number; schY: number; schRotation?: number }
+>
+
+interface Options {
+  placements?: BicycleLightPlacements
+  schMaxTraceDistance?: number
+}
+
+export function BicycleBrakeLights({
+  placements = {},
+  schMaxTraceDistance,
+}: Options = {}) {
   return (
-    <board schLayout={{ layoutMode: "relative" }}>
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={schMaxTraceDistance}
+    >
       <schematicsheet
         name="Lights"
         displayName="Six red LEDs and PWM switch"
@@ -28,6 +44,7 @@ export function BicycleBrakeLights() {
                   footprint="0603"
                   schX={schX}
                   schY={schY}
+                  {...placements[`R${12 + i}`]}
                   connections={{ pin1: "net.V3V3", pin2: `net.LED${i + 1}_A` }}
                 />
                 <XL_1608SURC_06
@@ -36,6 +53,7 @@ export function BicycleBrakeLights() {
                   cadModel={undefined}
                   schX={schX + 4.7}
                   schY={schY}
+                  {...placements[`D${i + 1}`]}
                   connections={{
                     anode: `net.LED${i + 1}_A`,
                     cathode: "net.LED_RETURN",
@@ -50,6 +68,7 @@ export function BicycleBrakeLights() {
             footprint="sot23"
             schX={-7.05}
             schY={-5.475}
+            {...placements.Q1}
             pinAttributes={{
               pin1: { isInput: true },
               pin2: { requiresGround: true },
@@ -68,6 +87,7 @@ export function BicycleBrakeLights() {
             footprint="0603"
             schX={-2.35}
             schY={-5.475}
+            {...placements.R18}
             connections={{ pin1: "net.LED_PWM", pin2: "net.GATE" }}
           />
           <resistor
@@ -76,6 +96,7 @@ export function BicycleBrakeLights() {
             footprint="0603"
             schX={2.35}
             schY={-5.475}
+            {...placements.R19}
             connections={{ pin1: "net.GATE", pin2: "net.GND" }}
           />
         </group>
@@ -84,10 +105,10 @@ export function BicycleBrakeLights() {
   )
 }
 
-export async function createBicycleBrakeLights() {
+export async function createBicycleBrakeLights(options: Options = {}) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<BicycleBrakeLights />)
+  circuit.add(<BicycleBrakeLights {...options} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
