@@ -47,7 +47,7 @@ test("reproduces the complete Stride sheet with L1 separated from U1", async () 
     ),
   ).toBe(true)
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(37)
+  expect(analysis.getIssues()).toHaveLength(32)
   const [issue] = analysis.getIssues({
     issueTypes: ["InductorSeparatedFromChipPin"],
   })

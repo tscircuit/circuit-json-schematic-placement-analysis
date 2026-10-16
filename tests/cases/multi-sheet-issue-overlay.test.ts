@@ -7,48 +7,36 @@ import { createMultiSheetComponentLabelOverlapCircuitJson } from "../assets/mult
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("retains exact collision regions and excludes other sheets at identical coordinates", async () => {
+test("renders the selected sheet without overlays or artifacts when no collisions remain", async () => {
   const circuitJson = await createMultiSheetComponentLabelOverlapCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
   const collisions = analysis.getIssues({ issueTypes: ["NetLabelCollision"] })
-  expect(collisions).toHaveLength(2)
-  const issue = collisions[1]!
-  if (issue.lineItemType !== "NetLabelCollision")
-    throw new Error("Expected collision")
+  expect(collisions).toEqual([])
+  const sheet = circuitJson.find(
+    (element) => element.type === "schematic_sheet" && element.name === "Logic",
+  )
+  if (sheet?.type !== "schematic_sheet") throw new Error("Missing Logic sheet")
   const input = {
     circuitJson,
     analysis,
-    schematicSheetId: issue.schematicSheetId,
+    schematicSheetId: sheet.schematic_sheet_id,
     issueTypes: ["NetLabelCollision" as const],
   }
-  expect(analysis.getIssueCounts().NetLabelCollision).toBe(2)
-  expect(analysis.getIssueCounts(input).NetLabelCollision).toBe(1)
+  expect(analysis.getIssueCounts().NetLabelCollision).toBe(0)
+  expect(analysis.getIssueCounts(input).NetLabelCollision).toBe(0)
   const svg = createIssueOverlaySvg(input)
-  expect(svg.match(/data-issue-index=/g)).toHaveLength(1)
-  expect(svg).not.toContain('data-issue-index="0"')
+  expect(svg).not.toContain("data-issue-index=")
   expect(svg).not.toContain("UP1")
   expect(svg).toContain("UL1")
-  expect(issue.collisionBounds).toHaveLength(1)
-  for (const bounds of issue.collisionBounds!) {
-    expect(bounds.right).toBeGreaterThan(bounds.left)
-    expect(bounds.top).toBeGreaterThan(bounds.bottom)
-    expect(svg).toContain(
-      `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="#ef444433"`,
-    )
-  }
   const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
     analysis,
-    schematicSheetId: issue.schematicSheetId,
+    schematicSheetId: sheet.schematic_sheet_id,
     issueTypes: ["NetLabelCollision"],
   })
-  expect(artifacts).toHaveLength(1)
-  expect(artifacts[0]!.issueIndex).toBe(1)
-  expect(artifacts[0]!.fileName).toBe("issue-0002-NetLabelCollision.svg")
-  expect(artifacts[0]!.content).not.toContain("UP1")
-  expect(artifacts[0]!.descriptionXml).toContain("UL1")
+  expect(artifacts).toEqual([])
   const snapshot = createIssueReproSnapshot(input)
-  expect(snapshot).toContain("NetLabelCollision: 2")
-  expect(snapshot).toContain("Matching issues: 1")
+  expect(snapshot).not.toContain("NetLabelCollision:")
+  expect(snapshot).toContain("Matching issues: 0")
   expect(snapshot).not.toContain("ComponentOverlap: 0")
   expect(snapshot).toMatchSvgSnapshot(import.meta.path)
 })

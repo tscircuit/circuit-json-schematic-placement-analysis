@@ -79,19 +79,19 @@ test("solves label clearance symmetrically for width and height at every corner"
         ? issues[0]!.suggestedSchHeight
         : issues[0]!.suggestedSchWidth
     // 11-character label, edge padding, outer bank pin, half text height,
-    // and a 0.2 gap between label banks determine the limiting dimension.
-    expect(length).toBeCloseTo(3.44)
+    // and a 0.1 gap between label banks determine the limiting dimension.
+    expect(length).toBeCloseTo(3.24)
     const resized = await render(length!)
     const resizedAnalysis = analyzeSchematicPlacement(resized)
     expect(resizedAnalysis.getIssues()).toHaveLength(0)
-    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
-    const tooSmall = await render(length! - 0.02)
+    expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.1)
+    const tooSmall = await render(length! - 0.05)
     expect(
       analyzeSchematicPlacement(tooSmall).getIssues({
         issueTypes: ["SchematicBoxInnerLabelCollision"],
       }),
-    ).toHaveLength(0)
-    expect(measureLabelBankGap(tooSmall)).toBeLessThan(0.2)
+    ).toHaveLength(1)
+    expect(measureLabelBankGap(tooSmall)).toBeLessThan(0.1)
     // Assert every mirrored corner; keep one visual example per resize axis.
     if (!variant.snapshot) continue
     await expect(

@@ -99,7 +99,43 @@ export interface SchematicBoxInnerLabelCollision {
   lineItemType: "SchematicBoxInnerLabelCollision"
   schematicBox: SchematicBoxPlacement
   overlappingSides: SchematicSide[]
+  /** Required clearance between different-side pin labels, in schematic units. */
+  minimumLabelGap: number
+  /** Exact reported pairs, with displayed text and bounds for highlighting.
+   * Optional for previously serialized reports. */
+  labelPairs?: SchematicPinLabelCollisionPair[]
+  /** Apply the suggested dimensions together, keeping pins along their edges. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
   message: string
+}
+
+/** Inner pin-label text crosses the boundary of its own schematic box. */
+export interface SchematicBoxInnerLabelOutOfBounds {
+  lineItemType: "SchematicBoxInnerLabelOutOfBounds"
+  schematicBox: SchematicBoxPlacement
+  overflowingLabels: Array<
+    SchematicPinLabelBounds & { outsideEdges: SchematicSide[] }
+  >
+  /** Apply together at the same center, preserving pin positions along each edge. */
+  suggestedSchWidth?: number
+  suggestedSchHeight?: number
+  message: string
+}
+
+export interface SchematicPinLabelCollisionPair {
+  firstLabel: SchematicPinLabelBounds
+  secondLabel: SchematicPinLabelBounds
+  /** Largest separating-axis gap; zero when the label bounds overlap. */
+  measuredGap: number
+  kind: "overlap" | "clearance"
+}
+
+export interface SchematicPinLabelBounds {
+  schematicPortId: string
+  text: string
+  side: SchematicSide
+  bounds: SchematicIssueBounds
 }
 
 export type SchematicSide = "left" | "right" | "top" | "bottom"
@@ -140,6 +176,30 @@ export interface DiodeResistorNotAligned {
   message: string
 }
 
+/** A separated series capacitor and its grounded shunt resistor. */
+export interface HighPassRcFilterComponentsNotGrouped {
+  lineItemType: "HighPassRcFilterComponentsNotGrouped"
+  resistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSourcePortId: string
+  capacitorSourcePortId: string
+  signalPinDistance: number
+  maxRecommendedSignalPinDistance: number
+  message: string
+}
+
+/** A separated series signal resistor and its grounded shunt capacitor. */
+export interface SeriesRcFilterComponentsNotGrouped {
+  lineItemType: "SeriesRcFilterComponentsNotGrouped"
+  resistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSourcePortId: string
+  capacitorSourcePortId: string
+  signalPinDistance: number
+  maxRecommendedSignalPinDistance: number
+  message: string
+}
+
 /** A unique grounded resistor/capacitor pair drawn with nonmatching branch ends. */
 export interface ParallelRcNotAligned {
   lineItemType: "ParallelRcNotAligned"
@@ -156,6 +216,54 @@ export interface ParallelDiodeResistorNotAligned {
   diodeSchematicBox: SchematicBoxPlacement
   resistorSchematicBox: SchematicBoxPlacement
   reason: "different_axes" | "crossed_connections" | "staggered"
+  message: string
+}
+
+/** A local diode/capacitor pair has nonmatching parallel branch ends. */
+export interface ParallelDiodeCapacitorNotAligned {
+  lineItemType: "ParallelDiodeCapacitorNotAligned"
+  diodeSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  reason: "different_axes" | "crossed_connections" | "staggered"
+  message: string
+}
+
+/** A local grounded switch/capacitor network or its pull resistor is spread out. */
+export interface SwitchRcNetworkNotGrouped {
+  lineItemType: "SwitchRcNetworkNotGrouped"
+  switchSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox?: SchematicBoxPlacement
+  switchCapacitorBodyGap: number
+  maxRecommendedSwitchCapacitorBodyGap: number
+  resistorBodyGap?: number
+  maxRecommendedResistorBodyGap?: number
+  message: string
+}
+
+/** Two resistors across the same nets are drawn end-to-end instead of as branches. */
+export interface ParallelResistorsDrawnInline {
+  lineItemType: "ParallelResistorsDrawnInline"
+  firstResistorSchematicBox: SchematicBoxPlacement
+  secondResistorSchematicBox: SchematicBoxPlacement
+  message: string
+}
+
+/** A crystal's series resistor is separated from its local signal branch. */
+export interface ResistorSeparatedFromCrystal {
+  lineItemType: "ResistorSeparatedFromCrystal"
+  crystalSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  pinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
+/** Two capacitors across the same nets are drawn end-to-end instead of as branches. */
+export interface ParallelCapacitorsDrawnInline {
+  lineItemType: "ParallelCapacitorsDrawnInline"
+  firstCapacitorSchematicBox: SchematicBoxPlacement
+  secondCapacitorSchematicBox: SchematicBoxPlacement
   message: string
 }
 
@@ -502,6 +610,18 @@ export interface CapacitorSeparatedFromChipPins {
   message: string
 }
 
+/** A crystal placed far across its host chip from its two connected pins. */
+export interface CrystalSeparatedFromChipPins {
+  lineItemType: "CrystalSeparatedFromChipPins"
+  hostSchematicBox: SchematicBoxPlacement
+  crystalSchematicBox: SchematicBoxPlacement
+  /** Connected chip pins, in the order of the crystal's source ports. */
+  chipSourcePortIds: [string, string]
+  maxPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 /** The series element and grounded shunt branches of a signal pi filter are separated. */
 export interface PiFilterComponentsNotGrouped {
   lineItemType: "PiFilterComponentsNotGrouped"
@@ -540,6 +660,14 @@ export interface DiodeCapacitorJunctionTooSpreadOut {
   diodeSchematicBoxes: [SchematicBoxPlacement, SchematicBoxPlacement]
   maxJunctionPinDistance: number
   maxRecommendedJunctionPinDistance: number
+  message: string
+}
+
+/** Complete parallel resistor/LED branches drawn end-to-end. */
+export interface ParallelLedBranchesDrawnInline {
+  lineItemType: "ParallelLedBranchesDrawnInline"
+  branchSchematicBoxes: SchematicBoxPlacement[]
+  branchCount: number
   message: string
 }
 
@@ -590,15 +718,41 @@ export interface TransistorHasIncorrectRailOrientation {
   message: string
 }
 
+/** A discrete diode is separated from its switch in a repeated matrix branch. */
+export interface SwitchMatrixDiodeSeparatedFromSwitch {
+  lineItemType: "SwitchMatrixDiodeSeparatedFromSwitch"
+  switchSchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  switchSourcePortId: string
+  diodeSourcePortId: string
+  connectedPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
+/** Excessive unused space between bus-connected rows/columns of a complete matrix. */
+export interface SwitchMatrixBranchesTooSpreadOut {
+  lineItemType: "SwitchMatrixBranchesTooSpreadOut"
+  branchSchematicBoxes: SchematicBoxPlacement[]
+  axis: "x" | "y"
+  emptyGap: number
+  maxRecommendedEmptyGap: number
+  message: string
+}
+
 export type SchematicPlacementIssue =
+  | SwitchMatrixBranchesTooSpreadOut
+  | SwitchMatrixDiodeSeparatedFromSwitch
   | TransistorHasIncorrectRailOrientation
   | InductorSeparatedFromChipPin
   | SharedNodeDiodesInline
   | DiodeCapacitorJunctionTooSpreadOut
+  | ParallelLedBranchesDrawnInline
   | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
   | CapacitorSeparatedFromChipPins
+  | CrystalSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
@@ -614,10 +768,18 @@ export type SchematicPlacementIssue =
   | VerboseSchematicNetLabel
   | SchematicBoxTooWideIssue
   | SchematicBoxInnerLabelCollision
+  | SchematicBoxInnerLabelOutOfBounds
   | SchematicPinPaddingToEdgeTooLarge
   | DiodeResistorNotAligned
+  | HighPassRcFilterComponentsNotGrouped
+  | SeriesRcFilterComponentsNotGrouped
+  | SwitchRcNetworkNotGrouped
+  | ParallelResistorsDrawnInline
+  | ResistorSeparatedFromCrystal
+  | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
+  | ParallelDiodeCapacitorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
   | CrystalNotCenteredOverLoadCapacitors

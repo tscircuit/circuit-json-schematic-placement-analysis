@@ -66,6 +66,15 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "ParallelLedBranchesDrawnInline":
+      case "SwitchMatrixBranchesTooSpreadOut":
+        for (const placement of issue.branchSchematicBoxes)
+          addPlacement(placement)
+        break
+      case "SwitchMatrixDiodeSeparatedFromSwitch":
+        addPlacement(issue.switchSchematicBox)
+        addPlacement(issue.diodeSchematicBox)
+        break
       case "SeriesLedChainNotOrdered":
         for (const placement of issue.ledSchematicBoxes) addPlacement(placement)
         break
@@ -76,6 +85,10 @@ export const getRelevantPlacementsForIssues = ({
       case "ResistorSeparatedFromChipPin":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.resistorSchematicBox)
+        break
+      case "CrystalSeparatedFromChipPins":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.crystalSchematicBox)
         break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
@@ -169,6 +182,7 @@ export const getRelevantPlacementsForIssues = ({
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
       case "SchematicBoxInnerLabelCollision":
+      case "SchematicBoxInnerLabelOutOfBounds":
       case "SchematicPinPaddingToEdgeTooLarge":
         addPlacement(issue.schematicBox)
         break
@@ -177,8 +191,31 @@ export const getRelevantPlacementsForIssues = ({
           addComponentName(getComponentNameFromPin(pin), issue.schematicSheetId)
         }
         break
+      case "SwitchRcNetworkNotGrouped":
+        addPlacement(issue.switchSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        if (issue.resistorSchematicBox) addPlacement(issue.resistorSchematicBox)
+        break
+      case "ResistorSeparatedFromCrystal":
+        addPlacement(issue.crystalSchematicBox)
+        addPlacement(issue.resistorSchematicBox)
+        break
+      case "ParallelCapacitorsDrawnInline":
+        addPlacement(issue.firstCapacitorSchematicBox)
+        addPlacement(issue.secondCapacitorSchematicBox)
+        break
+      case "ParallelResistorsDrawnInline":
+        addPlacement(issue.firstResistorSchematicBox)
+        addPlacement(issue.secondResistorSchematicBox)
+        break
+      case "HighPassRcFilterComponentsNotGrouped":
+      case "SeriesRcFilterComponentsNotGrouped":
       case "ParallelRcNotAligned":
         addPlacement(issue.resistorSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
+      case "ParallelDiodeCapacitorNotAligned":
+        addPlacement(issue.diodeSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
       case "ParallelDiodeResistorNotAligned":

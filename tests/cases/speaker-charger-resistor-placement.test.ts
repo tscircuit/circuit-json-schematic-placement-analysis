@@ -20,9 +20,7 @@ test("moving only R17 beside U6 preserves the full charger circuit and draws its
   // Renderer warning messages contain runtime instance IDs; electrical records do not.
   const electrical = (json: typeof before) =>
     json.filter(
-      (e) =>
-        e.type.startsWith("source_") &&
-        e.type !== "source_unnamed_trace_warning",
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
     )
   expect(electrical(after)).toEqual(electrical(before))
   for (const e of before) {

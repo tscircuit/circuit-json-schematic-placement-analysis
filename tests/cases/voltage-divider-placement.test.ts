@@ -19,8 +19,14 @@ test("reports reversed divider halves while accepting conventional placement and
     })
   expect(issues(before)).toHaveLength(1)
   expect(issues(after)).toEqual([])
-  expect(after.filter((e) => e.type.startsWith("source_"))).toEqual(
-    before.filter((e) => e.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    before.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   for (const name of ["RBOT", "U1"])
     expect(getReproSchematicComponent(after, name)).toEqual(

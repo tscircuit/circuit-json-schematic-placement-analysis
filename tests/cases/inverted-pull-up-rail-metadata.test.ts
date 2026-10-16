@@ -97,8 +97,14 @@ test("uses positive-supply metadata for pull-up flips on either pin and skips un
     1,
   )
   expect(issues(pin1After)).toEqual([])
-  expect(pin1After.filter((e) => e.type.startsWith("source_"))).toEqual(
-    pin1Before.filter((e) => e.type.startsWith("source_")),
+  expect(
+    pin1After.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    pin1Before.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   for (const [name, json] of [
     ["pin1-before", pin1Before],

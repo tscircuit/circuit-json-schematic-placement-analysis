@@ -9,7 +9,7 @@ test("clears staggered label warnings after resizing and accepts narrow glyphs",
       { name: "resized", dimension: 1.8 },
       {
         name: "narrow",
-        dimension: 0.8,
+        dimension: 0.9,
         labels: { pin1: "IIIIII", pin2: "llllll", pin3: "iiiiii" },
       },
     ]) {

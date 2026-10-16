@@ -5,12 +5,14 @@ import type {
   SchematicPlacementIssue,
   SchematicBoxPlacement,
   SchematicIssueBounds,
+  SchematicPinLabelBounds,
 } from "../index"
 import {
   getIssueSchematicSheetContext,
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
 import { centeredRect } from "../utils/geometry"
+import { getPinLabelHighlightBounds } from "../utils/schematic-box-labels"
 import {
   createIssueMarkerPlacer,
   ISSUE_MARKER_RADIUS,
@@ -73,6 +75,10 @@ export function renderIssueOverlay(input: {
   issueTypes?: readonly IssueType[]
   issueIndex?: number
   showOverlay?: boolean
+  /** Keep numbered markers while hiding highlight geometry and context boxes. */
+  showIssueGeometry?: boolean
+  /** Use this exact viewport in schematic coordinates, including any desired padding. */
+  viewportBounds?: SchematicIssueBounds
   /** Show the complete sheet. By default, frame only the selected issues. */
   showFullSchematic?: boolean
   width?: number
@@ -144,7 +150,11 @@ export function renderIssueOverlay(input: {
     const geometry: string[] = []
     let anchor: { x: number; y: number } | undefined
     const markerAnchors = new Map<string, { x: number; y: number }>()
-    const rect = (bounds: SchematicIssueBounds, isContext = false) => {
+    const rect = (
+      bounds: SchematicIssueBounds,
+      isContext = false,
+      label?: SchematicPinLabelBounds,
+    ) => {
       includeBounds(bounds)
       anchor ??= { x: bounds.left, y: bounds.top }
       const key = [
@@ -159,7 +169,11 @@ export function renderIssueOverlay(input: {
       if (!isContext) markerAnchors.set(key, { x: bounds.left, y: bounds.top })
       if (drawnRectangles.has(key)) return
       drawnRectangles.add(key)
-      const markup = `<rect x="${bounds.left}" y="${bounds.bottom}" width="${bounds.right - bounds.left}" height="${bounds.top - bounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
+      const labelAttrs = label
+        ? ` class="pin-label-collision-highlight" data-highlight-schematic-port-id="${escapeXml(label.schematicPortId)}" data-highlight-label="${escapeXml(label.text)}"`
+        : ""
+      const drawnBounds = label ? getPinLabelHighlightBounds(label) : bounds
+      const markup = `<rect${labelAttrs} x="${drawnBounds.left}" y="${drawnBounds.bottom}" width="${drawnBounds.right - drawnBounds.left}" height="${drawnBounds.top - drawnBounds.bottom}" fill="${isContext ? "none" : "#ef444433"}" stroke="${isContext ? "#2563eb" : "#dc2626"}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
       geometry.push(markup)
     }
     for (const placement of context) rect(boxBounds(placement), true)
@@ -191,6 +205,20 @@ export function renderIssueOverlay(input: {
       case "SchematicTextCollision":
         rect(issue.textBounds)
         rect(issue.collidingObjectBounds)
+        break
+      case "SchematicBoxInnerLabelOutOfBounds":
+        for (const label of issue.overflowingLabels)
+          rect(label.bounds, false, label)
+        break
+      case "SchematicBoxInnerLabelCollision":
+        if (issue.labelPairs?.length) {
+          for (const pair of issue.labelPairs) {
+            rect(pair.firstLabel.bounds, false, pair.firstLabel)
+            rect(pair.secondLabel.bounds, false, pair.secondLabel)
+          }
+        } else {
+          for (const placement of context) rect(boxBounds(placement))
+        }
         break
       case "ComponentNetLabelCollision":
         rect(issue.overlappingLabel1Bounds)
@@ -288,6 +316,13 @@ export function renderIssueOverlay(input: {
     right: input.width ?? 1400,
     bottom: input.height ?? 900,
   }
+  if (input.viewportBounds) {
+    focusPoints.length = 0
+    for (const x of [input.viewportBounds.left, input.viewportBounds.right]) {
+      for (const y of [input.viewportBounds.bottom, input.viewportBounds.top])
+        focusPoints.push(screen(x, y))
+    }
+  }
   if (!input.showFullSchematic && focusPoints.length > 0) {
     const minX = Math.min(...focusPoints.map((point) => point.x))
     const maxX = Math.max(...focusPoints.map((point) => point.x))
@@ -295,8 +330,8 @@ export function renderIssueOverlay(input: {
     const maxY = Math.max(...focusPoints.map((point) => point.y))
     // Half a bounds-width/height of padding on each side. A small minimum also
     // gives point-like or perfectly horizontal/vertical issues a useful frame.
-    const paddingX = Math.max((maxX - minX) / 2, 12)
-    const paddingY = Math.max((maxY - minY) / 2, 12)
+    const paddingX = input.viewportBounds ? 0 : Math.max((maxX - minX) / 2, 12)
+    const paddingY = input.viewportBounds ? 0 : Math.max((maxY - minY) / 2, 12)
     const width = maxX - minX + paddingX * 2
     const height = maxY - minY + paddingY * 2
     viewport = {
@@ -354,7 +389,9 @@ export function renderIssueOverlay(input: {
           `<g data-issue-number="${index + 1}" data-issue-type="${issueType}" transform="translate(${center.x} ${center.y}) scale(${markerScale})"><title>${title}</title><circle r="${ISSUE_MARKER_RADIUS}" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">${index + 1}</text></g>`,
         )
       }
-      return `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}</g>`
+      return input.showIssueGeometry === false
+        ? ""
+        : `<g data-issue-index="${index}" data-issue-type="${issueType}">${geometry}</g>`
     },
   )
   return {

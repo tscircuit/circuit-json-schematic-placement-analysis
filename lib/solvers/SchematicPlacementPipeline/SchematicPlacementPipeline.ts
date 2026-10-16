@@ -1,3 +1,14 @@
+import { HighPassRcFilterPlacementSolver } from "../HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
+import { ParallelDiodeCapacitorAlignmentSolver } from "../ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
+import { ParallelLedBranchPlacementSolver } from "../ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
+import { CrystalResistorPlacementSolver } from "../CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
+import { SwitchRcNetworkGroupingSolver } from "../SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
+import { SwitchMatrixDiodePlacementSolver } from "../SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
+import { SeriesRcFilterPlacementSolver } from "../SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
+import { ParallelResistorPlacementSolver } from "../ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+import { ParallelCapacitorAlignmentSolver } from "../ParallelCapacitorAlignmentSolver/ParallelCapacitorAlignmentSolver"
+import { ChipPinCrystalPlacementSolver } from "../ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
+import { SchematicBoxInnerLabelBoundsSolver } from "../SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "../TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "../ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "../SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
@@ -58,12 +69,16 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  SwitchMatrixDiodeSeparatedFromSwitch: [SwitchMatrixDiodePlacementSolver],
+  SwitchMatrixBranchesTooSpreadOut: [SwitchMatrixDiodePlacementSolver],
   TransistorHasIncorrectRailOrientation: [TransistorRailOrientationSolver],
+  ParallelLedBranchesDrawnInline: [ParallelLedBranchPlacementSolver],
   SeriesLedChainNotOrdered: [SeriesLedChainPlacementSolver],
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
   InductorSeparatedFromChipPin: [ChipSupplyInductorPlacementSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
+  CrystalSeparatedFromChipPins: [ChipPinCrystalPlacementSolver],
   SharedNodeDiodesInline: [SharedNodeDiodePlacementSolver],
   DiodeCapacitorJunctionTooSpreadOut: [DiodeCapacitorStagePlacementSolver],
   PiFilterComponentsNotGrouped: [PiFilterPlacementSolver],
@@ -80,10 +95,18 @@ const solversByIssueType = {
   PinHeaderSchematicBoxTooWide: [SchematicBoxTooWideSolver],
   GenericSchematicBoxTooWide: [SchematicBoxTooWideSolver],
   SchematicBoxInnerLabelCollision: [SchematicBoxInnerLabelCollisionSolver],
+  SchematicBoxInnerLabelOutOfBounds: [SchematicBoxInnerLabelBoundsSolver],
   SchematicPinPaddingToEdgeTooLarge: [SchematicPinPaddingToEdgeSolver],
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
+  HighPassRcFilterComponentsNotGrouped: [HighPassRcFilterPlacementSolver],
+  SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
+  SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
+  ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
+  ResistorSeparatedFromCrystal: [CrystalResistorPlacementSolver],
+  ParallelCapacitorsDrawnInline: [ParallelCapacitorAlignmentSolver],
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
+  ParallelDiodeCapacitorNotAligned: [ParallelDiodeCapacitorAlignmentSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
   TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
   CrystalNotCenteredOverLoadCapacitors: [CrystalLoadCapacitorPlacementSolver],
@@ -122,6 +145,34 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
 
   pipelineDef: PipelineStep<any>[] = [
     definePipelineStep(
+      "SwitchRcNetworkGroupingSolver",
+      SwitchRcNetworkGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SwitchMatrixDiodePlacementSolver",
+      SwitchMatrixDiodePlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelResistorPlacementSolver",
+      ParallelResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelLedBranchPlacementSolver",
+      ParallelLedBranchPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
       "SeriesLedChainPlacementSolver",
       SeriesLedChainPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
@@ -138,6 +189,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ParallelDiodeResistorPlacementSolver",
       ParallelDiodeResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelDiodeCapacitorAlignmentSolver",
+      ParallelDiodeCapacitorAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
@@ -187,6 +245,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "SchematicPinPaddingToEdgeSolver",
       SchematicPinPaddingToEdgeSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SchematicBoxInnerLabelBoundsSolver",
+      SchematicBoxInnerLabelBoundsSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
@@ -381,6 +446,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
       ],
     ),
     definePipelineStep(
+      "ChipPinCrystalPlacementSolver",
+      ChipPinCrystalPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
       "RailPathVisibilitySolver",
       RailPathVisibilitySolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
@@ -390,6 +462,34 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
           maxSpan: p.railPathVisibility?.maxSpan,
           maxLength: p.railPathVisibility?.maxPathLength,
         },
+      ],
+    ),
+    definePipelineStep(
+      "HighPassRcFilterPlacementSolver",
+      HighPassRcFilterPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SeriesRcFilterPlacementSolver",
+      SeriesRcFilterPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "CrystalResistorPlacementSolver",
+      CrystalResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ParallelCapacitorAlignmentSolver",
+      ParallelCapacitorAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
       ],
     ),
   ]

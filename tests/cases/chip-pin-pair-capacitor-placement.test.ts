@@ -23,8 +23,14 @@ test("places a capacitor beside its connected chip pins without relying on names
     },
   ])
   expect(issues(after)).toEqual([])
-  expect(after.filter((e) => e.type.startsWith("source_"))).toEqual(
-    before.filter((e) => e.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    before.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   for (const [variant, json] of [
     ["before", before],

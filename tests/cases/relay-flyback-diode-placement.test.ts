@@ -23,8 +23,14 @@ test("groups an identified relay flyback diode while excluding ambiguous or alre
     },
   ])
   expect(issues(after)).toEqual([])
-  expect(after.filter((e) => e.type.startsWith("source_"))).toEqual(
-    before.filter((e) => e.type.startsWith("source_")),
+  expect(
+    after.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
+  ).toEqual(
+    before.filter(
+      (e) => e.type.startsWith("source_") && !e.type.endsWith("_warning"),
+    ),
   )
   for (const name of ["K1", "Q1", "J1"])
     expect(getReproSchematicComponent(after, name)).toEqual(

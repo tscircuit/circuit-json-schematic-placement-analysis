@@ -41,7 +41,7 @@ test("does not shrink BLDC symbols below the space needed by all pin banks", asy
       })
       const resizedAnalysis = analyzeSchematicPlacement(resized)
       expect(resizedAnalysis.getIssues()).toHaveLength(0)
-      expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.2)
+      expect(measureLabelBankGap(resized) + 1e-9).toBeGreaterThanOrEqual(0.1)
       const component = resized.find(
         (element) => element.type === "schematic_component",
       )!

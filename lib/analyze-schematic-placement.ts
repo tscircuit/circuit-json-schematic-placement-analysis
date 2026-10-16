@@ -1,3 +1,14 @@
+import { HighPassRcFilterPlacementSolver } from "./solvers/HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
+import { ParallelDiodeCapacitorAlignmentSolver } from "./solvers/ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
+import { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
+import { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
+import { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
+import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
+import { SeriesRcFilterPlacementSolver } from "./solvers/SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
+import { ParallelResistorPlacementSolver } from "./solvers/ParallelResistorPlacementSolver/ParallelResistorPlacementSolver"
+import { ParallelCapacitorAlignmentSolver } from "./solvers/ParallelCapacitorAlignmentSolver/ParallelCapacitorAlignmentSolver"
+import { ChipPinCrystalPlacementSolver } from "./solvers/ChipPinCrystalPlacementSolver/ChipPinCrystalPlacementSolver"
+import { SchematicBoxInnerLabelBoundsSolver } from "./solvers/SchematicBoxInnerLabelBoundsSolver/SchematicBoxInnerLabelBoundsSolver"
 import { TransistorRailOrientationSolver } from "./solvers/TransistorRailOrientationSolver/TransistorRailOrientationSolver"
 import { ChipSupplyInductorPlacementSolver } from "./solvers/ChipSupplyInductorPlacementSolver/ChipSupplyInductorPlacementSolver"
 import { SharedNodeDiodePlacementSolver } from "./solvers/SharedNodeDiodePlacementSolver/SharedNodeDiodePlacementSolver"
@@ -98,10 +109,18 @@ export class SchematicPlacementAnalysis {
       PinHeaderSchematicBoxTooWide: 0,
       GenericSchematicBoxTooWide: 0,
       SchematicBoxInnerLabelCollision: 0,
+      SchematicBoxInnerLabelOutOfBounds: 0,
       SchematicPinPaddingToEdgeTooLarge: 0,
       DiodeResistorNotAligned: 0,
+      HighPassRcFilterComponentsNotGrouped: 0,
+      SeriesRcFilterComponentsNotGrouped: 0,
+      SwitchRcNetworkNotGrouped: 0,
+      ParallelResistorsDrawnInline: 0,
+      ResistorSeparatedFromCrystal: 0,
+      ParallelCapacitorsDrawnInline: 0,
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
+      ParallelDiodeCapacitorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
       TraceCanBeSimplifiedByMovingComponent: 0,
       CrystalNotCenteredOverLoadCapacitors: 0,
@@ -127,9 +146,13 @@ export class SchematicPlacementAnalysis {
       PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
+      CrystalSeparatedFromChipPins: 0,
       ResistorSeparatedFromChipPin: 0,
       InductorSeparatedFromChipPin: 0,
       RailPathTooSpreadOut: 0,
+      SwitchMatrixDiodeSeparatedFromSwitch: 0,
+      SwitchMatrixBranchesTooSpreadOut: 0,
+      ParallelLedBranchesDrawnInline: 0,
       SeriesLedChainNotOrdered: 0,
     } satisfies Record<SchematicPlacementIssue["lineItemType"], number>
     for (const issue of this.getIssues(filter)) counts[issue.lineItemType]++
@@ -157,12 +180,19 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "TransistorHasIncorrectRailOrientation":
         return TransistorRailOrientationSolver.issueToString(issue)
+      case "SwitchMatrixBranchesTooSpreadOut":
+      case "SwitchMatrixDiodeSeparatedFromSwitch":
+        return SwitchMatrixDiodePlacementSolver.issueToString(issue)
+      case "ParallelLedBranchesDrawnInline":
+        return ParallelLedBranchPlacementSolver.issueToString(issue)
       case "SeriesLedChainNotOrdered":
         return SeriesLedChainPlacementSolver.issueToString(issue)
       case "InductorSeparatedFromChipPin":
         return ChipSupplyInductorPlacementSolver.issueToString(issue)
       case "ResistorSeparatedFromChipPin":
         return ChipPinResistorPlacementSolver.issueToString(issue)
+      case "CrystalSeparatedFromChipPins":
+        return ChipPinCrystalPlacementSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
       case "SharedNodeDiodesInline":
@@ -186,12 +216,28 @@ export class SchematicPlacementAnalysis {
       case "PinHeaderSchematicBoxTooWide":
       case "GenericSchematicBoxTooWide":
         return SchematicBoxTooWideSolver.issueToString(issue)
+      case "SchematicBoxInnerLabelOutOfBounds":
+        return SchematicBoxInnerLabelBoundsSolver.issueToString(issue)
       case "SchematicBoxInnerLabelCollision":
         return SchematicBoxInnerLabelCollisionSolver.issueToString(issue)
       case "SchematicPinPaddingToEdgeTooLarge":
         return SchematicPinPaddingToEdgeSolver.issueToString(issue)
+      case "HighPassRcFilterComponentsNotGrouped":
+        return HighPassRcFilterPlacementSolver.issueToString(issue)
+      case "SeriesRcFilterComponentsNotGrouped":
+        return SeriesRcFilterPlacementSolver.issueToString(issue)
+      case "SwitchRcNetworkNotGrouped":
+        return SwitchRcNetworkGroupingSolver.issueToString(issue)
+      case "ResistorSeparatedFromCrystal":
+        return CrystalResistorPlacementSolver.issueToString(issue)
+      case "ParallelCapacitorsDrawnInline":
+        return ParallelCapacitorAlignmentSolver.issueToString(issue)
+      case "ParallelResistorsDrawnInline":
+        return ParallelResistorPlacementSolver.issueToString(issue)
       case "ParallelRcNotAligned":
         return ParallelRcPlacementSolver.issueToString(issue)
+      case "ParallelDiodeCapacitorNotAligned":
+        return ParallelDiodeCapacitorAlignmentSolver.issueToString(issue)
       case "ParallelDiodeResistorNotAligned":
         return ParallelDiodeResistorPlacementSolver.issueToString(issue)
       case "DiodeResistorNotAligned":

@@ -1,10 +1,15 @@
-import { expect, test } from "bun:test"
+import { beforeAll, expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
 import { createStridePedometer } from "../assets/stride-chip-supply-inductor"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
+let before: Awaited<ReturnType<typeof createStridePedometer>>
+
+beforeAll(async () => {
+  before = await createStridePedometer()
+})
+
 test("moving only L1 beside U1 preserves the complete Stride connectivity", async () => {
-  const before = await createStridePedometer()
   const after = await createStridePedometer(true)
   const sourceTypes = new Set([
     "source_component",
@@ -39,11 +44,14 @@ test("moving only L1 beside U1 preserves the complete Stride connectivity", asyn
   expect(part?.type === "source_component" && part.name).toBe("L1")
   const analysis = analyzeSchematicPlacement(after)
   const beforeCounts = analyzeSchematicPlacement(before).getIssueCounts()
+  // Rerouting clears the inductor finding but adds a text collision and rail-path finding.
   expect(analysis.getIssueCounts()).toEqual({
     ...beforeCounts,
     InductorSeparatedFromChipPin: 0,
+    SchematicTextCollision: 1,
+    RailPathTooSpreadOut: 2,
   })
-  expect(analysis.getIssues()).toHaveLength(36)
+  expect(analysis.getIssues()).toHaveLength(33)
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: after,

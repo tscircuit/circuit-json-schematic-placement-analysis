@@ -1,7 +1,7 @@
 import type { CircuitJson } from "circuit-json"
 import type { LabelRect } from "./schematic-box-labels"
 
-export type GraphicBounds = Omit<LabelRect, "side">
+export type GraphicBounds = Pick<LabelRect, "xMin" | "xMax" | "yMin" | "yMax">
 
 /** Measure the internal symbol primitives emitted by core, including strokes.
  * Ownership comes from Circuit JSON; connector standards and names are irrelevant. */
