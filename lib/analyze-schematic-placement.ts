@@ -1,3 +1,4 @@
+import { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
 import { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGroupingSolver/SwitchRcNetworkGroupingSolver"
 import { SwitchMatrixDiodePlacementSolver } from "./solvers/SwitchMatrixDiodePlacementSolver/SwitchMatrixDiodePlacementSolver"
 import { SeriesRcFilterPlacementSolver } from "./solvers/SeriesRcFilterPlacementSolver/SeriesRcFilterPlacementSolver"
@@ -111,6 +112,7 @@ export class SchematicPlacementAnalysis {
       SeriesRcFilterComponentsNotGrouped: 0,
       SwitchRcNetworkNotGrouped: 0,
       ParallelResistorsDrawnInline: 0,
+      ResistorSeparatedFromCrystal: 0,
       ParallelCapacitorsDrawnInline: 0,
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
@@ -216,6 +218,8 @@ export class SchematicPlacementAnalysis {
         return SeriesRcFilterPlacementSolver.issueToString(issue)
       case "SwitchRcNetworkNotGrouped":
         return SwitchRcNetworkGroupingSolver.issueToString(issue)
+      case "ResistorSeparatedFromCrystal":
+        return CrystalResistorPlacementSolver.issueToString(issue)
       case "ParallelCapacitorsDrawnInline":
         return ParallelCapacitorAlignmentSolver.issueToString(issue)
       case "ParallelResistorsDrawnInline":
