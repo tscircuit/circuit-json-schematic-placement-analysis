@@ -66,6 +66,7 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "ParallelLedBranchesDrawnInline":
       case "SwitchMatrixBranchesTooSpreadOut":
         for (const placement of issue.branchSchematicBoxes)
           addPlacement(placement)
@@ -195,6 +196,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.capacitorSchematicBox)
         if (issue.resistorSchematicBox) addPlacement(issue.resistorSchematicBox)
         break
+      case "ResistorSeparatedFromCrystal":
+        addPlacement(issue.crystalSchematicBox)
+        addPlacement(issue.resistorSchematicBox)
+        break
       case "ParallelCapacitorsDrawnInline":
         addPlacement(issue.firstCapacitorSchematicBox)
         addPlacement(issue.secondCapacitorSchematicBox)
@@ -206,6 +211,10 @@ export const getRelevantPlacementsForIssues = ({
       case "SeriesRcFilterComponentsNotGrouped":
       case "ParallelRcNotAligned":
         addPlacement(issue.resistorSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
+      case "ParallelDiodeCapacitorNotAligned":
+        addPlacement(issue.diodeSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
       case "ParallelDiodeResistorNotAligned":
