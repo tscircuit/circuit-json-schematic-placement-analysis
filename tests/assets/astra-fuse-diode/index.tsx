@@ -10,6 +10,8 @@ import { TCJD226M050R0090E } from "./imports/TCJD226M050R0090E"
 // five filtering components; connector/driver boundary connections are outside it.
 // The pair view retains only F_MOTOR_VBUS, D_MOTOR_BLOCK and their shared trace,
 // with both external ends left open equally before/after (no invented rail labels).
+// The shared trace name MOTOR_REVERSE_BLOCK is omitted in both states: core
+// otherwise turns it into a tall boxed label on the corrected straight wire.
 // Current core fixes the older published export's diode terminal geometry; both
 // states here are generated from the same original TSX using the installed core.
 export async function createAstraFuseDiode(
@@ -33,7 +35,6 @@ export async function createAstraFuseDiode(
         schRotation={corrected ? 0 : 90}
       />
       <trace
-        name="MOTOR_REVERSE_BLOCK"
         from=".F_MOTOR_VBUS > .pin2"
         to=".D_MOTOR_BLOCK > .anode"
         thickness="0.8mm"

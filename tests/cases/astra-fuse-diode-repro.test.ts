@@ -57,7 +57,7 @@ test("reproduces the published Astra fuse and diode with perpendicular terminals
         circuitJson,
         analysis,
         width: 1200,
-        height: scope === "pair" ? 800 : 1000,
+        height: scope === "pair" ? 800 : 500,
         showFullSchematic: true,
         showIssueGeometry: false,
         showListingIssueMarkers: true,
