@@ -14,8 +14,6 @@ type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 
 /** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
-  /** Fill camera margins when the shared viewport extends beyond the drawing. */
-  backgroundColor?: string
   subject?: string
   /** Fill the viewport margins when the camera extends beyond the rendered sheet. */
   backgroundColor?: string
