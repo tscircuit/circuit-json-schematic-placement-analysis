@@ -29,7 +29,9 @@ test("reproduces the separated series RC branch from Peltier v0.4.3", async () =
     )
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "SeriesRcBranchNotGrouped",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson,

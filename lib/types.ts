@@ -227,6 +227,19 @@ export interface ParallelDiodesNotAligned {
   message: string
 }
 
+/** A private series RC branch is separated beside its parallel capacitor. */
+export interface SeriesRcBranchNotGrouped {
+  lineItemType: "SeriesRcBranchNotGrouped"
+  resistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  parallelCapacitorSchematicBox: SchematicBoxPlacement
+  resistorSourcePortId: string
+  capacitorSourcePortId: string
+  sharedPinDistance: number
+  maxRecommendedSharedPinDistance: number
+  message: string
+}
+
 /** A local diode/capacitor pair has nonmatching parallel branch ends. */
 export interface ParallelDiodeCapacitorNotAligned {
   lineItemType: "ParallelDiodeCapacitorNotAligned"
@@ -788,6 +801,7 @@ export type SchematicPlacementIssue =
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
   | ParallelDiodesNotAligned
+  | SeriesRcBranchNotGrouped
   | ParallelDiodeCapacitorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent

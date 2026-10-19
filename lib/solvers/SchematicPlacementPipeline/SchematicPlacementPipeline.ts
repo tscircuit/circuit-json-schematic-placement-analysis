@@ -1,4 +1,5 @@
 import { ParallelDiodeAlignmentSolver } from "../ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
+import { SeriesRcBranchGroupingSolver } from "../SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 import { HighPassRcFilterPlacementSolver } from "../HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "../ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "../ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
@@ -108,6 +109,7 @@ const solversByIssueType = {
   ParallelRcNotAligned: [ParallelRcPlacementSolver],
   ParallelDiodeResistorNotAligned: [ParallelDiodeResistorPlacementSolver],
   ParallelDiodesNotAligned: [ParallelDiodeAlignmentSolver],
+  SeriesRcBranchNotGrouped: [SeriesRcBranchGroupingSolver],
   ParallelDiodeCapacitorNotAligned: [ParallelDiodeCapacitorAlignmentSolver],
   ComponentPinsWouldAlignWithVerticalShift: [ComponentPinAlignmentSolver],
   TraceCanBeSimplifiedByMovingComponent: [TraceSimplificationSolver],
@@ -198,6 +200,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ParallelDiodeAlignmentSolver",
       ParallelDiodeAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SeriesRcBranchGroupingSolver",
+      SeriesRcBranchGroupingSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],
