@@ -12,6 +12,7 @@ import {
   getLabelMovementFactor,
   getSchematicBoxLabelRects,
   getSchematicPinLabelWidth,
+  getSchematicPortsWithResolvedLabels,
   type LabelRect,
 } from "../../utils/schematic-box-labels"
 import type { SolverContext } from "../SolverContext"
@@ -35,8 +36,9 @@ export class SchematicBoxInnerLabelBoundsSolver extends BaseSolver {
     super()
     const boxIds = getSchematicBoxComponentIds(params.ctx.circuitJson)
     const portsByComponent = new Map<string, SchematicPort[]>()
-    for (const element of params.ctx.circuitJson) {
-      if (element.type !== "schematic_port") continue
+    for (const element of getSchematicPortsWithResolvedLabels(
+      params.ctx.circuitJson,
+    )) {
       const id = element.schematic_component_id
       if (!id) continue
       const ports = portsByComponent.get(id) ?? []

@@ -1,4 +1,4 @@
-import type { SchematicPort } from "circuit-json"
+import type { CircuitJson, SchematicPort } from "circuit-json"
 import { getUnitVectorFromDirection } from "@tscircuit/math-utils"
 import type {
   SchematicBoxPlacement,
@@ -24,6 +24,32 @@ export const INNER_LABEL_COLLISION_PADDING = 0.02
 // Readable clearance between labels on different sides, in schematic units.
 export const MINIMUM_LABEL_BANK_GAP = 0.1
 const COLLISION_COMPARISON_EPSILON = 1e-9
+
+/** Match circuit-to-svg's createSvgObjectsForSchPortPinLabel label precedence.
+ * Resolve before measuring so text parts, overlines, and font sizes use the same
+ * effective label throughout detection and resize validation. Do not mutate input. */
+export function getSchematicPortsWithResolvedLabels(
+  circuitJson: CircuitJson,
+): SchematicPort[] {
+  const components = new Map(
+    circuitJson
+      .filter((element) => element.type === "schematic_component")
+      .map((component) => [component.schematic_component_id, component]),
+  )
+  return circuitJson
+    .filter((element) => element.type === "schematic_port")
+    .map((port) => {
+      if (!port.schematic_component_id) return port
+      const label =
+        port.display_pin_label ??
+        components.get(port.schematic_component_id)?.port_labels?.[
+          `${port.pin_number}`
+        ]
+      return label === undefined || label === port.display_pin_label
+        ? port
+        : { ...port, display_pin_label: label }
+    })
+}
 
 /** With a fixed box center, an edge moves half the dimension change.
  * An undefined side represents stationary internal graphics. */
