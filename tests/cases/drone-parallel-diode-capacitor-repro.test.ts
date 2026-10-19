@@ -46,6 +46,7 @@ test("reproduces all four parallel diode/capacitor branches on the complete dron
     "DecouplingCapacitorsNotCloseTogether",
     "RailPathTooSpreadOut",
     "RailPathTooSpreadOut",
+    "InductorSeparatedFromChipPins",
   ])
   expect(
     createIssueReproSnapshot({

@@ -126,6 +126,7 @@ export default function Drone({
         schX={38}
         schY={15}
         schSectionName="Power"
+        {...placements.L1}
       />
       {caps.map(([name, value, footprint, x, y, a, b, section]) => (
         <capacitor

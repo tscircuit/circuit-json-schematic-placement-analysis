@@ -18,6 +18,8 @@ export function dronePlacements(correctPairs = true) {
     }
   for (const [i, name] of ["CIN", "CVINA", "CBULK"].entries())
     placements[name] = { schX: 29 + i * 1.7, schY: 12 }
+  // Both private L1 connections return to pins on the left of U3.
+  placements.L1 = { schX: 29.5, schY: 15.6, schRotation: 90 }
   placements.CREG = { schX: 29, schY: -6 }
   for (let n = 1; n <= 6; n++)
     placements[`TP${n}`] = { schX: -6 + (n - 1) * 3, schY: 1 }

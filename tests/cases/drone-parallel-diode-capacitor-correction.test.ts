@@ -33,7 +33,7 @@ test("corrects all four diode/capacitor branches while preserving the complete d
   expect(
     baseline.getIssues({ issueTypes: ["ParallelDiodeCapacitorNotAligned"] }),
   ).toHaveLength(4)
-  expect(baseline.getIssues()).toHaveLength(8)
+  expect(baseline.getIssues()).toHaveLength(9)
   expect(analysis.getIssues()).toEqual([])
   const rotated = new Set(["D1", "D2", "D3", "D4"])
   for (const source of before.filter((e) => e.type === "source_component")) {
@@ -42,7 +42,16 @@ test("corrects all four diode/capacitor branches while preserving the complete d
     expect(a).toEqual({
       ...b,
       center: a.center,
-      symbol_name: rotated.has(source.name!) ? "diode_up" : b.symbol_name,
+      size:
+        source.name === "L1"
+          ? { width: b.size.height, height: b.size.width }
+          : b.size,
+      symbol_name:
+        source.name === "L1"
+          ? "inductor_up"
+          : rotated.has(source.name!)
+            ? "diode_up"
+            : b.symbol_name,
     })
     for (const pin of before.filter(
       (e) =>
@@ -58,6 +67,17 @@ test("corrects all four diode/capacitor branches while preserving the complete d
       if (other?.type !== "schematic_port")
         throw new Error("Missing corrected port")
       expect(other.pin_number).toBe(pin.pin_number)
+      if (source.name === "L1") {
+        expect(other.center.x - a.center.x).toBeCloseTo(
+          -(pin.center.y - b.center.y),
+          6,
+        )
+        expect(other.center.y - a.center.y).toBeCloseTo(
+          pin.center.x - b.center.x,
+          6,
+        )
+        continue
+      }
       const sign = rotated.has(source.name!) ? -1 : 1
       expect(other.center.x - a.center.x).toBeCloseTo(
         sign * (pin.center.x - b.center.x),
@@ -101,18 +121,27 @@ test("corrects all four diode/capacitor branches while preserving the complete d
     if (p?.type !== "schematic_port") throw new Error("Missing drawn pin")
     return key(p.center)
   }
-  for (let n = 1; n <= 4; n++)
-    for (const number of ["pin1", "pin2"]) {
-      const reached = new Set([pin(`D${n}`, number)])
-      let previous = -1
-      while (previous !== reached.size) {
-        previous = reached.size
-        for (const segment of segments)
-          if (segment.some((p) => reached.has(p)))
-            for (const p of segment) reached.add(p)
-      }
-      expect(reached.has(pin(`CM${n}`, number))).toBe(true)
+  const connectedPairs = [
+    ...Array.from({ length: 4 }, (_, i) =>
+      ["pin1", "pin2"].map(
+        (number) =>
+          [pin(`D${i + 1}`, number), pin(`CM${i + 1}`, number)] as const,
+      ),
+    ).flat(),
+    [pin("U3", "pin4"), pin("L1", "pin1")],
+    [pin("U3", "pin2"), pin("L1", "pin2")],
+  ]
+  for (const [start, end] of connectedPairs) {
+    const reached = new Set([start])
+    let previous = -1
+    while (previous !== reached.size) {
+      previous = reached.size
+      for (const segment of segments)
+        if (segment.some((p) => reached.has(p)))
+          for (const p of segment) reached.add(p)
     }
+    expect(reached.has(end)).toBe(true)
+  }
   const original = { circuitJson: before, analysis: baseline },
     corrected = { circuitJson: after, analysis }
   const comparison = createDroneParallelComparison(original, corrected)

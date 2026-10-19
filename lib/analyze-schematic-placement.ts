@@ -1,6 +1,7 @@
 import { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 import { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 import { FuseDiodeAlignmentSolver } from "./solvers/FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
+import { ChipPinPairInductorPlacementSolver } from "./solvers/ChipPinPairInductorPlacementSolver/ChipPinPairInductorPlacementSolver"
 import { HighPassRcFilterPlacementSolver } from "./solvers/HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "./solvers/ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
@@ -104,6 +105,7 @@ export class SchematicPlacementAnalysis {
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
       FuseDiodeNotAligned: 0,
+      InductorSeparatedFromChipPins: 0,
       TransistorHasIncorrectRailOrientation: 0,
       FlybackDiodeSeparatedFromRelayCoil: 0,
       ComponentOverlap: 0,
@@ -186,6 +188,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "FuseDiodeNotAligned":
         return FuseDiodeAlignmentSolver.issueToString(issue)
+      case "InductorSeparatedFromChipPins":
+        return ChipPinPairInductorPlacementSolver.issueToString(issue)
       case "TransistorHasIncorrectRailOrientation":
         return TransistorRailOrientationSolver.issueToString(issue)
       case "SwitchMatrixBranchesTooSpreadOut":
