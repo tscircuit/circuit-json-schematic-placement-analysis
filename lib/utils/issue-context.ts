@@ -70,6 +70,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.fuseSchematicBox)
         addPlacement(issue.diodeSchematicBox)
         break
+      case "InductorSeparatedFromChipPins":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.inductorSchematicBox)
+        break
       case "ParallelLedBranchesDrawnInline":
       case "SwitchMatrixBranchesTooSpreadOut":
         for (const placement of issue.branchSchematicBoxes)

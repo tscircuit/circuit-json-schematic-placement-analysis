@@ -7,6 +7,16 @@ export interface FuseDiodeNotAligned {
   message: string
 }
 
+export interface InductorSeparatedFromChipPins {
+  lineItemType: "InductorSeparatedFromChipPins"
+  hostSchematicBox: SchematicBoxPlacement
+  inductorSchematicBox: SchematicBoxPlacement
+  chipSourcePortIds: [string, string]
+  maxPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
+}
+
 export interface SchematicBoxPlacement {
   positionAnchor: "center"
   schX: number
@@ -772,6 +782,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 
 export type SchematicPlacementIssue =
   | FuseDiodeNotAligned
+  | InductorSeparatedFromChipPins
   | SwitchMatrixBranchesTooSpreadOut
   | SwitchMatrixDiodeSeparatedFromSwitch
   | TransistorHasIncorrectRailOrientation

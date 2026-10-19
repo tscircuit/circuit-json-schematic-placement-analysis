@@ -59,7 +59,9 @@ test("reproduces the published remote inductor above its two connected chip pins
           ],
     )
     const analysis = analyzeSchematicPlacement(circuitJson)
-    expect(analysis.getIssues()).toEqual([])
+    expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+      "InductorSeparatedFromChipPins",
+    ])
     expect(
       createIssueReproSnapshot({
         circuitJson,
