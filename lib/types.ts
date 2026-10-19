@@ -1,3 +1,12 @@
+export interface FuseDiodeNotAligned {
+  lineItemType: "FuseDiodeNotAligned"
+  fuseSchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  fuseSourcePortId: string
+  diodeSourcePortId: string
+  message: string
+}
+
 export interface SchematicBoxPlacement {
   positionAnchor: "center"
   schX: number
@@ -762,6 +771,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | FuseDiodeNotAligned
   | SwitchMatrixBranchesTooSpreadOut
   | SwitchMatrixDiodeSeparatedFromSwitch
   | TransistorHasIncorrectRailOrientation

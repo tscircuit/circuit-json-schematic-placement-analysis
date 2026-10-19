@@ -1,5 +1,6 @@
 import { ParallelDiodeAlignmentSolver } from "../ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 import { SeriesRcBranchGroupingSolver } from "../SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
+import { FuseDiodeAlignmentSolver } from "../FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
 import { HighPassRcFilterPlacementSolver } from "../HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "../ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "../ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
@@ -71,6 +72,7 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  FuseDiodeNotAligned: [FuseDiodeAlignmentSolver],
   SwitchMatrixDiodeSeparatedFromSwitch: [SwitchMatrixDiodePlacementSolver],
   SwitchMatrixBranchesTooSpreadOut: [SwitchMatrixDiodePlacementSolver],
   TransistorHasIncorrectRailOrientation: [TransistorRailOrientationSolver],
@@ -148,6 +150,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "FuseDiodeAlignmentSolver",
+      FuseDiodeAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SwitchRcNetworkGroupingSolver",
       SwitchRcNetworkGroupingSolver,
