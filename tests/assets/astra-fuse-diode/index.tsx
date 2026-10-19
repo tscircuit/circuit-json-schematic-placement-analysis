@@ -66,7 +66,8 @@ export async function createAstraFuseDiode(
             manufacturerPartNumber="SMBJ22CAQ-13-F"
             schX={9}
             schY={-7.5}
-            schOrientation="vertical"
+            schOrientation={corrected ? undefined : "vertical"}
+            schRotation={corrected ? 90 : undefined}
           />
           <trace
             name="MOTOR_VBUS_CAP"

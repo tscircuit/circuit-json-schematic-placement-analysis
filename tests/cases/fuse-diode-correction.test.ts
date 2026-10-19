@@ -12,7 +12,7 @@ import {
 } from "../fixtures/placement-repro-assertions"
 import { createAstraFuseDiode } from "../assets/astra-fuse-diode"
 
-test("corrects the fuse / diode pair without changing electrical connections or chip pin layout", async () => {
+test("aligns the fuse / diode pair and places the shunt diode ground below without changing connections", async () => {
   const electrical = (json: CircuitJson) =>
     json.filter((e) =>
       [
@@ -46,7 +46,7 @@ test("corrects the fuse / diode pair without changing electrical connections or 
       ["F_MOTOR_VBUS", "pin2", "D_MOTOR_BLOCK", "anode"],
     ] as const)
       expectDrawnWire(b, n, p, m, q)
-    const rotations: Record<string, number> = {}
+    const rotations: Record<string, number> = { D_MOTOR_TVS: 180 }
     for (const component of a.filter((e) => e.type === "source_component")) {
       const first = getReproSchematicComponent(a, component.name!)
       const second = getReproSchematicComponent(b, component.name!)
@@ -98,6 +98,41 @@ test("corrects the fuse / diode pair without changing electrical connections or 
       }
     }
   }
+  const groundNet = completeAfter.find(
+    (e) => e.type === "source_net" && e.is_ground,
+  )
+  if (groundNet?.type !== "source_net") throw new Error("Missing ground net")
+  const groundPort = getReproSourcePort(completeAfter, "D_MOTOR_TVS", "anode")
+  expect(groundPort.subcircuit_connectivity_map_key).toBe(
+    groundNet.subcircuit_connectivity_map_key,
+  )
+  const diode = getReproSchematicComponent(completeAfter, "D_MOTOR_TVS")
+  const drawnGroundPort = completeAfter.find(
+    (e) =>
+      e.type === "schematic_port" &&
+      e.source_port_id === groundPort.source_port_id,
+  )
+  if (drawnGroundPort?.type !== "schematic_port")
+    throw new Error("Missing shunt diode ground terminal")
+  expect(drawnGroundPort.facing_direction).toBe("down")
+  expect(drawnGroundPort.center.y).toBeLessThan(diode.center.y)
+  expectDrawnWire(
+    completeAfter,
+    "D_MOTOR_TVS",
+    "cathode",
+    "C_MOTOR_BULK",
+    "pin1",
+  )
+  expect(
+    completeAfter.some(
+      (e) =>
+        e.type === "schematic_net_label" &&
+        e.source_net_id === groundNet.source_net_id &&
+        e.symbol_name === "rail_down" &&
+        e.anchor_position?.x === drawnGroundPort.center.x &&
+        e.anchor_position?.y === drawnGroundPort.center.y,
+    ),
+  ).toBe(true)
   const baseline = analyzeSchematicPlacement(before),
     analysis = analyzeSchematicPlacement(after)
   const comparison = createPlacementComparisonSvg({
