@@ -11,7 +11,6 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
-// Two full 58-component renders and three snapshots can exceed CI's 5s default.
 test("corrects all four diode/capacitor branches while preserving the complete drone circuit", async () => {
   const before = await createDroneParallelDiodeCapacitorRepro(),
     after = await createDroneParallelDiodeCapacitorRepro(dronePlacements())
@@ -196,4 +195,4 @@ test("corrects all four diode/capacitor branches while preserving the complete d
       ],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
-}, 15_000)
+})
