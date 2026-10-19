@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "FuseDiodeNotAligned":
+        addPlacement(issue.fuseSchematicBox)
+        addPlacement(issue.diodeSchematicBox)
+        break
       case "ParallelLedBranchesDrawnInline":
       case "SwitchMatrixBranchesTooSpreadOut":
         for (const placement of issue.branchSchematicBoxes)
