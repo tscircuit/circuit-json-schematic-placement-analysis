@@ -1,4 +1,5 @@
 import { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
+import { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 import { HighPassRcFilterPlacementSolver } from "./solvers/HighPassRcFilterPlacementSolver/HighPassRcFilterPlacementSolver"
 import { ParallelDiodeCapacitorAlignmentSolver } from "./solvers/ParallelDiodeCapacitorAlignmentSolver/ParallelDiodeCapacitorAlignmentSolver"
 import { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
@@ -122,6 +123,7 @@ export class SchematicPlacementAnalysis {
       ParallelRcNotAligned: 0,
       ParallelDiodeResistorNotAligned: 0,
       ParallelDiodesNotAligned: 0,
+      SeriesRcBranchNotGrouped: 0,
       ParallelDiodeCapacitorNotAligned: 0,
       ComponentPinsWouldAlignWithVerticalShift: 0,
       TraceCanBeSimplifiedByMovingComponent: 0,
@@ -240,6 +242,8 @@ export class SchematicPlacementAnalysis {
         return ParallelRcPlacementSolver.issueToString(issue)
       case "ParallelDiodesNotAligned":
         return ParallelDiodeAlignmentSolver.issueToString(issue)
+      case "SeriesRcBranchNotGrouped":
+        return SeriesRcBranchGroupingSolver.issueToString(issue)
       case "ParallelDiodeCapacitorNotAligned":
         return ParallelDiodeCapacitorAlignmentSolver.issueToString(issue)
       case "ParallelDiodeResistorNotAligned":

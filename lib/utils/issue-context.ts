@@ -218,6 +218,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstDiodeSchematicBox)
         addPlacement(issue.secondDiodeSchematicBox)
         break
+      case "SeriesRcBranchNotGrouped":
+        addPlacement(issue.resistorSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
       case "ParallelDiodeCapacitorNotAligned":
         addPlacement(issue.diodeSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
