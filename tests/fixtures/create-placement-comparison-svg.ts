@@ -15,6 +15,8 @@ type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 /** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
   subject?: string
+  /** Fill the viewport margins when the camera extends beyond the rendered sheet. */
+  backgroundColor?: string
   /** Override a crop margin when the default would cut through an unrelated block. */
   padding?: Partial<Record<"left" | "right" | "bottom" | "top", number>>
   before: State
@@ -143,6 +145,9 @@ export function createPlacementComparisonSvg(input: {
       Number(svg.match(/height="([\d.]+)"/)![1]),
     ),
   )
+  const background = input.backgroundColor
+    ? `<rect width="${width}" height="${height}" fill="${input.backgroundColor}" />`
+    : ""
   const headerHeight = 56
   const note = createAnalyzerTextSvg(input.note, width * 2)
   const noteHeight = Number(note.match(/height="([\d.]+)"/)![1])
@@ -152,12 +157,12 @@ export function createPlacementComparisonSvg(input: {
 <rect width="100%" height="100%" fill="white" />
 <g data-comparison-panel="before">
 <text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">Before — ${input.subject ?? "complete matrix"}, ${issues.length} ${issues.length === 1 ? "finding" : "findings"}</text>
-<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(beforeSvg, "before")}</svg>
+<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${background}${scopeIds(beforeSvg, "before")}</svg>
 <g transform="translate(0 ${headerHeight + height})">${beforeText}</g>
 </g>
 <g data-comparison-panel="after" transform="translate(${width} 0)">
 <text x="18" y="35" font-family="sans-serif" font-size="28" fill="#172b3a">After — ${input.subject ?? "complete matrix"}, 0 findings</text>
-<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${scopeIds(afterSvg, "after")}</svg>
+<svg y="${headerHeight}" width="${width}" height="${height}" overflow="hidden">${background}${scopeIds(afterSvg, "after")}</svg>
 <g transform="translate(0 ${headerHeight + height})">${afterText}</g>
 </g>
 <line x1="${width}" y1="0" x2="${width}" y2="${noteY}" stroke="#9ca3af" stroke-width="2" />

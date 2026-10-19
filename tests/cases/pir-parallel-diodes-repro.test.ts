@@ -26,7 +26,9 @@ test("reproduces the published PIR diode pair with shared nets at opposite ends"
     expect(part.symbol_name).toBe("diode_right")
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ParallelDiodesNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson,
