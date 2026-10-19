@@ -219,6 +219,14 @@ export interface ParallelDiodeResistorNotAligned {
   message: string
 }
 
+/** Two local diodes share the same nets at opposite drawing ends. */
+export interface ParallelDiodesNotAligned {
+  lineItemType: "ParallelDiodesNotAligned"
+  firstDiodeSchematicBox: SchematicBoxPlacement
+  secondDiodeSchematicBox: SchematicBoxPlacement
+  message: string
+}
+
 /** A local diode/capacitor pair has nonmatching parallel branch ends. */
 export interface ParallelDiodeCapacitorNotAligned {
   lineItemType: "ParallelDiodeCapacitorNotAligned"
@@ -779,6 +787,7 @@ export type SchematicPlacementIssue =
   | ParallelCapacitorsDrawnInline
   | ParallelRcNotAligned
   | ParallelDiodeResistorNotAligned
+  | ParallelDiodesNotAligned
   | ParallelDiodeCapacitorNotAligned
   | ComponentPinsWouldAlignWithVerticalShift
   | TraceCanBeSimplifiedByMovingComponent
