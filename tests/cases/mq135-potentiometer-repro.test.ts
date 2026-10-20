@@ -35,7 +35,9 @@ test("reproduces the MQ135 potentiometer with published position, terminals and 
     json.find((e) => e.type === "source_net" && e.name === "GND"),
   ).toMatchObject({ is_ground: true })
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "PotentiometerHasIncorrectRailOrientation",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,

@@ -66,6 +66,9 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "PotentiometerHasIncorrectRailOrientation":
+        addPlacement(issue.schematicBox)
+        break
       case "CapacitorSeparatedFromResistorDivider":
         addPlacement(issue.capacitorSchematicBox)
         for (const b of issue.resistorSchematicBoxes) addPlacement(b)

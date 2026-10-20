@@ -1,3 +1,12 @@
+export interface PotentiometerHasIncorrectRailOrientation {
+  lineItemType: "PotentiometerHasIncorrectRailOrientation"
+  schematicBox: SchematicBoxPlacement
+  supplySourcePortId: string
+  groundSourcePortId: string
+  deltaSchRotation: 90 | 180 | 270
+  message: string
+}
+
 export interface CapacitorSeparatedFromResistorDivider {
   lineItemType: "CapacitorSeparatedFromResistorDivider"
   capacitorSchematicBox: SchematicBoxPlacement
@@ -801,6 +810,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
   | FuseDiodeNotAligned
