@@ -1,3 +1,4 @@
+import { PotentiometerRailOrientationSolver } from "../PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
 import { ResistorDividerCapacitorPlacementSolver } from "../ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 import { SeriesResistorAlignmentSolver } from "../SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
 import { ParallelDiodeAlignmentSolver } from "../ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
@@ -75,6 +76,9 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  PotentiometerHasIncorrectRailOrientation: [
+    PotentiometerRailOrientationSolver,
+  ],
   CapacitorSeparatedFromResistorDivider: [
     ResistorDividerCapacitorPlacementSolver,
   ],
@@ -158,6 +162,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "PotentiometerRailOrientationSolver",
+      PotentiometerRailOrientationSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "ResistorDividerCapacitorPlacementSolver",
       ResistorDividerCapacitorPlacementSolver,
