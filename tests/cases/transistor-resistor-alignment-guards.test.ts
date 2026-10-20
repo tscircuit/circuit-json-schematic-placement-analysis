@@ -16,15 +16,22 @@ test("transistor resistor alignment ignores semantic names and skips ambiguous t
     analyzeSchematicPlacement(j, {
       issueTypes: ["TransistorResistorNotAligned"],
     }).getIssues()
-  // A broader low-side-driver finding already includes this exact pair.
-  expect(issues(stm32MiniDevBoard)).toEqual([])
+  // Load placement and resistor alignment are independent findings on the same pair.
+  const alignment = issues(stm32MiniDevBoard)
+  expect(alignment).toMatchObject([
+    {
+      lineItemType: "TransistorResistorNotAligned",
+      transistorSchematicBox: { sourceComponentName: "Q1" },
+      resistorSchematicBox: { sourceComponentName: "R6" },
+    },
+  ])
   const driver = analyzeSchematicPlacement(stm32MiniDevBoard)
   expect(
     driver.getIssues({ issueTypes: ["LowSideTransistorNotAlignedWithLoad"] }),
   ).toHaveLength(1)
   expect(
     driver.getIssues({ issueTypes: ["TransistorResistorNotAligned"] }),
-  ).toEqual([])
+  ).toEqual(alignment)
   expect(issues(before)).toHaveLength(1)
   expect(issues(after)).toEqual([])
   expect(JSON.stringify(before)).toBe(saved)

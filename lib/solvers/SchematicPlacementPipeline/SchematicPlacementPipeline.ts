@@ -77,10 +77,7 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
-  TransistorResistorNotAligned: [
-    TransistorResistorAlignmentSolver,
-    LowSideTransistorPlacementSolver,
-  ],
+  TransistorResistorNotAligned: [TransistorResistorAlignmentSolver],
   PotentiometerHasIncorrectRailOrientation: [
     PotentiometerRailOrientationSolver,
   ],
@@ -613,31 +610,8 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
           : [],
       ),
     )
-    // The low-side-driver instruction already places its base resistor beside the transistor.
-    const lowSidePairs = new Set(
-      this.issues.flatMap((issue) =>
-        issue.lineItemType === "LowSideTransistorNotAlignedWithLoad"
-          ? [
-              JSON.stringify([
-                issue.transistorSchematicBox.schematicComponentId,
-                issue.baseResistorSchematicBox.schematicComponentId,
-              ]),
-            ]
-          : [],
-      ),
-    )
     return {
       issues: this.issues
-        .filter(
-          (issue) =>
-            issue.lineItemType !== "TransistorResistorNotAligned" ||
-            !lowSidePairs.has(
-              JSON.stringify([
-                issue.transistorSchematicBox.schematicComponentId,
-                issue.resistorSchematicBox.schematicComponentId,
-              ]),
-            ),
-        )
         .filter(
           (issue) =>
             issue.lineItemType !== "CapacitorSymbolHorizontal" ||
