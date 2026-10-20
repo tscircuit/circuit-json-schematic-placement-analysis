@@ -1,6 +1,6 @@
+import { Circuit } from "@tscircuit/core"
 import { expect, test } from "bun:test"
 import { analyzeSchematicPlacement } from "lib/index"
-import { createMacroSixSeriesFuseCircuitJson } from "../assets/macro-six-series-fuse"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 import {
   expectReproNets,
@@ -9,7 +9,28 @@ import {
 } from "../fixtures/placement-repro-assertions"
 
 test("reproduces a horizontal series fuse reported as a vertical rail branch", async () => {
-  const circuitJson = await createMacroSixSeriesFuseCircuitJson()
+  const circuit = new Circuit()
+  circuit.pcbDisabled = true
+  circuit.add(
+    <board schTraceAutoLabelEnabled={false}>
+      <net name="VBUS" isPowerNet />
+      <net name="FUSED_5V" isPowerNet />
+      <fuse
+        name="F1"
+        currentRating="500mA"
+        voltageRating="6V"
+        manufacturerPartNumber="nSMD050"
+        supplierPartNumbers={{ jlcpcb: ["C69688"] }}
+        schX={-8.75}
+        schY={4.2}
+      />
+      <trace from="net.VBUS" to=".F1 > .pin1" />
+      <trace from=".F1 > .pin2" to="net.FUSED_5V" />
+    </board>,
+  )
+  await circuit.renderUntilSettled()
+  const circuitJson = circuit.getCircuitJson()
+
   expectReproRendered(circuitJson, 1)
   expectReproNets(circuitJson, [
     ["net.VBUS", "F1.pin1"],
