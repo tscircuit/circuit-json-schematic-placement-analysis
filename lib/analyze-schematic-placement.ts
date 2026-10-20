@@ -1,4 +1,5 @@
 import { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
+import { SeriesResistorAlignmentSolver } from "./solvers/SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
 import { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 import { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 import { FuseDiodeAlignmentSolver } from "./solvers/FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
@@ -106,6 +107,7 @@ export class SchematicPlacementAnalysis {
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
       CapacitorSeparatedFromResistorDivider: 0,
+      SeriesResistorsNotAligned: 0,
       FuseDiodeNotAligned: 0,
       InductorSeparatedFromChipPins: 0,
       TransistorHasIncorrectRailOrientation: 0,
@@ -190,6 +192,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "CapacitorSeparatedFromResistorDivider":
         return ResistorDividerCapacitorPlacementSolver.issueToString(issue)
+      case "SeriesResistorsNotAligned":
+        return SeriesResistorAlignmentSolver.issueToString(issue)
       case "FuseDiodeNotAligned":
         return FuseDiodeAlignmentSolver.issueToString(issue)
       case "InductorSeparatedFromChipPins":
