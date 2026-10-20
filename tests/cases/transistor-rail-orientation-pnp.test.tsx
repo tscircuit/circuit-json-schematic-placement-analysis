@@ -46,6 +46,15 @@ test("PNP rail orientation follows connected rails without assuming NPN terminal
   const before = await render(0)
   expectReproRendered(before, 4)
   const analysis = analyzeSchematicPlacement(before)
+  // Rotating Q1 for its rails does not align the separate input resistor R3.
+  expect(
+    analysis.getIssues({ issueTypes: ["TransistorResistorNotAligned"] }),
+  ).toMatchObject([
+    {
+      resistorSchematicBox: { sourceComponentName: "R3" },
+      transistorSchematicBox: { sourceComponentName: "Q1" },
+    },
+  ])
   const [issue] = analysis.getIssues({
     issueTypes: ["TransistorHasIncorrectRailOrientation"],
   })

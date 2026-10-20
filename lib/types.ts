@@ -1,3 +1,12 @@
+export interface TransistorResistorNotAligned {
+  lineItemType: "TransistorResistorNotAligned"
+  transistorSchematicBox: SchematicBoxPlacement
+  resistorSchematicBox: SchematicBoxPlacement
+  transistorSourcePortId: string
+  resistorSourcePortId: string
+  message: string
+}
+
 export interface PotentiometerHasIncorrectRailOrientation {
   lineItemType: "PotentiometerHasIncorrectRailOrientation"
   schematicBox: SchematicBoxPlacement
@@ -810,6 +819,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | TransistorResistorNotAligned
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
