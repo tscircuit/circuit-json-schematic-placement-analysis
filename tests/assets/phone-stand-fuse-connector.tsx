@@ -7,13 +7,18 @@ import { Circuit } from "@tscircuit/core"
 // Preserves F_QI/J_QI positions, native symbols, values, footprint and pin order.
 // J_USB.pin1 becomes a boundary net. Other circuitry and PCB placements are
 // omitted. This is a two-part connection, not a complete power board.
-export async function createPhoneStandFuseConnector() {
+// Corrections change only schematic coordinates/facing and local wire distance.
+export async function createPhoneStandFuseConnector(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
-    <board schLayout={{ layoutMode: "relative" }}>
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={after ? 7 : undefined}
+    >
       <pinheader
         name="J_QI"
+        schFacingDirection={after ? "left" : undefined}
         pinCount={2}
         pinLabels={{ pin1: "5V_QI", pin2: "GND" }}
         schX={-1}
@@ -42,8 +47,8 @@ export async function createPhoneStandFuseConnector() {
         currentRating="2A"
         voltageRating={6}
         manufacturerPartNumber="MF-MSMF200-2"
-        schX={-5}
-        schY={4}
+        schX={after ? -4 : -5}
+        schY={after ? 4.06 : 4}
       />
       <net name="GND" isGroundNet connectsTo={["J_QI.pin2"]} />
       <trace from="net.J_USB_PIN1" to="F_QI.pin1" />
