@@ -34,6 +34,8 @@ test("reproduces the published pocket-audio-divider-capacitors network without c
   ])
   const analysis = analyzeSchematicPlacement(j)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "CapacitorSeparatedFromResistorDivider",
+    "CapacitorSeparatedFromResistorDivider",
     "TwoPinComponentShouldBeVertical",
     "TwoPinComponentShouldBeVertical",
   ])

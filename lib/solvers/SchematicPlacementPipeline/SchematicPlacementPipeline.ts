@@ -1,3 +1,4 @@
+import { ResistorDividerCapacitorPlacementSolver } from "../ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 import { SeriesResistorAlignmentSolver } from "../SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
 import { ParallelDiodeAlignmentSolver } from "../ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 import { SeriesRcBranchGroupingSolver } from "../SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
@@ -74,6 +75,9 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  CapacitorSeparatedFromResistorDivider: [
+    ResistorDividerCapacitorPlacementSolver,
+  ],
   SeriesResistorsNotAligned: [SeriesResistorAlignmentSolver],
   FuseDiodeNotAligned: [FuseDiodeAlignmentSolver],
   InductorSeparatedFromChipPins: [ChipPinPairInductorPlacementSolver],
@@ -154,6 +158,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
   readonly issues: SchematicPlacementIssue[] = []
 
   pipelineDef: PipelineStep<any>[] = [
+    definePipelineStep(
+      "ResistorDividerCapacitorPlacementSolver",
+      ResistorDividerCapacitorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
     definePipelineStep(
       "SeriesResistorAlignmentSolver",
       SeriesResistorAlignmentSolver,

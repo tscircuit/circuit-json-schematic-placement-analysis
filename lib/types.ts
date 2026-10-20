@@ -1,3 +1,14 @@
+export interface CapacitorSeparatedFromResistorDivider {
+  lineItemType: "CapacitorSeparatedFromResistorDivider"
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSchematicBoxes: SchematicBoxPlacement[]
+  capacitorSourcePortId: string
+  resistorSourcePortIds: string[]
+  signalPinDistance: number
+  maxRecommendedSignalPinDistance: number
+  message: string
+}
+
 export interface SeriesResistorsNotAligned {
   lineItemType: "SeriesResistorsNotAligned"
   firstResistorSchematicBox: SchematicBoxPlacement
@@ -790,6 +801,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
   | FuseDiodeNotAligned
   | InductorSeparatedFromChipPins

@@ -66,6 +66,10 @@ export const getRelevantPlacementsForIssues = ({
 
   for (const issue of issues) {
     switch (issue.lineItemType) {
+      case "CapacitorSeparatedFromResistorDivider":
+        addPlacement(issue.capacitorSchematicBox)
+        for (const b of issue.resistorSchematicBoxes) addPlacement(b)
+        break
       case "SeriesResistorsNotAligned":
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)
