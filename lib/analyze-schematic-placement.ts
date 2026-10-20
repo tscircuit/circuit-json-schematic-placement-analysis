@@ -1,3 +1,4 @@
+import { TransistorResistorAlignmentSolver } from "./solvers/TransistorResistorAlignmentSolver/TransistorResistorAlignmentSolver"
 import { PotentiometerRailOrientationSolver } from "./solvers/PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
 import { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 import { SeriesResistorAlignmentSolver } from "./solvers/SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
@@ -107,6 +108,7 @@ export class SchematicPlacementAnalysis {
   /** Counts emitted issue objects, including zero counts for known types. */
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
+      TransistorResistorNotAligned: 0,
       PotentiometerHasIncorrectRailOrientation: 0,
       CapacitorSeparatedFromResistorDivider: 0,
       SeriesResistorsNotAligned: 0,
@@ -192,6 +194,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "TransistorResistorNotAligned":
+        return TransistorResistorAlignmentSolver.issueToString(issue)
       case "PotentiometerHasIncorrectRailOrientation":
         return PotentiometerRailOrientationSolver.issueToString(issue)
       case "CapacitorSeparatedFromResistorDivider":

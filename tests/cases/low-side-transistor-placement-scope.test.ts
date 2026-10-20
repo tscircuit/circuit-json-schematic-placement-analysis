@@ -107,6 +107,17 @@ test("skips ambiguous transistor roles, rails, loads and circuits in separate bl
   ).toBe(1)
   const unknownPins = structuredClone(original)
   mutations[1]!(unknownPins)
+  // The local alignment check needs geometry and typed connectivity, not base/emitter aliases.
+  expect(
+    analyzeSchematicPlacement(unknownPins).getIssues({
+      issueTypes: ["TransistorResistorNotAligned"],
+    }),
+  ).toMatchObject([
+    {
+      resistorSchematicBox: { sourceComponentName: "R1" },
+      transistorSchematicBox: { sourceComponentName: "Q1" },
+    },
+  ])
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson: unknownPins,

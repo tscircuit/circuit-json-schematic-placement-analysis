@@ -1,4 +1,4 @@
-<svg width="1200" height="922" viewBox="0 0 1200 922" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1200" height="1098" viewBox="0 0 1200 1098" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -31,10 +31,18 @@
     <rect width="100%" height="100%" fill="#fff" />
 <text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
     <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;Q1&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;3&quot; width=&quot;1.1&quot;</tspan>
+    <tspan x="18" dy="22">  height=&quot;0.95&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;R1&quot; positionAnchor=&quot;center&quot; schX=&quot;-3.5&quot; schY=&quot;3&quot;</tspan>
+    <tspan x="18" dy="22">  width=&quot;0.6&quot; height=&quot;0.65&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;BZ1&quot; positionAnchor=&quot;center&quot; schX=&quot;0&quot; schY=&quot;0&quot; width=&quot;0.5&quot;</tspan>
     <tspan x="18" dy="22">  height=&quot;0.8&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
+    <tspan x="18" dy="22">&lt;TransistorResistorNotAligned transistorName=&quot;Q1&quot; resistorName=&quot;R1&quot; message=&quot;Align R1 with its</tspan>
+    <tspan x="18" dy="22">  connected terminal on Q1 so the separated pair reads along a straight wire. Preserve all pin</tspan>
+    <tspan x="18" dy="22">  connections and transistor polarity, leave room for labels and neighboring parts, and reroute</tspan>
+    <tspan x="18" dy="22">  affected traces.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Labels POS (top) and NEG (bottom) overlap. Increase</tspan>
     <tspan x="18" dy="22">  the schHeight to leave at least 0.1 schematic units between these labels.&quot; componentName=&quot;BZ1&quot;</tspan>
     <tspan x="18" dy="22">  currentSchWidth=&quot;0.5&quot; currentSchHeight=&quot;0.8&quot; overlappingSides=&quot;top,bottom&quot;</tspan>

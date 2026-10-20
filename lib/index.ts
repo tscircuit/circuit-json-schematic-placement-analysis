@@ -1,3 +1,4 @@
+export { TransistorResistorAlignmentSolver } from "./solvers/TransistorResistorAlignmentSolver/TransistorResistorAlignmentSolver"
 export { PotentiometerRailOrientationSolver } from "./solvers/PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
 export { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 export { SeriesResistorAlignmentSolver } from "./solvers/SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"

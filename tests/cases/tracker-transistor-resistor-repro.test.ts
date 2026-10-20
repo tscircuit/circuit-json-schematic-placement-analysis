@@ -36,6 +36,7 @@ test("reproduces the tracker transistor network with its original positions and 
   }
   const analysis = analyzeSchematicPlacement(json)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "TransistorResistorNotAligned",
     "TwoPinComponentShouldBeVertical",
   ])
   expect(
