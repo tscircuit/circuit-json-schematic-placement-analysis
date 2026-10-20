@@ -8,7 +8,7 @@ import {
   getReproSchematicComponent,
 } from "../fixtures/placement-repro-assertions"
 
-test("reproduces a horizontal series fuse reported as a vertical rail branch", async () => {
+test("accepts a horizontal fuse in a series power path", async () => {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
@@ -58,13 +58,8 @@ test("reproduces a horizontal series fuse reported as a vertical rail branch", a
   expect(fuse.center).toEqual({ x: -8.75, y: 4.2 })
 
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(1)
-  expect(analysis.getIssues()[0]).toMatchObject({
-    lineItemType: "TwoPinComponentShouldBeVertical",
-    schematicBox: { sourceComponentName: "F1" },
-    railType: "power",
-  })
-  expect(analysis.getIssueCounts().TwoPinComponentShouldBeVertical).toBe(1)
+  expect(analysis.getIssues()).toHaveLength(0)
+  expect(analysis.getIssueCounts().TwoPinComponentShouldBeVertical).toBe(0)
 
   expect(
     createIssueReproSnapshot({
