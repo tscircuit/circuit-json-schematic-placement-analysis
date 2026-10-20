@@ -1,3 +1,4 @@
+export { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 export { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 export { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 export { FuseDiodeAlignmentSolver } from "./solvers/FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
