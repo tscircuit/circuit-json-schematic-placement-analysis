@@ -34,7 +34,9 @@ test("reproduces the published nema34-series-resistors network without changing 
     expect(net.is_positive_voltage_source).not.toBe(true)
   }
   const analysis = analyzeSchematicPlacement(j)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "SeriesResistorsNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: j,

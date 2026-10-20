@@ -1,3 +1,4 @@
+export { SeriesResistorAlignmentSolver } from "./solvers/SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
 export { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 export { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 export { FuseDiodeAlignmentSolver } from "./solvers/FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
