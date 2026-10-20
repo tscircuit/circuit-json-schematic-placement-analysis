@@ -7,11 +7,19 @@ import { Circuit } from "@tscircuit/core"
 // Preserves Q2/LED4/R16/R20, their original positions, native symbols and wiring.
 // U7.NETLIGHT becomes a boundary net. Other circuitry, PCB placements and section
 // frames are omitted. This is the complete four-part indicator, not a full board.
-export async function createTrackerTransistorLed() {
+// Corrections change only schematic coordinates/orientation and local wire distance.
+export async function createTrackerTransistorLed(
+  state: "before" | "existing-only" | "after" = "before",
+) {
+  const after = state === "after",
+    existingOnly = state === "existing-only"
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
-    <board schLayout={{ layoutMode: "relative" }}>
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={after ? 7 : undefined}
+    >
       <transistor
         name="Q2"
         type="npn"
@@ -19,29 +27,31 @@ export async function createTrackerTransistorLed() {
         supplierPartNumbers={{ jlcpcb: ["C20526"] }}
         schX={11}
         schY={-21.5}
+        schRotation={after || existingOnly ? -90 : 0}
       />
       <resistor
         name="R20"
         resistance="2.2k"
         footprint="0402"
-        schX={7.5}
-        schY={-22.175}
+        schX={after || existingOnly ? 9.1 : 7.5}
+        schY={after || existingOnly ? -21.5 : -22.175}
       />
       <led
         name="LED4"
         color="green"
         footprint="0603"
-        schRotation={90}
-        schX={14}
-        schY={-21.5}
+        schRotation={after ? -90 : 90}
+        schX={after ? 11.29 : 14}
+        schY={after ? -20.1 : -21.5}
       />
       <resistor
         name="R16"
         resistance="330"
         footprint="0402"
-        schOrientation="vertical"
-        schX={14}
-        schY={-19}
+        schOrientation={after || existingOnly ? undefined : "vertical"}
+        schRotation={after || existingOnly ? 90 : undefined}
+        schX={after ? 11.29 : 14}
+        schY={after ? -18.7 : -19}
       />
       <trace from="net.U7_NETLIGHT" to="R20.pin1" />
       <trace from="R20.pin2" to="Q2.base" />

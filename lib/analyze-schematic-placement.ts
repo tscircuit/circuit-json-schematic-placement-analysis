@@ -1,4 +1,5 @@
 import { FuseConnectorAlignmentSolver } from "./solvers/FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
+import { TransistorLedAlignmentSolver } from "./solvers/TransistorLedAlignmentSolver/TransistorLedAlignmentSolver"
 import { TransistorResistorAlignmentSolver } from "./solvers/TransistorResistorAlignmentSolver/TransistorResistorAlignmentSolver"
 import { PotentiometerRailOrientationSolver } from "./solvers/PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
 import { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
@@ -110,6 +111,7 @@ export class SchematicPlacementAnalysis {
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
       FuseConnectorNotAligned: 0,
+      TransistorLedNotAligned: 0,
       TransistorResistorNotAligned: 0,
       PotentiometerHasIncorrectRailOrientation: 0,
       CapacitorSeparatedFromResistorDivider: 0,
@@ -198,6 +200,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "FuseConnectorNotAligned":
         return FuseConnectorAlignmentSolver.issueToString(issue)
+      case "TransistorLedNotAligned":
+        return TransistorLedAlignmentSolver.issueToString(issue)
       case "TransistorResistorNotAligned":
         return TransistorResistorAlignmentSolver.issueToString(issue)
       case "PotentiometerHasIncorrectRailOrientation":

@@ -37,6 +37,7 @@ test("reproduces the tracker-transistor-led with original positions and pin conn
   }
   const analysis = analyzeSchematicPlacement(json)
   expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "TransistorLedNotAligned",
     "TransistorResistorNotAligned",
     "TwoPinComponentHasInvertedRails",
   ])
