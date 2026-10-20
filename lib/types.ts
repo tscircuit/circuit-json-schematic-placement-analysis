@@ -1,3 +1,12 @@
+export interface SeriesResistorsNotAligned {
+  lineItemType: "SeriesResistorsNotAligned"
+  firstResistorSchematicBox: SchematicBoxPlacement
+  secondResistorSchematicBox: SchematicBoxPlacement
+  firstSourcePortId: string
+  secondSourcePortId: string
+  message: string
+}
+
 export interface FuseDiodeNotAligned {
   lineItemType: "FuseDiodeNotAligned"
   fuseSchematicBox: SchematicBoxPlacement
@@ -781,6 +790,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | SeriesResistorsNotAligned
   | FuseDiodeNotAligned
   | InductorSeparatedFromChipPins
   | SwitchMatrixBranchesTooSpreadOut
