@@ -15,6 +15,8 @@ type State = { circuitJson: CircuitJson; analysis: SchematicPlacementAnalysis }
 /** Frame all selected findings together, before and after, using the same world bounds. */
 export function createPlacementComparisonSvg(input: {
   subject?: string
+  /** Use a shorter panel for wide, shallow networks. Defaults to 900. */
+  panelHeight?: number
   /** Fill the viewport margins when the camera extends beyond the rendered sheet. */
   backgroundColor?: string
   /** Override a crop margin when the default would cut through an unrelated block. */
@@ -45,7 +47,7 @@ export function createPlacementComparisonSvg(input: {
   )
     throw new Error("Comparison must include all matching issues on one sheet")
   const width = 1200
-  const height = 900
+  const height = input.panelHeight ?? 900
   const original = renderIssueOverlay({
     ...before,
     schematicSheetId,

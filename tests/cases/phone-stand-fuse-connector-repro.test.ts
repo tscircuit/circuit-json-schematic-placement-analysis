@@ -31,7 +31,9 @@ test("reproduces the phone-stand-fuse-connector with original positions and pin 
     ).toMatchObject({ facing_direction: direction })
   }
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "FuseConnectorNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
