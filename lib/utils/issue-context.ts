@@ -70,6 +70,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.fuseSchematicBox)
         addPlacement(issue.connectorSchematicBox)
         break
+      case "TransistorLedNotAligned":
+        addPlacement(issue.transistorSchematicBox)
+        addPlacement(issue.ledSchematicBox)
+        break
       case "TransistorResistorNotAligned":
         addPlacement(issue.transistorSchematicBox)
         addPlacement(issue.resistorSchematicBox)
