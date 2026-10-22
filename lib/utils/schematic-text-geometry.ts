@@ -1,4 +1,9 @@
-import type { SchematicText } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicComponent,
+  SchematicText,
+} from "circuit-json"
+import { symbols } from "schematic-symbols"
 import type { RectBounds } from "./geometry"
 
 export interface Point {
@@ -7,6 +12,11 @@ export interface Point {
 }
 
 export type Polygon = Point[]
+
+export type SchematicTextLayout = Pick<
+  SchematicText,
+  "text" | "font_size" | "rotation" | "position" | "anchor" | "color"
+>
 
 export const rectPolygon = (bounds: RectBounds): Polygon => [
   { x: bounds.left, y: bounds.bottom },
@@ -35,7 +45,7 @@ const widthInEm = (text: string): number =>
 export const getSchematicTextWidth = (text: string, fontSize: number): number =>
   widthInEm(text) * fontSize
 
-export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
+export function getSchematicTextPolygons(text: SchematicTextLayout): Polygon[] {
   const size = text.font_size
   if (
     !Number.isFinite(size) ||
@@ -164,4 +174,107 @@ export const polygonBounds = (polygons: Polygon[]): RectBounds => {
     top: Math.max(...points.map((p) => p.y)),
     bottom: Math.min(...points.map((p) => p.y)),
   }
+}
+
+// Symbol text is rendered from a component, not a standalone schematic_text.
+export interface ComponentSymbolText {
+  component: SchematicComponent
+  layout: SchematicTextLayout
+}
+
+export function getComponentSymbolTexts(
+  circuitJson: CircuitJson,
+): ComponentSymbolText[] {
+  const sources = new Map(
+    circuitJson
+      .filter((e) => e.type === "source_component")
+      .map((e) => [e.source_component_id, e]),
+  )
+  const ports = circuitJson.filter((e) => e.type === "schematic_port")
+  return circuitJson.flatMap((component) => {
+    if (component.type !== "schematic_component" || !component.symbol_name)
+      return []
+    const symbol = symbols[component.symbol_name as keyof typeof symbols]
+    if (!symbol) return []
+    // Match the renderer: directional symbol variants already encode rotation;
+    // matched port pairs determine the uniform scale and translation of text anchors.
+    const angle = (p: Point, center: Point) =>
+      Math.atan2(p.y - center.y, p.x - center.x)
+    const available = new Set(
+      [...symbol.ports].sort(
+        (a, b) => angle(a, symbol.center) - angle(b, symbol.center),
+      ),
+    )
+    const matches = ports
+      .filter(
+        (p) => p.schematic_component_id === component.schematic_component_id,
+      )
+      .sort(
+        (a, b) =>
+          angle(a.center, component.center) - angle(b.center, component.center),
+      )
+      .flatMap((port) => {
+        const candidates = [...available]
+          .map((p) => {
+            const difference = Math.abs(
+              angle(port.center, component.center) - angle(p, symbol.center),
+            )
+            return {
+              p,
+              difference: Math.min(difference, 2 * Math.PI - difference),
+            }
+          })
+          .sort((a, b) => a.difference - b.difference)
+        const match = candidates[0]
+        if (!match || match.difference >= Math.PI / 4) return []
+        available.delete(match.p)
+        return [{ symbol: match.p, real: port.center }]
+      })
+    const first = matches[0]
+    if (!first) return []
+    const second = matches[1] ?? {
+      symbol: symbol.center,
+      real: component.center,
+    }
+    const scale =
+      Math.hypot(first.real.x - second.real.x, first.real.y - second.real.y) /
+      Math.hypot(
+        first.symbol.x - second.symbol.x,
+        first.symbol.y - second.symbol.y,
+      )
+    if (!Number.isFinite(scale) || scale <= 0) return []
+    const source = component.source_component_id
+      ? sources.get(component.source_component_id)
+      : undefined
+    return symbol.primitives.flatMap((primitive): ComponentSymbolText[] => {
+      if (primitive.type !== "text") return []
+      const text =
+        primitive.text === "{REF}"
+          ? (source?.display_name ?? source?.name)
+          : primitive.text === "{VAL}"
+            ? component.symbol_display_value
+            : undefined
+      if (!text) return []
+      return [
+        {
+          component,
+          layout: {
+            text,
+            position: {
+              x: second.real.x + scale * (primitive.x - second.symbol.x),
+              y: second.real.y + scale * (primitive.y - second.symbol.y),
+            },
+            anchor: primitive.anchor.replace(
+              "middle_",
+              "",
+            ) as SchematicText["anchor"],
+            // circuit-to-svg uses a fixed 0.18-unit font, even for scaled symbols.
+            font_size: 0.18,
+            rotation: 0,
+            color: "#000000",
+          },
+        },
+      ]
+    })
+  })
 }
