@@ -64,20 +64,22 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
   private getOverlapCorrectionSuggestions({
     firstComponent,
     secondComponent,
-    overlapWidth,
-    overlapHeight,
   }: {
     firstComponent: SchematicBoxPlacement
     secondComponent: SchematicBoxPlacement
-    overlapWidth: number
-    overlapHeight: number
   }): OverlapCorrectionSuggestion[] {
     const firstArea = firstComponent.width * firstComponent.height
     const secondArea = secondComponent.width * secondComponent.height
     const target = firstArea <= secondArea ? firstComponent : secondComponent
     const other = target === firstComponent ? secondComponent : firstComponent
-    const deltaSchX = target.schX <= other.schX ? -overlapWidth : overlapWidth
-    const deltaSchY = target.schY <= other.schY ? -overlapHeight : overlapHeight
+    // The intersection size is too small when one rectangle contains another.
+    // Move the target to the nearest outer edge on each axis instead.
+    const separationX =
+      (target.width + other.width) / 2 - Math.abs(target.schX - other.schX)
+    const separationY =
+      (target.height + other.height) / 2 - Math.abs(target.schY - other.schY)
+    const deltaSchX = target.schX <= other.schX ? -separationX : separationX
+    const deltaSchY = target.schY <= other.schY ? -separationY : separationY
     return [
       {
         targetComponentName: target.sourceComponentName,
@@ -154,8 +156,6 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
       correctionSuggestions: this.getOverlapCorrectionSuggestions({
         firstComponent,
         secondComponent,
-        overlapWidth,
-        overlapHeight,
       }),
     }
   }
