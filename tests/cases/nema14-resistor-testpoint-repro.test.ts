@@ -21,7 +21,9 @@ test("reproduces the real nema14-resistor-testpoint positions and connections", 
     ["R_USB_BOOT.pin2", "TP_BOOT.pin1", "net.BOOT_PAD"],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ResistorTestPointNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
