@@ -141,7 +141,9 @@ import {
 } from "@tscircuit/circuit-json-schematic-placement-analysis"
 
 const analysis = analyzeSchematicPlacement(circuitJson)
-const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, { analysis })
+const artifacts = createSchematicPlacementIssueArtifacts(circuitJson, {
+  analysis,
+})
 const outputDir = "dist/schematic-placement"
 if (artifacts.length) await mkdir(outputDir, { recursive: true })
 for (const artifact of artifacts) {
