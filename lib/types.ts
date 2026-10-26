@@ -1,3 +1,12 @@
+export interface ResistorConnectorNotAligned {
+  lineItemType: "ResistorConnectorNotAligned"
+  resistorSchematicBox: SchematicBoxPlacement
+  connectorSchematicBox: SchematicBoxPlacement
+  resistorSourcePortId: string
+  connectorSourcePortId: string
+  message: string
+}
+
 export interface FuseConnectorNotAligned {
   lineItemType: "FuseConnectorNotAligned"
   fuseSchematicBox: SchematicBoxPlacement
@@ -837,6 +846,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | ResistorConnectorNotAligned
   | FuseConnectorNotAligned
   | TransistorLedNotAligned
   | TransistorResistorNotAligned

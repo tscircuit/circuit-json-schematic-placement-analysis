@@ -7,11 +7,14 @@ import { JstSwdSide } from "./JstSwdSide"
 // StandardJstUartSide's host labels are inlined below; its imported footprint is unchanged.
 // Original positions, values, native symbols and physical pin order are preserved.
 // U1.GPIO8/9 become boundary nets UART_TX_GPIO/RX_GPIO; other board blocks are omitted.
-export async function createProgrammerResistorConnector() {
+export async function createProgrammerResistorConnector(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
-    <board schLayout={{ layoutMode: "relative" }}>
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={after ? 10 : undefined}
+    >
       <JstSwdSide
         name="J5"
         schX={8}
@@ -23,15 +26,17 @@ export async function createProgrammerResistorConnector() {
         name="R_UART_TX"
         resistance="100"
         footprint="0402"
-        schX={3}
-        schY={-5}
+        schX={after ? 13.5 : 3}
+        schY={after ? -6.2 : -5}
+        schRotation={after ? 180 : 0}
       />
       <resistor
         name="R_UART_RX"
         resistance="100"
         footprint="0402"
-        schX={3}
-        schY={-7}
+        schX={after ? 10.7 : 3}
+        schY={after ? -5.8 : -7}
+        schRotation={after ? 180 : 0}
       />
       <trace
         from="net.UART_TX_GPIO"
@@ -43,8 +48,16 @@ export async function createProgrammerResistorConnector() {
         to="R_UART_RX.pin1"
         schDisplayLabel="UART_RX_GPIO"
       />
-      <trace from="R_UART_TX.pin2" to="J5.TX" schDisplayLabel="UART_TX" />
-      <trace from="R_UART_RX.pin2" to="J5.RX" schDisplayLabel="UART_RX" />
+      <trace
+        from="R_UART_TX.pin2"
+        to="J5.TX"
+        schDisplayLabel={after ? undefined : "UART_TX"}
+      />
+      <trace
+        from="R_UART_RX.pin2"
+        to="J5.RX"
+        schDisplayLabel={after ? undefined : "UART_RX"}
+      />
       <trace from="J5.GND" to="net.GND" />
     </board>,
   )

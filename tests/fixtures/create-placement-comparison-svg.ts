@@ -19,6 +19,8 @@ export function createPlacementComparisonSvg(input: {
   panelHeight?: number
   /** Fill the viewport margins when the camera extends beyond the rendered sheet. */
   backgroundColor?: string
+  /** Recenter moved circuits independently while retaining identical scale. */
+  centerEachPanel?: boolean
   /** Override a crop margin when the default would cut through an unrelated block. */
   padding?: Partial<Record<"left" | "right" | "bottom" | "top", number>>
   before: State
@@ -83,7 +85,7 @@ export function createPlacementComparisonSvg(input: {
   if (!corrected.length) throw new Error("Comparison issues have no components")
   // Include both layouts and leave room for labels and numbered markers.
   // One shared window keeps stationary components in the same place in both panels.
-  const context = [before, after].flatMap((state) =>
+  const contextByState = [before, after].map((state) =>
     state.circuitJson.flatMap((component) =>
       component.type === "schematic_component" &&
       component.source_component_id &&
@@ -99,6 +101,7 @@ export function createPlacementComparisonSvg(input: {
         : [],
     ),
   )
+  const context = contextByState.flat()
   const bounds = [original.bounds, ...corrected, ...context]
   const viewportBounds = {
     left: Math.min(...bounds.map((b) => b.left)) - (input.padding?.left ?? 1.2),
@@ -108,11 +111,39 @@ export function createPlacementComparisonSvg(input: {
       Math.min(...bounds.map((b) => b.bottom)) - (input.padding?.bottom ?? 1.2),
     top: Math.max(...bounds.map((b) => b.top)) + (input.padding?.top ?? 1.2),
   }
+  // A large relocation otherwise leaves both drawings small in a mostly empty
+  // shared window. Keep equal world extents, but center each complete circuit.
+  let beforeBounds = viewportBounds,
+    afterBounds = viewportBounds
+  if (input.centerEachPanel) {
+    const boundsFor = (items: typeof corrected) => ({
+      left:
+        Math.min(...items.map((b) => b.left)) - (input.padding?.left ?? 1.2),
+      right:
+        Math.max(...items.map((b) => b.right)) + (input.padding?.right ?? 1.2),
+      bottom:
+        Math.min(...items.map((b) => b.bottom)) -
+        (input.padding?.bottom ?? 1.2),
+      top: Math.max(...items.map((b) => b.top)) + (input.padding?.top ?? 1.2),
+    })
+    const a = boundsFor([original.bounds, ...contextByState[0]!])
+    const b = boundsFor([...corrected, ...contextByState[1]!])
+    const w = Math.max(a.right - a.left, b.right - b.left)
+    const h = Math.max(a.top - a.bottom, b.top - b.bottom)
+    const centered = (b: typeof viewportBounds) => ({
+      left: (b.left + b.right - w) / 2,
+      right: (b.left + b.right + w) / 2,
+      bottom: (b.bottom + b.top - h) / 2,
+      top: (b.bottom + b.top + h) / 2,
+    })
+    beforeBounds = centered(a)
+    afterBounds = centered(b)
+  }
   const beforeSvg = renderIssueOverlay({
     ...before,
     schematicSheetId,
     issueTypes,
-    viewportBounds,
+    viewportBounds: beforeBounds,
     showIssueGeometry: false,
     width,
     height,
@@ -120,7 +151,7 @@ export function createPlacementComparisonSvg(input: {
   const afterSvg = renderIssueOverlay({
     ...after,
     schematicSheetId,
-    viewportBounds,
+    viewportBounds: afterBounds,
     showOverlay: false,
     width,
     height,
