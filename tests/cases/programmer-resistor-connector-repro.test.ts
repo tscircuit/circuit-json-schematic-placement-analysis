@@ -25,7 +25,10 @@ test("reproduces the real programmer-resistor-connector positions and connection
     ["J5.pin2", "net.GND"],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ResistorConnectorNotAligned",
+    "ResistorConnectorNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,

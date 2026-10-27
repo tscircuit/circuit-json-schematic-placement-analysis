@@ -35,6 +35,8 @@ test("records separated flyback diodes on the complete relay controller sheet", 
     "NetLabelCollision",
     "FlybackDiodeSeparatedFromRelayCoil",
     "FlybackDiodeSeparatedFromRelayCoil",
+    "ResistorConnectorNotAligned",
+    "ResistorConnectorNotAligned",
   ])
   const issues = analysis.getIssues({
     issueTypes: ["FlybackDiodeSeparatedFromRelayCoil"],
