@@ -1,3 +1,4 @@
+import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { ResistorTestPointAlignmentSolver } from "../ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
 import { ResistorConnectorAlignmentSolver } from "../ResistorConnectorAlignmentSolver/ResistorConnectorAlignmentSolver"
 import { FuseConnectorAlignmentSolver } from "../FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
@@ -81,6 +82,7 @@ type SolverParams = {
 
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
+  ConnectorTestPointNotAligned: [ConnectorTestPointAlignmentSolver],
   ResistorTestPointNotAligned: [ResistorTestPointAlignmentSolver],
   ResistorConnectorNotAligned: [ResistorConnectorAlignmentSolver],
   FuseConnectorNotAligned: [FuseConnectorAlignmentSolver],
@@ -600,6 +602,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ResistorConnectorAlignmentSolver",
       ResistorConnectorAlignmentSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ConnectorTestPointAlignmentSolver",
+      ConnectorTestPointAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

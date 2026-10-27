@@ -31,7 +31,9 @@ test("reproduces microsd-connector-testpoint from the published board", async ()
     ],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ConnectorTestPointNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,

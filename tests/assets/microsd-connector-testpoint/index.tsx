@@ -8,7 +8,7 @@ import { TF_01A } from "./TF_01A"
 // Published testpoint_left is reproduced with schRotation=180; default core differs.
 // VDD label is placed above the signal labels; connector pin layout is unchanged.
 // Centers/orientations are frozen from that release; no published JSON is loaded.
-function MicroSdClock() {
+function MicroSdClock({ after = false }: { after?: boolean }) {
   return (
     <>
       <net name="VDD_3V3" isPowerNet />
@@ -17,8 +17,8 @@ function MicroSdClock() {
       <testpoint
         name="TP_SD_CLK"
         schRotation={180}
-        schX={-7.73375}
-        schY={-4.4}
+        schX={after ? -3 : -7.73375}
+        schY={after ? -0.2 : -4.4}
         footprint={
           <footprint>
             <smtpad
@@ -59,12 +59,15 @@ function MicroSdClock() {
     </>
   )
 }
-export async function createMicroSdConnectorTestPoint() {
+export async function createMicroSdConnectorTestPoint(after = false) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
-    <board schLayout={{ layoutMode: "relative" }}>
-      <MicroSdClock />
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={after ? 20 : undefined}
+    >
+      <MicroSdClock after={after} />
     </board>,
   )
   await c.renderUntilSettled()
