@@ -159,6 +159,7 @@ export default function Drone({
             jlcpcb: [value === "10k" ? "C25804" : "C25803"],
           }}
           connections={{ pin1: `net.${a}`, pin2: `net.${b}` }}
+          {...placements[name]}
         />
       ))}
       {[

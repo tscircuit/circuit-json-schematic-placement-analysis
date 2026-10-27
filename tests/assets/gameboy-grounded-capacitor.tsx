@@ -5,7 +5,7 @@ import { CL05A105KA5NQNC } from "./gameboy-grounded-capacitor-imports/CL05A105KA
 // Release b0c4b57c-2e3e-40cf-b61a-e646c5920d62, index.circuit.tsx lines 391–427.
 // Two-component audio extract. Imported symbols, positions and chip pin arrangement retained.
 // External audio connections use boundary nets; BOARD_GND is displayed as GND.
-export async function createGameboyGroundedCapacitor() {
+export async function createGameboyGroundedCapacitor(after = false) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -28,7 +28,12 @@ export async function createGameboyGroundedCapacitor() {
           OUT_L_NEG: "net.SPK_NEG",
         }}
       />
-      <CL05A105KA5NQNC name="C_AMP_VREF" schX={2} schY={2} schRotation={-90} />
+      <CL05A105KA5NQNC
+        name="C_AMP_VREF"
+        schX={after ? -5 : 2}
+        schY={after ? 0.65 : 2}
+        schRotation={-90}
+      />
       <trace from=".U_SPK_AMP > .PGND1" to="net.GND" schDisplayLabel="GND" />
       <trace from=".U_SPK_AMP > .GND" to="net.GND" schDisplayLabel="GND" />
       <trace from=".U_SPK_AMP > .PGND2" to="net.GND" schDisplayLabel="GND" />

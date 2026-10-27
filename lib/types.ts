@@ -730,13 +730,13 @@ export interface ResistorSeparatedFromChipPin {
   message: string
 }
 
-/** A capacitor placed far across its host chip from its two connected pins. */
+/** A capacitor placed far across its chip from its private pin connection(s). */
 export interface CapacitorSeparatedFromChipPins {
   lineItemType: "CapacitorSeparatedFromChipPins"
   hostSchematicBox: SchematicBoxPlacement
   capacitorSchematicBox: SchematicBoxPlacement
-  /** Connected chip pins, in the order of the capacitor's source ports. */
-  chipSourcePortIds: [string, string]
+  /** Private chip pins in capacitor-port order; one when the other terminal is grounded. */
+  chipSourcePortIds: [string] | [string, string]
   maxPinDistance: number
   maxRecommendedPinDistance: number
   message: string

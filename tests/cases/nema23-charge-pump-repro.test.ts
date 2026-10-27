@@ -30,7 +30,7 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
   const analysis = analyzeSchematicPlacement(circuitJson)
   const issueTypes = ["CapacitorSeparatedFromChipPins"] as const
   const issues = analysis.getIssues({ issueTypes })
-  expect(analysis.getIssues()).toHaveLength(5)
+  expect(analysis.getIssues()).toHaveLength(6)
   // The unchanged VM row has a 1.1-unit neighbour gap, above the 1-unit limit.
   expect(
     analysis.getIssues({
@@ -65,6 +65,13 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
         getReproSourcePort(circuitJson, "DRIVER", "CPL").source_port_id,
       ],
     },
+    {
+      hostSchematicBox: { sourceComponentName: "DRIVER" },
+      capacitorSchematicBox: { sourceComponentName: "C_DVDD" },
+      chipSourcePortIds: [
+        getReproSourcePort(circuitJson, "DRIVER", "DVDD").source_port_id,
+      ],
+    },
   ])
   const sheet = circuitJson.find(
     (e) => e.type === "schematic_sheet" && e.name === "driver",
@@ -86,11 +93,12 @@ test("preserves the separated charge-pump capacitor on the complete NEMA23 drive
     width: 1800,
     height: 1200,
   })
-  const number = analysis.getIssues().indexOf(issues[0]!) + 1
+  const numbers = issues.map((issue) => analysis.getIssues().indexOf(issue) + 1)
   expect(
     [...svg.matchAll(/data-issue-number="(\d+)"/g)].map((m) => Number(m[1])),
-  ).toEqual([number, number])
-  expect(svg).toContain(`data-listing-issue-number="${number}"`)
+  ).toEqual(numbers.flatMap((number) => [number, number]))
+  for (const number of numbers)
+    expect(svg).toContain(`data-listing-issue-number="${number}"`)
   expect(svg).toMatchSvgSnapshot(import.meta.path, "full-sheet")
   expect(JSON.stringify(circuitJson)).toBe(original)
 })

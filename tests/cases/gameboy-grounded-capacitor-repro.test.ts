@@ -41,7 +41,9 @@ test("reproduces the Game Boy amplifier capacitor across the chip from VREF", as
     ["U_SPK_AMP.pin3", "net.SPK_NEG"],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "CapacitorSeparatedFromChipPins",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
