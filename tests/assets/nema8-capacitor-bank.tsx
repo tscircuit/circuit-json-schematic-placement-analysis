@@ -7,13 +7,16 @@ import { Circuit } from "@tscircuit/core"
 // values, ratings and suppliers match the source. VIO and GND are boundaries.
 // The board has eight capacitors on these nets; these four share the control sheet.
 // No published circuit JSON is loaded at runtime.
-export async function createNema8CapacitorBank() {
+export async function createNema8CapacitorBank(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
-    <board schLayout={{ layoutMode: "relative" }}>
+    <board
+      schLayout={{ layoutMode: "relative" }}
+      schMaxTraceDistance={after ? 20 : undefined}
+    >
       <net name="GND" isGroundNet />
-      {
+      {!after && (
         <>
           <netlabel
             net="VIO"
@@ -32,7 +35,7 @@ export async function createNema8CapacitorBank() {
             />
           ))}
         </>
-      }
+      )}
       {(["C_MCU_HF", "C_MCU_BULK", "C_TEMP", "C_STATUS"] as const).map(
         (name, i) => (
           <capacitor
@@ -43,8 +46,8 @@ export async function createNema8CapacitorBank() {
             footprint="0402"
             maxDecouplingTraceLength="50mm"
             supplierPartNumbers={{ jlcpcb: [i === 1 ? "C107370" : "C1525"] }}
-            schX={10}
-            schY={4.5 - i * 1.5}
+            schX={after ? 7.3 + i * 1.8 : 10}
+            schY={after ? 2.25 : 4.5 - i * 1.5}
             schRotation={-90}
             connections={{ pin1: "net.VIO", pin2: "net.GND" }}
           />

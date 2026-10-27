@@ -1,0 +1,160 @@
+import { expect, test } from "bun:test"
+import type { CircuitJson } from "circuit-json"
+import { stackSvgsVertically } from "stack-svgs"
+import { analyzeSchematicPlacement } from "lib/index"
+import { getSourceConnectivity } from "lib/utils/source-connectivity"
+import { renderIssueOverlay } from "lib/svg/create-issue-overlay-svg"
+import { createAnalyzerTextSvg } from "lib/svg/create-analyzer-text-svg"
+import { createPlacementComparisonSvg } from "../fixtures/create-placement-comparison-svg"
+import {
+  expectReproRendered,
+  getReproSourcePort,
+} from "../fixtures/placement-repro-assertions"
+import { createNema8CapacitorBank } from "../assets/nema8-capacitor-bank"
+const electrical = (json: CircuitJson) => {
+  const connected = getSourceConnectivity(json)
+  return {
+    components: json.filter((e) => e.type === "source_component"),
+    ports: json
+      .filter((e) => e.type === "source_port")
+      .map((p) => ({
+        id: p.source_port_id,
+        nets: json
+          .filter(
+            (n) =>
+              n.type === "source_net" &&
+              connected(n.source_net_id) === connected(p.source_port_id),
+          )
+          .map((n) => (n.type === "source_net" ? n.name : ""))
+          .sort(),
+        peers: json
+          .filter(
+            (q) =>
+              q.type === "source_port" &&
+              connected(q.source_port_id) === connected(p.source_port_id),
+          )
+          .map((q) => (q.type === "source_port" ? q.source_port_id : ""))
+          .sort(),
+      })),
+  }
+}
+test("corrects the complete nema8-capacitor-bank extract without changing connections", async () => {
+  const before = await createNema8CapacitorBank(),
+    after = await createNema8CapacitorBank(true)
+  expectReproRendered(before, 4)
+  expectReproRendered(after, 4)
+  expect(electrical(after)).toEqual(electrical(before))
+  const analysis = analyzeSchematicPlacement(before),
+    corrected = analyzeSchematicPlacement(after),
+    issues = analysis.getIssues({
+      issueTypes: ["ParallelCapacitorsDrawnInline"],
+    })
+  expect(issues).toHaveLength(3)
+  expect(corrected.getIssues()).toEqual([])
+  const symbols = (j: CircuitJson) =>
+    j
+      .filter((e) => e.type === "schematic_component")
+      .map((e) => ({
+        id: e.source_component_id,
+        symbol: e.symbol_name,
+        labels: e.port_labels,
+        arrangement: e.port_arrangement,
+      }))
+  expect(symbols(after)).toEqual(symbols(before))
+  for (const name of ["C_MCU_BULK", "C_TEMP", "C_STATUS"]) {
+    expectDrawnWire(after, "C_MCU_HF", "pin1", name, "pin1")
+    expectDrawnWire(after, "C_MCU_HF", "pin2", name, "pin2")
+  }
+  expect(
+    createPlacementComparisonSvg({
+      subject: "complete 4-component extract",
+      centerEachPanel: true,
+      panelHeight: 700,
+      padding: { left: 2, right: 3, top: 2, bottom: 1.3 },
+      backgroundColor: "#f5f1ed",
+      before: { circuitJson: before, analysis },
+      after: { circuitJson: after, analysis: corrected },
+      issues,
+      contextSourceComponentIds: before.flatMap((e) =>
+        e.type === "source_component" ? [e.source_component_id] : [],
+      ),
+      beforeDiagnostic: () =>
+        "Parallel capacitors are drawn end-to-end in one column.",
+      afterDiagnostic:
+        "Four capacitors form parallel branches between VIO and ground.\nComplete extract: 0 reported issues.",
+      note: "Real-board TSX extract. Component symbols, values and pin connections preserved.",
+    }),
+  ).toMatchSvgSnapshot(import.meta.path, "comparison")
+  expect(
+    stackSvgsVertically(
+      [
+        renderIssueOverlay({
+          circuitJson: after,
+          analysis: corrected,
+          showFullSchematic: true,
+          showOverlay: false,
+          width: 1400,
+          height: 550,
+        }).svg,
+        createAnalyzerTextSvg(
+          "Complete 4-component extract.\nFull analysis of the extracted circuit: 0 reported issues.",
+          1400,
+        ),
+      ],
+      { normalizeSize: false, gap: 0 },
+    ).replace(/[ \t]+$/gm, ""),
+  ).toMatchSvgSnapshot(import.meta.path, "full-network")
+})
+// Check visible trace continuity too: equal electrical nets alone can be joined only by labels.
+function expectDrawnWire(
+  json: CircuitJson,
+  a: string,
+  ap: string,
+  b: string,
+  bp: string,
+) {
+  const first = getReproSourcePort(json, a, ap),
+    second = getReproSourcePort(json, b, bp)
+  const pin = (id: string) => {
+    const p = json.find(
+      (e) => e.type === "schematic_port" && e.source_port_id === id,
+    )
+    if (p?.type !== "schematic_port") throw new Error("Missing drawn port")
+    return p.center
+  }
+  const start = pin(first.source_port_id),
+    end = pin(second.source_port_id)
+  const edges = json.flatMap((e) =>
+    e.type === "schematic_trace" &&
+    e.subcircuit_connectivity_map_key === first.subcircuit_connectivity_map_key
+      ? e.edges
+      : [],
+  )
+  const vertices = [start, end, ...edges.flatMap((e) => [e.from, e.to])]
+  const key = (p: { x: number; y: number }) =>
+    `${p.x.toFixed(6)},${p.y.toFixed(6)}`
+  const segments = edges.map((e) =>
+    vertices
+      .filter(
+        (p) =>
+          Math.abs(
+            (p.x - e.from.x) * (e.to.y - e.from.y) -
+              (p.y - e.from.y) * (e.to.x - e.from.x),
+          ) < 1e-6 &&
+          p.x >= Math.min(e.from.x, e.to.x) - 1e-6 &&
+          p.x <= Math.max(e.from.x, e.to.x) + 1e-6 &&
+          p.y >= Math.min(e.from.y, e.to.y) - 1e-6 &&
+          p.y <= Math.max(e.from.y, e.to.y) + 1e-6,
+      )
+      .map(key),
+  )
+  const reached = new Set([key(start)])
+  let previous = -1
+  while (previous !== reached.size) {
+    previous = reached.size
+    for (const segment of segments)
+      if (segment.some((p) => reached.has(p)))
+        for (const p of segment) reached.add(p)
+  }
+  expect(reached.has(key(end))).toBe(true)
+}

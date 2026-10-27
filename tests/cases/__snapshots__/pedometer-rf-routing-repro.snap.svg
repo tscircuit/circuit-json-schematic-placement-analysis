@@ -1,4 +1,4 @@
-<svg width="1800" height="3304" viewBox="0 0 1800 3304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
+<svg width="1800" height="3568" viewBox="0 0 1800 3568" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="schematic analysis fixture">
   <g transform="translate(0, 0)">
     <style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -326,6 +326,18 @@
     <tspan x="18" dy="22">  C19_ACCEL_VDDIO&quot; maxBodyGap=&quot;1.745&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling</tspan>
     <tspan x="18" dy="22">  capacitors between SYS_VDD and GND closer together in this schematic block. Preserve their net</tspan>
     <tspan x="18" dy="22">  connections.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C13_VDDS_1&quot; secondCapacitorName=&quot;C14_VDDS_2&quot;</tspan>
+    <tspan x="18" dy="22">  message=&quot;Draw C13_VDDS_1 and C14_VDDS_2 beside each other as two parallel branches between</tspan>
+    <tspan x="18" dy="22">  their shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute</tspan>
+    <tspan x="18" dy="22">  the affected wires.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C14_VDDS_2&quot; secondCapacitorName=&quot;C15_VDDS_3&quot;</tspan>
+    <tspan x="18" dy="22">  message=&quot;Draw C14_VDDS_2 and C15_VDDS_3 beside each other as two parallel branches between</tspan>
+    <tspan x="18" dy="22">  their shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute</tspan>
+    <tspan x="18" dy="22">  the affected wires.&quot; /&gt;</tspan>
+    <tspan x="18" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C15_VDDS_3&quot;</tspan>
+    <tspan x="18" dy="22">  secondCapacitorName=&quot;C16_VDDS_BULK&quot; message=&quot;Draw C15_VDDS_3 and C16_VDDS_BULK beside each</tspan>
+    <tspan x="18" dy="22">  other as two parallel branches between their shared nets. Preserve both capacitors&apos;</tspan>
+    <tspan x="18" dy="22">  connections, leave room for labels, and reroute the affected wires.&quot; /&gt;</tspan>
     <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>

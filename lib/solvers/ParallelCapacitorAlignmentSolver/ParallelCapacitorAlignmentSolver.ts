@@ -16,7 +16,7 @@ interface Member {
   axis?: Axis
 }
 
-/** A local parallel pair drawn end-to-end hides the two electrical branches. */
+/** Nearby capacitors drawn end-to-end hide their parallel electrical branches. */
 export class ParallelCapacitorAlignmentSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly banks: Member[][]
@@ -45,7 +45,7 @@ export class ParallelCapacitorAlignmentSolver extends BaseSolver {
       if (!nets) continue
       const key = JSON.stringify(nets)
       const bank = banks.get(key) ?? []
-      // Count unsupported/unplaced members too; never manufacture a unique pair.
+      // Keep all members in the electrical bank; validate each local pair below.
       const member: Member = { box: index.placement(id) }
       bank.push(member)
       banks.set(key, bank)
@@ -77,8 +77,12 @@ export class ParallelCapacitorAlignmentSolver extends BaseSolver {
   override _step(): void {
     const members = this.banks[this.bankIndex++]!
     this.solved = this.bankIndex >= this.banks.length
-    if (members.length !== 2) return
-    const [first, second] = members
+    for (let a = 0; a < members.length; a++)
+      for (let b = a + 1; b < members.length; b++)
+        this.checkPair(members[a]!, members[b]!)
+  }
+
+  private checkPair(first: Member, second: Member): void {
     if (
       !first?.box ||
       !second?.box ||

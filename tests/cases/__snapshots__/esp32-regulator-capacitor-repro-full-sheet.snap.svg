@@ -30,7 +30,7 @@
     <rect width="100%" height="100%" fill="#fff" />
 <text x="52" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
 <tspan x="52" dy="0">Emitted issue counts (all sheets):</tspan>
-<tspan x="52" dy="22">ParallelCapacitorsDrawnInline: 1</tspan>
+<tspan x="52" dy="22">ParallelCapacitorsDrawnInline: 2</tspan>
 <tspan x="52" dy="22">TwoPinComponentCouldBeFlipped: 1</tspan>
 <tspan x="52" dy="22">TwoPinComponentShouldBeVertical: 12</tspan>
 <tspan x="52" dy="22">DecouplingCapacitorsNotCloseTogether: 2</tspan>

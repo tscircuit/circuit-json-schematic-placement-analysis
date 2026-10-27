@@ -37,7 +37,11 @@ test("reproduces nema8-capacitor-bank from the published board", async () => {
     ],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ParallelCapacitorsDrawnInline",
+    "ParallelCapacitorsDrawnInline",
+    "ParallelCapacitorsDrawnInline",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
