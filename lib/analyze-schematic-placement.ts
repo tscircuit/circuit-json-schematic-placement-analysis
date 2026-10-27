@@ -1,3 +1,4 @@
+import { ResistorTestPointAlignmentSolver } from "./solvers/ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
 import { ResistorConnectorAlignmentSolver } from "./solvers/ResistorConnectorAlignmentSolver/ResistorConnectorAlignmentSolver"
 import { FuseConnectorAlignmentSolver } from "./solvers/FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
 import { TransistorLedAlignmentSolver } from "./solvers/TransistorLedAlignmentSolver/TransistorLedAlignmentSolver"
@@ -111,6 +112,7 @@ export class SchematicPlacementAnalysis {
   /** Counts emitted issue objects, including zero counts for known types. */
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
+      ResistorTestPointNotAligned: 0,
       ResistorConnectorNotAligned: 0,
       FuseConnectorNotAligned: 0,
       TransistorLedNotAligned: 0,
@@ -200,6 +202,8 @@ export class SchematicPlacementAnalysis {
 
   schematicIssuesToString(issue: SchematicPlacementIssue): string {
     switch (issue.lineItemType) {
+      case "ResistorTestPointNotAligned":
+        return ResistorTestPointAlignmentSolver.issueToString(issue)
       case "ResistorConnectorNotAligned":
         return ResistorConnectorAlignmentSolver.issueToString(issue)
       case "FuseConnectorNotAligned":
