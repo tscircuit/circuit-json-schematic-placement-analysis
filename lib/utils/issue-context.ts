@@ -129,6 +129,12 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.crystalSchematicBox)
         break
+      case "RrcTimingNetworkNotGrouped":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.firstResistorSchematicBox)
+        addPlacement(issue.secondResistorSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
       case "CapacitorSeparatedFromChipPins":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.capacitorSchematicBox)

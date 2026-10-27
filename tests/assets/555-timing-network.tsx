@@ -4,7 +4,10 @@ import { Circuit } from "@tscircuit/core"
 // Retains source positions, values, default chip pin layout and pin connections.
 // Named rails make the original VCC/GND connectivity explicit in this current-core rebuild.
 // orientationOnly fixes existing rotation findings without grouping the timing chain.
-export async function create555TimingNetwork(orientationOnly = false) {
+export async function create555TimingNetwork(
+  orientationOnly = false,
+  after = false,
+) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -13,7 +16,7 @@ export async function create555TimingNetwork(orientationOnly = false) {
         name="J_PWR"
         pinCount={2}
         footprint="pinrow2"
-        schX={-5}
+        schX={after ? -4 : -5}
         schY={2}
         connections={{ pin1: "net.VCC", pin2: "net.GND" }}
       />
@@ -48,44 +51,44 @@ export async function create555TimingNetwork(orientationOnly = false) {
         name="R1"
         resistance="10k"
         footprint="0805"
-        schX={-2}
-        schY={4}
-        schRotation={orientationOnly ? -90 : 0}
+        schX={after ? 4 : -2}
+        schY={after ? 1.6 : 4}
+        schRotation={after || orientationOnly ? -90 : 0}
         connections={{ pin1: "net.VCC", pin2: "net.DISCH" }}
       />
       <resistor
         name="R2"
         resistance="100k"
         footprint="0805"
-        schX={2}
-        schY={4}
-        schRotation={orientationOnly ? -90 : 0}
+        schX={after ? 4 : 2}
+        schY={after ? -0.4 : 4}
+        schRotation={after || orientationOnly ? -90 : 0}
         connections={{ pin1: "net.DISCH", pin2: "net.TIMING" }}
       />
       <capacitor
         name="C1"
         capacitance="10uF"
         footprint="0805"
-        schX={2}
-        schY={-4}
-        schRotation={orientationOnly ? -90 : 0}
+        schX={after ? 4 : 2}
+        schY={after ? -2.4 : -4}
+        schRotation={after || orientationOnly ? -90 : 0}
         connections={{ pin1: "net.TIMING", pin2: "net.GND" }}
       />
       <capacitor
         name="C2"
         capacitance="10nF"
         footprint="0805"
-        schX={-2}
-        schY={-4}
-        schRotation={orientationOnly ? -90 : 0}
+        schX={after ? 1.9 : -2}
+        schY={after ? -1.8 : -4}
+        schRotation={after || orientationOnly ? -90 : 0}
         connections={{ pin1: "net.CTRL", pin2: "net.GND" }}
       />
       <pinheader
         name="J_OUT"
         pinCount={2}
         footprint="pinrow2"
-        schX={5}
-        schY={0}
+        schX={after ? -4 : 5}
+        schY={after ? -2 : 0}
         connections={{ pin1: "net.OUT", pin2: "net.GND" }}
       />
       <net name="VCC" isPowerNet />

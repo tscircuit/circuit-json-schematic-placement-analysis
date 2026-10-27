@@ -1,3 +1,4 @@
+import { RrcTimingNetworkGroupingSolver } from "./solvers/RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ResistorTestPointAlignmentSolver } from "./solvers/ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
 import { ResistorConnectorAlignmentSolver } from "./solvers/ResistorConnectorAlignmentSolver/ResistorConnectorAlignmentSolver"
 import { FuseConnectorAlignmentSolver } from "./solvers/FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
@@ -169,6 +170,7 @@ export class SchematicPlacementAnalysis {
       SharedNodeDiodesInline: 0,
       PiFilterComponentsNotGrouped: 0,
       MosfetGateNetworkNotGrouped: 0,
+      RrcTimingNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
       CrystalSeparatedFromChipPins: 0,
       ResistorSeparatedFromChipPin: 0,
@@ -237,6 +239,8 @@ export class SchematicPlacementAnalysis {
         return ChipPinResistorPlacementSolver.issueToString(issue)
       case "CrystalSeparatedFromChipPins":
         return ChipPinCrystalPlacementSolver.issueToString(issue)
+      case "RrcTimingNetworkNotGrouped":
+        return RrcTimingNetworkGroupingSolver.issueToString(issue)
       case "CapacitorSeparatedFromChipPins":
         return ChipPinPairCapacitorPlacementSolver.issueToString(issue)
       case "SharedNodeDiodesInline":

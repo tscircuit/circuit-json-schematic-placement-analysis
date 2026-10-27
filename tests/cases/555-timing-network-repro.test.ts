@@ -34,12 +34,13 @@ test("reproduces the published 555 timing chain and its missed grouping after or
     const analysis = analyzeSchematicPlacement(json)
     expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual(
       orientationOnly
-        ? []
+        ? ["RrcTimingNetworkNotGrouped"]
         : [
             "TwoPinComponentCouldBeFlipped",
             "TwoPinComponentShouldBeVertical",
             "TwoPinComponentShouldBeVertical",
             "TwoPinComponentShouldBeVertical",
+            "RrcTimingNetworkNotGrouped",
           ],
     )
     expect(
