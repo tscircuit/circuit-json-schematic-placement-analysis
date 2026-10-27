@@ -9,7 +9,7 @@ import { A_0402WGF4701TCE } from "./A_0402WGF4701TCE"
 // Current core draws these native symbols 20% smaller than the published export;
 // their types, centers, orientations, values and pin connections are unchanged.
 // V3V3 is the boundary rail. Other board blocks are omitted.
-export async function createNema14ResistorTestPoint() {
+export async function createNema14ResistorTestPoint(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
@@ -25,9 +25,9 @@ export async function createNema14ResistorTestPoint() {
         name="TP_BOOT"
         footprintVariant="pad"
         padDiameter="1.1mm"
-        schX={27}
-        schY={12.5}
-        schRotation={0}
+        schX={after ? 23 : 27}
+        schY={after ? 13.2 : 12.5}
+        schRotation={after ? -90 : 0}
         footprint={
           <footprint>
             <smtpad portHints={["pin1"]} shape="circle" radius={0.55} />
