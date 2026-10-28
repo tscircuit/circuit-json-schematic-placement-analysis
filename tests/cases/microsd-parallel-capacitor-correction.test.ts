@@ -19,9 +19,9 @@ test("places the parallel microSD capacitors beside each other without changing 
     C_SD_HF: { schX: -4.2, schY: -2.7, schRotation: 270 },
     C_SD_BULK: { schX: -2.6, schY: -2.7, schRotation: 270 },
     // Clear the pre-existing resistor-label overlap with the connector and
-    // keep the clock test point with the other signals in the full-sheet view.
-    R_SD_DAT0_PU: { schX: -3.2, schY: -0.3, schRotation: 90 },
-    TP_SD_CLK: { schX: -5.39375, schY: -1.5, schRotation: 180 },
+    // align the clock test point beside its connector pin.
+    R_SD_DAT0_PU: { schX: -3.2, schY: -1.2, schRotation: 90 },
+    TP_SD_CLK: { schX: -3, schY: -0.2, schRotation: 180 },
   })
   for (const json of [before, pairOnly, after]) expectReproRendered(json, 16)
   const electrical = (json: CircuitJson) =>
@@ -90,11 +90,15 @@ test("places the parallel microSD capacitors beside each other without changing 
   const analysis = analyzeSchematicPlacement(after)
   const pairAnalysis = analyzeSchematicPlacement(pairOnly)
   const issues = baseline.getIssues()
-  expect(issues.map((issue) => issue.lineItemType)).toEqual([
+  expect(baseline.getIssues().map((i) => i.lineItemType)).toEqual([
     "ParallelCapacitorsDrawnInline",
+    "ConnectorTestPointNotAligned",
   ])
+  expect(issues).toHaveLength(2)
   expect(analysis.getIssues()).toEqual([])
-  expect(pairAnalysis.getIssues()).toEqual([])
+  expect(pairAnalysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "ConnectorTestPointNotAligned",
+  ])
 
   // Both pairs of terminals must have continuous local wires, not only net labels.
   const capacitors = ["C_SD_HF", "C_SD_BULK"].map((name) =>
@@ -130,16 +134,23 @@ test("places the parallel microSD capacitors beside each other without changing 
   }
   expect(
     createPlacementComparisonSvg({
-      subject: "parallel capacitor pair",
-      padding: { top: 0.6 },
+      subject: "complete microSD sheet",
+      centerEachPanel: true,
+      backgroundColor: "#f5f1ed",
+      padding: { top: 1.5, left: 2, right: 2, bottom: 1 },
+      contextSourceComponentIds: before.flatMap((e) =>
+        e.type === "source_component" ? [e.source_component_id] : [],
+      ),
       before: { circuitJson: before, analysis: baseline },
-      after: { circuitJson: pairOnly, analysis: pairAnalysis },
+      after: { circuitJson: after, analysis },
       issues,
-      beforeDiagnostic: () =>
-        "C_SD_HF / C_SD_BULK: parallel capacitors drawn end-to-end.",
+      beforeDiagnostic: (issue) =>
+        issue.lineItemType === "ParallelCapacitorsDrawnInline"
+          ? "C_SD_HF / C_SD_BULK: parallel capacitors drawn end-to-end."
+          : "J_SD / TP_SD_CLK: clock test point below its connector pin.",
       afterDiagnostic:
-        "Parallel branches beside one another.\nContinuous shared wires; full analysis: 0 findings.",
-      note: "Only the two capacitors move in this comparison; symbols and electrical connections are preserved.",
+        "Capacitors beside one another; clock test point aligned with pin 5.\nFull-sheet analysis: 0 findings.",
+      note: "Complete microSD sheet. Symbols, pin layouts and electrical connections preserved.",
     }),
   ).toMatchSvgSnapshot(import.meta.path, "comparison")
   expect(
