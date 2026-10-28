@@ -111,8 +111,6 @@ test("places a capacitor beside its connected chip pins without relying on names
   for (const attributes of [
     { requiresPower: true },
     { providesPower: true },
-    { requiresGround: true },
-    { providesGround: true },
     { requiresVoltage: 3.3 },
     { providesVoltage: 3.3 },
   ]) {
@@ -121,6 +119,39 @@ test("places a capacitor beside its connected chip pins without relying on names
     })
     expect(issues(json)).toEqual([])
   }
+  // A typed ground connection now uses the same rule with one private chip pin.
+  for (const attributes of [
+    { requiresGround: true },
+    { providesGround: true },
+  ]) {
+    const json = await createChipPinPairCapacitorPlacement({
+      pinAttributes: { pin2: attributes },
+    })
+    expect(issues(json)).toMatchObject([
+      {
+        chipSourcePortIds: [
+          getReproSourcePort(json, "U1", "pin1").source_port_id,
+        ],
+      },
+    ])
+  }
+  const grounded = structuredClone(before)
+  const groundPort = getReproSourcePort(grounded, "C1", "pin2")
+  grounded.push({
+    type: "source_net",
+    source_net_id: "ground",
+    name: "arbitrary_label",
+    is_ground: true,
+    member_source_group_ids: [],
+    subcircuit_connectivity_map_key: groundPort.subcircuit_connectivity_map_key,
+  })
+  expect(issues(grounded)).toMatchObject([
+    {
+      chipSourcePortIds: [
+        getReproSourcePort(grounded, "U1", "pin2").source_port_id,
+      ],
+    },
+  ])
   for (const options of [{ differentChips: true }, { sharedConnection: true }])
     expect(issues(await createChipPinPairCapacitorPlacement(options))).toEqual(
       [],
@@ -159,17 +190,6 @@ test("places a capacitor beside its connected chip pins without relying on names
       for (const e of json)
         if (e.type === "schematic_port" && e.source_port_id === id)
           e.facing_direction = "right"
-    },
-    "grounded capacitor": (json) => {
-      const p = getReproSourcePort(json, "C1", "pin2")
-      json.push({
-        type: "source_net",
-        source_net_id: "ground",
-        name: "GND",
-        is_ground: true,
-        member_source_group_ids: [],
-        subcircuit_connectivity_map_key: p.subcircuit_connectivity_map_key,
-      })
     },
     "power net with an arbitrary name": (json) => {
       const p = getReproSourcePort(json, "C1", "pin1")

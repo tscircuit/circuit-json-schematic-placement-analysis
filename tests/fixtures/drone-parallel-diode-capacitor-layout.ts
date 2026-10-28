@@ -20,7 +20,9 @@ export function dronePlacements(correctPairs = true) {
     placements[name] = { schX: 29 + i * 1.7, schY: 12 }
   // Both private L1 connections return to pins on the left of U3.
   placements.L1 = { schX: 29.5, schY: 15.6, schRotation: 90 }
-  placements.CREG = { schX: 29, schY: -6 }
+  // REGOUT faces right; keep its grounded support capacitor on that side.
+  placements.CREG = { schX: 35, schY: -5 }
+  placements.RCS = { schX: 29, schY: -4 }
   for (let n = 1; n <= 6; n++)
     placements[`TP${n}`] = { schX: -6 + (n - 1) * 3, schY: 1 }
   if (!correctPairs) return placements

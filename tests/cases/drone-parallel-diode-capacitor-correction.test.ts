@@ -130,6 +130,7 @@ test("corrects all four diode/capacitor branches while preserving the complete d
     ).flat(),
     [pin("U3", "pin4"), pin("L1", "pin1")],
     [pin("U3", "pin2"), pin("L1", "pin2")],
+    [pin("U2", "pin14"), pin("CREG", "pin1")],
   ]
   for (const [start, end] of connectedPairs) {
     const reached = new Set([start])
