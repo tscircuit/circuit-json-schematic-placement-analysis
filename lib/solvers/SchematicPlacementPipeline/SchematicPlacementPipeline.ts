@@ -1,3 +1,4 @@
+import { RrcTimingNetworkGroupingSolver } from "../RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { InductorCapacitorGroupingSolver } from "../InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
 import { ResistorTestPointAlignmentSolver } from "../ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
@@ -107,6 +108,7 @@ const solversByIssueType = {
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
   InductorSeparatedFromChipPin: [ChipSupplyInductorPlacementSolver],
+  RrcTimingNetworkNotGrouped: [RrcTimingNetworkGroupingSolver],
   CapacitorSeparatedFromChipPins: [ChipPinPairCapacitorPlacementSolver],
   CrystalSeparatedFromChipPins: [ChipPinCrystalPlacementSolver],
   SharedNodeDiodesInline: [SharedNodeDiodePlacementSolver],
@@ -529,6 +531,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "ChipPinResistorPlacementSolver",
       ChipPinResistorPlacementSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RrcTimingNetworkGroupingSolver",
+      RrcTimingNetworkGroupingSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

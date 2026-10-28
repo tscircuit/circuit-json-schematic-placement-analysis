@@ -895,6 +895,7 @@ export type SchematicPlacementIssue =
   | SeriesLedChainNotOrdered
   | RailPathTooSpreadOut
   | ResistorSeparatedFromChipPin
+  | RrcTimingNetworkNotGrouped
   | CapacitorSeparatedFromChipPins
   | CrystalSeparatedFromChipPins
   | PiFilterComponentsNotGrouped
@@ -955,4 +956,15 @@ export interface SchematicPlacementAnalysisOptions {
   /** Schematic drawing units, not PCB dimensions. Defaults: span 8, length 16. */
   railPathVisibility?: { maxSpan?: number; maxPathLength?: number }
   issueTypes?: readonly SchematicPlacementIssue["lineItemType"][]
+}
+
+export interface RrcTimingNetworkNotGrouped {
+  lineItemType: "RrcTimingNetworkNotGrouped"
+  hostSchematicBox: SchematicBoxPlacement
+  firstResistorSchematicBox: SchematicBoxPlacement
+  secondResistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  maxPinDistance: number
+  maxRecommendedPinDistance: number
+  message: string
 }
