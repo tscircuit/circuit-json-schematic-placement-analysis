@@ -86,7 +86,7 @@ test("corrects rrc-timing-network with unchanged electrical connections and chip
         "R1 / R2 / C1: timing chain is spread around the chip.",
       afterDiagnostic:
         "R1–R2–C1 form a compact chain beside the timing pins.\nComplete 7-component circuit: 0 reported issues.",
-      note: "Before has 4 existing orientation findings plus the marked grouping finding. After has 0 total findings.",
+      note: "Before has 4 orientation findings, 1 capacitor-placement finding and the marked grouping finding. After has 0 total findings.",
     }),
   ).toMatchSvgSnapshot(import.meta.path, "comparison")
   expect(
@@ -112,6 +112,7 @@ test("corrects rrc-timing-network with unchanged electrical connections and chip
     rotatedAnalysis = analyzeSchematicPlacement(rotated)
   expect(rotatedAnalysis.getIssues().map((i) => i.lineItemType)).toEqual([
     "RrcTimingNetworkNotGrouped",
+    "CapacitorSeparatedFromChipPins",
   ])
   expect(
     createPlacementComparisonSvg({
@@ -125,8 +126,10 @@ test("corrects rrc-timing-network with unchanged electrical connections and chip
       contextSourceComponentIds: before.flatMap((e) =>
         e.type === "source_component" ? [e.source_component_id] : [],
       ),
-      beforeDiagnostic: () =>
-        "Existing orientation findings fixed; the timing chain is still spread out.",
+      beforeDiagnostic: (issue) =>
+        issue.lineItemType === "CapacitorSeparatedFromChipPins"
+          ? "C2 is across the chip from its connected pin 5."
+          : "Existing orientation findings fixed; the timing chain is still spread out.",
       afterDiagnostic:
         "Compact connected timing chain.\nComplete circuit: 0 reported issues.",
       note: "Grouping is independent of the existing two-pin orientation findings.",

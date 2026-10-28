@@ -1,4 +1,4 @@
-<svg width="1400" height="1586" viewBox="0 0 1400 1586" xmlns="http://www.w3.org/2000/svg">
+<svg width="1400" height="1696" viewBox="0 0 1400 1696" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="1000" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(93.4975565972,0,0,-93.4975565972,685.9753665104,470.0807818889)" data-software-used-string="@tscircuit/core@0.0.2132"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -15,10 +15,13 @@
 
 
 
+
 <line x1="611.17732123264" y1="423.3320035903" x2="585.17732123264" y2="385.3320035903" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="470.93098633684" y1="65.70384960600995" x2="444.93098633684" y2="27.703849606009953" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="844.9212127256401" y1="65.70384960600995" x2="818.9212127256401" y2="27.703849606009953" stroke="#b91c1c" stroke-width="0.5" />
-<line x1="844.9212127256401" y1="813.68430238361" x2="818.9212127256401" y2="775.68430238361" stroke="#b91c1c" stroke-width="0.5" /><g data-issue-number="1" data-issue-type="TwoPinComponentCouldBeFlipped" transform="translate(611.17732123264 411.3320035903) scale(1)"><title>#1 TwoPinComponentCouldBeFlipped
+<line x1="844.9212127256401" y1="813.68430238361" x2="818.9212127256401" y2="775.68430238361" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="611.17732123264" y1="423.3320035903" x2="585.17732123264" y2="411.3320035903" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="470.93098633684" y1="813.68430238361" x2="444.93098633684" y2="775.68430238361" stroke="#b91c1c" stroke-width="0.5" /><g data-issue-number="1" data-issue-type="TwoPinComponentCouldBeFlipped" transform="translate(611.17732123264 411.3320035903) scale(1)"><title>#1 TwoPinComponentCouldBeFlipped
 &lt;TwoPinComponentCouldBeFlipped traceName=&quot;U1.THRES to R2.pin2&quot; targetComponentName=&quot;R2&quot; connectedComponentName=&quot;U1&quot; targetPin=&quot;pin2&quot; currentFacingDirection=&quot;right&quot; suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;2&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R2 by 180° so pin2 faces U1 and reduce this trace from 2 turns to 1&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">1</text></g>
 <g data-issue-number="1" data-issue-type="TwoPinComponentCouldBeFlipped" transform="translate(844.9212127256401 53.70384960600995) scale(1)"><title>#1 TwoPinComponentCouldBeFlipped
 &lt;TwoPinComponentCouldBeFlipped traceName=&quot;U1.THRES to R2.pin2&quot; targetComponentName=&quot;R2&quot; connectedComponentName=&quot;U1&quot; targetPin=&quot;pin2&quot; currentFacingDirection=&quot;right&quot; suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;2&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R2 by 180° so pin2 faces U1 and reduce this trace from 2 turns to 1&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">1</text></g>
@@ -35,7 +38,11 @@
 <g data-issue-number="5" data-issue-type="RrcTimingNetworkNotGrouped" transform="translate(818.9212127256401 27.703849606009953) scale(1)"><title>#5 RrcTimingNetworkNotGrouped
 &lt;RrcTimingNetworkNotGrouped hostComponentName=&quot;U1&quot; firstResistorName=&quot;R1&quot; secondResistorName=&quot;R2&quot; capacitorName=&quot;C1&quot; maxPinDistance=&quot;8.022&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Group R1, R2 and C1 into a compact connected chain beside U1. Keep the intermediate chip connections visible, preserve pin connections, leave room for labels, and reroute affected wires; exact alignment is not required.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
 <g data-issue-number="5" data-issue-type="RrcTimingNetworkNotGrouped" transform="translate(818.9212127256401 775.68430238361) scale(1)"><title>#5 RrcTimingNetworkNotGrouped
-&lt;RrcTimingNetworkNotGrouped hostComponentName=&quot;U1&quot; firstResistorName=&quot;R1&quot; secondResistorName=&quot;R2&quot; capacitorName=&quot;C1&quot; maxPinDistance=&quot;8.022&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Group R1, R2 and C1 into a compact connected chain beside U1. Keep the intermediate chip connections visible, preserve pin connections, leave room for labels, and reroute affected wires; exact alignment is not required.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g></g></svg>
+&lt;RrcTimingNetworkNotGrouped hostComponentName=&quot;U1&quot; firstResistorName=&quot;R1&quot; secondResistorName=&quot;R2&quot; capacitorName=&quot;C1&quot; maxPinDistance=&quot;8.022&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Group R1, R2 and C1 into a compact connected chain beside U1. Keep the intermediate chip connections visible, preserve pin connections, leave room for labels, and reroute affected wires; exact alignment is not required.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="6" data-issue-type="CapacitorSeparatedFromChipPins" transform="translate(585.17732123264 411.3320035903) scale(1)"><title>#6 CapacitorSeparatedFromChipPins
+&lt;CapacitorSeparatedFromChipPins hostComponentName=&quot;U1&quot; capacitorName=&quot;C2&quot; maxPinDistance=&quot;5.093&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place C2 beside its connected pin on the right side of U1, with ground at the other terminal. Preserve connections and symbol orientation, leave room for labels, and reroute the wire; exact alignment is not required.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="CapacitorSeparatedFromChipPins" transform="translate(444.93098633684 775.68430238361) scale(1)"><title>#6 CapacitorSeparatedFromChipPins
+&lt;CapacitorSeparatedFromChipPins hostComponentName=&quot;U1&quot; capacitorName=&quot;C2&quot; maxPinDistance=&quot;5.093&quot; maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place C2 beside its connected pin on the right side of U1, with ground at the other terminal. Preserve connections and symbol orientation, leave room for labels, and reroute the wire; exact alignment is not required.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g></g></svg>
   </g>
   <g transform="translate(0, 1000) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
@@ -44,8 +51,9 @@
 <tspan x="52" dy="22">TwoPinComponentCouldBeFlipped: 1</tspan>
 <tspan x="52" dy="22">TwoPinComponentShouldBeVertical: 3</tspan>
 <tspan x="52" dy="22">RrcTimingNetworkNotGrouped: 1</tspan>
+<tspan x="52" dy="22">CapacitorSeparatedFromChipPins: 1</tspan>
 <tspan x="52" dy="22">Selected type(s): all</tspan>
-<tspan x="52" dy="22">Matching issues: 5</tspan>
+<tspan x="52" dy="22">Matching issues: 6</tspan>
 <tspan x="52" dy="22">&lt;TwoPinComponentCouldBeFlipped traceName=&quot;U1.THRES to R2.pin2&quot; targetComponentName=&quot;R2&quot;</tspan>
 <tspan x="52" dy="22">  connectedComponentName=&quot;U1&quot; targetPin=&quot;pin2&quot; currentFacingDirection=&quot;right&quot;</tspan>
 <tspan x="52" dy="22">  suggestedFacingDirection=&quot;left&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;2&quot;</tspan>
@@ -65,11 +73,16 @@
 <tspan x="52" dy="22">  maxRecommendedPinDistance=&quot;4&quot; message=&quot;Group R1, R2 and C1 into a compact connected chain</tspan>
 <tspan x="52" dy="22">  beside U1. Keep the intermediate chip connections visible, preserve pin connections, leave</tspan>
 <tspan x="52" dy="22">  room for labels, and reroute affected wires; exact alignment is not required.&quot; /&gt;</tspan>
+<tspan x="52" dy="22">&lt;CapacitorSeparatedFromChipPins hostComponentName=&quot;U1&quot; capacitorName=&quot;C2&quot; maxPinDistance=&quot;5.093&quot;</tspan>
+<tspan x="52" dy="22">  maxRecommendedPinDistance=&quot;4&quot; message=&quot;Place C2 beside its connected pin on the right side of</tspan>
+<tspan x="52" dy="22">  U1, with ground at the other terminal. Preserve connections and symbol orientation, leave room</tspan>
+<tspan x="52" dy="22">  for labels, and reroute the wire; exact alignment is not required.&quot; /&gt;</tspan>
 </text>
-<g data-listing-issue-number="1"><circle cx="24" cy="167" r="11" fill="#b91c1c" /><text x="24" y="167" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
-<g data-listing-issue-number="2"><circle cx="24" cy="277" r="11" fill="#b91c1c" /><text x="24" y="277" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>
-<g data-listing-issue-number="3"><circle cx="24" cy="343" r="11" fill="#b91c1c" /><text x="24" y="343" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">3</text></g>
-<g data-listing-issue-number="4"><circle cx="24" cy="409" r="11" fill="#b91c1c" /><text x="24" y="409" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">4</text></g>
-<g data-listing-issue-number="5"><circle cx="24" cy="475" r="11" fill="#b91c1c" /><text x="24" y="475" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">5</text></g>
+<g data-listing-issue-number="1"><circle cx="24" cy="189" r="11" fill="#b91c1c" /><text x="24" y="189" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
+<g data-listing-issue-number="2"><circle cx="24" cy="299" r="11" fill="#b91c1c" /><text x="24" y="299" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>
+<g data-listing-issue-number="3"><circle cx="24" cy="365" r="11" fill="#b91c1c" /><text x="24" y="365" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">3</text></g>
+<g data-listing-issue-number="4"><circle cx="24" cy="431" r="11" fill="#b91c1c" /><text x="24" y="431" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">4</text></g>
+<g data-listing-issue-number="5"><circle cx="24" cy="497" r="11" fill="#b91c1c" /><text x="24" y="497" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">5</text></g>
+<g data-listing-issue-number="6"><circle cx="24" cy="607" r="11" fill="#b91c1c" /><text x="24" y="607" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">6</text></g>
   </g>
 </svg>
