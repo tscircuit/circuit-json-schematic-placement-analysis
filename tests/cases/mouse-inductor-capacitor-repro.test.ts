@@ -25,7 +25,9 @@ test("reproduces mouse-inductor-capacitor from the published board", async () =>
     ["L_ANT_SERIES.pin1", "net.RF1"],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "InductorCapacitorNotGrouped",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
