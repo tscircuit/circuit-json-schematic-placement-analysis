@@ -1,3 +1,5 @@
+export { ConnectorTestPointAlignmentSolver } from "./solvers/ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
+export { InductorCapacitorGroupingSolver } from "./solvers/InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
 export { ResistorTestPointAlignmentSolver } from "./solvers/ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
 export { ResistorConnectorAlignmentSolver } from "./solvers/ResistorConnectorAlignmentSolver/ResistorConnectorAlignmentSolver"
 export { FuseConnectorAlignmentSolver } from "./solvers/FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
