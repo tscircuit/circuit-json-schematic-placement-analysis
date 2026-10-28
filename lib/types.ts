@@ -7,6 +7,15 @@ export interface ConnectorTestPointNotAligned {
   message: string
 }
 
+export interface InductorCapacitorNotGrouped {
+  lineItemType: "InductorCapacitorNotGrouped"
+  inductorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  inductorSourcePortId: string
+  capacitorSourcePortId: string
+  message: string
+}
+
 export interface ResistorTestPointNotAligned {
   lineItemType: "ResistorTestPointNotAligned"
   resistorSchematicBox: SchematicBoxPlacement
@@ -865,6 +874,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 
 export type SchematicPlacementIssue =
   | ConnectorTestPointNotAligned
+  | InductorCapacitorNotGrouped
   | ResistorTestPointNotAligned
   | ResistorConnectorNotAligned
   | FuseConnectorNotAligned

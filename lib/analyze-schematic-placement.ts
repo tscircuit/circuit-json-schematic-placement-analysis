@@ -1,4 +1,5 @@
 import { ConnectorTestPointAlignmentSolver } from "./solvers/ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
+import { InductorCapacitorGroupingSolver } from "./solvers/InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
 import { ResistorTestPointAlignmentSolver } from "./solvers/ResistorTestPointAlignmentSolver/ResistorTestPointAlignmentSolver"
 import { ResistorConnectorAlignmentSolver } from "./solvers/ResistorConnectorAlignmentSolver/ResistorConnectorAlignmentSolver"
 import { FuseConnectorAlignmentSolver } from "./solvers/FuseConnectorAlignmentSolver/FuseConnectorAlignmentSolver"
@@ -114,6 +115,7 @@ export class SchematicPlacementAnalysis {
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
       ConnectorTestPointNotAligned: 0,
+      InductorCapacitorNotGrouped: 0,
       ResistorTestPointNotAligned: 0,
       ResistorConnectorNotAligned: 0,
       FuseConnectorNotAligned: 0,
@@ -206,6 +208,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "ConnectorTestPointNotAligned":
         return ConnectorTestPointAlignmentSolver.issueToString(issue)
+      case "InductorCapacitorNotGrouped":
+        return InductorCapacitorGroupingSolver.issueToString(issue)
       case "ResistorTestPointNotAligned":
         return ResistorTestPointAlignmentSolver.issueToString(issue)
       case "ResistorConnectorNotAligned":
