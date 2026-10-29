@@ -9,16 +9,29 @@ import { getReproSourcePort } from "../fixtures/placement-repro-assertions"
 test("identifies inverted positive-supply capacitors and resistors in the unchanged Allwinner schematic", () => {
   const original = JSON.stringify(circuitJson)
   const analysis = analyzeSchematicPlacement(circuitJson)
-  const issues = analysis.getIssues({
+  const allInverted = analysis.getIssues({
     issueTypes: ["TwoPinComponentHasInvertedRails"],
   })
+  expect(allInverted).toHaveLength(67)
+  const issues = allInverted.filter(
+    (i) =>
+      i.lineItemType === "TwoPinComponentHasInvertedRails" &&
+      i.railType === "power",
+  )
+  expect(
+    allInverted.filter(
+      (i) =>
+        i.lineItemType === "TwoPinComponentHasInvertedRails" &&
+        i.railType === "ground",
+    ),
+  ).toHaveLength(11)
   // Review the full design's count, not just the six buck capacitors.
   expect(issues).toHaveLength(56)
   expect(
     analyzeSchematicPlacement(circuitJson, {
       issueTypes: ["TwoPinComponentHasInvertedRails"],
     }).getIssues(),
-  ).toEqual(issues)
+  ).toEqual(allInverted)
   const capacitorIssues = issues.filter(
     (issue) =>
       issue.lineItemType === "TwoPinComponentHasInvertedRails" &&

@@ -42,6 +42,12 @@ test("reports a pull-up below and a pull-down above their signal pins", async ()
       railPinName: "pin1",
       deltaSchRotation: 180,
     },
+    {
+      schematicBox: { sourceComponentName: "R2" },
+      railPinName: "pin2",
+      railType: "ground",
+      deltaSchRotation: 180,
+    },
   ])
   expect(
     createSchematicAnalysisFixtureSvg({ circuitJson, analysis }),

@@ -30,7 +30,12 @@ test("reproduces ground-above-signal capacitors from the published quad sensor b
     ["full-sheet", full],
   ] as const) {
     const analysis = analyzeSchematicPlacement(json)
-    expect(analysis.getIssues()).toEqual([])
+    expect(analysis.getIssues()).toHaveLength(name === "filter" ? 1 : 8)
+    expect(
+      analysis
+        .getIssues()
+        .every((i) => i.lineItemType === "TwoPinComponentHasInvertedRails"),
+    ).toBe(true)
     expect(
       createIssueReproSnapshot({
         circuitJson: json,

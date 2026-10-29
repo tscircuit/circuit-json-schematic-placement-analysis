@@ -40,7 +40,10 @@ test("aligns the fuse / diode pair and places the shunt diode ground below witho
       analyzeSchematicPlacement(a)
         .getIssues()
         .map((i) => i.lineItemType),
-    ).toEqual(["FuseDiodeNotAligned"])
+    ).toEqual([
+      "FuseDiodeNotAligned",
+      ...(count === 5 ? ["TwoPinComponentHasInvertedRails" as const] : []),
+    ])
     expect(analyzeSchematicPlacement(b).getIssues()).toEqual([])
     for (const [n, p, m, q] of [
       ["F_MOTOR_VBUS", "pin2", "D_MOTOR_BLOCK", "anode"],

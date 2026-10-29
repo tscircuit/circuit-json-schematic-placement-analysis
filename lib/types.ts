@@ -506,13 +506,11 @@ export interface TwoPinComponentShouldBeVertical
   deltaSchRotation: -90 | 90
 }
 
-/** A vertical component has a positive supply below its ground pin or a resistor's signal pin. */
+/** A vertical component has a positive supply below its return, or ground above a signal. */
 export interface TwoPinComponentHasInvertedRails
   extends TwoPinComponentRailOrientation {
   lineItemType: "TwoPinComponentHasInvertedRails"
-  railType: "power"
   deltaSchRotation: 180
-  suggestedRailFacingDirection: "up"
 }
 
 export interface ComponentNetLabelCollision {

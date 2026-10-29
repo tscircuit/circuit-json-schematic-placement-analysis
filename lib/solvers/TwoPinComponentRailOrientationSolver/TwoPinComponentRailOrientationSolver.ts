@@ -15,6 +15,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly powerNets: Set<string>
   private readonly groundNets: Set<string>
+  private readonly voltageNets = new Set<string>()
   private readonly positiveVoltageNets = new Set<string>()
   private readonly componentIds: string[]
   private readonly horizontalPushbuttonComponentIds: Set<string>
@@ -41,6 +42,11 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         )
       if (element.type !== "source_port") continue
       const net = this.index.connected(element.source_port_id)
+      if (
+        element.provides_voltage !== undefined ||
+        element.requires_voltage !== undefined
+      )
+        this.voltageNets.add(net)
       if (element.provides_power || element.requires_power)
         this.powerNets.add(net)
       if (element.provides_ground || element.requires_ground)
@@ -143,6 +149,45 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
         deltaSchRotation: 180,
         suggestedRailFacingDirection: "up",
         message: `rotate ${component.sourceComponentName || "component"} by 180° so its positive-supply pin faces up and its ${otherIsGround ? "ground" : "signal"} pin faces down; preserve pin connections and reroute attached traces`,
+      })
+      return
+    }
+
+    // A passive shunt from a non-supply signal to explicit ground reads downward.
+    // Supply/negative-rail branches and connectors need different constraints.
+    const groundedPassive =
+      sourceComponent &&
+      [
+        "simple_resistor",
+        "simple_capacitor",
+        "simple_diode",
+        "simple_led",
+        "simple_inductor",
+        "simple_fuse",
+      ].includes(sourceComponent.ftype)
+    if (
+      groundedPassive &&
+      railType === "ground" &&
+      !otherIsGround &&
+      !this.powerNets.has(otherNet) &&
+      !this.voltageNets.has(otherNet) &&
+      !sourcePorts.some((port) => port.do_not_connect) &&
+      Math.abs(railPort.center.x - otherPort.center.x) <=
+        TwoPinComponentRailOrientationSolver.EPSILON &&
+      railPort.center.y >
+        otherPort.center.y + TwoPinComponentRailOrientationSolver.EPSILON &&
+      railPort.facing_direction === "up" &&
+      otherPort.facing_direction === "down"
+    ) {
+      this.issues.push({
+        lineItemType: "TwoPinComponentHasInvertedRails",
+        schematicBox: component,
+        railSourcePortId: railSourcePort.source_port_id,
+        railPinName: railSourcePort.name,
+        railType: "ground",
+        deltaSchRotation: 180,
+        suggestedRailFacingDirection: "down",
+        message: `rotate ${component.sourceComponentName || "component"} by 180° so its ground pin faces down and its signal pin faces up; preserve pin connections and reroute attached traces`,
       })
       return
     }
