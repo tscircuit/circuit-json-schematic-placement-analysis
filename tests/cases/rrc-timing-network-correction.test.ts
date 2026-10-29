@@ -86,7 +86,7 @@ test("corrects rrc-timing-network with unchanged electrical connections and chip
         "R1 / R2 / C1: timing chain is spread around the chip.",
       afterDiagnostic:
         "R1–R2–C1 form a compact chain beside the timing pins.\nComplete 7-component circuit: 0 reported issues.",
-      note: "Before has 4 orientation findings, 1 capacitor-placement finding and the marked grouping finding. After has 0 total findings.",
+      note: "Before has 4 orientation findings, 1 capacitor-placement finding, 1 connector-detour finding and the marked grouping finding. After has 0 total findings.",
     }),
   ).toMatchSvgSnapshot(import.meta.path, "comparison")
   expect(
