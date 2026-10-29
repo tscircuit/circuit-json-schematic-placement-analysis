@@ -53,6 +53,9 @@ test("reproduces the published Astra fuse and diode with perpendicular terminals
     const analysis = analyzeSchematicPlacement(circuitJson)
     expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
       "FuseDiodeNotAligned",
+      ...(scope === "filter"
+        ? ["TwoPinComponentHasInvertedRails" as const]
+        : []),
     ])
     expect(
       createIssueReproSnapshot({

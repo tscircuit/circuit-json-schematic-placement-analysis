@@ -4,7 +4,11 @@ import { Circuit } from "@tscircuit/core"
 import React from "react"
 
 // MCP6004-I/P, Microchip DS20001733L. Four unity-gain sensor buffers.
-export default function QuadSensorConditioner() {
+export default function QuadSensorConditioner({
+  after = false,
+}: {
+  after?: boolean
+}) {
   const nets: Record<string, string[]> = {
     V5: ["J1.pin1", "U1.VDD", "C1.pin1", "C2.pin1", "R1.pin1"],
     GND: ["J1.pin2", "U1.VSS", "C1.pin2", "C2.pin2", "LED1.cathode"],
@@ -195,7 +199,7 @@ export default function QuadSensorConditioner() {
               pcbY={y + 5}
               schX={sx + 1.8}
               schY={sy + 1.5}
-              schRotation={90}
+              schRotation={after ? -90 : 90}
               schSectionName={`CH${n}`}
             />
             <capacitor
@@ -239,8 +243,8 @@ export default function QuadSensorConditioner() {
               pcbY={y - 5}
               pcbRotation={side < 0 ? 180 : 0}
               schX={sx - 0.45}
-              schY={sy - 4.5}
-              schRotation={90}
+              schY={sy - 4.5 - (after && n === 1 ? 0.8 : 0)}
+              schRotation={after ? -90 : 90}
               schSectionName={`CH${n}`}
             />
             <pinheader
@@ -313,10 +317,10 @@ export default function QuadSensorConditioner() {
   )
 }
 
-export async function createQuadSensorConditioner() {
+export async function createQuadSensorConditioner(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<QuadSensorConditioner />)
+  circuit.add(<QuadSensorConditioner after={after} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }

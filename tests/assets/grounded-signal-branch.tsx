@@ -1,7 +1,7 @@
 // Output filter extracted from hrithik18k/quad-sensor-conditioner v1.0.1.
 // Exact R21/C31/JO1 values, placements and pin connections; other channels omitted.
 import { Circuit } from "@tscircuit/core"
-export async function createGroundedSignalBranch() {
+export async function createGroundedSignalBranch(after = false) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -19,8 +19,8 @@ export async function createGroundedSignalBranch() {
         capacitance="10nF"
         footprint="0805"
         schX={-20.45}
-        schY={5.5}
-        schRotation={90}
+        schY={after ? 4.7 : 5.5}
+        schRotation={after ? -90 : 90}
         connections={{ pin1: "net.OUT1", pin2: "net.GND" }}
       />
       <pinheader
