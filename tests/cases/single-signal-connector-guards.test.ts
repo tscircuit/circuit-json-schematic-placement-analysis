@@ -26,6 +26,8 @@ test("requires a private signal, movable return and clear destination for a sing
       : e,
   )
   expect(analyze(renamed).getIssues()).toHaveLength(1)
+  // Geometry-only invariance control: these transforms do not regenerate symbol
+  // graphics or text metadata, so never render this mutated JSON as a snapshot.
   const rotated = structuredClone(original),
     turn = ({ x, y }: { x: number; y: number }) => ({ x: -y, y: x }),
     facing = { left: "down", down: "right", right: "up", up: "left" } as const
@@ -40,11 +42,13 @@ test("requires a private signal, movable return and clear destination for a sing
         e.center = turn(e.center)
         if (e.facing_direction) e.facing_direction = facing[e.facing_direction]
       }
-      if (e.type === "schematic_trace")
+      if (e.type === "schematic_trace") {
         for (const edge of e.edges) {
           edge.from = turn(edge.from)
           edge.to = turn(edge.to)
         }
+        e.junctions = e.junctions.map(turn)
+      }
       if (e.type === "schematic_net_label" && e.anchor_position)
         e.anchor_position = turn(e.anchor_position)
     }
@@ -142,19 +146,21 @@ test("requires a private signal, movable return and clear destination for a sing
   }
   for (const [name, json] of Object.entries(controls))
     expect(analyze(json).getIssues(), name).toEqual([])
-  expect(
-    analyze(
-      await create555OutputConnector({ x: move.newSchX, y: move.newSchY }),
-    ).getIssues(),
-  ).toEqual([])
+  const corrected = await create555OutputConnector({
+    x: move.newSchX,
+    y: move.newSchY,
+  })
+  const correctedAnalysis = analyzeSchematicPlacement(corrected)
+  expect(correctedAnalysis.getIssues()).toEqual([])
+  // Visual coverage comes from native TSX rendering, including all symbol/text metadata.
   expect(
     createIssueReproSnapshot({
-      circuitJson: rotated,
-      analysis: analyze(rotated),
+      circuitJson: corrected,
+      analysis: correctedAnalysis,
       showFullSchematic: true,
       showIssueGeometry: false,
       width: 1000,
-      height: 700,
+      height: 600,
     }),
-  ).toMatchSvgSnapshot(import.meta.path, "rotated")
+  ).toMatchSvgSnapshot(import.meta.path, "corrected")
 })
