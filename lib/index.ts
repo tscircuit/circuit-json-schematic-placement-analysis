@@ -81,3 +81,5 @@ export { SwitchRcNetworkGroupingSolver } from "./solvers/SwitchRcNetworkGrouping
 
 export { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPlacementSolver/ParallelLedBranchPlacementSolver"
 export { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
+
+export { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"

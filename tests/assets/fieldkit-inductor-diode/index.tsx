@@ -7,7 +7,9 @@ import { WPN4020H4R7MT } from "./WPN4020H4R7MT"
 // Complete U10/L2/D3 extract, translated together so U10 is at the origin.
 // Source-relative positions, rotations, values, symbols and chip pins are preserved.
 // External supply/feedback connections terminate at explicit boundary net labels.
-export async function createFieldkitInductorDiode() {
+export async function createFieldkitInductorDiode(
+  mode: "before" | "after" = "before",
+) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -22,15 +24,15 @@ export async function createFieldkitInductorDiode() {
       />
       <WPN4020H4R7MT
         name="L2"
-        schX={0}
-        schY={2.5329125}
-        schRotation={270}
+        schX={mode === "before" ? 0 : -4.5}
+        schY={mode === "before" ? 2.5329125 : 0.2}
+        schRotation={mode === "before" ? 270 : 0}
         connections={{ pin2: "net.OLED_SW" }}
       />
       <SS34
         name="D3"
-        schX={-2.885}
-        schY={-1.44375}
+        schX={mode === "before" ? -2.885 : -2.5}
+        schY={mode === "before" ? -1.44375 : 1.8}
         schRotation={90}
         connections={{ anode: "net.OLED_SW", cathode: "net.OLED_12V" }}
       />
@@ -48,8 +50,8 @@ export async function createFieldkitInductorDiode() {
       <netlabel
         net="V5"
         connectsTo=".L2 > .pin1"
-        schX={0}
-        schY={3.3}
+        schX={mode === "before" ? 0 : -5.4}
+        schY={mode === "before" ? 3.3 : 0.7}
         anchorSide="bottom"
       />
       <netlabel

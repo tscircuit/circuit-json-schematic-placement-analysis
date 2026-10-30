@@ -1,3 +1,4 @@
+import { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
 import { RrcTimingNetworkGroupingSolver } from "./solvers/RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "./solvers/ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { InductorCapacitorGroupingSolver } from "./solvers/InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
@@ -116,6 +117,7 @@ export class SchematicPlacementAnalysis {
   getIssueCounts(filter: { schematicSheetId?: string } = {}) {
     const counts = {
       ConnectorTestPointNotAligned: 0,
+      InductorDiodeNotGrouped: 0,
       InductorCapacitorNotGrouped: 0,
       ResistorTestPointNotAligned: 0,
       ResistorConnectorNotAligned: 0,
@@ -210,6 +212,8 @@ export class SchematicPlacementAnalysis {
     switch (issue.lineItemType) {
       case "ConnectorTestPointNotAligned":
         return ConnectorTestPointAlignmentSolver.issueToString(issue)
+      case "InductorDiodeNotGrouped":
+        return InductorDiodeGroupingSolver.issueToString(issue)
       case "InductorCapacitorNotGrouped":
         return InductorCapacitorGroupingSolver.issueToString(issue)
       case "ResistorTestPointNotAligned":

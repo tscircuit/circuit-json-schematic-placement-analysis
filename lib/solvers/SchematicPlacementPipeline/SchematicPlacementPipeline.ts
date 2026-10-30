@@ -1,3 +1,4 @@
+import { InductorDiodeGroupingSolver } from "../InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
 import { RrcTimingNetworkGroupingSolver } from "../RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { InductorCapacitorGroupingSolver } from "../InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
@@ -85,6 +86,7 @@ type SolverParams = {
 // Include prerequisites used when deduplicating findings in getOutput().
 const solversByIssueType = {
   ConnectorTestPointNotAligned: [ConnectorTestPointAlignmentSolver],
+  InductorDiodeNotGrouped: [InductorDiodeGroupingSolver],
   InductorCapacitorNotGrouped: [InductorCapacitorGroupingSolver],
   ResistorTestPointNotAligned: [ResistorTestPointAlignmentSolver],
   ResistorConnectorNotAligned: [ResistorConnectorAlignmentSolver],
@@ -627,6 +629,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "InductorCapacitorGroupingSolver",
       InductorCapacitorGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "InductorDiodeGroupingSolver",
+      InductorDiodeGroupingSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

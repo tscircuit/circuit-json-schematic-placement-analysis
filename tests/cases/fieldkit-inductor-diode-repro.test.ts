@@ -28,7 +28,9 @@ test("reproduces the published Fieldkit inductor-diode junction around U10", asy
     ["U10.FB", "net.OLED_FB"],
   ])
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "InductorDiodeNotGrouped",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
