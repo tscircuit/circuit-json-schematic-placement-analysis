@@ -21,7 +21,12 @@ test("reproduces the 555 output connector behind its output pin", async () => {
     y: 0,
   })
   const analysis = analyzeSchematicPlacement(json)
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toMatchObject([
+    {
+      lineItemType: "ConnectorPositionCausesTraceDetours",
+      evaluatedSignalCount: 1,
+    },
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: json,
@@ -36,6 +41,16 @@ test("reproduces the 555 output connector behind its output pin", async () => {
   // Keep the existing complete published seven-component fixture as context.
   const full = await create555TimingNetwork()
   expectReproRendered(full, 7)
+  expect(
+    analyzeSchematicPlacement(full).getIssues({
+      issueTypes: ["ConnectorPositionCausesTraceDetours"],
+    }),
+  ).toMatchObject([
+    {
+      evaluatedSignalCount: 1,
+      connectorSchematicBox: { sourceComponentName: "J_OUT" },
+    },
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: full,

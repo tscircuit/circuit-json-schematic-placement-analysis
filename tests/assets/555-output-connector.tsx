@@ -2,7 +2,7 @@
 // Release 436223ab-1458-48c6-a313-a24246ce0fcc. Original U1/J_OUT pin layouts, positions and output/ground connectivity.
 // Other timing and supply branches are outside this two-component extract.
 import { Circuit } from "@tscircuit/core"
-export async function create555OutputConnector() {
+export async function create555OutputConnector(position = { x: 5, y: 0 }) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -29,8 +29,8 @@ export async function create555OutputConnector() {
         name="J_OUT"
         pinCount={2}
         footprint="pinrow2"
-        schX={5}
-        schY={0}
+        schX={position.x}
+        schY={position.y}
         connections={{ pin1: "net.OUT", pin2: "net.GND" }}
       />
       <net name="GND" isGroundNet />

@@ -40,6 +40,7 @@ test("reproduces the published 555 timing chain and its missed grouping after or
             "TwoPinComponentShouldBeVertical",
             "TwoPinComponentShouldBeVertical",
             "TwoPinComponentShouldBeVertical",
+            "ConnectorPositionCausesTraceDetours",
             "RrcTimingNetworkNotGrouped",
             "CapacitorSeparatedFromChipPins",
           ],

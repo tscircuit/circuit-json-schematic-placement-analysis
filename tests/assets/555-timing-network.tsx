@@ -7,6 +7,7 @@ import { Circuit } from "@tscircuit/core"
 export async function create555TimingNetwork(
   orientationOnly = false,
   after = false,
+  outputPosition?: { x: number; y: number },
 ) {
   const c = new Circuit()
   c.pcbDisabled = true
@@ -87,8 +88,8 @@ export async function create555TimingNetwork(
         name="J_OUT"
         pinCount={2}
         footprint="pinrow2"
-        schX={after ? -4 : 5}
-        schY={after ? -2 : 0}
+        schX={outputPosition?.x ?? (after ? -4 : 5)}
+        schY={outputPosition?.y ?? (after ? -2 : 0)}
         connections={{ pin1: "net.OUT", pin2: "net.GND" }}
       />
       <net name="VCC" isPowerNet />

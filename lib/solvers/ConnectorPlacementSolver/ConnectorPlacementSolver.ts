@@ -18,6 +18,7 @@ type Point = { x: number; y: number }
 type Connection = {
   pin: SchematicPort
   peer: SchematicPort
+  currentEndpoint?: Point
   component: SchematicBoxPlacement
 }
 const EPSILON = 0.01
@@ -33,7 +34,7 @@ const distance = (a: Point, b: Point) =>
 const near = (a: Point, b: Point) => distance(a, b) <= EPSILON
 const round = (value: number) => Math.round(value * 100) / 100
 
-/** Translate a one-sided connector when multiple signal routes double back. */
+/** Translate a one-sided connector when signal routes double back behind their hosts. */
 export class ConnectorPlacementSolver extends BaseSolver {
   constructor(
     private readonly params: {
@@ -82,6 +83,14 @@ export class ConnectorPlacementSolver extends BaseSolver {
           e.schematic_sheet_id === connector.schematicSheetId,
       )
       const connections: Connection[] = []
+      const groundConnections: Connection[] = []
+      const wiredGrounds: {
+        pin: SchematicPort
+        net: string
+        trace: SchematicTrace
+        currentPeer: SchematicPort
+      }[] = []
+      let groundPinCount = 0
       let ambiguous = false
       for (const sourcePort of sourcePorts) {
         const pin = index.port(sourcePort)!
@@ -95,19 +104,35 @@ export class ConnectorPlacementSolver extends BaseSolver {
           ),
         )
         if (index.isRail(net)) {
-          // Labeled rail stubs can follow the connector. A wired rail endpoint
-          // constrains the move, so leave that connector for a broader analysis.
-          if (
-            incidentTraces.some(
-              (t) =>
-                !railLabels.some(
-                  (label) =>
-                    label.anchor_position &&
-                    joins(t, pin.center, label.anchor_position),
-                ),
-            )
+          // A labeled rail can follow the connector. A single wired ground
+          // leaf may reconnect to the host's same ground net after translation.
+          if (index.groundNets.has(net) && !index.powerNets.has(net))
+            groundPinCount++
+          const wired = incidentTraces.filter(
+            (t) =>
+              !railLabels.some(
+                (label) =>
+                  label.anchor_position &&
+                  joins(t, pin.center, label.anchor_position),
+              ),
           )
-            ambiguous = true
+          if (wired.length) {
+            const trace = wired[0]!
+            const endpoints = peers.flatMap((p) => {
+              const port = index.port(p)
+              return port && joins(trace, pin.center, port.center) ? [port] : []
+            })
+            if (
+              sourcePorts.length !== 2 ||
+              !index.groundNets.has(net) ||
+              index.powerNets.has(net) ||
+              wired.length !== 1 ||
+              endpoints.length !== 1
+            )
+              ambiguous = true
+            else
+              wiredGrounds.push({ pin, net, trace, currentPeer: endpoints[0]! })
+          }
           continue
         }
         if (peers.length === 0) {
@@ -130,9 +155,55 @@ export class ConnectorPlacementSolver extends BaseSolver {
         }
         connections.push({ pin, peer, component })
       }
-      if (ambiguous || connections.length < 2) continue
+      const singleSignal =
+        connections.length === 1 &&
+        sourcePorts.length === 2 &&
+        groundPinCount === 1
+      if (ambiguous || (connections.length < 2 && !singleSignal)) continue
+      if (singleSignal && sourcePorts.some((p) => p.do_not_connect)) continue
+      for (const ground of wiredGrounds) {
+        const host = connections[0]!.component
+        const candidates = (index.portsByNet.get(ground.net) ?? []).filter(
+          (p) => p.source_component_id === host.sourceComponentId,
+        )
+        const peer =
+          candidates.length === 1 ? index.port(candidates[0]!) : undefined
+        const currentSource = index.portsByNet
+          .get(ground.net)
+          ?.find((p) => p.source_port_id === ground.currentPeer.source_port_id)
+        const currentComponent = currentSource
+          ? index.placement(currentSource.source_component_id)
+          : undefined
+        if (
+          !singleSignal ||
+          !peer?.facing_direction ||
+          !currentComponent ||
+          !index.sameLocalScope(connector, currentComponent) ||
+          dot(directions[peer.facing_direction], along) !== -1
+        ) {
+          ambiguous = true
+          break
+        }
+        // Keep the shared ground tree: only its connector leaf is rerouted.
+        // Compare against even the nearest existing junction, not a farther pin.
+        const currentEndpoint = [
+          ground.currentPeer.center,
+          ...ground.trace.junctions,
+        ].sort(
+          (a, b) =>
+            distance(ground.pin.center, a) - distance(ground.pin.center, b),
+        )[0]!
+        groundConnections.push({
+          pin: ground.pin,
+          peer,
+          component: host,
+          currentEndpoint,
+        })
+      }
+      if (ambiguous) continue
+      const constrainedConnections = [...connections, ...groundConnections]
       // Every signal currently points away from its peer. Label-only separation
-      // is intentional in many designs; require at least two actual wire detours.
+      // is intentional in many designs; require actual multi-bend wire detours.
       if (
         connections.some(
           (c) => dot(c.peer.center, along) >= dot(c.pin.center, along) - 2,
@@ -146,7 +217,7 @@ export class ConnectorPlacementSolver extends BaseSolver {
           ),
         )
         .filter((t) => t.length > 0)
-      if (detouredConnections.length < 2) continue
+      if (detouredConnections.length < (singleSignal ? 1 : 2)) continue
       const detours = detouredConnections.flat()
       const ordered = [...connections].sort(
         (a, b) => dot(a.pin.center, across) - dot(b.pin.center, across),
@@ -190,10 +261,11 @@ export class ConnectorPlacementSolver extends BaseSolver {
         y: pin.center.y + delta.y,
       })
       if (
-        connections.some(
+        constrainedConnections.some(
           (c) =>
             distance(movedPin(c.pin), c.peer.center) >
-            distance(c.pin.center, c.peer.center) + EPSILON,
+            distance(c.pin.center, c.currentEndpoint ?? c.peer.center) +
+              EPSILON,
         )
       )
         continue
@@ -226,9 +298,9 @@ export class ConnectorPlacementSolver extends BaseSolver {
         )
       )
         continue
-      // Require a clear orthogonal corridor for each signal after translation.
+      // Require a clear orthogonal corridor for each signal and wired return.
       if (
-        connections.some((c) => {
+        constrainedConnections.some((c) => {
           const start = movedPin(c.pin)
           const end = c.peer.center
           const middleAlong = (dot(start, along) + dot(end, along)) / 2
@@ -277,7 +349,7 @@ export class ConnectorPlacementSolver extends BaseSolver {
         deltaSchY: round(delta.y),
         currentTotalSignalDistance: round(before),
         suggestedTotalSignalDistance: round(after),
-        message: `Move ${name} to schX=${target.x}, schY=${target.y} so its signal pins face ${connectedComponents.map((p) => p.sourceComponentName || "component").join(", ")}. Preserve rotation and pin assignments; reroute the connections and attached rail labels.`,
+        message: `Move ${name} to schX=${target.x}, schY=${target.y} so its signal pins face ${connectedComponents.map((p) => p.sourceComponentName || "component").join(", ")}. Preserve rotation and pin assignments; reroute the connections and attached rail labels.${groundConnections.length ? " Reroute only the connector ground leaf to the same ground net at the signal host; retain the remaining ground tree." : ""}`,
       })
     }
     this.solved = true
