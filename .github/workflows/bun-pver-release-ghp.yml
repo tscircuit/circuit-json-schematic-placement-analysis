@@ -32,14 +32,15 @@ jobs:
         with:
           bun-version: latest
 
+      # Install public dependencies before setup-node configures the publishing registry.
+      - run: bun install
+      - run: bun run build
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com
           scope: "@tscircuit"
-
-      - run: bun install
-      - run: bun run build
 
       - name: Publish package
         run: bunx pver release --no-push-main
