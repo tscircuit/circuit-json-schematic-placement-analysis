@@ -134,6 +134,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.inductorSchematicBox)
         break
+      case "ResistorDividerSeparatedFromChip":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.supplyResistorSchematicBox)
+        addPlacement(issue.groundResistorSchematicBox)
+        break
       case "ResistorSeparatedFromChipPin":
         addPlacement(issue.hostSchematicBox)
         addPlacement(issue.resistorSchematicBox)

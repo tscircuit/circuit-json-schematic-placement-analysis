@@ -30,7 +30,11 @@ test("corrects the chip / inductor pair without changing electrical connections 
       analyzeSchematicPlacement(a)
         .getIssues()
         .map((i) => i.lineItemType),
-    ).toEqual(["InductorSeparatedFromChipPins"])
+    ).toEqual(
+      count === 7
+        ? ["InductorSeparatedFromChipPins", "ResistorDividerSeparatedFromChip"]
+        : ["InductorSeparatedFromChipPins"],
+    )
     expect(analyzeSchematicPlacement(b).getIssues()).toEqual([])
     for (const [n, p, m, q] of [
       ["U2", "pin9", "L1", "pin1"],

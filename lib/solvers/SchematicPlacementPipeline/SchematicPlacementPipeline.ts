@@ -1,4 +1,5 @@
 import { InductorDiodeGroupingSolver } from "../InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+import { ChipPinResistorDividerPlacementSolver } from "../ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 import { RrcTimingNetworkGroupingSolver } from "../RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { InductorCapacitorGroupingSolver } from "../InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
@@ -108,6 +109,7 @@ const solversByIssueType = {
   ParallelLedBranchesDrawnInline: [ParallelLedBranchPlacementSolver],
   SeriesLedChainNotOrdered: [SeriesLedChainPlacementSolver],
   RailPathTooSpreadOut: [RailPathVisibilitySolver],
+  ResistorDividerSeparatedFromChip: [ChipPinResistorDividerPlacementSolver],
   ResistorSeparatedFromChipPin: [ChipPinResistorPlacementSolver],
   InductorSeparatedFromChipPin: [ChipSupplyInductorPlacementSolver],
   RrcTimingNetworkNotGrouped: [RrcTimingNetworkGroupingSolver],
@@ -629,6 +631,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "InductorCapacitorGroupingSolver",
       InductorCapacitorGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "ChipPinResistorDividerPlacementSolver",
+      ChipPinResistorDividerPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

@@ -1,4 +1,5 @@
 import { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+import { ChipPinResistorDividerPlacementSolver } from "./solvers/ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 import { RrcTimingNetworkGroupingSolver } from "./solvers/RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "./solvers/ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
 import { InductorCapacitorGroupingSolver } from "./solvers/InductorCapacitorGroupingSolver/InductorCapacitorGroupingSolver"
@@ -179,6 +180,7 @@ export class SchematicPlacementAnalysis {
       RrcTimingNetworkNotGrouped: 0,
       CapacitorSeparatedFromChipPins: 0,
       CrystalSeparatedFromChipPins: 0,
+      ResistorDividerSeparatedFromChip: 0,
       ResistorSeparatedFromChipPin: 0,
       InductorSeparatedFromChipPin: 0,
       RailPathTooSpreadOut: 0,
@@ -247,6 +249,8 @@ export class SchematicPlacementAnalysis {
         return SeriesLedChainPlacementSolver.issueToString(issue)
       case "InductorSeparatedFromChipPin":
         return ChipSupplyInductorPlacementSolver.issueToString(issue)
+      case "ResistorDividerSeparatedFromChip":
+        return ChipPinResistorDividerPlacementSolver.issueToString(issue)
       case "ResistorSeparatedFromChipPin":
         return ChipPinResistorPlacementSolver.issueToString(issue)
       case "CrystalSeparatedFromChipPins":
