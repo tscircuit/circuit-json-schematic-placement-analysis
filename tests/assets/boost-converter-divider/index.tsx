@@ -4,7 +4,9 @@ import { MT3608 } from "./MT3608"
 // https://tscircuit.com/imrishabh18/boost-converter#schematic
 // Complete U1/R1/R2 extract. Positions, values, symbols and chip pins come from the source.
 // "before" only applies existing resistor-rotation advice; external nets terminate at labels.
-export async function createBoostConverterDivider(mode: "original" | "before") {
+export async function createBoostConverterDivider(
+  mode: "original" | "before" | "after",
+) {
   const c = new Circuit()
   c.pcbDisabled = true
   c.add(
@@ -34,8 +36,8 @@ export async function createBoostConverterDivider(mode: "original" | "before") {
         manufacturerPartNumber="0603WAF6202T5E"
         supplierPartNumbers={{ jlcpcb: ["C23221"] }}
         footprint="0603"
-        schX={4.8}
-        schY={0.4}
+        schX={mode === "after" ? -3.5 : 4.8}
+        schY={mode === "after" ? 1 : 0.4}
         schRotation={mode === "original" ? 0 : 270}
         connections={{ pin1: "net.VOUT_12V", pin2: "net.FB" }}
       />
@@ -45,7 +47,7 @@ export async function createBoostConverterDivider(mode: "original" | "before") {
         manufacturerPartNumber="0603WAF3301T5E"
         supplierPartNumbers={{ jlcpcb: ["C22978"] }}
         footprint="0603"
-        schX={4.8}
+        schX={mode === "after" ? -3.5 : 4.8}
         schY={-1.4}
         schRotation={mode === "original" ? 0 : 270}
         connections={{ pin1: "net.FB" }}
@@ -62,7 +64,7 @@ export async function createBoostConverterDivider(mode: "original" | "before") {
       <netlabel
         net="GND"
         connectsTo=".R2 > .pin2"
-        schX={4.8}
+        schX={mode === "after" ? -3.5 : 4.8}
         schY={-2.1}
         anchorSide="top"
       />

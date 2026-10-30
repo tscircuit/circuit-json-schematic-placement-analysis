@@ -169,7 +169,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       ...comparison,
       after: comparison.before,
     }),
-  ).toThrow("After layout still has 29 unresolved findings")
+  ).toThrow("After layout still has 30 unresolved findings")
   const svg = createPlacementComparisonSvg(comparison)
   // Both panels must show the whole matrix at the same scale and world coordinates.
   const panels = [

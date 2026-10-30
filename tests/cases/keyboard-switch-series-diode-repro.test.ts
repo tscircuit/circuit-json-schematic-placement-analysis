@@ -59,6 +59,7 @@ test("reproduces the complete key-pcb sheet with separated switch series diodes"
     ...Array(3).fill("DecouplingCapacitorsNotCloseTogether"),
     "ResistorSeparatedFromChipPin",
     "RailPathTooSpreadOut",
+    "ResistorDividerSeparatedFromChip",
   ])
   expect(
     createIssueReproSnapshot({
