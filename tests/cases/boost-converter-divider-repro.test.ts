@@ -31,8 +31,12 @@ test("reproduces the published divider behind U1 after existing rotation advice"
     const analysis = analyzeSchematicPlacement(json)
     expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual(
       mode === "original"
-        ? ["TwoPinComponentShouldBeVertical", "TwoPinComponentShouldBeVertical"]
-        : [],
+        ? [
+            "TwoPinComponentShouldBeVertical",
+            "TwoPinComponentShouldBeVertical",
+            "ResistorDividerSeparatedFromChip",
+          ]
+        : ["ResistorDividerSeparatedFromChip"],
     )
     expect(
       createIssueReproSnapshot({
