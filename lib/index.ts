@@ -83,3 +83,5 @@ export { ParallelLedBranchPlacementSolver } from "./solvers/ParallelLedBranchPla
 export { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlacementSolver/CrystalResistorPlacementSolver"
 
 export { ChipPinResistorDividerPlacementSolver } from "./solvers/ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
+
+export { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"

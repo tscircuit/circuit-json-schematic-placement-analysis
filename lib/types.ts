@@ -1,3 +1,14 @@
+export interface InductorDiodeNotGrouped {
+  lineItemType: "InductorDiodeNotGrouped"
+  hostSchematicBox: SchematicBoxPlacement
+  inductorSchematicBox: SchematicBoxPlacement
+  diodeSchematicBox: SchematicBoxPlacement
+  chipSourcePortId: string
+  inductorSourcePortId: string
+  diodeSourcePortId: string
+  message: string
+}
+
 export interface ResistorDividerSeparatedFromChip {
   lineItemType: "ResistorDividerSeparatedFromChip"
   hostSchematicBox: SchematicBoxPlacement
@@ -882,6 +893,7 @@ export interface SwitchMatrixBranchesTooSpreadOut {
 }
 
 export type SchematicPlacementIssue =
+  | InductorDiodeNotGrouped
   | ResistorDividerSeparatedFromChip
   | ConnectorTestPointNotAligned
   | InductorCapacitorNotGrouped

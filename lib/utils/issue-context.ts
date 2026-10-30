@@ -70,6 +70,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.connectorSchematicBox)
         addPlacement(issue.testPointSchematicBox)
         break
+      case "InductorDiodeNotGrouped":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.inductorSchematicBox)
+        addPlacement(issue.diodeSchematicBox)
+        break
       case "InductorCapacitorNotGrouped":
         addPlacement(issue.inductorSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
