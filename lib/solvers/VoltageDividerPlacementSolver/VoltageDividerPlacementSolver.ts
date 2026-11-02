@@ -2,6 +2,7 @@ import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   SchematicPlacementIssue,
   VoltageDividerSupplyResistorBelowGroundResistor,
+  VoltageDividerNetworkNotGrouped,
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
@@ -73,6 +74,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     const supply = index.placement(supplyId)
     const ground = index.placement(groundId)
     if (!supply || !ground || !index.sameLocalScope(supply, ground)) return
+    this.checkFilteredNetwork(supplyId, groundId, tap, groundNet)
     // Leave horizontal/L-shaped dividers and individual rotation problems to
     // their own checks. Here both resistors already read toward ground.
     const supplyTap = this.getDownwardResistorPorts(supplyId, supplyNet, tap)
@@ -91,6 +93,136 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       groundTapSourcePortId: groundTap.top.source_port_id,
       reversedBodyGap,
       message: `Place ${supply.sourceComponentName || "component"} above ${ground.sourceComponentName || "component"}, close enough to read their shared divider tap. Preserve all connections and leave room for labels; exact alignment is not required.`,
+    })
+  }
+
+  /** A grounded filter capacitor identifies a local divider network, not a plain series pair. */
+  private checkFilteredNetwork(
+    supplyId: string,
+    groundId: string,
+    tap: string,
+    groundNet: string,
+  ) {
+    const index = this.index,
+      members = index.portsByNet.get(tap) ?? []
+    if (
+      members.some(
+        (p) =>
+          p.do_not_connect ||
+          !["simple_resistor", "simple_capacitor", "simple_chip"].includes(
+            index.components.get(p.source_component_id)?.ftype ?? "",
+          ),
+      )
+    )
+      return
+    const capacitors = members.filter(
+      (p) =>
+        index.components.get(p.source_component_id)?.ftype ===
+        "simple_capacitor",
+    )
+    if (capacitors.length !== 1) return
+    const capacitorId = capacitors[0]!.source_component_id
+    const capacitor = index.components.get(capacitorId)
+    const capacitorNets = index.twoTerminalNets(capacitorId)
+    if (
+      capacitor?.ftype !== "simple_capacitor" ||
+      !Number.isFinite(capacitor.capacitance) ||
+      capacitor.capacitance <= 0 ||
+      !capacitorNets?.includes(groundNet)
+    )
+      return
+    const ids = [supplyId, groundId, capacitorId]
+    const parts = ids.map((id) => {
+      const box = index.placement(id),
+        ports = index.portsByComponent.get(id)
+      if (
+        !box ||
+        !ports ||
+        ports.length !== 2 ||
+        ports.some((p) => p.do_not_connect) ||
+        !index.twoTerminalNets(id)
+      )
+        return
+      if (
+        ![box.schX, box.schY, box.width, box.height].every(Number.isFinite) ||
+        box.width <= 0 ||
+        box.height <= 0
+      )
+        return
+      if (
+        this.params.ctx.circuitJson.some(
+          (e) =>
+            e.type === "pcb_component" &&
+            e.source_component_id === id &&
+            e.do_not_place,
+        )
+      )
+        return
+      const pins = ports.map((p) => index.port(p))
+      if (
+        pins.some(
+          (p) =>
+            !p ||
+            p.schematic_sheet_id !== box.schematicSheetId ||
+            !Number.isFinite(p.center.x) ||
+            !Number.isFinite(p.center.y),
+        )
+      )
+        return
+      const tapPorts = ports.filter(
+        (p) => index.connected(p.source_port_id) === tap,
+      )
+      if (tapPorts.length !== 1) return
+      return { box, pin: index.port(tapPorts[0]!)! }
+    })
+    const [supply, ground, cap] = parts
+    if (
+      !supply ||
+      !ground ||
+      !cap ||
+      !index.sameLocalScope(supply.box, cap.box)
+    )
+      return
+    const boxes = [supply.box, ground.box, cap.box]
+    for (let a = 0; a < boxes.length; a++)
+      for (let b = a + 1; b < boxes.length; b++) {
+        const x = boxes[a]!,
+          y = boxes[b]!
+        if (
+          Math.abs(x.schX - y.schX) < (x.width + y.width) / 2 &&
+          Math.abs(x.schY - y.schY) < (x.height + y.height) / 2
+        )
+          return
+      }
+    const distance = (a: typeof supply, b: typeof supply) =>
+      Math.hypot(
+        a.pin.center.x - b.pin.center.x,
+        a.pin.center.y - b.pin.center.y,
+      )
+    const resistorTapDistance = distance(supply, ground)
+    const capacitorTapDistance = Math.min(
+      distance(cap, supply),
+      distance(cap, ground),
+    )
+    // A schematic spacing allowance, not a PCB or electrical requirement. Compact bends are valid.
+    const maxRecommendedTapDistance = Math.max(
+      6,
+      4 * Math.max(...boxes.flatMap((b) => [b.width, b.height])),
+    )
+    if (
+      resistorTapDistance <= maxRecommendedTapDistance &&
+      capacitorTapDistance <= maxRecommendedTapDistance
+    )
+      return
+    this.params.issues.push({
+      lineItemType: "VoltageDividerNetworkNotGrouped",
+      supplyResistorSchematicBox: supply.box,
+      groundResistorSchematicBox: ground.box,
+      capacitorSchematicBox: cap.box,
+      resistorTapDistance,
+      capacitorTapDistance,
+      maxRecommendedTapDistance,
+      message: `Group ${supply.box.sourceComponentName || "the supply resistor"}, ${ground.box.sourceComponentName || "the ground resistor"} and ${cap.box.sourceComponentName || "the filter capacitor"} around their shared divider tap. Keep the capacitor across the lower leg, preserve all pin connections, and reroute with room for labels and nearby parts; exact alignment is not required.`,
     })
   }
 
@@ -135,7 +267,9 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
   }
 
   static issueToString(
-    issue: VoltageDividerSupplyResistorBelowGroundResistor,
+    issue:
+      | VoltageDividerSupplyResistorBelowGroundResistor
+      | VoltageDividerNetworkNotGrouped,
   ): string {
     const attrs: string[] = []
     addAttr(
@@ -148,8 +282,21 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       "groundResistorName",
       issue.groundResistorSchematicBox.sourceComponentName,
     )
-    addAttr(attrs, "reversedBodyGap", issue.reversedBodyGap)
+    if (issue.lineItemType === "VoltageDividerNetworkNotGrouped") {
+      addAttr(
+        attrs,
+        "capacitorName",
+        issue.capacitorSchematicBox.sourceComponentName,
+      )
+      addAttr(attrs, "resistorTapDistance", issue.resistorTapDistance)
+      addAttr(attrs, "capacitorTapDistance", issue.capacitorTapDistance)
+      addAttr(
+        attrs,
+        "maxRecommendedTapDistance",
+        issue.maxRecommendedTapDistance,
+      )
+    } else addAttr(attrs, "reversedBodyGap", issue.reversedBodyGap)
     addAttr(attrs, "message", issue.message)
-    return `<VoltageDividerSupplyResistorBelowGroundResistor ${attrs.join(" ")} />`
+    return `<${issue.lineItemType} ${attrs.join(" ")} />`
   }
 }

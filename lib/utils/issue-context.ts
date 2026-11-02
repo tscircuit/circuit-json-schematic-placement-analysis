@@ -187,6 +187,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.amplifierSchematicBox)
         addPlacement(issue.shuntSchematicBox)
         break
+      case "VoltageDividerNetworkNotGrouped":
+        addPlacement(issue.supplyResistorSchematicBox)
+        addPlacement(issue.groundResistorSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        break
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)

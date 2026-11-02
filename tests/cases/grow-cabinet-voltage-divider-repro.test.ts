@@ -48,6 +48,15 @@ test("records reversed divider halves on the complete grow cabinet controller sh
     ["R_DU1", "R_DL1"],
     ["R_DU2", "R_DL2"],
   ])
+  expect(
+    analysis.getIssues({ issueTypes: ["VoltageDividerNetworkNotGrouped"] }),
+  ).toMatchObject([
+    {
+      supplyResistorSchematicBox: { sourceComponentName: "R_DU2" },
+      groundResistorSchematicBox: { sourceComponentName: "R_DL2" },
+      capacitorSchematicBox: { sourceComponentName: "C_D2" },
+    },
+  ])
   const svg = createIssueReproSnapshot({
     circuitJson,
     analysis,

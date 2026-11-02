@@ -166,6 +166,7 @@ const solversByIssueType = {
   LowSideTransistorNotAlignedWithLoad: [LowSideTransistorPlacementSolver],
   UsbSeriesResistorsNotAligned: [UsbSeriesResistorPlacementSolver],
   CurrentSenseShuntSeparatedFromInputs: [CurrentSenseShuntPlacementSolver],
+  VoltageDividerNetworkNotGrouped: [VoltageDividerPlacementSolver],
   VoltageDividerSupplyResistorBelowGroundResistor: [
     VoltageDividerPlacementSolver,
   ],

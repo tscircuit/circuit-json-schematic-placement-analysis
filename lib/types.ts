@@ -693,6 +693,18 @@ export interface RegulatorCapacitorsOnWrongSides {
   message: string
 }
 
+/** A local supply-to-ground divider and its shunt capacitor are excessively separated. */
+export interface VoltageDividerNetworkNotGrouped {
+  lineItemType: "VoltageDividerNetworkNotGrouped"
+  supplyResistorSchematicBox: SchematicBoxPlacement
+  groundResistorSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorTapDistance: number
+  capacitorTapDistance: number
+  maxRecommendedTapDistance: number
+  message: string
+}
+
 /** Advisory: a vertical divider's supply resistor lies clearly below its ground resistor. */
 export interface VoltageDividerSupplyResistorBelowGroundResistor {
   lineItemType: "VoltageDividerSupplyResistorBelowGroundResistor"
@@ -924,6 +936,7 @@ export type SchematicPlacementIssue =
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs
+  | VoltageDividerNetworkNotGrouped
   | VoltageDividerSupplyResistorBelowGroundResistor
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned

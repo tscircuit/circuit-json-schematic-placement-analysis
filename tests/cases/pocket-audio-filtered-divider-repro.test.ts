@@ -30,8 +30,12 @@ test("reproduces the published filtered battery divider and its missed grouping 
     const analysis = analyzeSchematicPlacement(json)
     expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual(
       mode === "original"
-        ? ["TwoPinComponentShouldBeVertical", "TwoPinComponentShouldBeVertical"]
-        : [],
+        ? [
+            "TwoPinComponentShouldBeVertical",
+            "TwoPinComponentShouldBeVertical",
+            "VoltageDividerNetworkNotGrouped",
+          ]
+        : ["VoltageDividerNetworkNotGrouped"],
     )
     expect(
       createIssueReproSnapshot({
