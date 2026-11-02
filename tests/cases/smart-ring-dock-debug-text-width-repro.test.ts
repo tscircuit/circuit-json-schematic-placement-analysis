@@ -3,19 +3,13 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { smartRingTextWidth } from "../assets/smart-ring-text-width"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("reproduces the oversized DockDebug annotation bounds", () => {
+test("keeps the DockDebug annotation clear of the adjacent trace", () => {
   const analysis = analyzeSchematicPlacement(smartRingTextWidth, {
     issueTypes: ["SchematicTextCollision"],
   })
   expect(
     analysis.getIssues({ schematicSheetId: "schematic_sheet_15" }),
-  ).toMatchObject([
-    {
-      schematicTextId: "schematic_text_249",
-      text: "OE supports 3.3V logic, target stays1.8V.",
-      collidingObject: { type: "trace", id: "schematic_trace_36" },
-    },
-  ])
+  ).toEqual([])
   expect(
     createIssueReproSnapshot({
       circuitJson: smartRingTextWidth,

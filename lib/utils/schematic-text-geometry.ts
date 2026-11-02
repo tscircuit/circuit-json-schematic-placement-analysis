@@ -1,4 +1,5 @@
 import type { SchematicText } from "circuit-json"
+import pixelWidth from "string-pixel-width"
 import type { RectBounds } from "./geometry"
 
 export interface Point {
@@ -15,25 +16,12 @@ export const rectPolygon = (bounds: RectBounds): Polygon => [
   { x: bounds.left, y: bounds.top },
 ]
 
-// Circuit JSON does not contain glyph metrics. Approximate the renderer's
-// sans-serif advances in ems, with narrower punctuation and wider M/W glyphs.
-// These are text-line bounds, not a claim of pixel-exact glyph intersections.
-const advance = (character: string): number => {
-  if (/\s/.test(character)) return 0.28
-  if (/[ilI.,:;!'|]/.test(character)) return 0.25
-  if (/[MW@%]/.test(character)) return 0.9
-  if (/[mw]/.test(character)) return 0.8
-  if (/[A-Z]/.test(character)) return 0.67
-  return 0.56
-}
-
-const widthInEm = (text: string): number =>
-  Array.from(text).reduce((width, character) => width + advance(character), 0)
-
-/** Approximate sans-serif line width in schematic units. Shared by explicit
- * schematic text and box pin labels; electrical names do not set font metrics. */
+// circuit-to-svg renders schematic text in sans-serif. Use Arial's measured
+// proportional advances instead of estimating character classes. The browser's
+// fallback font can vary, so these remain line bounds, not exact glyph outlines.
+/** Approximate sans-serif line width in schematic units. */
 export const getSchematicTextWidth = (text: string, fontSize: number): number =>
-  widthInEm(text) * fontSize
+  pixelWidth(text, { font: "arial", size: fontSize })
 
 export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
   const size = text.font_size
@@ -66,10 +54,11 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
     if (!visible) return []
     const leading = line.length - line.trimStart().length
     const left =
-      (widthInEm(line.slice(0, leading)) - widthInEm(line) * horizontal) * size
+      getSchematicTextWidth(line.slice(0, leading), size) -
+      getSchematicTextWidth(line, size) * horizontal
     const polygon = rectPolygon({
       left,
-      right: left + widthInEm(visible) * size,
+      right: left + getSchematicTextWidth(visible, size),
       // Leave the small whitespace at the top/bottom of an em outside the
       // collision region. Otherwise a readable caption just above a wire
       // (e.g. 100V at y=4.8, size=0.22 above a wire at y=4.7) is a false hit.

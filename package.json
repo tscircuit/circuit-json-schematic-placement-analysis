@@ -38,7 +38,8 @@
     "circuit-to-svg": "^0.0.427",
     "graphics-debug": "^0.0.94",
     "schematic-symbols": "^0.0.248",
-    "stack-svgs": "^0.0.1"
+    "stack-svgs": "^0.0.1",
+    "string-pixel-width": "^1.11.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
@@ -61,6 +62,7 @@
     "@tscircuit/schematic-trace-solver": "^0.0.76",
     "@tscircuit/soup-util": "^0.0.41",
     "@types/bun": "latest",
+    "@types/string-pixel-width": "^1.11.0",
     "bpc-graph": "^0.0.66",
     "bun-match-svg": "^0.0.15",
     "calculate-packing": "^0.0.71",

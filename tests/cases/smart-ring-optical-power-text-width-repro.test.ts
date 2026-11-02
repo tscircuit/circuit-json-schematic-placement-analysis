@@ -3,18 +3,13 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { smartRingTextWidth } from "../assets/smart-ring-text-width"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("reproduces the oversized OpticalPower annotation bounds", () => {
+test("reports only the OpticalPower line crossed by the returning trace", () => {
   const analysis = analyzeSchematicPlacement(smartRingTextWidth, {
     issueTypes: ["SchematicTextCollision"],
   })
   expect(
     analysis.getIssues({ schematicSheetId: "schematic_sheet_19" }),
   ).toMatchObject([
-    {
-      schematicTextId: "schematic_text_314",
-      text: "R30 - 1k resistor limits inrush",
-      collidingObject: { type: "trace", id: "schematic_trace_136" },
-    },
     {
       schematicTextId: "schematic_text_315",
       text: "into the LED supply reservoir.",
