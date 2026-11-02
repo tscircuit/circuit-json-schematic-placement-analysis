@@ -1,5 +1,4 @@
 import type { SchematicText } from "circuit-json"
-import pixelWidth from "string-pixel-width"
 import type { RectBounds } from "./geometry"
 
 export interface Point {
@@ -16,12 +15,32 @@ export const rectPolygon = (bounds: RectBounds): Polygon => [
   { x: bounds.left, y: bounds.top },
 ]
 
-// circuit-to-svg renders schematic text in sans-serif. Use Arial's measured
-// proportional advances instead of estimating character classes. The browser's
-// fallback font can vary, so these remain line bounds, not exact glyph outlines.
-/** Approximate sans-serif line width in schematic units. */
+// Circuit JSON does not contain glyph metrics. Approximate the renderer's
+// sans-serif advances in ems, with narrower punctuation and wider M/W glyphs.
+// These are text-line bounds, not a claim of pixel-exact glyph intersections.
+const advance = (character: string): number => {
+  if (/\s/.test(character)) return 0.28
+  // Approximate Arial lowercase advances. Narrow letters such as f/r/t
+  // are substantially smaller than the 0.56-em default.
+  if (/[ijl]/.test(character)) return 0.22
+  if (/[ft]/.test(character)) return 0.28
+  if (character === "r") return 0.33
+  if (/[cksvxyz]/.test(character)) return 0.5
+  if (character === "m") return 0.83
+  if (character === "w") return 0.72
+  if (/[I.,:;!'|]/.test(character)) return 0.25
+  if (/[MW@%]/.test(character)) return 0.9
+  if (/[A-Z]/.test(character)) return 0.67
+  return 0.56
+}
+
+const widthInEm = (text: string): number =>
+  Array.from(text).reduce((width, character) => width + advance(character), 0)
+
+/** Approximate sans-serif line width in schematic units. Shared by explicit
+ * schematic text and box pin labels; electrical names do not set font metrics. */
 export const getSchematicTextWidth = (text: string, fontSize: number): number =>
-  pixelWidth(text, { font: "arial", size: fontSize })
+  widthInEm(text) * fontSize
 
 export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
   const size = text.font_size

@@ -21,7 +21,7 @@ test("records the full power sheet's findings without rotating its series induct
     ResistorDividerSeparatedFromChip: 1,
     GenericSchematicBoxTooWide: 1,
     SchematicPinPaddingToEdgeTooLarge: 2,
-    SchematicTextCollision: 2,
+    SchematicTextCollision: 1,
     TwoPinComponentShouldBeVertical: 8,
     DecouplingCapacitorsNotCloseTogether: 2,
     CurrentSenseShuntSeparatedFromInputs: 1,

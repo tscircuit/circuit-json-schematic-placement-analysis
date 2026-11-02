@@ -5,6 +5,7 @@ import type {
   SchematicSide,
   SchematicPinLabelBounds,
 } from "../types"
+import { getSchematicTextWidth } from "./schematic-text-geometry"
 
 export interface LabelRect {
   side: SchematicSide
@@ -55,22 +56,11 @@ export function getSchematicPinLabelFontSize(port: SchematicPort): number {
   )
 }
 
-// Preserve the pin-bank sizing estimates independently of standalone
-// schematic_text bounds: these advances also drive box resize suggestions.
-const pinLabelAdvance = (character: string): number => {
-  if (/\s/.test(character)) return 0.28
-  if (/[ilI.,:;!'|]/.test(character)) return 0.25
-  if (/[MW@%]/.test(character)) return 0.9
-  if (/[mw]/.test(character)) return 0.8
-  if (/[A-Z]/.test(character)) return 0.67
-  return 0.56
-}
-
 export const getSchematicPinLabelWidth = (port: SchematicPort): number =>
-  Array.from(getSchematicPinLabelText(port)).reduce(
-    (width, character) => width + pinLabelAdvance(character),
-    0,
-  ) * getSchematicPinLabelFontSize(port)
+  getSchematicTextWidth(
+    getSchematicPinLabelText(port),
+    getSchematicPinLabelFontSize(port),
+  )
 
 export function getSchematicBoxLabelRects(
   box: SchematicBoxPlacement,
