@@ -36,6 +36,11 @@ test("reports the motor-driver sheet's inner pin-label collision", async () => {
   const analysis = analyzeSchematicPlacement(circuitJson)
   expect(analysis.getIssues()).toMatchObject([
     {
+      lineItemType: "SchematicTextCollision",
+      text: "R_DRV_ENABLE_PU",
+      collidingObject: { type: "line", id: "schematic_line_104" },
+    },
+    {
       lineItemType: "SchematicBoxInnerLabelCollision",
       schematicBox: { sourceComponentName: "DRIVER" },
       overlappingSides: ["left", "right", "top"],

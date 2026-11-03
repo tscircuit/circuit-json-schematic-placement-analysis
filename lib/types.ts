@@ -596,7 +596,7 @@ export interface NetLabelCollision {
 }
 
 export interface SchematicTextCollisionObject {
-  type: "text" | "trace" | "component"
+  type: "text" | "trace" | "component" | "line"
   id: string
   text?: string
   componentName?: string
@@ -607,7 +607,9 @@ export interface SchematicTextCollision {
   lineItemType: "SchematicTextCollision"
   schematicSheetId?: string
   schematicSheetName?: string
-  schematicTextId: string
+  /** Symbol reference/value primitives have no standalone schematic_text ID. */
+  schematicTextId?: string
+  schematicComponentId?: string
   text: string
   collidingObject: SchematicTextCollisionObject
   textBounds: { left: number; right: number; top: number; bottom: number }
