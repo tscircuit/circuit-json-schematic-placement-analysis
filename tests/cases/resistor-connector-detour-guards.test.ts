@@ -7,7 +7,7 @@ import {
   getReproSourcePort as port,
 } from "../fixtures/placement-repro-assertions"
 
-test("grounded connector branches require explicit roles, private wires and placement behind the pin", async () => {
+test("resistor detours require private visible wires and placement behind the connector regardless of net roles", async () => {
   const before = await createConnectorGroundResistor(),
     after = await createConnectorGroundResistor(true)
   const saved = JSON.stringify(before),
@@ -64,18 +64,84 @@ test("grounded connector branches require explicit roles, private wires and plac
     reject((j) => {
       port(j, name, p).do_not_connect = true
     })
-  const untyped = structuredClone(before)
-  for (const e of untyped) if (e.type === "source_net") delete e.is_ground
-  expect(
-    issues(untyped).filter(
+  // Neither terminal needs a known role. Ground, supply, signal and unknown
+  // metadata must leave the same geometric detour finding unchanged.
+  const relevant = (j: CircuitJson) =>
+    issues(j).filter(
       (i) =>
         i.lineItemType === type &&
-        i.reason === "grounded_branch_behind_connector",
-    ),
-  ).toEqual([])
-  reject((j) => {
-    port(j, "R_CC2", "pin2").provides_power = true
-  })
+        i.resistorSchematicBox.sourceComponentId ===
+          box(j, "R_CC2").source_component_id,
+    )
+  for (const input of [before, after]) {
+    const untyped = structuredClone(input)
+    for (const e of untyped) {
+      if (e.type === "source_net") {
+        delete e.is_ground
+        delete e.is_power
+        delete e.is_positive_voltage_source
+        e.name = "arbitrary"
+      }
+      if (e.type === "source_port") {
+        delete e.requires_ground
+        delete e.provides_ground
+        delete e.requires_power
+        delete e.provides_power
+        delete e.requires_voltage
+        delete e.provides_voltage
+      }
+    }
+    const check = (j: CircuitJson) => {
+      if (input === before) {
+        expect(relevant(j)).toHaveLength(1)
+        expect(relevant(j)[0]).toMatchObject({ reason: "behind_connector" })
+      } else expect(relevant(j)).toEqual([])
+    }
+    check(untyped)
+    for (const terminal of ["pin1", "pin2"] as const) {
+      for (const flag of [
+        "requires_ground",
+        "provides_ground",
+        "requires_power",
+        "provides_power",
+      ] as const) {
+        const j = structuredClone(untyped)
+        port(j, "R_CC2", terminal)[flag] = true
+        check(j)
+      }
+      for (const flag of [
+        "is_ground",
+        "is_power",
+        "is_positive_voltage_source",
+      ] as const) {
+        const j = structuredClone(untyped)
+        j.push(
+          {
+            type: "source_net",
+            source_net_id: "role",
+            member_source_group_ids: [],
+            name: "arbitrary",
+            [flag]: true,
+          },
+          {
+            type: "source_trace",
+            source_trace_id: "role",
+            connected_source_port_ids: [
+              port(j, "R_CC2", terminal).source_port_id,
+            ],
+            connected_source_net_ids: ["role"],
+          },
+        )
+        check(j)
+      }
+    }
+  }
+  // A zero-ohm resistor has the same drawing geometry and can have the same detour.
+  const jumper = structuredClone(before)
+  for (const e of jumper)
+    if (e.type === "source_component" && e.ftype === "simple_resistor")
+      e.resistance = 0
+  expect(relevant(jumper)).toHaveLength(1)
   reject((j) => {
     const p = port(j, "R_CC2", "pin1")
     j.push(
@@ -104,15 +170,6 @@ test("grounded connector branches require explicit roles, private wires and plac
       is_dashed: true,
     })
   })
-  // Ground evidence may come from a port, and must not require a ground-like name.
-  const portGround = structuredClone(before)
-  for (const e of portGround)
-    if (e.type === "source_net") {
-      delete e.is_ground
-      e.name = "arbitrary"
-    }
-  port(portGround, "R_CC2", "pin2").requires_ground = true
-  expect(issues(portGround)).toHaveLength(1)
   // Rotate/reflect the entire circuit, including drawn wires. Detection is not horizontal-only.
   for (const input of [before, after])
     for (const turns of [0, 1, 2, 3])

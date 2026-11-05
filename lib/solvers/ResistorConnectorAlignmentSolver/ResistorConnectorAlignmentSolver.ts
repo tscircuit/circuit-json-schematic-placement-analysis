@@ -57,7 +57,7 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
     if (!net) return
     const index = this.index,
       ports = index.portsByNet.get(net)!
-    if (index.isRail(net) || ports.length !== 2) return
+    if (ports.length !== 2) return
     const rp = ports.find(
       (p) =>
         index.components.get(p.source_component_id)?.ftype ===
@@ -75,44 +75,27 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
     const cb = this.validPlacement(cp.source_component_id, peerPorts.length, cp)
     const resistorNets = index.twoTerminalNets(rp.source_component_id)
     if (!rb || !cb || !index.sameLocalScope(rb, cb) || !resistorNets) return
-    const otherNet = resistorNets.find((n) => n !== net)!
-    const grounded =
-      index.groundNets.has(otherNet) && !index.powerNets.has(otherNet)
-    if (grounded) {
-      const resistor = index.components.get(rp.source_component_id)
-      if (
-        resistor?.ftype !== "simple_resistor" ||
-        !Number.isFinite(resistor.resistance) ||
-        resistor.resistance <= 0 ||
-        !this.isGroundBranchBehindConnector(rb, cb, rp, cp) ||
-        this.crossesSectionDivider(cb, rb) ||
-        !hasVisibleSchematicConnection(
-          this.params.ctx.circuitJson,
-          index,
-          cp,
-          rp,
-        )
-      )
-        return
-    } else {
-      // Keep the existing series-signal rule; supply branches remain outside it.
-      if (
-        resistorNets.some((n) => index.isRail(n)) ||
-        !this.isSeparated(rb, cb, rp, cp)
-      )
-        return
-    }
+    // A visible detour around the body is geometric, regardless of either net's role.
+    const behindConnector =
+      this.isBehindConnector(rb, cb, rp, cp) &&
+      !this.crossesSectionDivider(cb, rb) &&
+      hasVisibleSchematicConnection(this.params.ctx.circuitJson, index, cp, rp)
+    // Preserve the existing alignment rule, including its label-only connections.
+    if (
+      !behindConnector &&
+      (resistorNets.some((n) => index.isRail(n)) ||
+        !this.isSeparated(rb, cb, rp, cp))
+    )
+      return
     this.params.issues.push({
       lineItemType: "ResistorConnectorNotAligned",
-      ...(grounded
-        ? { reason: "grounded_branch_behind_connector" as const }
-        : {}),
+      ...(behindConnector ? { reason: "behind_connector" as const } : {}),
       resistorSchematicBox: rb,
       connectorSchematicBox: cb,
       resistorSourcePortId: rp.source_port_id,
       connectorSourcePortId: cp.source_port_id,
-      message: grounded
-        ? `Move ${rb.sourceComponentName || "the resistor"} beside its connected pin on ${cb.sourceComponentName || "the connector"} so the wire does not detour around the connector body. Keep the resistor vertical with ground below. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`
+      message: behindConnector
+        ? `Move ${rb.sourceComponentName || "the resistor"} beside its connected pin on ${cb.sourceComponentName || "the connector"} so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`
         : `Align ${rb.sourceComponentName || "the resistor"} with its connected terminal on ${cb.sourceComponentName || "the connector"}, facing their pins toward each other along a straight wire. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`,
     })
   }
@@ -142,7 +125,7 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
       pv[0] * qv[0] + pv[1] * qv[1] === -1 && dx * pv[0] + dy * pv[1] > 0
     )
   }
-  private isGroundBranchBehindConnector(
+  private isBehindConnector(
     resistor: SchematicBoxPlacement,
     connector: SchematicBoxPlacement,
     rp: SourcePort & { source_component_id: string },
@@ -163,7 +146,7 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
     const halfExtent = v[0]
       ? (connector.width + resistor.width) / 2
       : (connector.height + resistor.height) / 2
-    // Ordinary perpendicular branches beside the pin are valid, including bends.
+    // The entire resistor body must be beyond the opposite connector edge.
     return behind > halfExtent + 0.2
   }
 

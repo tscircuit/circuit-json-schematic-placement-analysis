@@ -56,7 +56,7 @@ test("corrects connector-ground-resistor with unchanged connectivity and pin lay
   expectVisibleConnection(after, "J_USB", "pin26", "R_CC2", "pin1")
   expect(
     createPlacementComparisonSvg({
-      subject: "USB-C ground branches",
+      subject: "USB-C connector resistors",
       panelHeight: 900,
       backgroundColor: "#f5f1ed",
       centerEachPanel: true,
@@ -67,9 +67,9 @@ test("corrects connector-ground-resistor with unchanged connectivity and pin lay
         e.type === "source_component" ? [e.source_component_id] : [],
       ),
       beforeDiagnostic: () =>
-        "J_USB / R_CC2: grounded resistor sits behind the connector, forcing a wire detour.\nThe original extract also has 2 existing findings.",
+        "J_USB / R_CC2: resistor sits behind the connector, forcing a wire detour.\nThe original extract also has 2 existing findings.",
       afterDiagnostic:
-        "Grounded resistors beside their connected connector pins.\nComplete extract: 0 reported issues.",
+        "Resistors beside their connected connector pins.\nComplete extract: 0 reported issues.",
       note: "Complete 3-component extract. Original symbols, pin order, labels, values and connections preserved. Existing width and pin-padding findings also corrected.",
     }),
   ).toMatchSvgSnapshot(import.meta.path, "comparison")
