@@ -2,11 +2,13 @@ import { BaseSolver } from "@tscircuit/solver-utils"
 import type { SourcePort } from "circuit-json"
 import type {
   ResistorConnectorNotAligned,
+  SchematicBoxPlacement,
   SchematicPlacementIssue,
 } from "../../types"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
+import { hasVisibleSchematicConnection } from "../../utils/has-visible-schematic-connection"
 const vectors = {
   up: [0, 1],
   down: [0, -1],
@@ -70,19 +72,48 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
     const rb = this.validPlacement(rp.source_component_id, 2)
     const peerPorts = index.portsByComponent.get(cp.source_component_id)
     if (!peerPorts?.length) return
-    const cb = this.validPlacement(cp.source_component_id, peerPorts.length)
+    const cb = this.validPlacement(cp.source_component_id, peerPorts.length, cp)
     const resistorNets = index.twoTerminalNets(rp.source_component_id)
     if (!rb || !cb || !index.sameLocalScope(rb, cb) || !resistorNets) return
-    // Pull-up/down resistors belong to rail placement, not a series signal path.
-    if (resistorNets.some((n) => index.isRail(n))) return
-    if (!this.isSeparated(rb, cb, rp, cp)) return
+    const otherNet = resistorNets.find((n) => n !== net)!
+    const grounded =
+      index.groundNets.has(otherNet) && !index.powerNets.has(otherNet)
+    if (grounded) {
+      const resistor = index.components.get(rp.source_component_id)
+      if (
+        resistor?.ftype !== "simple_resistor" ||
+        !Number.isFinite(resistor.resistance) ||
+        resistor.resistance <= 0 ||
+        !this.isGroundBranchBehindConnector(rb, cb, rp, cp) ||
+        this.crossesSectionDivider(cb, rb) ||
+        !hasVisibleSchematicConnection(
+          this.params.ctx.circuitJson,
+          index,
+          cp,
+          rp,
+        )
+      )
+        return
+    } else {
+      // Keep the existing series-signal rule; supply branches remain outside it.
+      if (
+        resistorNets.some((n) => index.isRail(n)) ||
+        !this.isSeparated(rb, cb, rp, cp)
+      )
+        return
+    }
     this.params.issues.push({
       lineItemType: "ResistorConnectorNotAligned",
+      ...(grounded
+        ? { reason: "grounded_branch_behind_connector" as const }
+        : {}),
       resistorSchematicBox: rb,
       connectorSchematicBox: cb,
       resistorSourcePortId: rp.source_port_id,
       connectorSourcePortId: cp.source_port_id,
-      message: `Align ${rb.sourceComponentName || "the resistor"} with its connected terminal on ${cb.sourceComponentName || "the connector"}, facing their pins toward each other along a straight wire. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`,
+      message: grounded
+        ? `Move ${rb.sourceComponentName || "the resistor"} beside its connected pin on ${cb.sourceComponentName || "the connector"} so the wire does not detour around the connector body. Keep the resistor vertical with ground below. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`
+        : `Align ${rb.sourceComponentName || "the resistor"} with its connected terminal on ${cb.sourceComponentName || "the connector"}, facing their pins toward each other along a straight wire. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.`,
     })
   }
   private isSeparated(
@@ -111,7 +142,63 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
       pv[0] * qv[0] + pv[1] * qv[1] === -1 && dx * pv[0] + dy * pv[1] > 0
     )
   }
-  private validPlacement(id: string, pinCount: number) {
+  private isGroundBranchBehindConnector(
+    resistor: SchematicBoxPlacement,
+    connector: SchematicBoxPlacement,
+    rp: SourcePort & { source_component_id: string },
+    cp: SourcePort & { source_component_id: string },
+  ) {
+    const p = this.index.port(cp)!,
+      q = this.index.port(rp)!,
+      v = vectors[p.facing_direction!]
+    if (
+      Math.hypot(p.center.x - q.center.x, p.center.y - q.center.y) <=
+      Math.max(2, 2 * Math.max(resistor.width, resistor.height))
+    )
+      return false
+    const behind = -(
+      v[0] * (resistor.schX - connector.schX) +
+      v[1] * (resistor.schY - connector.schY)
+    )
+    const halfExtent = v[0]
+      ? (connector.width + resistor.width) / 2
+      : (connector.height + resistor.height) / 2
+    // Ordinary perpendicular branches beside the pin are valid, including bends.
+    return behind > halfExtent + 0.2
+  }
+
+  private crossesSectionDivider(
+    host: SchematicBoxPlacement,
+    leaf: SchematicBoxPlacement,
+  ) {
+    const dx = leaf.schX - host.schX,
+      dy = leaf.schY - host.schY
+    return this.params.ctx.circuitJson.some((line) => {
+      if (
+        line.type !== "schematic_line" ||
+        !line.is_dashed ||
+        line.schematic_component_id ||
+        line.schematic_sheet_id !== host.schematicSheetId ||
+        ![line.x1, line.y1, line.x2, line.y2].every(Number.isFinite)
+      )
+        return false
+      const sx = line.x2 - line.x1,
+        sy = line.y2 - line.y1,
+        cross = dx * sy - dy * sx
+      if (Math.abs(cross) < 1e-9) return false
+      const ox = line.x1 - host.schX,
+        oy = line.y1 - host.schY
+      const branch = (ox * sy - oy * sx) / cross,
+        divider = (ox * dy - oy * dx) / cross
+      return branch > 1e-6 && branch < 1 - 1e-6 && divider >= 0 && divider <= 1
+    })
+  }
+
+  private validPlacement(
+    id: string,
+    pinCount: number,
+    connectedPort?: SourcePort,
+  ) {
     const box = this.index.placement(id),
       ports = this.index.portsByComponent.get(id)
     if (
@@ -121,7 +208,14 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
       ![box.schX, box.schY, box.width, box.height].every(Number.isFinite) ||
       box.width <= 0 ||
       box.height <= 0 ||
-      ports.some((p) => !this.validPort(p, box.schematicSheetId))
+      ports.some(
+        (p) =>
+          !this.validPort(
+            p,
+            box.schematicSheetId,
+            connectedPort !== undefined && p !== connectedPort,
+          ),
+      )
     )
       return
     return box
@@ -130,10 +224,11 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
   private validPort(
     p: SourcePort & { source_component_id: string },
     sheetId?: string,
+    allowNoConnect = false,
   ) {
     const geometry = this.index.port(p)
     return (
-      !p.do_not_connect &&
+      (allowNoConnect || !p.do_not_connect) &&
       geometry &&
       geometry.schematic_sheet_id === sheetId &&
       [geometry.center.x, geometry.center.y].every(Number.isFinite) &&
@@ -154,6 +249,7 @@ export class ResistorConnectorAlignmentSolver extends BaseSolver {
       "connectorName",
       issue.connectorSchematicBox.sourceComponentName,
     )
+    addAttr(attrs, "reason", issue.reason)
     addAttr(attrs, "message", issue.message)
     return `<ResistorConnectorNotAligned ${attrs.join(" ")} />`
   }

@@ -45,7 +45,7 @@ test("reproduces the published connector-ground-resistor placement", async () =>
   const analysis = analyzeSchematicPlacement(json)
   expect(
     analysis.getIssues({ issueTypes: ["ResistorConnectorNotAligned"] }),
-  ).toHaveLength(0)
+  ).toHaveLength(1)
   for (const [name, circuitJson] of [
     ["extract", json],
     ["published-sheet", source],

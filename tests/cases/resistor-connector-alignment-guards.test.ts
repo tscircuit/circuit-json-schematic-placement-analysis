@@ -163,10 +163,15 @@ test("resistor-connector-alignment uses topology and accepts both horizontal and
       connected_source_net_ids: [],
     })
   })
-  // Pull-up/down resistors are outside the series-signal connection rule.
-  reject((j) => {
-    port(j, "R_UART_TX", "pin1").requires_ground = true
+  // Explicit ground metadata now enables the behind-connector branch check.
+  const grounded = structuredClone(before)
+  port(grounded, "R_UART_TX", "pin1").requires_ground = true
+  expect(issues(grounded)).toHaveLength(1)
+  expect(issues(grounded)[0]).toMatchObject({
+    reason: "grounded_branch_behind_connector",
+    message: expect.stringContaining("ground below"),
   })
+  // Supply-connected branches remain outside this extension.
   reject((j) => {
     port(j, "R_UART_TX", "pin1").provides_power = true
   })

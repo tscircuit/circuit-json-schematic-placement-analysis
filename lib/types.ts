@@ -67,6 +67,7 @@ export interface ResistorTestPointNotAligned {
 
 export interface ResistorConnectorNotAligned {
   lineItemType: "ResistorConnectorNotAligned"
+  reason?: "grounded_branch_behind_connector"
   resistorSchematicBox: SchematicBoxPlacement
   connectorSchematicBox: SchematicBoxPlacement
   resistorSourcePortId: string

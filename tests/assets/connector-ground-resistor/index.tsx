@@ -4,7 +4,7 @@ import { Circuit } from "@tscircuit/core"
 // Complete selected sheet retained in published.circuit.json; TSX extracts the affected components.
 import pinLabels from "./pin-labels.json"
 // Three-component programming-USB extract from seveibar/nema17-stepper-motor-driver-tmc2209-usb-pd.
-export function Usb() {
+export function Usb({ after = false }: { after?: boolean }) {
   return (
     <board routingDisabled schTraceAutoLabelEnabled schMaxTraceDistance={7}>
       <net name="GND" isGroundNet />
@@ -16,8 +16,8 @@ export function Usb() {
         pinLabels={pinLabels}
         schX={2}
         schY={0.5}
-        schWidth={2.1}
-        schHeight={5.4}
+        schWidth={after ? 1.92 : 2.1}
+        schHeight={after ? 4.25 : 5.4}
         noConnect={["A8", "B8"]}
         connections={{
           A4B9: "net.VBUS",
@@ -39,8 +39,8 @@ export function Usb() {
         resistance="5.1k"
         manufacturerPartNumber="0402WGF5101TCE"
         footprint="0402"
-        schX={-3}
-        schY={-3.5}
+        schX={after ? 6 : -3}
+        schY={after ? 0 : -3.5}
         schRotation={270}
         connections={{ pin1: ".J_USB > .A5", pin2: "net.GND" }}
       />
@@ -49,8 +49,8 @@ export function Usb() {
         resistance="5.1k"
         manufacturerPartNumber="0402WGF5101TCE"
         footprint="0402"
-        schX={-1.3}
-        schY={-3.5}
+        schX={after ? 4.5 : -1.3}
+        schY={after ? 0 : -3.5}
         schRotation={270}
         connections={{ pin1: ".J_USB > .B5", pin2: "net.GND" }}
       />
@@ -58,10 +58,10 @@ export function Usb() {
   )
 }
 
-export async function createConnectorGroundResistor() {
+export async function createConnectorGroundResistor(after = false) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
-  circuit.add(<Usb />)
+  circuit.add(<Usb after={after} />)
   await circuit.renderUntilSettled()
   return circuit.getCircuitJson()
 }
