@@ -42,6 +42,16 @@ test("reports the motor-driver sheet's inner pin-label collision", async () => {
       minimumLabelGap: 0.1,
       suggestedSchHeight: 4.195,
     },
+    {
+      lineItemType: "ParallelCapacitorsDrawnInline",
+      firstCapacitorSchematicBox: { sourceComponentName: "C_VMA" },
+      secondCapacitorSchematicBox: { sourceComponentName: "C_VM_BULK" },
+    },
+    {
+      lineItemType: "ParallelCapacitorsDrawnInline",
+      firstCapacitorSchematicBox: { sourceComponentName: "C_VM_BULK" },
+      secondCapacitorSchematicBox: { sourceComponentName: "C_VM_HF" },
+    },
   ])
   await expect(
     createIssueReproSnapshot({
