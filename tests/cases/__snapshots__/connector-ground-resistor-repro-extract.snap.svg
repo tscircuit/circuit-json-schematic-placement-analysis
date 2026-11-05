@@ -47,9 +47,9 @@
 <g data-issue-number="2" data-issue-type="SchematicPinPaddingToEdgeTooLarge" transform="translate(690.48818316095 77.36331098750003) scale(1)"><title>#2 SchematicPinPaddingToEdgeTooLarge
 &lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change the schematic box height&quot; componentName=&quot;J_USB&quot; pinSides=&quot;right&quot; edgeSides=&quot;top,bottom&quot; suggestedSchHeight=&quot;3.95&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">2</text></g>
 <g data-issue-number="3" data-issue-type="ResistorConnectorNotAligned" transform="translate(690.48818316095 103.36331098750003) scale(1)"><title>#3 ResistorConnectorNotAligned
-&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; reason=&quot;behind_connector&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g>
+&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g>
 <g data-issue-number="3" data-issue-type="ResistorConnectorNotAligned" transform="translate(443.25928871725006 751.0169867059001) scale(1)"><title>#3 ResistorConnectorNotAligned
-&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; reason=&quot;behind_connector&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g></g></svg>
+&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g></g></svg>
   </g>
   <g transform="translate(0, 950) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
@@ -66,10 +66,10 @@
 <tspan x="52" dy="22">&lt;SchematicPinPaddingToEdgeTooLarge message=&quot;Move schematic pins closer to the box edge or change</tspan>
 <tspan x="52" dy="22">  the schematic box height&quot; componentName=&quot;J_USB&quot; pinSides=&quot;right&quot; edgeSides=&quot;top,bottom&quot;</tspan>
 <tspan x="52" dy="22">  suggestedSchHeight=&quot;3.95&quot; /&gt;</tspan>
-<tspan x="52" dy="22">&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot;</tspan>
-<tspan x="52" dy="22">  reason=&quot;behind_connector&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire</tspan>
-<tspan x="52" dy="22">  does not detour around the connector body. Preserve connector pin order, resistor value and</tspan>
-<tspan x="52" dy="22">  all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</tspan>
+<tspan x="52" dy="22">&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2</tspan>
+<tspan x="52" dy="22">  beside its connected pin on J_USB so the wire does not detour around the connector body.</tspan>
+<tspan x="52" dy="22">  Preserve connector pin order, resistor value and all connections, leave room for labels and</tspan>
+<tspan x="52" dy="22">  neighboring parts, and reroute affected traces.&quot; /&gt;</tspan>
 </text>
 <g data-listing-issue-number="1"><circle cx="24" cy="167" r="11" fill="#b91c1c" /><text x="24" y="167" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
 <g data-listing-issue-number="2"><circle cx="24" cy="233" r="11" fill="#b91c1c" /><text x="24" y="233" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>

@@ -92,10 +92,8 @@ test("resistor detours require private visible wires and placement behind the co
       }
     }
     const check = (j: CircuitJson) => {
-      if (input === before) {
-        expect(relevant(j)).toHaveLength(1)
-        expect(relevant(j)[0]).toMatchObject({ reason: "behind_connector" })
-      } else expect(relevant(j)).toEqual([])
+      if (input === before) expect(relevant(j)).toHaveLength(1)
+      else expect(relevant(j)).toEqual([])
     }
     check(untyped)
     for (const terminal of ["pin1", "pin2"] as const) {

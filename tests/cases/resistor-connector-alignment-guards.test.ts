@@ -134,7 +134,6 @@ test("resistor-connector-alignment uses topology and accepts both horizontal and
       const j = structuredClone(before)
       port(j, "R_UART_TX", terminal)[flag] = true
       expect(issues(j)).toHaveLength(1)
-      expect(issues(j)[0]).toMatchObject({ reason: "behind_connector" })
     }
   reject((j) => {
     j.push({
