@@ -743,6 +743,18 @@ export interface RegulatorCapacitorsOnWrongSides {
   message: string
 }
 
+/** A local supply-to-ground voltage divider whose resistors are scattered apart. */
+export interface VoltageDividerNotCompact {
+  lineItemType: "VoltageDividerNotCompact"
+  supplyResistorSchematicBox: SchematicBoxPlacement
+  groundResistorSchematicBox: SchematicBoxPlacement
+  supplyTapSourcePortId: string
+  groundTapSourcePortId: string
+  resistorTapDistance: number
+  maxRecommendedTapDistance: number
+  message: string
+}
+
 /** A local supply-to-ground divider and its shunt capacitor are excessively separated. */
 export interface VoltageDividerNetworkNotGrouped {
   lineItemType: "VoltageDividerNetworkNotGrouped"
@@ -991,6 +1003,7 @@ export type SchematicPlacementIssue =
   | MosfetGateNetworkNotGrouped
   | FlybackDiodeSeparatedFromRelayCoil
   | CurrentSenseShuntSeparatedFromInputs
+  | VoltageDividerNotCompact
   | VoltageDividerNetworkNotGrouped
   | VoltageDividerSupplyResistorBelowGroundResistor
   | RegulatorCapacitorsOnWrongSides

@@ -214,6 +214,7 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.groundResistorSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
+      case "VoltageDividerNotCompact":
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)
