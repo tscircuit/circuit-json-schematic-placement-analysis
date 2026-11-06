@@ -46,16 +46,26 @@ export class CurrentSenseShuntPlacementSolver extends BaseSolver {
     const ports = index.portsByComponent.get(hostId) ?? []
     const positive = ports.filter((port) => inputRole(port) === "positive")
     const negative = ports.filter((port) => inputRole(port) === "negative")
-    const outputs = ports.filter((port) =>
-      hasHint(port, /^(?:OUT|VOUT|OUTPUT)$/),
+    const outputs = ports.filter(
+      (port) =>
+        hasRoleFlag(port, "is_output") ||
+        hasHint(port, /^(?:OUT|VOUT|OUTPUT)$/),
     )
     if (
       !host ||
       positive.length !== 1 ||
       negative.length !== 1 ||
       outputs.length !== 1 ||
-      !ports.some((port) => hasHint(port, /^(?:VS|VCC|VDD)$/)) ||
-      !ports.some((port) => hasHint(port, /^(?:GND|GROUND|VSS)$/))
+      !ports.some(
+        (port) =>
+          Boolean(port.requires_power || port.provides_power) ||
+          hasHint(port, /^(?:VS|VCC|VDD)$/),
+      ) ||
+      !ports.some(
+        (port) =>
+          Boolean(port.requires_ground || port.provides_ground) ||
+          hasHint(port, /^(?:GND|GROUND|VSS)$/),
+      )
     )
       return
     const inputs = [positive[0]!, negative[0]!]
@@ -301,9 +311,17 @@ function hasHint(port: SourcePort, pattern: RegExp): boolean {
   )
 }
 
+function hasRoleFlag(port: SourcePort, flag: string): boolean {
+  return (port as unknown as Record<string, unknown>)[flag] === true
+}
+
 function inputRole(port: SourcePort): InputRole | undefined {
-  const positive = hasHint(port, /^(?:IN\+|VIN\+|INPOS|VINPOS)$/)
-  const negative = hasHint(port, /^(?:IN-|VIN-|INNEG|VINNEG)$/)
+  const positive =
+    hasRoleFlag(port, "is_non_inverting_input") ||
+    hasHint(port, /^(?:IN\+|VIN\+|INPOS|VINPOS)$/)
+  const negative =
+    hasRoleFlag(port, "is_inverting_input") ||
+    hasHint(port, /^(?:IN-|VIN-|INNEG|VINNEG)$/)
   return positive === negative ? undefined : positive ? "positive" : "negative"
 }
 

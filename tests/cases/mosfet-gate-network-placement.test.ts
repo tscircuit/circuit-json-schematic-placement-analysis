@@ -178,6 +178,23 @@ test("groups MOSFET gate resistors without guessing roles or requiring exact ali
       delete e.subcircuit_connectivity_map_key
   }
   expect(issues(renamed)).toHaveLength(1)
+  // Explicit source_port role flags identify MOSFET terminals even when pin names are generic.
+  const explicitRoles = structuredClone(before)
+  for (const [role, pinName, flag] of [
+    ["gate", "pin1", "is_gate"],
+    ["source", "pin2", "is_source"],
+    ["drain", "pin3", "is_drain"],
+  ] as const) {
+    const port = getReproSourcePort(
+      explicitRoles,
+      "Q1",
+      role,
+    ) as unknown as Record<string, unknown>
+    port.name = pinName
+    port.port_hints = [pinName]
+    port[flag] = true
+  }
+  expect(issues(explicitRoles)).toHaveLength(1)
   // Readable nearby alternatives need neither exact coordinates nor fixed orientation.
   const nearby = structuredClone(after)
   getReproSchematicComponent(nearby, "R_GATE").center.y += 0.7

@@ -197,6 +197,9 @@ export class UsbSeriesResistorPlacementSolver extends BaseSolver {
 
 function usbRole(port: SourcePort): UsbRole | undefined {
   const roles = new Set<UsbRole>()
+  const flags = port as unknown as Record<string, unknown>
+  if (flags.is_positive_differential_signal === true) roles.add("positive")
+  if (flags.is_negative_differential_signal === true) roles.add("negative")
   for (const hint of [port.name, ...(port.port_hints ?? [])]) {
     const name = hint.toUpperCase()
     if (/^(?:USB_?)?D(?:P|\+|_POS)$/.test(name)) roles.add("positive")
