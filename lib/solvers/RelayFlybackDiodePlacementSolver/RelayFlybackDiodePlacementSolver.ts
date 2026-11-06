@@ -175,10 +175,12 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
     )
   }
 
-  private uniquePort(id: string, pattern: RegExp) {
+  private uniquePort(id: string, pattern: RegExp, flag?: string) {
     const ports = this.index.portsByComponent
       .get(id)
-      ?.filter((p) => hasHint(p, pattern))
+      ?.filter(
+        (p) => (flag ? hasRoleFlag(p, flag) : false) || hasHint(p, pattern),
+      )
     return ports?.length === 1 ? ports[0] : undefined
   }
 
@@ -188,8 +190,13 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
     // Require both a named coil pair and relay contacts; never infer a relay
     // from its reference designator or generic pin numbers alone.
     if (
-      !this.uniquePort(id, /^(?:COM|COMMON)$/) ||
-      !ports.some((p) => hasHint(p, /^(?:NO|NC|NORMALLYOPEN|NORMALLYCLOSED)$/))
+      !this.uniquePort(id, /^(?:COM|COMMON)$/, "is_common") ||
+      !ports.some(
+        (p) =>
+          hasRoleFlag(p, "is_normally_open") ||
+          hasRoleFlag(p, "is_normally_closed") ||
+          hasHint(p, /^(?:NO|NC|NORMALLYOPEN|NORMALLYCLOSED)$/),
+      )
     )
       return
     const coil = ports.filter((p) => hasHint(p, /^(?:COIL[A-B12]|A[12])$/))
@@ -225,9 +232,9 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
       )
         return false
       if (this.index.portsByComponent.get(id)?.length !== 3) return false
-      const c = this.uniquePort(id, /^(?:C|COLLECTOR)$/)
-      const e = this.uniquePort(id, /^(?:E|EMITTER)$/)
-      const b = this.uniquePort(id, /^(?:B|BASE)$/)
+      const c = this.uniquePort(id, /^(?:C|COLLECTOR)$/, "is_collector")
+      const e = this.uniquePort(id, /^(?:E|EMITTER)$/, "is_emitter")
+      const b = this.uniquePort(id, /^(?:B|BASE)$/, "is_base")
       if (
         !c ||
         !e ||
@@ -255,6 +262,10 @@ export class RelayFlybackDiodePlacementSolver extends BaseSolver {
     addAttr(attrs, "message", issue.message)
     return `<FlybackDiodeSeparatedFromRelayCoil ${attrs.join(" ")} />`
   }
+}
+
+function hasRoleFlag(port: SourcePort, flag: string): boolean {
+  return (port as unknown as Record<string, unknown>)[flag] === true
 }
 
 function hasHint(port: SourcePort, pattern: RegExp): boolean {

@@ -187,4 +187,23 @@ test("groups an identified relay flyback diode while excluding ambiguous or alre
       delete e.subcircuit_connectivity_map_key
   }
   expect(issues(renamed)).toHaveLength(1)
+  // Explicit source_port role flags identify relay contact and driver transistor terminals when pin names are generic.
+  const explicitRoles = structuredClone(before)
+  for (const [comp, role, pinName, flag] of [
+    ["K1", "COM", "pin3", "is_common"],
+    ["K1", "NO", "pin4", "is_normally_open"],
+    ["Q1", "collector", "pin1", "is_collector"],
+    ["Q1", "base", "pin2", "is_base"],
+    ["Q1", "emitter", "pin3", "is_emitter"],
+  ] as const) {
+    const port = getReproSourcePort(
+      explicitRoles,
+      comp,
+      role,
+    ) as unknown as Record<string, unknown>
+    port.name = pinName
+    port.port_hints = [pinName]
+    port[flag] = true
+  }
+  expect(issues(explicitRoles)).toHaveLength(1)
 })

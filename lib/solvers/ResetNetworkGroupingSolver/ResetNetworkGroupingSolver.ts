@@ -246,4 +246,7 @@ export class ResetNetworkGroupingSolver extends BaseSolver {
 const resetPinName = (port: SourcePort): string | undefined =>
   [port.name, ...(port.port_hints ?? [])].find((name) =>
     /^N?(RESET|RST)(N|B)?$/.test(name.toUpperCase().replace(/[_\-!~#/]/g, "")),
-  )
+  ) ??
+  ((port as unknown as Record<string, unknown>).is_reset === true
+    ? port.name || port.port_hints?.[0]
+    : undefined)
