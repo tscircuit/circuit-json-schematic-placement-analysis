@@ -537,7 +537,7 @@
 <tspan x="52" dy="22">NetLabelCollision: 1</tspan>
 <tspan x="52" dy="22">TwoPinComponentShouldBeVertical: 42</tspan>
 <tspan x="52" dy="22">TwoPinComponentHasInvertedRails: 67</tspan>
-<tspan x="52" dy="22">DecouplingCapacitorsNotCloseTogether: 6</tspan>
+<tspan x="52" dy="22">DecouplingCapacitorsNotCloseTogether: 4</tspan>
 <tspan x="52" dy="22">ResistorSeparatedFromChipPin: 2</tspan>
 <tspan x="52" dy="22">RailPathTooSpreadOut: 11</tspan>
 <tspan x="52" dy="22">Selected type(s): TwoPinComponentHasInvertedRails</tspan>

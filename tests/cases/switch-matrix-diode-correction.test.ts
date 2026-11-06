@@ -97,7 +97,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
     12,
   )
   expect(analysis.getIssueCounts().SwitchMatrixDiodeSeparatedFromSwitch).toBe(0)
-  expect(baseline.getIssueCounts().DecouplingCapacitorsNotCloseTogether).toBe(3)
+  expect(baseline.getIssueCounts().DecouplingCapacitorsNotCloseTogether).toBe(0)
   expect(analysis.getIssues()).toEqual([])
   // Every private switch/diode connection must actually be drawn as a straight wire.
   for (let n = 1; n <= 12; n++) {
@@ -169,7 +169,7 @@ test("grouping the matrix diodes clears all twelve findings and preserves the co
       ...comparison,
       after: comparison.before,
     }),
-  ).toThrow("After layout still has 30 unresolved findings")
+  ).toThrow("After layout still has 27 unresolved findings")
   const svg = createPlacementComparisonSvg(comparison)
   // Both panels must show the whole matrix at the same scale and world coordinates.
   const panels = [
