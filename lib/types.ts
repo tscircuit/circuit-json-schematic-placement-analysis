@@ -130,6 +130,17 @@ export interface SeriesResistorsNotAligned {
   message: string
 }
 
+export interface SeriesChainNotAligned {
+  lineItemType: "SeriesChainNotAligned"
+  chainSchematicBoxes: [
+    SchematicBoxPlacement,
+    SchematicBoxPlacement,
+    SchematicBoxPlacement,
+  ]
+  junctionSourcePortPairs: [[string, string], [string, string]]
+  message: string
+}
+
 export interface FuseMosfetNotAligned {
   lineItemType: "FuseMosfetNotAligned"
   fuseSchematicBox: SchematicBoxPlacement
@@ -969,6 +980,7 @@ export type SchematicPlacementIssue =
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
+  | SeriesChainNotAligned
   | FuseMosfetNotAligned
   | LedResistorBranchSeparatedFromChipPin
   | ChipDiodeCapacitorNetworkNotGrouped

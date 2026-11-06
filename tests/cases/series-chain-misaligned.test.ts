@@ -42,6 +42,36 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a bent R-L-R chain without a diode or multi-pin component", () => {
+test("reports a bent R-L-R chain without a diode or multi-pin component", async () => {
   expect(issueTypes).toContain("SeriesChainNotAligned")
+
+  const alignedCircuitJson = structuredClone(
+    await createSeriesChainMisalignedCircuitJson(),
+  )
+  for (const name of ["R1", "L1", "R2"]) {
+    getReproSchematicComponent(alignedCircuitJson, name).center.y = 0
+  }
+  const r1Id = getReproSchematicComponent(
+    alignedCircuitJson,
+    "R1",
+  ).schematic_component_id
+  const l1Id = getReproSchematicComponent(
+    alignedCircuitJson,
+    "L1",
+  ).schematic_component_id
+  for (const element of alignedCircuitJson) {
+    if (element.type !== "schematic_port") continue
+    if (element.schematic_component_id === r1Id) {
+      element.center.y = 0
+    } else if (element.schematic_component_id === l1Id) {
+      const isLeft = element.pin_number === 1
+      element.center = { x: isLeft ? -0.55 : 0.55, y: 0 }
+      element.facing_direction = isLeft ? "left" : "right"
+    }
+  }
+  expect(
+    analyzeSchematicPlacement(alignedCircuitJson, {
+      issueTypes: ["SeriesChainNotAligned"],
+    }).getIssues(),
+  ).toEqual([])
 })

@@ -4,6 +4,7 @@ import { ChipDiodeCapacitorNetworkGroupingSolver } from "../ChipDiodeCapacitorNe
 import { ChipPinTestPointAlignmentSolver } from "../ChipPinTestPointAlignmentSolver/ChipPinTestPointAlignmentSolver"
 import { CapacitorConnectorAlignmentSolver } from "../CapacitorConnectorAlignmentSolver/CapacitorConnectorAlignmentSolver"
 import { InductorDiodeGroupingSolver } from "../InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+import { SeriesChainAlignmentSolver } from "../SeriesChainAlignmentSolver/SeriesChainAlignmentSolver"
 import { ChipPinResistorDividerPlacementSolver } from "../ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 import { RrcTimingNetworkGroupingSolver } from "../RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
@@ -108,6 +109,7 @@ const solversByIssueType = {
     ResistorDividerCapacitorPlacementSolver,
   ],
   SeriesResistorsNotAligned: [SeriesResistorAlignmentSolver],
+  SeriesChainNotAligned: [SeriesChainAlignmentSolver],
   FuseMosfetNotAligned: [FuseMosfetAlignmentSolver],
   ChipDiodeCapacitorNetworkNotGrouped: [
     ChipDiodeCapacitorNetworkGroupingSolver,
@@ -693,6 +695,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "InductorDiodeGroupingSolver",
       InductorDiodeGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "SeriesChainAlignmentSolver",
+      SeriesChainAlignmentSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

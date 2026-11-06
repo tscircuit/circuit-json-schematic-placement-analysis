@@ -118,6 +118,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)
         break
+      case "SeriesChainNotAligned":
+        for (const placement of issue.chainSchematicBoxes)
+          addPlacement(placement)
+        break
       case "FuseMosfetNotAligned":
         addPlacement(issue.fuseSchematicBox)
         addPlacement(issue.mosfetSchematicBox)
