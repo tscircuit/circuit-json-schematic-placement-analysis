@@ -1,4 +1,4 @@
-<svg width="1200" height="2584" viewBox="0 0 1200 2584" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Actual RP2040 motor-controller reference crossing with analyzer evidence">
+<svg width="1200" height="2892" viewBox="0 0 1200 2892" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Actual RP2040 motor-controller reference crossing with analyzer evidence">
   <g transform="translate(0, 0) scale(1, 1) translate(0, 0)">
     <rect width="1200" height="82" fill="#f1f5f9"/>
     <text x="24" y="33" font-family="sans-serif" font-size="23" fill="#0f172a">Actual board: imrishabh18 / rp2040-motor-controller</text>
@@ -356,6 +356,12 @@
 <tspan x="18" dy="0">&lt;SchematicBoxPositions&gt;</tspan>
 <tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;DRIVER&quot; positionAnchor=&quot;center&quot; schX=&quot;2.58&quot; schY=&quot;-11.72&quot;</tspan>
 <tspan x="18" dy="22">  width=&quot;2.2&quot; height=&quot;3.8&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C_VMA&quot; positionAnchor=&quot;center&quot; schX=&quot;1.197&quot; schY=&quot;-3.22&quot;</tspan>
+<tspan x="18" dy="22">  width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C_VM_BULK&quot; positionAnchor=&quot;center&quot; schX=&quot;1.197&quot;</tspan>
+<tspan x="18" dy="22">  schY=&quot;-4.83&quot; width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;SchematicBoxPlacement componentName=&quot;C_VM_HF&quot; positionAnchor=&quot;center&quot; schX=&quot;1.317&quot; schY=&quot;-6.69&quot;</tspan>
+<tspan x="18" dy="22">  width=&quot;0.9&quot; height=&quot;0.6&quot; /&gt;</tspan>
 <tspan x="18" dy="22">&lt;/SchematicBoxPositions&gt;</tspan>
 <tspan x="18" dy="22">&lt;SchematicPlacementIssues&gt;</tspan>
 <tspan x="18" dy="22">&lt;SchematicBoxInnerLabelCollision message=&quot;Labels VMA (top) and AOUT1 (left) overlap. Labels</tspan>
@@ -368,6 +374,14 @@
 <tspan x="18" dy="22">  &lt;PinLabelPair label1=&quot;BVREF&quot; label2=&quot;STEP&quot; port1=&quot;schematic_port_173&quot;</tspan>
 <tspan x="18" dy="22">  port2=&quot;schematic_port_182&quot; side1=&quot;top&quot; side2=&quot;right&quot; kind=&quot;clearance&quot; measuredGap=&quot;0.023&quot; /&gt;</tspan>
 <tspan x="18" dy="22">&lt;/SchematicBoxInnerLabelCollision&gt;</tspan>
+<tspan x="18" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_VMA&quot; secondCapacitorName=&quot;C_VM_BULK&quot;</tspan>
+<tspan x="18" dy="22">  message=&quot;Draw C_VMA and C_VM_BULK beside each other as two parallel branches between their</tspan>
+<tspan x="18" dy="22">  shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute the</tspan>
+<tspan x="18" dy="22">  affected wires.&quot; /&gt;</tspan>
+<tspan x="18" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_VM_BULK&quot; secondCapacitorName=&quot;C_VM_HF&quot;</tspan>
+<tspan x="18" dy="22">  message=&quot;Draw C_VM_BULK and C_VM_HF beside each other as two parallel branches between their</tspan>
+<tspan x="18" dy="22">  shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute the</tspan>
+<tspan x="18" dy="22">  affected wires.&quot; /&gt;</tspan>
 <tspan x="18" dy="22">&lt;/SchematicPlacementIssues&gt;</tspan>
 </text>
   </g>
