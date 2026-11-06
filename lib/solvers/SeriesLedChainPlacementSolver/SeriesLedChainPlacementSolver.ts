@@ -28,9 +28,29 @@ export class SeriesLedChainPlacementSolver extends BaseSolver {
         .filter((c) => c.ftype === "simple_led")
         .map((c) => c.source_component_id),
     )
-    for (const e of params.ctx.circuitJson)
-      if (e.type === "pcb_component" && e.do_not_place)
-        this.unpopulated.add(e.source_component_id)
+    const populated = new Set<string>()
+    for (const e of params.ctx.circuitJson) {
+      if (e.type === "pcb_component") {
+        if (e.do_not_place) {
+          if (!populated.has(e.source_component_id))
+            this.unpopulated.add(e.source_component_id)
+        } else {
+          populated.add(e.source_component_id)
+          this.unpopulated.delete(e.source_component_id)
+        }
+      } else if (e.type === "source_port" && !e.do_not_connect) {
+        const net = this.index.connected(e.source_port_id)
+        if (e.requires_ground || e.provides_ground)
+          this.index.groundNets.add(net)
+        if (
+          e.requires_power ||
+          e.provides_power ||
+          e.requires_voltage !== undefined ||
+          e.provides_voltage !== undefined
+        )
+          this.index.powerNets.add(net)
+      }
+    }
     this.solved = this.ledIds.size === 0
   }
 

@@ -25,9 +25,18 @@ export class ChipPinResistorPlacementSolver extends BaseSolver {
   ) {
     super()
     this.index = new PlacementNetworkIndex(params.ctx)
-    for (const element of params.ctx.circuitJson)
-      if (element.type === "pcb_component" && element.do_not_place)
-        this.unpopulated.add(element.source_component_id)
+    const populated = new Set<string>()
+    for (const element of params.ctx.circuitJson) {
+      if (element.type === "pcb_component") {
+        if (element.do_not_place) {
+          if (!populated.has(element.source_component_id))
+            this.unpopulated.add(element.source_component_id)
+        } else {
+          populated.add(element.source_component_id)
+          this.unpopulated.delete(element.source_component_id)
+        }
+      }
+    }
     this.resistorIds = [...this.index.components.values()]
       .filter((component) => component.ftype === "simple_resistor")
       .map((component) => component.source_component_id)
@@ -69,13 +78,25 @@ export class ChipPinResistorPlacementSolver extends BaseSolver {
         continue
       const otherPort = resistorPorts.find((p) => p !== resistorPort)!
       const otherNet = index.connected(otherPort.source_port_id)
+      const otherPorts = (index.portsByNet.get(otherNet) ?? []).filter(
+        (p) =>
+          !p.do_not_connect && !this.unpopulated.has(p.source_component_id),
+      )
+      const otherIsGround =
+        index.groundNets.has(otherNet) ||
+        otherPorts.some((p) => p.requires_ground || p.provides_ground)
+      const otherIsPower =
+        index.powerNets.has(otherNet) ||
+        otherPorts.some(
+          (p) =>
+            p.requires_power ||
+            p.provides_power ||
+            p.requires_voltage !== undefined ||
+            p.provides_voltage !== undefined,
+        )
       // Grounded chip signals and resistor-fed supply pins are both local branches.
       // Contradictory ground/power metadata does not establish a placement rule.
-      if (
-        index.groundNets.has(otherNet) &&
-        (index.powerNets.has(otherNet) || hasSupplyRole(chipPort))
-      )
-        continue
+      if (otherIsGround && (otherIsPower || hasSupplyRole(chipPort))) continue
       const hostId = chipPort.source_component_id
       const host = index.placement(hostId)
       if (
@@ -111,7 +132,7 @@ export class ChipPinResistorPlacementSolver extends BaseSolver {
       // Power and series-signal branches can belong to separate net-label blocks.
       // Require a drawn connection for these additional topologies.
       if (
-        (!index.groundNets.has(otherNet) &&
+        (!otherIsGround &&
           !hasVisibleSchematicConnection(
             this.params.ctx.circuitJson,
             index,
@@ -145,8 +166,8 @@ export class ChipPinResistorPlacementSolver extends BaseSolver {
       // A series signal resistor also has an owner at its far end. Only suggest
       // this host when moving beside it shortens both connections. Shared or
       // missing far endpoints are deliberately left undecided.
-      if (!index.isRail(otherNet)) {
-        const farMembers = index.portsByNet.get(otherNet) ?? []
+      if (!otherIsGround && !otherIsPower) {
+        const farMembers = otherPorts
         const peer = farMembers.find(
           (p) => p.source_component_id !== resistorId,
         )
@@ -200,7 +221,7 @@ export class ChipPinResistorPlacementSolver extends BaseSolver {
         resistorSourcePortId: resistorPort.source_port_id,
         pinDistance,
         maxRecommendedPinDistance,
-        message: `Place ${resistor.sourceComponentName || "resistor"} beside its connected pin on the ${side} side of ${host.sourceComponentName || "chip"} so the ${index.groundNets.has(otherNet) ? "resistor-to-ground" : "resistor"} branch can be read together. Preserve pin connections, leave room for labels, and reroute affected traces; exact alignment is not required.`,
+        message: `Place ${resistor.sourceComponentName || "resistor"} beside its connected pin on the ${side} side of ${host.sourceComponentName || "chip"} so the ${otherIsGround ? "resistor-to-ground" : "resistor"} branch can be read together. Preserve pin connections, leave room for labels, and reroute affected traces; exact alignment is not required.`,
       })
     }
     if (candidates.length === 1) this.params.issues.push(candidates[0]!)
