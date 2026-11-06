@@ -14,6 +14,7 @@ export class PullResistorPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly resistorIds: string[]
   private readonly horizontalPushbuttonComponentIds: Set<string>
+  private readonly unpopulated = new Set<string>()
   private readonly issues: SchematicPlacementIssue[]
   private currentIndex = 0
 
@@ -24,13 +25,36 @@ export class PullResistorPlacementSolver extends BaseSolver {
     super()
     this.issues = issues
     this.index = new PlacementNetworkIndex(ctx)
+    for (const e of ctx.circuitJson) {
+      if (e.type === "pcb_component" && e.do_not_place)
+        this.unpopulated.add(e.source_component_id)
+      if (e.type !== "source_port" || e.do_not_connect) continue
+      const net = this.index.connected(e.source_port_id)
+      if (!net) continue
+      if (e.requires_ground || e.provides_ground) this.index.groundNets.add(net)
+      if (
+        e.requires_power ||
+        e.provides_power ||
+        e.requires_voltage !== undefined ||
+        e.provides_voltage !== undefined
+      )
+        this.index.powerNets.add(net)
+    }
+    for (const e of ctx.circuitJson)
+      if (e.type === "pcb_component" && !e.do_not_place)
+        this.unpopulated.delete(e.source_component_id)
+
     this.horizontalPushbuttonComponentIds = getHorizontalPushbuttonComponentIds(
       this.index,
+      this.unpopulated,
     )
     this.resistorIds = [...this.index.components.values()]
       .filter(
         (component) =>
-          component.ftype === "simple_resistor" && component.resistance > 0,
+          component.ftype === "simple_resistor" &&
+          Number.isFinite(component.resistance) &&
+          component.resistance > 0 &&
+          !this.unpopulated.has(component.source_component_id),
       )
       .map((component) => component.source_component_id)
     this.solved = this.resistorIds.length === 0
@@ -44,7 +68,14 @@ export class PullResistorPlacementSolver extends BaseSolver {
     const index = this.index
     const resistor = index.placement(id)
     const nets = index.twoTerminalNets(id)
-    if (!resistor || !nets) return
+    const resistorPorts = index.portsByComponent.get(id)
+    if (
+      !resistor ||
+      !nets ||
+      !resistorPorts ||
+      resistorPorts.some((p) => p.do_not_connect)
+    )
+      return
     const rails = nets.filter((net) => index.isRail(net))
     if (rails.length !== 1) return
     const rail = rails[0]!
@@ -54,7 +85,10 @@ export class PullResistorPlacementSolver extends BaseSolver {
     const signal = nets.find((net) => net !== rail)!
     const signalPorts = index.portsByNet.get(signal) ?? []
     const requiringPorts = signalPorts.filter(
-      (port) => port.needs_external_pullup || port.needs_external_pulldown,
+      (port) =>
+        !port.do_not_connect &&
+        !this.unpopulated.has(port.source_component_id) &&
+        (port.needs_external_pullup || port.needs_external_pulldown),
     )
     // Shared buses need a branch-based policy, rather than choosing an arbitrary host pin.
     if (requiringPorts.length !== 1) return
@@ -69,11 +103,21 @@ export class PullResistorPlacementSolver extends BaseSolver {
       return
     const host = index.placement(signalPort.source_component_id)
     const schematicPin = index.port(signalPort)
-    if (!host || !schematicPin || !index.sameLocalScope(host, resistor)) return
+    if (
+      !host ||
+      !schematicPin ||
+      schematicPin.schematic_sheet_id !== host.schematicSheetId ||
+      !index.sameLocalScope(host, resistor)
+    )
+      return
     if (
       signalPorts.some((port) => {
         const otherId = port.source_component_id
-        if (otherId === id || otherId === signalPort.source_component_id)
+        if (
+          otherId === id ||
+          otherId === signalPort.source_component_id ||
+          this.unpopulated.has(otherId)
+        )
           return false
         const type = index.components.get(otherId)?.ftype
         // A local shunt capacitor is fine; other devices or resistor branches make the role ambiguous.

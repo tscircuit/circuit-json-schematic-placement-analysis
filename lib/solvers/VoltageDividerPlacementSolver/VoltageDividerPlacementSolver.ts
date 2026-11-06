@@ -12,6 +12,7 @@ import type { SolverContext } from "../SolverContext"
 export class VoltageDividerPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly positiveNets = new Set<string>()
+  private readonly unpopulated = new Set<string>()
   private readonly resistorIds: string[]
   private currentIndex = 0
 
@@ -23,13 +24,33 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
   ) {
     super()
     this.index = new PlacementNetworkIndex(params.ctx)
+    for (const element of params.ctx.circuitJson) {
+      if (element.type === "pcb_component" && element.do_not_place)
+        this.unpopulated.add(element.source_component_id)
+      if (element.type === "source_net" && element.is_positive_voltage_source)
+        this.positiveNets.add(this.index.connected(element.source_net_id))
+      if (element.type !== "source_port" || element.do_not_connect) continue
+      const net = this.index.connected(element.source_port_id)
+      if (!net) continue
+      if (element.requires_ground || element.provides_ground)
+        this.index.groundNets.add(net)
+      if (
+        element.requires_power ||
+        element.provides_power ||
+        element.requires_voltage !== undefined ||
+        element.provides_voltage !== undefined
+      ) {
+        this.index.powerNets.add(net)
+        this.positiveNets.add(net)
+      }
+    }
+    for (const element of params.ctx.circuitJson)
+      if (element.type === "pcb_component" && !element.do_not_place)
+        this.unpopulated.delete(element.source_component_id)
+
     this.resistorIds = [...this.index.components.values()]
       .filter((component) => component.ftype === "simple_resistor")
       .map((component) => component.source_component_id)
-    for (const element of params.ctx.circuitJson) {
-      if (element.type === "source_net" && element.is_positive_voltage_source)
-        this.positiveNets.add(this.index.connected(element.source_net_id))
-    }
     this.solved = this.resistorIds.length === 0
   }
 
@@ -46,7 +67,9 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     if (!this.positiveNets.has(supplyNet) || index.groundNets.has(supplyNet))
       return
     const tap = nets.find((net) => net !== supplyNet)!
-    const tapPorts = index.portsByNet.get(tap) ?? []
+    const tapPorts = (index.portsByNet.get(tap) ?? []).filter(
+      (port) => !this.unpopulated.has(port.source_component_id),
+    )
     const resistorIds = new Set(
       tapPorts
         .filter(
@@ -104,7 +127,9 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     groundNet: string,
   ) {
     const index = this.index,
-      members = index.portsByNet.get(tap) ?? []
+      members = (index.portsByNet.get(tap) ?? []).filter(
+        (p) => !this.unpopulated.has(p.source_component_id),
+      )
     if (
       members.some(
         (p) =>
@@ -133,6 +158,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       return
     const ids = [supplyId, groundId, capacitorId]
     const parts = ids.map((id) => {
+      if (this.unpopulated.has(id)) return
       const box = index.placement(id),
         ports = index.portsByComponent.get(id)
       if (
@@ -147,15 +173,6 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
         ![box.schX, box.schY, box.width, box.height].every(Number.isFinite) ||
         box.width <= 0 ||
         box.height <= 0
-      )
-        return
-      if (
-        this.params.ctx.circuitJson.some(
-          (e) =>
-            e.type === "pcb_component" &&
-            e.source_component_id === id &&
-            e.do_not_place,
-        )
       )
         return
       const pins = ports.map((p) => index.port(p))
@@ -227,6 +244,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
   }
 
   private isResistor(id: string): boolean {
+    if (this.unpopulated.has(id)) return false
     const component = this.index.components.get(id)
     return (
       component?.ftype === "simple_resistor" &&
