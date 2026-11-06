@@ -4,6 +4,7 @@ import type {
   CircuitJson,
   SchematicNetLabel,
   SchematicPort,
+  SchematicTrace,
 } from "circuit-json"
 import type {
   NetLabelCollision,
@@ -394,6 +395,27 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
     return result
   }
 
+  private isPointOnEdge(
+    px: number,
+    py: number,
+    edge: SchematicTrace["edges"][number],
+    eps: number,
+  ): boolean {
+    const dx = edge.to.x - edge.from.x
+    const dy = edge.to.y - edge.from.y
+    const lenSq = dx * dx + dy * dy
+    if (lenSq === 0) {
+      return Math.hypot(px - edge.from.x, py - edge.from.y) < eps
+    }
+    const t = Math.max(
+      0,
+      Math.min(1, ((px - edge.from.x) * dx + (py - edge.from.y) * dy) / lenSq),
+    )
+    const projX = edge.from.x + t * dx
+    const projY = edge.from.y + t * dy
+    return Math.hypot(px - projX, py - projY) < eps
+  }
+
   private buildNetLabelsByComponentId(
     circuitJson: CircuitJson,
   ): Map<string, SchematicNetLabel[]> {
@@ -404,16 +426,20 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       cy: number
       schematicSheetId?: string
     }> = []
+    const traces: SchematicTrace[] = []
     for (const element of circuitJson) {
-      if (element.type !== "schematic_port") continue
-      const port = element as SchematicPort
-      if (!port.schematic_component_id) continue
-      portPositions.push({
-        componentId: port.schematic_component_id,
-        cx: port.center.x,
-        cy: port.center.y,
-        schematicSheetId: port.schematic_sheet_id,
-      })
+      if (element.type === "schematic_port") {
+        const port = element as SchematicPort
+        if (!port.schematic_component_id) continue
+        portPositions.push({
+          componentId: port.schematic_component_id,
+          cx: port.center.x,
+          cy: port.center.y,
+          schematicSheetId: port.schematic_sheet_id,
+        })
+      } else if (element.type === "schematic_trace") {
+        traces.push(element as SchematicTrace)
+      }
     }
 
     const result = new Map<string, SchematicNetLabel[]>()
@@ -423,11 +449,35 @@ export class ComponentNetLabelCollisionSolver extends BaseSolver {
       if (!label.anchor_position) continue
       const { x: anchorX, y: anchorY } = label.anchor_position
 
-      const matches = portPositions.filter(
+      let matches = portPositions.filter(
         (port) =>
           port.schematicSheetId === label.schematic_sheet_id &&
           Math.hypot(port.cx - anchorX, port.cy - anchorY) < MATCH_EPSILON,
       )
+      if (
+        matches.length === 0 &&
+        (label.anchor_side === "left" || label.anchor_side === "right")
+      ) {
+        const anchorTraces = traces.filter(
+          (trace) =>
+            trace.schematic_sheet_id === label.schematic_sheet_id &&
+            trace.edges.some((edge) =>
+              this.isPointOnEdge(anchorX, anchorY, edge, MATCH_EPSILON),
+            ),
+        )
+        if (anchorTraces.length > 0) {
+          matches = portPositions.filter(
+            (port) =>
+              port.schematicSheetId === label.schematic_sheet_id &&
+              anchorTraces.some((trace) =>
+                trace.edges.some((edge) =>
+                  this.isPointOnEdge(port.cx, port.cy, edge, MATCH_EPSILON),
+                ),
+              ),
+          )
+          if (matches.length < 2) matches = []
+        }
+      }
       if (matches.length === 0) continue
 
       const componentIds = new Set(matches.map((match) => match.componentId))

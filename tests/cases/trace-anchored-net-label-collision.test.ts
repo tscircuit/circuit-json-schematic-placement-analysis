@@ -3,7 +3,7 @@ import { analyzeSchematicPlacement } from "lib/index"
 import { createTraceAnchoredNetLabelCollisionCircuitJson } from "../assets/trace-anchored-net-label-collision"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test.failing("reports a collision with a net label anchored to a trace", () => {
+test("reports a collision with a net label anchored to a trace", () => {
   const circuitJson = createTraceAnchoredNetLabelCollisionCircuitJson()
   const analysis = analyzeSchematicPlacement(circuitJson)
 
