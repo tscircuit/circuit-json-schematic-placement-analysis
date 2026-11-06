@@ -31,7 +31,7 @@ export class ChipPinResistorDividerPlacementSolver extends BaseSolver {
     for (const e of params.ctx.circuitJson) {
       if (e.type === "pcb_component" && e.do_not_place)
         this.unpopulated.add(e.source_component_id)
-      if (e.type !== "source_port") continue
+      if (e.type !== "source_port" || e.do_not_connect) continue
       const net = this.index.connected(e.source_port_id)
       if (e.requires_ground || e.provides_ground) this.index.groundNets.add(net)
       if (
@@ -49,10 +49,15 @@ export class ChipPinResistorDividerPlacementSolver extends BaseSolver {
     const tap = this.taps[this.currentIndex++]
     this.solved = this.currentIndex >= this.taps.length
     if (!tap) return
-    const i = this.index,
-      members = i.portsByNet.get(tap)!
+    const i = this.index
+    if (i.isRail(tap)) return
+    const rawMembers = i.portsByNet.get(tap)!
+    if (rawMembers.length < 3) return
+    const members = rawMembers.filter(
+      (p) => !p.do_not_connect && !this.unpopulated.has(p.source_component_id),
+    )
     // Exactly one chip pin and two resistor pins: skip shared taps, filters and buses.
-    if (i.isRail(tap) || members.length !== 3) return
+    if (members.length !== 3) return
     const resistors = members.filter(
       (p) =>
         i.components.get(p.source_component_id)?.ftype === "simple_resistor",

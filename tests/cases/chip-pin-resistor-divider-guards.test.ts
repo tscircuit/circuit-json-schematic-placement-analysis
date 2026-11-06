@@ -166,6 +166,44 @@ test("divider detection respects topology, component identity, scope and pin geo
   reject((j) => {
     port(j, "R2", "pin2").requires_power = true
   })
+  const withTapStubs = structuredClone(before)
+  const fbPort = port(withTapStubs, "U1", "FB")
+  withTapStubs.push(
+    {
+      ...fbPort,
+      source_port_id: "dnp_tap_port",
+      source_component_id: "dnp_tap_comp",
+    },
+    {
+      ...fbPort,
+      source_port_id: "dnc_tap_port",
+      source_component_id: "dnc_tap_comp",
+      do_not_connect: true,
+      requires_power: true,
+    },
+    {
+      type: "source_trace",
+      source_trace_id: "tap_stubs_trace",
+      connected_source_port_ids: [
+        fbPort.source_port_id,
+        "dnp_tap_port",
+        "dnc_tap_port",
+      ],
+      connected_source_net_ids: [],
+    },
+    pcb_component.parse({
+      type: "pcb_component",
+      pcb_component_id: "pcb_dnp_tap",
+      source_component_id: "dnp_tap_comp",
+      center: { x: 0, y: 0 },
+      width: 1,
+      height: 1,
+      rotation: 0,
+      layer: "top",
+      do_not_place: true,
+    }),
+  )
+  expect(reports(withTapStubs)).toHaveLength(1)
   // Both bodies must lie beyond the opposite edge; same-side layouts, split dividers and modest offsets are valid.
   const move = (j: CircuitJson, name: string, dx: number) => {
     const b = box(j, name)
