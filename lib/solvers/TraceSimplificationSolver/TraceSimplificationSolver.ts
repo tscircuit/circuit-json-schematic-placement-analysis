@@ -63,6 +63,23 @@ export class TraceSimplificationSolver extends BaseSolver {
           : [],
       ),
     )
+    const componentTypes = new Map(
+      this.ctx.circuitJson.flatMap((element) =>
+        element.type === "source_component"
+          ? [[element.source_component_id, element.ftype] as const]
+          : [],
+      ),
+    )
+    const componentType = (placement: SchematicBoxPlacement) =>
+      placement.sourceComponentId
+        ? componentTypes.get(placement.sourceComponentId)
+        : undefined
+    const isPassive = (placement: SchematicBoxPlacement) =>
+      componentType(placement) === "simple_resistor" ||
+      componentType(placement) === "simple_capacitor"
+    const isChip = (placement: SchematicBoxPlacement) =>
+      componentType(placement) === "simple_chip" ||
+      componentType(placement) === "simple_op_amp"
     const emittedMoves = new Set<string>()
 
     for (const trace of this.ctx.circuitJson.filter(
@@ -98,7 +115,7 @@ export class TraceSimplificationSolver extends BaseSolver {
       // opposite endpoint instead. Try that when it lets a passive move in
       // place of an IC, then validate its own obstacles and attached routes.
       for (const candidate of [...candidates]) {
-        if (!candidate.target.sourceComponentName?.startsWith("U")) continue
+        if (!isChip(candidate.target)) continue
         for (const point of [points[0]!, points.at(-1)!]) {
           const port = this.findPortAtPoint(
             ports,
@@ -108,8 +125,7 @@ export class TraceSimplificationSolver extends BaseSolver {
           const target = port?.schematic_component_id
             ? placementsByComponentId.get(port.schematic_component_id)
             : undefined
-          if (!target || !/^[CR]/.test(target.sourceComponentName ?? ""))
-            continue
+          if (!target || !isPassive(target)) continue
           candidates.push({
             target,
             deltaSchX: -candidate.deltaSchX,
@@ -120,11 +136,7 @@ export class TraceSimplificationSolver extends BaseSolver {
         }
       }
       const priority = (candidate: MoveCandidate) =>
-        /^[CR]/.test(candidate.target.sourceComponentName ?? "")
-          ? 0
-          : candidate.target.sourceComponentName?.startsWith("U")
-            ? 2
-            : 1
+        isPassive(candidate.target) ? 0 : isChip(candidate.target) ? 2 : 1
       candidates.sort((a, b) => priority(a) - priority(b))
 
       for (const candidate of candidates) {

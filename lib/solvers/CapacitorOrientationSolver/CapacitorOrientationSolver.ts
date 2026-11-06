@@ -47,7 +47,7 @@ export class CapacitorOrientationSolver extends BaseSolver {
   private readonly schematicComponentById: Map<string, SchematicComponent>
   private readonly sourceComponentById: Map<string, SourceComponentWithFtype>
   private readonly capacitorPlacements: Capacitor[]
-  private readonly feedbackCapacitorIds: Set<string>
+  private readonly possibleFeedbackCapacitorIds: Set<string>
   private currentPlacementIndex = 0
   private readonly horizontalSymbolNames = new Set([
     "capacitor_left",
@@ -70,10 +70,10 @@ export class CapacitorOrientationSolver extends BaseSolver {
     this.sourceComponentById = this.buildSourceComponentById(ctx.circuitJson)
     this.capacitorPlacements = this.getCapacitorPlacements()
     const networks = new PlacementNetworkIndex(ctx)
-    this.feedbackCapacitorIds = new Set(
+    this.possibleFeedbackCapacitorIds = new Set(
       this.capacitorPlacements.flatMap((capacitor) =>
         capacitor.sourceComponentId &&
-        networks.isDirectOpAmpFeedback(capacitor.sourceComponentId)
+        networks.isDirectOpAmpFeedback(capacitor.sourceComponentId) !== false
           ? [capacitor.sourceComponentId]
           : [],
       ),
@@ -209,7 +209,9 @@ export class CapacitorOrientationSolver extends BaseSolver {
 
     // Horizontal feedback capacitors make the output-to-input return path readable.
     // Their distance from the amplifier is assessed by the feedback placement solver.
-    if (this.feedbackCapacitorIds.has(placement.sourceComponentId)) return
+    // Missing op-amp roles cannot establish that a capacitor is not feedback.
+    if (this.possibleFeedbackCapacitorIds.has(placement.sourceComponentId))
+      return
 
     // Keep capacitors inline when both traces leave outward and at least one
     // side continues as a straight horizontal run.

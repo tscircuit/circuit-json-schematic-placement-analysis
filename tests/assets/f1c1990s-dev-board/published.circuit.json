@@ -4266,6 +4266,7 @@
   {
     "type": "source_port",
     "source_port_id": "source_port_259",
+    "requires_power": true,
     "name": "IN",
     "pin_number": 1,
     "port_hints": ["IN", "pin1", "1"],
@@ -4307,6 +4308,7 @@
   {
     "type": "source_port",
     "source_port_id": "source_port_263",
+    "provides_power": true,
     "name": "OUT",
     "pin_number": 5,
     "port_hints": ["OUT", "pin5", "5"],
@@ -4398,6 +4400,7 @@
   {
     "type": "source_port",
     "source_port_id": "source_port_268",
+    "requires_power": true,
     "name": "IN",
     "pin_number": 1,
     "port_hints": ["IN", "pin1", "1"],
@@ -4439,6 +4442,7 @@
   {
     "type": "source_port",
     "source_port_id": "source_port_272",
+    "provides_power": true,
     "name": "OUT",
     "pin_number": 5,
     "port_hints": ["OUT", "pin5", "5"],

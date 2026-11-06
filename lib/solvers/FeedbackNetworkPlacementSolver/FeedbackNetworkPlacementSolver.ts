@@ -35,8 +35,9 @@ export class FeedbackNetworkPlacementSolver extends BaseSolver {
     if (!id) return
     const index = this.index
     const amplifier = index.placement(id)
-    const output = index.namedPort(id, "output")
-    const input = index.namedPort(id, "inverting_input")
+    const roles = index.opAmpPorts(id)
+    const output = roles?.output
+    const input = roles?.invertingInput
     if (
       !amplifier ||
       !output ||

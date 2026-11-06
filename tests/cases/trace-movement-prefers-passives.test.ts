@@ -6,17 +6,6 @@ import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-
 test("prefers a verified capacitor or resistor move over moving the connected IC", async () => {
   for (const name of ["C1", "R1"]) {
     const circuitJson = await createPassiveTraceMovement(name)
-    const withoutPassivePrefix = structuredClone(circuitJson)
-    const source = withoutPassivePrefix.find(
-      (e) => e.type === "source_component" && e.name === name,
-    )!
-    if (source.type !== "source_component") throw new Error("Missing passive")
-    source.name = "X1"
-    expect(
-      analyzeSchematicPlacement(withoutPassivePrefix).getIssues({
-        issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
-      })[0],
-    ).toMatchObject({ targetComponent: { sourceComponentName: "U1" } })
     const analysis = analyzeSchematicPlacement(circuitJson)
     const moves = analysis.getIssues({
       issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
@@ -26,6 +15,40 @@ test("prefers a verified capacitor or resistor move over moving the connected IC
       targetComponent: { sourceComponentName: name },
       suggestedTurnCount: 1,
     })
+    const originalMove = moves[0]!
+    if (originalMove.lineItemType !== "TraceCanBeSimplifiedByMovingComponent")
+      throw new Error("Expected a trace move")
+    // Even misleading prefixes must not make a chip preferable to a passive.
+    for (const passiveName of ["X1", "U99"]) {
+      const renamed = structuredClone(circuitJson)
+      for (const e of renamed) {
+        if (e.type === "source_component")
+          e.name =
+            e.source_component_id ===
+            originalMove.targetComponent.sourceComponentId
+              ? passiveName
+              : "C99"
+        if (e.type === "source_port") {
+          e.name = e.source_port_id
+          delete e.port_hints
+        }
+      }
+      expect(
+        analyzeSchematicPlacement(renamed).getIssues({
+          issueTypes: ["TraceCanBeSimplifiedByMovingComponent"],
+        }),
+      ).toMatchObject([
+        {
+          targetComponent: {
+            sourceComponentId: originalMove.targetComponent.sourceComponentId,
+            sourceComponentName: passiveName,
+          },
+          deltaSchX: originalMove.deltaSchX,
+          deltaSchY: originalMove.deltaSchY,
+          suggestedTurnCount: originalMove.suggestedTurnCount,
+        },
+      ])
+    }
     expect(
       createSchematicAnalysisFixtureSvg({
         circuitJson,
