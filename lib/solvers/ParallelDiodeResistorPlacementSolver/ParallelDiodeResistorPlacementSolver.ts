@@ -12,7 +12,7 @@ import type { SolverContext } from "../SolverContext"
 type Axis = "horizontal" | "vertical"
 interface Member {
   diode: boolean
-  box: SchematicBoxPlacement
+  box?: SchematicBoxPlacement
   // Both members are ordered by the same electrical net IDs, not pin names.
   pins?: [SchematicPort, SchematicPort]
   axis?: Axis
@@ -31,16 +31,43 @@ export class ParallelDiodeResistorPlacementSolver extends BaseSolver {
   ) {
     super()
     const index = new PlacementNetworkIndex(params.ctx)
+    const unpopulated = new Set<string>()
+    for (const e of params.ctx.circuitJson) {
+      if (e.type === "pcb_component" && e.do_not_place)
+        unpopulated.add(e.source_component_id)
+      if (e.type !== "source_port" || e.do_not_connect) continue
+      const net = index.connected(e.source_port_id)
+      if (!net) continue
+      if (e.requires_ground || e.provides_ground) index.groundNets.add(net)
+      if (
+        e.requires_power ||
+        e.provides_power ||
+        e.requires_voltage !== undefined ||
+        e.provides_voltage !== undefined
+      )
+        index.powerNets.add(net)
+    }
+    for (const e of params.ctx.circuitJson)
+      if (e.type === "pcb_component" && !e.do_not_place)
+        unpopulated.delete(e.source_component_id)
+
     const byNets = new Map<string, Member[][]>()
     for (const component of index.components.values()) {
       const diode =
         component.ftype === "simple_diode" || component.ftype === "simple_led"
       if (!diode && component.ftype !== "simple_resistor") continue
       const id = component.source_component_id
+      if (unpopulated.has(id)) continue
       const box = index.placement(id)
       const nets = index.twoTerminalNets(id)?.sort()
       const ports = index.portsByComponent.get(id)
-      if (!box || !nets || !ports) continue
+      if (
+        !nets ||
+        !ports ||
+        (nets.some((net) => index.powerNets.has(net)) &&
+          nets.some((net) => index.groundNets.has(net)))
+      )
+        continue
       const pins = nets.map((net) => {
         const port = ports.find(
           (p) => index.connected(p.source_port_id) === net,
@@ -51,19 +78,37 @@ export class ParallelDiodeResistorPlacementSolver extends BaseSolver {
       // Count electrically parallel members even when their drawing is unsupported:
       // dropping one must not make an ambiguous bank look like a unique pair.
       const member: Member = { diode, box }
+      const validResistor =
+        component.ftype === "simple_resistor" &&
+        (typeof component.resistance !== "number" ||
+          (Number.isFinite(component.resistance) && component.resistance > 0))
+      const validBox =
+        box !== undefined &&
+        [box.schX, box.schY, box.width, box.height].every(Number.isFinite) &&
+        box.width > 0 &&
+        box.height > 0
       if (
+        validBox &&
+        (diode || validResistor) &&
         first &&
         second &&
         !ports.some((port) => port.do_not_connect) &&
-        pins.every((pin) => pin?.schematic_sheet_id === box.schematicSheetId)
+        pins.every(
+          (pin) =>
+            pin !== undefined &&
+            pin.schematic_sheet_id === box.schematicSheetId &&
+            Number.isFinite(pin.center.x) &&
+            Number.isFinite(pin.center.y),
+        )
       ) {
         member.pins = [first, second]
         member.axis = pinAxis(first, second)
       }
       const key = JSON.stringify(nets)
       const scopes = byNets.get(key) ?? []
-      const bank = scopes.find((items) =>
-        index.sameLocalScope(items[0]!.box, box),
+      const bank = scopes.find(
+        (items) =>
+          !items[0]?.box || !box || index.sameLocalScope(items[0].box, box),
       )
       if (bank) bank.push(member)
       else {
@@ -83,7 +128,15 @@ export class ParallelDiodeResistorPlacementSolver extends BaseSolver {
     if (bank.length !== 2) return
     const diode = bank.find((member) => member.diode)
     const resistor = bank.find((member) => !member.diode)
-    if (!diode?.pins || !diode.axis || !resistor?.pins || !resistor.axis) return
+    if (
+      !diode?.box ||
+      !resistor?.box ||
+      !diode.pins ||
+      !diode.axis ||
+      !resistor.pins ||
+      !resistor.axis
+    )
+      return
     const a = diode.box
     const b = resistor.box
     // Body collisions already have a dedicated diagnostic.
