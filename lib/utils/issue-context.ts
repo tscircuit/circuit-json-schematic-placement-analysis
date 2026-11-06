@@ -304,6 +304,12 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.resistorSchematicBox)
         addPlacement(issue.capacitorSchematicBox)
         break
+      case "RepeatedCircuitLayoutInconsistent":
+        addPlacement(issue.outlierResistorSchematicBox)
+        addPlacement(issue.outlierCapacitorSchematicBox)
+        for (const placement of issue.channelSchematicBoxes)
+          addPlacement(placement)
+        break
       case "ParallelDiodesNotAligned":
         addPlacement(issue.firstDiodeSchematicBox)
         addPlacement(issue.secondDiodeSchematicBox)

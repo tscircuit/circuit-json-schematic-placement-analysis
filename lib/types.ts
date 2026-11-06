@@ -383,6 +383,18 @@ export interface SeriesRcFilterComponentsNotGrouped {
   message: string
 }
 
+/** A repeated two-component RC channel whose relative placement differs from matching channels. */
+export interface RepeatedCircuitLayoutInconsistent {
+  lineItemType: "RepeatedCircuitLayoutInconsistent"
+  outlierResistorSchematicBox: SchematicBoxPlacement
+  outlierCapacitorSchematicBox: SchematicBoxPlacement
+  channelSchematicBoxes: SchematicBoxPlacement[]
+  expectedOffset: { x: number; y: number }
+  actualOffset: { x: number; y: number }
+  offsetDeviation: number
+  message: string
+}
+
 /** A unique grounded resistor/capacitor pair drawn with nonmatching branch ends. */
 export interface ParallelRcNotAligned {
   lineItemType: "ParallelRcNotAligned"
@@ -1008,6 +1020,7 @@ export type SchematicPlacementIssue =
   | DiodeResistorNotAligned
   | HighPassRcFilterComponentsNotGrouped
   | SeriesRcFilterComponentsNotGrouped
+  | RepeatedCircuitLayoutInconsistent
   | SwitchRcNetworkNotGrouped
   | ParallelResistorsDrawnInline
   | ResistorSeparatedFromCrystal
