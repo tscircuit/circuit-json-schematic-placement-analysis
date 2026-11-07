@@ -24,8 +24,11 @@ beforeAll(() => {
   })
   croppedSvgRoot = croppedSvg.match(/^<svg\b[^>]*>/)?.[0] ?? ""
   const fullSvgRoot = fullSvg.match(/^<svg\b[^>]*>/)?.[0] ?? ""
-  expect(croppedSvgRoot).toContain("viewBox=")
+  expect(croppedSvgRoot).not.toContain("viewBox=")
   expect(fullSvgRoot).not.toContain("viewBox=")
+  expect(
+    createIssueOverlaySvg({ ...input, showFullSchematic: false }),
+  ).toContain("viewBox=")
 
   expect(createIssueReproSnapshot(input)).toMatchSvgSnapshot(
     import.meta.path,
@@ -37,6 +40,6 @@ beforeAll(() => {
   expect(JSON.stringify(circuitJson)).toBe(original)
 })
 
-test.failing("shows the complete acoustic guitar tuner by default", () => {
+test("shows the complete acoustic guitar tuner by default", () => {
   expect(croppedSvgRoot).not.toContain("viewBox=")
 })
