@@ -119,9 +119,15 @@ export class MosfetGateNetworkPlacementSolver extends BaseSolver {
     const type = this.index.components.get(id)?.ftype
     if (type !== "simple_mosfet" && type !== "simple_chip") return
     const ports = this.index.portsByComponent.get(id) ?? []
-    const gate = ports.filter((p) => hasRole(p, /^(G|GATE)$/))
-    const sources = ports.filter((p) => hasRole(p, /^(S|SOURCE)[0-9]*$/))
-    const drains = ports.filter((p) => hasRole(p, /^(D|DRAIN)[0-9]*$/))
+    const gate = ports.filter(
+      (p) => hasRoleFlag(p, "is_gate") || hasRole(p, /^(G|GATE)$/),
+    )
+    const sources = ports.filter(
+      (p) => hasRoleFlag(p, "is_source") || hasRole(p, /^(S|SOURCE)[0-9]*$/),
+    )
+    const drains = ports.filter(
+      (p) => hasRoleFlag(p, "is_drain") || hasRole(p, /^(D|DRAIN)[0-9]*$/),
+    )
     // Imported power packages may expose several bonded source/drain pins.
     // Require every port to have exactly one role; never guess from pin numbers.
     if (
@@ -160,6 +166,10 @@ export class MosfetGateNetworkPlacementSolver extends BaseSolver {
     addAttr(attrs, "message", issue.message)
     return `<MosfetGateNetworkNotGrouped ${attrs.join(" ")} />`
   }
+}
+
+function hasRoleFlag(port: SourcePort, flag: string): boolean {
+  return (port as unknown as Record<string, unknown>)[flag] === true
 }
 
 function hasRole(port: SourcePort, pattern: RegExp): boolean {
