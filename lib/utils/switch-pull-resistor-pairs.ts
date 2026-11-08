@@ -12,7 +12,10 @@ interface SwitchPullResistorPair {
 }
 
 /** A local resistor and two-terminal switch sharing a signal between opposing rails. */
-export function getSwitchPullResistorPairs(index: PlacementNetworkIndex) {
+export function getSwitchPullResistorPairs(
+  index: PlacementNetworkIndex,
+  unpopulated: ReadonlySet<string> = new Set(),
+) {
   const pairs: SwitchPullResistorPair[] = []
   const isHorizontal = (id: string) => {
     const ports = index.portsByComponent.get(id)
@@ -27,7 +30,12 @@ export function getSwitchPullResistorPairs(index: PlacementNetworkIndex) {
     )
   }
   for (const component of index.components.values()) {
-    if (component.ftype !== "simple_resistor" || component.resistance <= 0)
+    if (
+      component.ftype !== "simple_resistor" ||
+      !Number.isFinite(component.resistance) ||
+      component.resistance <= 0 ||
+      unpopulated.has(component.source_component_id)
+    )
       continue
     const id = component.source_component_id
     const nets = index.twoTerminalNets(id)
@@ -35,7 +43,9 @@ export function getSwitchPullResistorPairs(index: PlacementNetworkIndex) {
     const rail = nets.find((net) => index.isRail(net))!
     if (index.powerNets.has(rail) && index.groundNets.has(rail)) continue
     const signal = nets.find((net) => net !== rail)!
-    const peers = index.portsByNet.get(signal) ?? []
+    const peers = (index.portsByNet.get(signal) ?? []).filter(
+      (port) => !unpopulated.has(port.source_component_id),
+    )
     // Signal consumers may share the net, but the resistor/switch pair must be unique.
     const switches = peers.filter((port) => {
       const type = index.components.get(port.source_component_id)?.ftype
@@ -78,6 +88,7 @@ export function getSwitchPullResistorPairs(index: PlacementNetworkIndex) {
       !resistor ||
       !switchBox ||
       !pin ||
+      pin.schematic_sheet_id !== switchBox.schematicSheetId ||
       !index.sameLocalScope(resistor, switchBox)
     )
       continue
@@ -99,9 +110,10 @@ export function getSwitchPullResistorPairs(index: PlacementNetworkIndex) {
 /** Horizontal pushbutton pairs are an exception to the usual vertical rail convention. */
 export function getHorizontalPushbuttonComponentIds(
   index: PlacementNetworkIndex,
+  unpopulated: ReadonlySet<string> = new Set(),
 ) {
   return new Set(
-    getSwitchPullResistorPairs(index).flatMap((pair) =>
+    getSwitchPullResistorPairs(index, unpopulated).flatMap((pair) =>
       pair.horizontalPushbutton
         ? [pair.resistor.sourceComponentId!, pair.switchBox.sourceComponentId!]
         : [],
