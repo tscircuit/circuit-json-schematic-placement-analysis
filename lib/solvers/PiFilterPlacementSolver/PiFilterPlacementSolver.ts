@@ -24,9 +24,21 @@ export class PiFilterPlacementSolver extends BaseSolver {
     this.index = new PlacementNetworkIndex(params.ctx)
     // Some imports retain population information only on pcb_component records.
     // Without an explicit flag, all parallel capacitors remain candidates.
-    for (const e of params.ctx.circuitJson)
+    for (const e of params.ctx.circuitJson) {
       if (e.type === "pcb_component" && e.do_not_place)
         this.unpopulated.add(e.source_component_id)
+      if (e.type !== "source_port" || e.do_not_connect) continue
+      const net = this.index.connected(e.source_port_id)
+      if (!net) continue
+      if (e.requires_ground || e.provides_ground) this.index.groundNets.add(net)
+      if (
+        e.requires_power ||
+        e.provides_power ||
+        e.requires_voltage !== undefined ||
+        e.provides_voltage !== undefined
+      )
+        this.index.powerNets.add(net)
+    }
     for (const e of params.ctx.circuitJson)
       if (e.type === "pcb_component" && !e.do_not_place)
         this.unpopulated.delete(e.source_component_id)
@@ -34,6 +46,8 @@ export class PiFilterPlacementSolver extends BaseSolver {
       .filter(
         (c) =>
           c.ftype === "simple_inductor" &&
+          (typeof c.inductance !== "number" ||
+            (Number.isFinite(c.inductance) && c.inductance > 0)) &&
           !this.unpopulated.has(c.source_component_id),
       )
       .map((c) => c.source_component_id)
@@ -68,7 +82,10 @@ export class PiFilterPlacementSolver extends BaseSolver {
         return (
           c?.ftype === "simple_capacitor" &&
           !this.unpopulated.has(p.source_component_id) &&
-          capNets?.some((n) => n !== net && index.groundNets.has(n))
+          capNets?.some(
+            (n) =>
+              n !== net && index.groundNets.has(n) && !index.powerNets.has(n),
+          )
         )
       })
       // Never guess which capacitor belongs to the filter in a populated bank.
@@ -131,6 +148,14 @@ export class PiFilterPlacementSolver extends BaseSolver {
     const ports = this.index.portsByComponent.get(id)
     if (
       !placement ||
+      ![
+        placement.schX,
+        placement.schY,
+        placement.width,
+        placement.height,
+      ].every(Number.isFinite) ||
+      placement.width <= 0 ||
+      placement.height <= 0 ||
       ports?.length !== 2 ||
       ports.some((p) => {
         const pin = this.index.port(p)

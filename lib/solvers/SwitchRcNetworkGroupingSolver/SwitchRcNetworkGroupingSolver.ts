@@ -22,13 +22,26 @@ export class SwitchRcNetworkGroupingSolver extends BaseSolver {
   override _step(): void {
     const { ctx, issues } = this.params
     const index = new PlacementNetworkIndex(ctx)
-    const excluded = new Set(
-      ctx.circuitJson.flatMap((e) =>
-        e.type === "pcb_component" && e.do_not_place
-          ? [e.source_component_id]
-          : [],
-      ),
-    )
+    const excluded = new Set<string>()
+    for (const e of ctx.circuitJson) {
+      if (e.type === "pcb_component" && e.do_not_place)
+        excluded.add(e.source_component_id)
+      if (e.type !== "source_port" || e.do_not_connect) continue
+      const net = index.connected(e.source_port_id)
+      if (!net) continue
+      if (e.requires_ground || e.provides_ground) index.groundNets.add(net)
+      if (
+        e.requires_power ||
+        e.provides_power ||
+        e.requires_voltage !== undefined ||
+        e.provides_voltage !== undefined
+      )
+        index.powerNets.add(net)
+    }
+    for (const e of ctx.circuitJson)
+      if (e.type === "pcb_component" && !e.do_not_place)
+        excluded.delete(e.source_component_id)
+
     const usable = (id: string) => {
       const box = index.placement(id)
       const ports = index.portsByComponent.get(id)
@@ -43,7 +56,9 @@ export class SwitchRcNetworkGroupingSolver extends BaseSolver {
           return (
             !port.do_not_connect &&
             pin &&
-            pin.schematic_sheet_id === box.schematicSheetId
+            pin.schematic_sheet_id === box.schematicSheetId &&
+            Number.isFinite(pin.center.x) &&
+            Number.isFinite(pin.center.y)
           )
         })
         ? box
@@ -79,9 +94,13 @@ export class SwitchRcNetworkGroupingSolver extends BaseSolver {
       )
       if (switches.length !== 1 || caps.length !== 1) continue
       const capId = caps[0]!.source_component_id
+      const capPart = index.components.get(capId)
       const capNets = index.twoTerminalNets(capId)
       const cap = usable(capId)
       if (
+        capPart?.ftype !== "simple_capacitor" ||
+        !Number.isFinite(capPart.capacitance) ||
+        capPart.capacitance <= 0 ||
         !cap ||
         !capNets?.every((net) => nets.includes(net)) ||
         !index.sameLocalScope(sw, cap)
