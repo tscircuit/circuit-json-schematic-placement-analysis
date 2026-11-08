@@ -42,6 +42,14 @@ export class ParallelLedBranchPlacementSolver extends BaseSolver {
   ) {
     super()
     const index = (this.index = new PlacementNetworkIndex(params.ctx))
+    let ledCount = 0
+    for (const c of index.components.values())
+      if (c.ftype === "simple_led") ledCount++
+    if (ledCount < 3) {
+      this.banks = []
+      this.solved = true
+      return
+    }
     const excluded = new Set(
       params.ctx.circuitJson.flatMap((e) =>
         e.type === "pcb_component" && e.do_not_place
@@ -52,8 +60,15 @@ export class ParallelLedBranchPlacementSolver extends BaseSolver {
     // Explicit port flags also identify rails when no source_net has rail metadata.
     for (const ports of index.portsByComponent.values())
       for (const port of ports) {
+        if (port.do_not_connect) continue
         const net = index.connected(port.source_port_id)
-        if (port.requires_power || port.provides_power) index.powerNets.add(net)
+        if (
+          port.requires_power ||
+          port.provides_power ||
+          port.requires_voltage !== undefined ||
+          port.provides_voltage !== undefined
+        )
+          index.powerNets.add(net)
         if (port.requires_ground || port.provides_ground)
           index.groundNets.add(net)
       }
@@ -66,7 +81,7 @@ export class ParallelLedBranchPlacementSolver extends BaseSolver {
       for (const joint of resistorPorts) {
         const junctionNet = index.connected(joint.source_port_id)
         const junction = index.portsByNet.get(junctionNet)
-        if (index.isRail(junctionNet) || junction?.length !== 2) continue
+        if (junction?.length !== 2 || index.isRail(junctionNet)) continue
         const ledPort = junction.find(
           (p) => p.source_component_id !== resistorId,
         )

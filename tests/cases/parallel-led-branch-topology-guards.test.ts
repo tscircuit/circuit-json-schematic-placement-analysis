@@ -39,6 +39,7 @@ test("requires a complete local parallel LED bank with private resistor junction
     "do-not-connect",
     "nonfinite",
     "source-ground-flag",
+    "source-voltage-flag",
   ] as const) {
     const altered = structuredClone(json)
     const source = altered.find(
@@ -74,7 +75,7 @@ test("requires a complete local parallel LED bank with private resistor junction
       Object.assign(source, { ftype: "simple_chip" })
     if (invalid === "do-not-connect") p.do_not_connect = true
     if (invalid === "nonfinite") pin.center.x = Number.NaN
-    if (invalid === "source-ground-flag") {
+    if (invalid === "source-ground-flag" || invalid === "source-voltage-flag") {
       const endpoint = altered.find(
         (e) => e.type === "source_component" && e.ftype === "simple_chip",
       )!
@@ -85,7 +86,8 @@ test("requires a complete local parallel LED bank with private resistor junction
           e.source_component_id === endpoint.source_component_id,
       )!
       if (port.type !== "source_port") throw new Error("Missing host port")
-      port.requires_ground = true
+      if (invalid === "source-ground-flag") port.requires_ground = true
+      else port.provides_voltage = 3.3
     }
     if (invalid === "dnp")
       altered.push({
