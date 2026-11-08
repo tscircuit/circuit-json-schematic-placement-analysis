@@ -21,6 +21,7 @@ interface Member {
 export class ParallelResistorPlacementSolver extends BaseSolver {
   private readonly index: PlacementNetworkIndex
   private readonly banks: { nets: string[]; members: Member[] }[]
+  private readonly excluded = new Set<string>()
   private bankIndex = 0
 
   constructor(
@@ -31,13 +32,29 @@ export class ParallelResistorPlacementSolver extends BaseSolver {
   ) {
     super()
     const index = (this.index = new PlacementNetworkIndex(params.ctx))
-    const excluded = new Set(
-      params.ctx.circuitJson.flatMap((e) =>
-        e.type === "pcb_component" && e.do_not_place
-          ? [e.source_component_id]
-          : [],
-      ),
-    )
+    const populated = new Set<string>()
+    for (const e of params.ctx.circuitJson) {
+      if (e.type === "pcb_component") {
+        if (e.do_not_place) {
+          if (!populated.has(e.source_component_id))
+            this.excluded.add(e.source_component_id)
+        } else {
+          populated.add(e.source_component_id)
+          this.excluded.delete(e.source_component_id)
+        }
+      } else if (e.type === "source_port" && !e.do_not_connect) {
+        const net = index.connected(e.source_port_id)
+        if (e.requires_ground || e.provides_ground) index.groundNets.add(net)
+        if (
+          e.requires_power ||
+          e.provides_power ||
+          e.requires_voltage !== undefined ||
+          e.provides_voltage !== undefined
+        )
+          index.powerNets.add(net)
+      }
+    }
+    const excluded = this.excluded
     const banks = new Map<string, { nets: string[]; members: Member[] }>()
     for (const component of index.components.values()) {
       if (component.ftype !== "simple_resistor") continue
@@ -99,6 +116,8 @@ export class ParallelResistorPlacementSolver extends BaseSolver {
       if (this.index.isRail(net)) return false
       const others = (this.index.portsByNet.get(net) ?? []).filter(
         (port) =>
+          !port.do_not_connect &&
+          !this.excluded.has(port.source_component_id) &&
           port.source_component_id !== first.id &&
           port.source_component_id !== second.id,
       )

@@ -65,6 +65,30 @@ export class RailPathVisibilitySolver extends BaseSolver {
     this.maxSpan = maxSpan
     this.maxLength = maxLength
     const index = this.index
+    const unpopulated = new Set<string>()
+    const populated = new Set<string>()
+    for (const element of ctx.circuitJson) {
+      if (element.type === "pcb_component") {
+        if (element.do_not_place) {
+          if (!populated.has(element.source_component_id))
+            unpopulated.add(element.source_component_id)
+        } else {
+          populated.add(element.source_component_id)
+          unpopulated.delete(element.source_component_id)
+        }
+      } else if (element.type === "source_port" && !element.do_not_connect) {
+        const net = index.connected(element.source_port_id)
+        if (element.requires_ground || element.provides_ground)
+          index.groundNets.add(net)
+        if (
+          element.requires_power ||
+          element.provides_power ||
+          element.requires_voltage !== undefined ||
+          element.provides_voltage !== undefined
+        )
+          index.powerNets.add(net)
+      }
+    }
     const node = (point: Point, net: string, sheet?: string) => {
       const id = JSON.stringify([
         sheet,
@@ -86,6 +110,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
     const portNodes = new Map<string, string>()
     for (const [componentId, ports] of index.portsByComponent) {
       for (const port of ports) {
+        if (port.do_not_connect) continue
         const placed = index.port(port)
         if (!placed) continue
         const id = node(
@@ -159,6 +184,7 @@ export class RailPathVisibilitySolver extends BaseSolver {
     }
     for (const [id, component] of index.components) {
       if (
+        unpopulated.has(id) ||
         !["simple_resistor", "simple_capacitor", "simple_inductor"].includes(
           component.ftype,
         )
