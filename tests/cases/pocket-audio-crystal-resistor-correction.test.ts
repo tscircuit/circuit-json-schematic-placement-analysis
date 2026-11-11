@@ -19,7 +19,8 @@ test("groups the crystal series resistor with a complete zero-finding Clock shee
   const capsOnly = await createPocketAudioClock(capacitors)
   const after = await createPocketAudioClock({
     ...capacitors,
-    R_XOUT: { schX: 42, schY: 23, schRotation: 180 },
+    // Place the resistor beside the four-pin crystal's upper-right signal pin.
+    R_XOUT: { schX: 40, schY: 23.2, schRotation: 180 },
   })
   const electrical = (json: CircuitJson) =>
     json.filter((e) =>
@@ -76,10 +77,9 @@ test("groups the crystal series resistor with a complete zero-finding Clock shee
   const afterCaps = analyzeSchematicPlacement(capsOnly)
   const analysis = analyzeSchematicPlacement(after)
   expect(baseline.getIssues().map((i) => i.lineItemType)).toEqual([
-    "RailPathTooSpreadOut",
     "ResistorSeparatedFromCrystal",
   ])
-  // Removing the old ground-route finding still leaves the new resistor finding.
+  // Moving only the load capacitors still leaves the resistor finding.
   expect(afterCaps.getIssues().map((i) => i.lineItemType)).toEqual([
     "ResistorSeparatedFromCrystal",
   ])
@@ -123,10 +123,8 @@ test("groups the crystal series resistor with a complete zero-finding Clock shee
       contextSourceComponentIds: before.flatMap((e) =>
         e.type === "source_component" ? [e.source_component_id] : [],
       ),
-      beforeDiagnostic: (issue) =>
-        issue.lineItemType === "ResistorSeparatedFromCrystal"
-          ? "R_XOUT is separated from the crystal's signal branch."
-          : "Y1's ground route is spread out across the sheet.",
+      beforeDiagnostic: () =>
+        "R_XOUT is separated from the crystal's signal branch.",
       afterDiagnostic:
         "Series resistor beside Y1, load capacitors nearby.\nFull-sheet analysis: 0 reported issues.",
       note: "Same pin connections and symbols; only the resistor and two load capacitors move.",

@@ -37,7 +37,8 @@ test("reproduces the complete RP2040 logic power sheet with inline diode branche
     })
   }
   const analysis = analyzeSchematicPlacement(circuitJson)
-  expect(analysis.getIssues()).toHaveLength(6)
+  // D7's directional Zener symbol also exposes crossed branches and inverted rails.
+  expect(analysis.getIssues()).toHaveLength(8)
   const [issue] = analysis.getIssues({ issueTypes: ["SharedNodeDiodesInline"] })
   expect(issue?.lineItemType).toBe("SharedNodeDiodesInline")
   if (issue?.lineItemType !== "SharedNodeDiodesInline")
