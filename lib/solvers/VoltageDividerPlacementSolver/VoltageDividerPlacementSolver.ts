@@ -1,6 +1,7 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   SchematicPlacementIssue,
+  VoltageDividerNotCompact,
   VoltageDividerSupplyResistorBelowGroundResistor,
   VoltageDividerNetworkNotGrouped,
 } from "../../types"
@@ -83,7 +84,18 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
     const reversedBodyGap =
       ground.schY - ground.height / 2 - (supply.schY + supply.height / 2)
     // Ignore small offsets and overlapping bodies, rather than demand alignment.
-    if (reversedBodyGap <= 1.5) return
+    if (reversedBodyGap <= 1.5) {
+      this.checkScatteredDivider(
+        supplyId,
+        groundId,
+        supply,
+        ground,
+        supplyTap.bottom,
+        groundTap.top,
+        tap,
+      )
+      return
+    }
 
     this.params.issues.push({
       lineItemType: "VoltageDividerSupplyResistorBelowGroundResistor",
@@ -93,6 +105,90 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       groundTapSourcePortId: groundTap.top.source_port_id,
       reversedBodyGap,
       message: `Place ${supply.sourceComponentName || "component"} above ${ground.sourceComponentName || "component"}, close enough to read their shared divider tap. Preserve all connections and leave room for labels; exact alignment is not required.`,
+    })
+  }
+
+  private checkScatteredDivider(
+    supplyId: string,
+    groundId: string,
+    supply: NonNullable<ReturnType<PlacementNetworkIndex["placement"]>>,
+    ground: NonNullable<ReturnType<PlacementNetworkIndex["placement"]>>,
+    supplyTapPort: NonNullable<
+      ReturnType<VoltageDividerPlacementSolver["getDownwardResistorPorts"]>
+    >["bottom"],
+    groundTapPort: NonNullable<
+      ReturnType<VoltageDividerPlacementSolver["getDownwardResistorPorts"]>
+    >["top"],
+    tap: string,
+  ) {
+    const index = this.index
+    const members = index.portsByNet.get(tap) ?? []
+    if (
+      members.some(
+        (p) =>
+          p.do_not_connect ||
+          !["simple_resistor", "simple_chip"].includes(
+            index.components.get(p.source_component_id)?.ftype ?? "",
+          ),
+      )
+    )
+      return
+    if (
+      ![
+        supply.schX,
+        supply.schY,
+        supply.width,
+        supply.height,
+        ground.schX,
+        ground.schY,
+        ground.width,
+        ground.height,
+      ].every(Number.isFinite) ||
+      supply.width <= 0 ||
+      supply.height <= 0 ||
+      ground.width <= 0 ||
+      ground.height <= 0
+    )
+      return
+    if (
+      this.params.ctx.circuitJson.some(
+        (e) =>
+          e.type === "pcb_component" &&
+          (e.source_component_id === supplyId ||
+            e.source_component_id === groundId) &&
+          e.do_not_place,
+      )
+    )
+      return
+    const supplyPin = index.port(supplyTapPort)!
+    const groundPin = index.port(groundTapPort)!
+    const horizontalGap =
+      Math.abs(supply.schX - ground.schX) - (supply.width + ground.width) / 2
+    const verticalGap =
+      supply.schY - supply.height / 2 - (ground.schY + ground.height / 2)
+    const resistorTapDistance = Math.hypot(
+      supplyPin.center.x - groundPin.center.x,
+      supplyPin.center.y - groundPin.center.y,
+    )
+    const maxRecommendedTapDistance = Math.max(
+      6,
+      4 * Math.max(supply.width, supply.height, ground.width, ground.height),
+    )
+    if (
+      horizontalGap <= 2 ||
+      verticalGap <= 2 ||
+      resistorTapDistance <= maxRecommendedTapDistance
+    )
+      return
+    this.params.issues.push({
+      lineItemType: "VoltageDividerNotCompact",
+      supplyResistorSchematicBox: supply,
+      groundResistorSchematicBox: ground,
+      supplyTapSourcePortId: supplyTapPort.source_port_id,
+      groundTapSourcePortId: groundTapPort.source_port_id,
+      resistorTapDistance,
+      maxRecommendedTapDistance,
+      message: `Group ${supply.sourceComponentName || "the supply resistor"} and ${ground.sourceComponentName || "the ground resistor"} near their shared divider tap so the supply-to-ground path reads as one compact network. Preserve all pin connections and leave room for labels; exact alignment is not required.`,
     })
   }
 
@@ -268,6 +364,7 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
 
   static issueToString(
     issue:
+      | VoltageDividerNotCompact
       | VoltageDividerSupplyResistorBelowGroundResistor
       | VoltageDividerNetworkNotGrouped,
   ): string {
@@ -290,6 +387,13 @@ export class VoltageDividerPlacementSolver extends BaseSolver {
       )
       addAttr(attrs, "resistorTapDistance", issue.resistorTapDistance)
       addAttr(attrs, "capacitorTapDistance", issue.capacitorTapDistance)
+      addAttr(
+        attrs,
+        "maxRecommendedTapDistance",
+        issue.maxRecommendedTapDistance,
+      )
+    } else if (issue.lineItemType === "VoltageDividerNotCompact") {
+      addAttr(attrs, "resistorTapDistance", issue.resistorTapDistance)
       addAttr(
         attrs,
         "maxRecommendedTapDistance",

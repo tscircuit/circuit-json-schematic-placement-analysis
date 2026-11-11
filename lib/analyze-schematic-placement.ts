@@ -183,6 +183,7 @@ export class SchematicPlacementAnalysis {
       LowSideTransistorNotAlignedWithLoad: 0,
       UsbSeriesResistorsNotAligned: 0,
       RegulatorCapacitorsOnWrongSides: 0,
+      VoltageDividerNotCompact: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       VoltageDividerNetworkNotGrouped: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
@@ -368,6 +369,7 @@ export class SchematicPlacementAnalysis {
         return LowSideTransistorPlacementSolver.issueToString(issue)
       case "FlybackDiodeSeparatedFromRelayCoil":
         return RelayFlybackDiodePlacementSolver.issueToString(issue)
+      case "VoltageDividerNotCompact":
       case "VoltageDividerNetworkNotGrouped":
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         return VoltageDividerPlacementSolver.issueToString(issue)

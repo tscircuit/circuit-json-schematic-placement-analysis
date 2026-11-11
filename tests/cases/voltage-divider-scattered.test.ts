@@ -38,6 +38,27 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a scattered voltage divider and its ADC tap", () => {
+test("reports a scattered voltage divider and its ADC tap", async () => {
   expect(issueTypes).toContain("VoltageDividerNotCompact")
+
+  const compactCircuitJson = structuredClone(
+    await createVoltageDividerScatteredCircuitJson(),
+  )
+  const upper = getReproSchematicComponent(compactCircuitJson, "R1")
+  upper.center.x = 3
+  upper.center.y = 4
+  for (const element of compactCircuitJson) {
+    if (
+      element.type === "schematic_port" &&
+      element.schematic_component_id === upper.schematic_component_id
+    ) {
+      element.center.x += 8
+      element.center.y += 1
+    }
+  }
+  expect(
+    analyzeSchematicPlacement(compactCircuitJson, {
+      issueTypes: ["VoltageDividerNotCompact"],
+    }).getIssues(),
+  ).toEqual([])
 })
