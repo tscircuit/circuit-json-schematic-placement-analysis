@@ -323,7 +323,12 @@ export function renderIssueOverlay(input: {
         focusPoints.push(screen(x, y))
     }
   }
-  if (!input.showFullSchematic && focusPoints.length > 0) {
+  const showFullSchematic =
+    input.showFullSchematic ??
+    (input.issueTypes === undefined &&
+      input.issueIndex === undefined &&
+      input.viewportBounds === undefined)
+  if (!showFullSchematic && focusPoints.length > 0) {
     const minX = Math.min(...focusPoints.map((point) => point.x))
     const maxX = Math.max(...focusPoints.map((point) => point.x))
     const minY = Math.min(...focusPoints.map((point) => point.y))
