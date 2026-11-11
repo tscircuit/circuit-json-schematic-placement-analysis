@@ -6,6 +6,7 @@ import { ChipDiodeCapacitorNetworkGroupingSolver } from "../ChipDiodeCapacitorNe
 import { ChipPinTestPointAlignmentSolver } from "../ChipPinTestPointAlignmentSolver/ChipPinTestPointAlignmentSolver"
 import { CapacitorConnectorAlignmentSolver } from "../CapacitorConnectorAlignmentSolver/CapacitorConnectorAlignmentSolver"
 import { InductorDiodeGroupingSolver } from "../InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+import { RepeatedCircuitPlacementSolver } from "../RepeatedCircuitPlacementSolver/RepeatedCircuitPlacementSolver"
 import { ChipPinResistorDividerPlacementSolver } from "../ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 import { RrcTimingNetworkGroupingSolver } from "../RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "../ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
@@ -152,6 +153,7 @@ const solversByIssueType = {
   DiodeResistorNotAligned: [DiodeResistorAlignmentSolver],
   HighPassRcFilterComponentsNotGrouped: [HighPassRcFilterPlacementSolver],
   SeriesRcFilterComponentsNotGrouped: [SeriesRcFilterPlacementSolver],
+  RepeatedCircuitLayoutInconsistent: [RepeatedCircuitPlacementSolver],
   SwitchRcNetworkNotGrouped: [SwitchRcNetworkGroupingSolver],
   ParallelResistorsDrawnInline: [ParallelResistorPlacementSolver],
   ResistorSeparatedFromCrystal: [CrystalResistorPlacementSolver],
@@ -711,6 +713,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "InductorDiodeGroupingSolver",
       InductorDiodeGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RepeatedCircuitPlacementSolver",
+      RepeatedCircuitPlacementSolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

@@ -6,6 +6,7 @@ import { ChipDiodeCapacitorNetworkGroupingSolver } from "./solvers/ChipDiodeCapa
 import { ChipPinTestPointAlignmentSolver } from "./solvers/ChipPinTestPointAlignmentSolver/ChipPinTestPointAlignmentSolver"
 import { CapacitorConnectorAlignmentSolver } from "./solvers/CapacitorConnectorAlignmentSolver/CapacitorConnectorAlignmentSolver"
 import { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+import { RepeatedCircuitPlacementSolver } from "./solvers/RepeatedCircuitPlacementSolver/RepeatedCircuitPlacementSolver"
 import { ChipPinResistorDividerPlacementSolver } from "./solvers/ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 import { RrcTimingNetworkGroupingSolver } from "./solvers/RrcTimingNetworkGroupingSolver/RrcTimingNetworkGroupingSolver"
 import { ConnectorTestPointAlignmentSolver } from "./solvers/ConnectorTestPointAlignmentSolver/ConnectorTestPointAlignmentSolver"
@@ -156,6 +157,7 @@ export class SchematicPlacementAnalysis {
       DiodeResistorNotAligned: 0,
       HighPassRcFilterComponentsNotGrouped: 0,
       SeriesRcFilterComponentsNotGrouped: 0,
+      RepeatedCircuitLayoutInconsistent: 0,
       SwitchRcNetworkNotGrouped: 0,
       ParallelResistorsDrawnInline: 0,
       ResistorSeparatedFromCrystal: 0,
@@ -319,6 +321,8 @@ export class SchematicPlacementAnalysis {
         return HighPassRcFilterPlacementSolver.issueToString(issue)
       case "SeriesRcFilterComponentsNotGrouped":
         return SeriesRcFilterPlacementSolver.issueToString(issue)
+      case "RepeatedCircuitLayoutInconsistent":
+        return RepeatedCircuitPlacementSolver.issueToString(issue)
       case "SwitchRcNetworkNotGrouped":
         return SwitchRcNetworkGroupingSolver.issueToString(issue)
       case "ResistorSeparatedFromCrystal":

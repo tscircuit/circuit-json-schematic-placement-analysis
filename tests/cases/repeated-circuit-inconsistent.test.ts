@@ -51,6 +51,25 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a placement outlier among three equivalent RC channels", () => {
+test("reports a placement outlier among three equivalent RC channels", async () => {
   expect(issueTypes).toContain("RepeatedCircuitLayoutInconsistent")
+
+  const consistentCircuitJson = structuredClone(
+    await createRepeatedCircuitInconsistentCircuitJson(),
+  )
+  const c3 = getReproSchematicComponent(consistentCircuitJson, "C3")
+  c3.center.x = 0
+  for (const element of consistentCircuitJson) {
+    if (
+      element.type === "schematic_port" &&
+      element.schematic_component_id === c3.schematic_component_id
+    ) {
+      element.center.x -= 5
+    }
+  }
+  expect(
+    analyzeSchematicPlacement(consistentCircuitJson, {
+      issueTypes: ["RepeatedCircuitLayoutInconsistent"],
+    }).getIssues(),
+  ).toEqual([])
 })
