@@ -134,6 +134,7 @@ test("reports inline parallel capacitor pairs using typed connectivity and accep
         "reversed-pins",
         "shared-rails",
         "shared-node",
+        "bank",
       ].includes(variant)
         ? 1
         : 0
@@ -250,7 +251,9 @@ test("reports inline parallel capacitor pairs using typed connectivity and accep
             do_not_place: true,
             obstructs_within_bounds: true,
           })
-        expect(issues(altered), invalid).toEqual([])
+        expect(issues(altered), invalid).toHaveLength(
+          invalid === "unplaced-third" ? 1 : 0,
+        )
       }
     }
   }

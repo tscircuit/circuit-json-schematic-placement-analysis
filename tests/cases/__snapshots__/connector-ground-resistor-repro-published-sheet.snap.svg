@@ -1,4 +1,4 @@
-<svg width="1400" height="1558" viewBox="0 0 1400 1558" xmlns="http://www.w3.org/2000/svg">
+<svg width="1400" height="1756" viewBox="0 0 1400 1756" xmlns="http://www.w3.org/2000/svg">
   <g transform="translate(0, 0)">
     <svg xmlns="http://www.w3.org/2000/svg" class="tscircuit-schematic" width="1400" height="950" style="background-color: rgb(245, 241, 237)" data-real-to-screen-transform="matrix(40.023221098,0,0,-40.023221098,685.9918726157,408.9616851883)"><style>
               .boundary { fill: rgb(245, 241, 237); }
@@ -85,7 +85,13 @@
 
 
 
+
+
 <line x1="724.0139326588" y1="280.8873776747" x2="698.0139326588" y2="242.88737767470002" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="607.9465914746" y1="637.0940454469" x2="581.9465914746" y2="599.0940454469" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="607.9465914746" y1="737.1520981919" x2="581.9465914746" y2="699.1520981919" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="728.0162547686" y1="637.0940454469" x2="702.0162547686" y2="599.0940454469" stroke="#b91c1c" stroke-width="0.5" />
+<line x1="728.0162547686" y1="737.1520981919" x2="702.0162547686" y2="699.1520981919" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="724.0139326588" y1="280.8873776747" x2="698.0139326588" y2="268.8873776747" stroke="#b91c1c" stroke-width="0.5" /><g data-issue-number="1" data-issue-type="GenericSchematicBoxTooWide" transform="translate(724.0139326588 268.8873776747) scale(1)"><title>#1 GenericSchematicBoxTooWide
 &lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;J_USB&quot; currentSchWidth=&quot;2.1&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.525&quot; maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.679&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">1</text></g>
 <g data-issue-number="2" data-issue-type="SchematicPinPaddingToEdgeTooLarge" transform="translate(698.0139326588 242.88737767470002) scale(1)"><title>#2 SchematicPinPaddingToEdgeTooLarge
@@ -102,10 +108,18 @@
 &lt;UsbSeriesResistorsNotAligned positiveResistorName=&quot;R_USB2&quot; negativeResistorName=&quot;R_USB1&quot; signalAxis=&quot;horizontal&quot; message=&quot;Place R_USB2 (D+) and R_USB1 (D−) near each other and draw clear traces to their corresponding USB ports. Exact alignment is not required; preserve pin assignments and leave space for labels.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
 <g data-issue-number="4" data-issue-type="UsbSeriesResistorsNotAligned" transform="translate(1074.2171172663 524.03541217445) scale(1)"><title>#4 UsbSeriesResistorsNotAligned
 &lt;UsbSeriesResistorsNotAligned positiveResistorName=&quot;R_USB2&quot; negativeResistorName=&quot;R_USB1&quot; signalAxis=&quot;horizontal&quot; message=&quot;Place R_USB2 (D+) and R_USB1 (D−) near each other and draw clear traces to their corresponding USB ports. Exact alignment is not required; preserve pin assignments and leave space for labels.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
-<g data-issue-number="5" data-issue-type="ResistorConnectorNotAligned" transform="translate(698.0139326588 268.8873776747) scale(1)"><title>#5 ResistorConnectorNotAligned
-&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="ResistorConnectorNotAligned" transform="translate(615.9512356942 525.0359927019) scale(1)"><title>#5 ResistorConnectorNotAligned
-&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g></g></svg>
+<g data-issue-number="5" data-issue-type="ParallelCapacitorsDrawnInline" transform="translate(581.9465914746 599.0940454469) scale(1)"><title>#5 ParallelCapacitorsDrawnInline
+&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_FLASH&quot; secondCapacitorName=&quot;C_3V3&quot; message=&quot;Draw C_FLASH and C_3V3 beside each other as two parallel branches between their shared nets. Preserve both capacitors' connections, leave room for labels, and reroute the affected wires.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="5" data-issue-type="ParallelCapacitorsDrawnInline" transform="translate(581.9465914746 699.1520981919) scale(1)"><title>#5 ParallelCapacitorsDrawnInline
+&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_FLASH&quot; secondCapacitorName=&quot;C_3V3&quot; message=&quot;Draw C_FLASH and C_3V3 beside each other as two parallel branches between their shared nets. Preserve both capacitors' connections, leave room for labels, and reroute the affected wires.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="6" data-issue-type="ParallelCapacitorsDrawnInline" transform="translate(702.0162547686 599.0940454469) scale(1)"><title>#6 ParallelCapacitorsDrawnInline
+&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_USB_VDD&quot; secondCapacitorName=&quot;C_USB&quot; message=&quot;Draw C_USB_VDD and C_USB beside each other as two parallel branches between their shared nets. Preserve both capacitors' connections, leave room for labels, and reroute the affected wires.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="ParallelCapacitorsDrawnInline" transform="translate(702.0162547686 699.1520981919) scale(1)"><title>#6 ParallelCapacitorsDrawnInline
+&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_USB_VDD&quot; secondCapacitorName=&quot;C_USB&quot; message=&quot;Draw C_USB_VDD and C_USB beside each other as two parallel branches between their shared nets. Preserve both capacitors' connections, leave room for labels, and reroute the affected wires.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="7" data-issue-type="ResistorConnectorNotAligned" transform="translate(698.0139326588 268.8873776747) scale(1)"><title>#7 ResistorConnectorNotAligned
+&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
+<g data-issue-number="7" data-issue-type="ResistorConnectorNotAligned" transform="translate(615.9512356942 525.0359927019) scale(1)"><title>#7 ResistorConnectorNotAligned
+&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2 beside its connected pin on J_USB so the wire does not detour around the connector body. Preserve connector pin order, resistor value and all connections, leave room for labels and neighboring parts, and reroute affected traces.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g></g></svg>
   </g>
   <g transform="translate(0, 950) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
@@ -114,10 +128,11 @@
 <tspan x="52" dy="22">ResistorConnectorNotAligned: 1</tspan>
 <tspan x="52" dy="22">GenericSchematicBoxTooWide: 1</tspan>
 <tspan x="52" dy="22">SchematicPinPaddingToEdgeTooLarge: 1</tspan>
+<tspan x="52" dy="22">ParallelCapacitorsDrawnInline: 2</tspan>
 <tspan x="52" dy="22">DecouplingCapacitorsNotCloseTogether: 1</tspan>
 <tspan x="52" dy="22">UsbSeriesResistorsNotAligned: 1</tspan>
 <tspan x="52" dy="22">Selected type(s): all</tspan>
-<tspan x="52" dy="22">Matching issues: 5</tspan>
+<tspan x="52" dy="22">Matching issues: 7</tspan>
 <tspan x="52" dy="22">&lt;GenericSchematicBoxTooWide message=&quot;Shrink schematic box width&quot; componentName=&quot;J_USB&quot;</tspan>
 <tspan x="52" dy="22">  currentSchWidth=&quot;2.1&quot; measuredInnerLabelHorizontalEmptySpace=&quot;1.525&quot;</tspan>
 <tspan x="52" dy="22">  maxAllowedInnerLabelHorizontalEmptySpace=&quot;1&quot; suggestedSchWidth=&quot;1.679&quot; /&gt;</tspan>
@@ -132,15 +147,25 @@
 <tspan x="52" dy="22">  signalAxis=&quot;horizontal&quot; message=&quot;Place R_USB2 (D+) and R_USB1 (D−) near each other and draw</tspan>
 <tspan x="52" dy="22">  clear traces to their corresponding USB ports. Exact alignment is not required; preserve pin</tspan>
 <tspan x="52" dy="22">  assignments and leave space for labels.&quot; /&gt;</tspan>
+<tspan x="52" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_FLASH&quot; secondCapacitorName=&quot;C_3V3&quot;</tspan>
+<tspan x="52" dy="22">  message=&quot;Draw C_FLASH and C_3V3 beside each other as two parallel branches between their</tspan>
+<tspan x="52" dy="22">  shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute the</tspan>
+<tspan x="52" dy="22">  affected wires.&quot; /&gt;</tspan>
+<tspan x="52" dy="22">&lt;ParallelCapacitorsDrawnInline firstCapacitorName=&quot;C_USB_VDD&quot; secondCapacitorName=&quot;C_USB&quot;</tspan>
+<tspan x="52" dy="22">  message=&quot;Draw C_USB_VDD and C_USB beside each other as two parallel branches between their</tspan>
+<tspan x="52" dy="22">  shared nets. Preserve both capacitors&apos; connections, leave room for labels, and reroute the</tspan>
+<tspan x="52" dy="22">  affected wires.&quot; /&gt;</tspan>
 <tspan x="52" dy="22">&lt;ResistorConnectorNotAligned resistorName=&quot;R_CC2&quot; connectorName=&quot;J_USB&quot; message=&quot;Move R_CC2</tspan>
 <tspan x="52" dy="22">  beside its connected pin on J_USB so the wire does not detour around the connector body.</tspan>
 <tspan x="52" dy="22">  Preserve connector pin order, resistor value and all connections, leave room for labels and</tspan>
 <tspan x="52" dy="22">  neighboring parts, and reroute affected traces.&quot; /&gt;</tspan>
 </text>
-<g data-listing-issue-number="1"><circle cx="24" cy="211" r="11" fill="#b91c1c" /><text x="24" y="211" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
-<g data-listing-issue-number="2"><circle cx="24" cy="277" r="11" fill="#b91c1c" /><text x="24" y="277" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>
-<g data-listing-issue-number="3"><circle cx="24" cy="343" r="11" fill="#b91c1c" /><text x="24" y="343" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">3</text></g>
-<g data-listing-issue-number="4"><circle cx="24" cy="431" r="11" fill="#b91c1c" /><text x="24" y="431" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">4</text></g>
-<g data-listing-issue-number="5"><circle cx="24" cy="519" r="11" fill="#b91c1c" /><text x="24" y="519" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">5</text></g>
+<g data-listing-issue-number="1"><circle cx="24" cy="233" r="11" fill="#b91c1c" /><text x="24" y="233" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">1</text></g>
+<g data-listing-issue-number="2"><circle cx="24" cy="299" r="11" fill="#b91c1c" /><text x="24" y="299" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">2</text></g>
+<g data-listing-issue-number="3"><circle cx="24" cy="365" r="11" fill="#b91c1c" /><text x="24" y="365" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">3</text></g>
+<g data-listing-issue-number="4"><circle cx="24" cy="453" r="11" fill="#b91c1c" /><text x="24" y="453" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">4</text></g>
+<g data-listing-issue-number="5"><circle cx="24" cy="541" r="11" fill="#b91c1c" /><text x="24" y="541" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">5</text></g>
+<g data-listing-issue-number="6"><circle cx="24" cy="629" r="11" fill="#b91c1c" /><text x="24" y="629" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">6</text></g>
+<g data-listing-issue-number="7"><circle cx="24" cy="717" r="11" fill="#b91c1c" /><text x="24" y="717" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="11" fill="white">7</text></g>
   </g>
 </svg>
