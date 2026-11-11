@@ -37,7 +37,7 @@
     "circuit-json-to-connectivity-map": "^0.0.33",
     "circuit-to-svg": "^0.0.427",
     "graphics-debug": "^0.0.94",
-    "schematic-symbols": "^0.0.248",
+    "schematic-symbols": "^0.0.251",
     "stack-svgs": "^0.0.1"
   },
   "devDependencies": {
