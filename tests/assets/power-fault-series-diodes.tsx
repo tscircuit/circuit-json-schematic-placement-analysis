@@ -5,7 +5,11 @@
 import { Circuit } from "@tscircuit/core"
 // Three-component input clamp extract from coder-ari/power-fault-detector.
 // Before coordinates and symbols match the published Circuit JSON.
-export default function PowerFaultSeriesDiodes() {
+export default function PowerFaultSeriesDiodes({
+  corrected = false,
+}: {
+  corrected?: boolean
+}) {
   return (
     <board
       routingDisabled
@@ -30,27 +34,27 @@ export default function PowerFaultSeriesDiodes() {
         name="D302"
         zener
         footprint="sod123"
-        schX={3.0966471000000007}
-        schY={-9.500512299999992}
-        schRotation={0}
+        schX={corrected ? 3.1 : 3.0966471000000007}
+        schY={corrected ? -9.7 : -9.500512299999992}
+        schRotation={corrected ? 270 : 0}
         connections={{ anode: "net.AIN1_RAW", cathode: "net.TVSMID1" }}
       />
       <diode
         name="D303"
         zener
         footprint="sod123"
-        schX={2.6916471000000004}
-        schY={-11.316103899999991}
-        schRotation={0}
+        schX={corrected ? 3.1 : 2.6916471000000004}
+        schY={corrected ? -10.9 : -11.316103899999991}
+        schRotation={corrected ? 90 : 0}
         connections={{ anode: "net.HILCOM", cathode: "net.TVSMID1" }}
       />
     </board>
   )
 }
-export async function createPowerFaultSeriesDiodes() {
+export async function createPowerFaultSeriesDiodes(corrected = false) {
   const c = new Circuit()
   c.pcbDisabled = true
-  c.add(<PowerFaultSeriesDiodes />)
+  c.add(<PowerFaultSeriesDiodes corrected={corrected} />)
   await c.renderUntilSettled()
   return c.getCircuitJson()
 }

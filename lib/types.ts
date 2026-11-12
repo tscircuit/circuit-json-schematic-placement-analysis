@@ -121,6 +121,15 @@ export interface CapacitorSeparatedFromResistorDivider {
   message: string
 }
 
+export interface SeriesDiodesNotAligned {
+  lineItemType: "SeriesDiodesNotAligned"
+  firstDiodeSchematicBox: SchematicBoxPlacement
+  secondDiodeSchematicBox: SchematicBoxPlacement
+  firstSourcePortId: string
+  secondSourcePortId: string
+  message: string
+}
+
 export interface SeriesResistorsNotAligned {
   lineItemType: "SeriesResistorsNotAligned"
   firstResistorSchematicBox: SchematicBoxPlacement
@@ -971,6 +980,7 @@ export type SchematicPlacementIssue =
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
+  | SeriesDiodesNotAligned
   | FuseMosfetNotAligned
   | LedResistorBranchSeparatedFromChipPin
   | ChipDiodeCapacitorNetworkNotGrouped
