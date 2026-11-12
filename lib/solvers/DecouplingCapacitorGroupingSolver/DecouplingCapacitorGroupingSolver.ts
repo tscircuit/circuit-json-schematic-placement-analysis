@@ -92,6 +92,24 @@ export class DecouplingCapacitorGroupingSolver extends BaseSolver {
       if (bank) bank.capacitors.push(placement)
       else this.banks.push({ power, ground, capacitors: [placement] })
     }
+    // A global supply can serve several independent devices. Sharing its rails
+    // does not assign the capacitors to one bank. Without that association,
+    // skip the ambiguous bank instead of pulling unrelated decouplers together.
+    for (let i = this.banks.length - 1; i >= 0; i--) {
+      const bank = this.banks[i]!
+      const supplyComponents = new Set<string>()
+      for (const port of index.portsByNet.get(bank.power) ?? []) {
+        if (
+          port.do_not_connect ||
+          (!port.requires_power && !port.provides_power)
+        )
+          continue
+        const placement = index.placement(port.source_component_id)
+        if (placement && index.sameLocalScope(bank.capacitors[0]!, placement))
+          supplyComponents.add(port.source_component_id)
+      }
+      if (supplyComponents.size > 1) this.banks.splice(i, 1)
+    }
     this.solved = this.banks.length === 0
   }
 
