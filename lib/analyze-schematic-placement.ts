@@ -18,6 +18,7 @@ import { TransistorResistorAlignmentSolver } from "./solvers/TransistorResistorA
 import { PotentiometerRailOrientationSolver } from "./solvers/PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
 import { ResistorDividerCapacitorPlacementSolver } from "./solvers/ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 import { SeriesResistorAlignmentSolver } from "./solvers/SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
+import { SeriesDiodeAlignmentSolver } from "./solvers/SeriesDiodeAlignmentSolver/SeriesDiodeAlignmentSolver"
 import { ParallelDiodeAlignmentSolver } from "./solvers/ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
 import { SeriesRcBranchGroupingSolver } from "./solvers/SeriesRcBranchGroupingSolver/SeriesRcBranchGroupingSolver"
 import { FuseDiodeAlignmentSolver } from "./solvers/FuseDiodeAlignmentSolver/FuseDiodeAlignmentSolver"
@@ -137,6 +138,7 @@ export class SchematicPlacementAnalysis {
       PotentiometerHasIncorrectRailOrientation: 0,
       CapacitorSeparatedFromResistorDivider: 0,
       SeriesResistorsNotAligned: 0,
+      SeriesDiodesNotAligned: 0,
       FuseMosfetNotAligned: 0,
       ChipDiodeCapacitorNetworkNotGrouped: 0,
       LedResistorBranchSeparatedFromChipPin: 0,
@@ -251,6 +253,8 @@ export class SchematicPlacementAnalysis {
         return PotentiometerRailOrientationSolver.issueToString(issue)
       case "CapacitorSeparatedFromResistorDivider":
         return ResistorDividerCapacitorPlacementSolver.issueToString(issue)
+      case "SeriesDiodesNotAligned":
+        return SeriesDiodeAlignmentSolver.issueToString(issue)
       case "SeriesResistorsNotAligned":
         return SeriesResistorAlignmentSolver.issueToString(issue)
       case "FuseMosfetNotAligned":
