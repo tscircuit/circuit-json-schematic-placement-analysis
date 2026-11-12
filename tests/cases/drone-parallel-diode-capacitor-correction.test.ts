@@ -11,6 +11,7 @@ import {
   getReproSourcePort,
 } from "../fixtures/placement-repro-assertions"
 
+// Builds and renders two complete 58-component circuits; allow CI headroom.
 test("corrects all four diode/capacitor branches while preserving the complete drone circuit", async () => {
   const before = await createDroneParallelDiodeCapacitorRepro(),
     after = await createDroneParallelDiodeCapacitorRepro(dronePlacements())
@@ -196,4 +197,4 @@ test("corrects all four diode/capacitor branches while preserving the complete d
       ],
     }),
   ).toMatchSvgSnapshot(import.meta.path, "full-sheet")
-})
+}, 15_000)
