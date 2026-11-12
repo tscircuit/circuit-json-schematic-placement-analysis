@@ -1,4 +1,10 @@
-import type { SchematicText } from "circuit-json"
+import type {
+  CircuitJson,
+  SchematicComponent,
+  SchematicPort,
+  SchematicText,
+} from "circuit-json"
+import { symbols } from "schematic-symbols"
 import type { RectBounds } from "./geometry"
 
 export interface Point {
@@ -7,6 +13,30 @@ export interface Point {
 }
 
 export type Polygon = Point[]
+
+/** Positioned text geometry using `@tscircuit/props` `SchematicTextProps` naming. */
+export interface PositionedSchematicText {
+  text: string
+  schX: number
+  schY: number
+  fontSize: number
+  anchor: SchematicText["anchor"]
+  schRotation: number
+  color?: string
+}
+
+export interface SchematicComponentLabelGeometry {
+  schematicComponent: SchematicComponent
+  sourceComponentName?: string
+  textGeometry: PositionedSchematicText
+}
+
+// `schematic-symbols` defines component reference and value labels as template
+// text primitives ("{REF}" and "{VAL}") rather than standalone `schematic_text`
+// records; `circuit-to-svg` substitutes them at render time at font size 0.18.
+const SYMBOL_REFERENCE_PLACEHOLDER = "{REF}"
+const SYMBOL_VALUE_PLACEHOLDER = "{VAL}"
+const SYMBOL_LABEL_FONT_SIZE = 0.18
 
 export const rectPolygon = (bounds: RectBounds): Polygon => [
   { x: bounds.left, y: bounds.bottom },
@@ -42,14 +72,19 @@ const widthInEm = (text: string): number =>
 export const getSchematicTextWidth = (text: string, fontSize: number): number =>
   widthInEm(text) * fontSize
 
-export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
-  const size = text.font_size
+export function getSchematicTextPolygons(
+  text: SchematicText | PositionedSchematicText,
+): Polygon[] {
+  const size = "font_size" in text ? text.font_size : text.fontSize
+  const rotation = "rotation" in text ? text.rotation : text.schRotation
+  const position =
+    "position" in text ? text.position : { x: text.schX, y: text.schY }
   if (
     !Number.isFinite(size) ||
     size <= 0 ||
-    !Number.isFinite(text.rotation) ||
-    !Number.isFinite(text.position.x) ||
-    !Number.isFinite(text.position.y)
+    !Number.isFinite(rotation) ||
+    !Number.isFinite(position.x) ||
+    !Number.isFinite(position.y)
   )
     return []
 
@@ -65,7 +100,7 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
       ? size
       : size / 2
   // SVG rotates clockwise on a Y-down canvas; our geometry uses Y-up.
-  const radians = (-text.rotation * Math.PI) / 180
+  const radians = (-rotation * Math.PI) / 180
   const cos = Math.cos(radians)
   const sin = Math.sin(radians)
   return text.text.split("\n").flatMap((line, index) => {
@@ -86,8 +121,8 @@ export function getSchematicTextPolygons(text: SchematicText): Polygon[] {
     })
     return [
       polygon.map(({ x, y }) => ({
-        x: text.position.x + x * cos - y * sin,
-        y: text.position.y + x * sin + y * cos,
+        x: position.x + x * cos - y * sin,
+        y: position.y + x * sin + y * cos,
       })),
     ]
   })
@@ -172,4 +207,140 @@ export const polygonBounds = (polygons: Polygon[]): RectBounds => {
     top: Math.max(...points.map((p) => p.y)),
     bottom: Math.min(...points.map((p) => p.y)),
   }
+}
+
+const getAngularDifference = (angle1: number, angle2: number): number => {
+  const normalizedA = angle1 < 0 ? angle1 + 2 * Math.PI : angle1
+  const normalizedB = angle2 < 0 ? angle2 + 2 * Math.PI : angle2
+  const diff = Math.abs(normalizedA - normalizedB)
+  return diff > Math.PI ? 2 * Math.PI - diff : diff
+}
+
+/** Resolve rendered reference/value label geometry for symbol-based schematic components,
+ * matching `circuit-to-svg`'s `matchSchPortsToSymbolPorts` + `pointPairsToMatrix` transform. */
+export function getSchematicSymbolLabelGeometries(
+  circuitJson: CircuitJson,
+): SchematicComponentLabelGeometry[] {
+  const sourceComponentsById = new Map(
+    circuitJson.flatMap((element) =>
+      element.type === "source_component"
+        ? [[element.source_component_id, element] as const]
+        : [],
+    ),
+  )
+  const portsByComponentId = new Map<string, SchematicPort[]>()
+  for (const element of circuitJson) {
+    if (element.type !== "schematic_port" || !element.schematic_component_id)
+      continue
+    const list = portsByComponentId.get(element.schematic_component_id)
+    if (list) list.push(element)
+    else portsByComponentId.set(element.schematic_component_id, [element])
+  }
+
+  return circuitJson.flatMap((component) => {
+    if (component.type !== "schematic_component" || !component.symbol_name)
+      return []
+    const symbol = symbols[component.symbol_name as keyof typeof symbols]
+    if (!symbol) return []
+
+    const schPorts =
+      portsByComponentId.get(component.schematic_component_id) ?? []
+    const schPortAngles = schPorts
+      .map((port) => ({
+        port,
+        angle: Math.atan2(
+          port.center.y - component.center.y,
+          port.center.x - component.center.x,
+        ),
+      }))
+      .sort((a, b) => a.angle - b.angle)
+    const symbolPortAngles = symbol.ports
+      .map((port) => ({
+        port,
+        angle: Math.atan2(port.y - symbol.center.y, port.x - symbol.center.x),
+      }))
+      .sort((a, b) => a.angle - b.angle)
+
+    const usedSymbolPorts = new Set<(typeof symbol.ports)[number]>()
+    const matchedPorts: Array<{
+      schPort: SchematicPort
+      symbolPort: (typeof symbol.ports)[number]
+    }> = []
+    for (const schPortAngle of schPortAngles) {
+      let bestMatch: {
+        symbolPort: (typeof symbol.ports)[number]
+        angleDiff: number
+      } | null = null
+      for (const symbolPortAngle of symbolPortAngles) {
+        if (usedSymbolPorts.has(symbolPortAngle.port)) continue
+        const angleDiff = getAngularDifference(
+          schPortAngle.angle,
+          symbolPortAngle.angle,
+        )
+        if (bestMatch === null || angleDiff < bestMatch.angleDiff) {
+          bestMatch = { symbolPort: symbolPortAngle.port, angleDiff }
+        }
+      }
+      if (bestMatch && bestMatch.angleDiff < Math.PI / 4) {
+        matchedPorts.push({
+          schPort: schPortAngle.port,
+          symbolPort: bestMatch.symbolPort,
+        })
+        usedSymbolPorts.add(bestMatch.symbolPort)
+      }
+    }
+
+    const firstMatch = matchedPorts[0]
+    if (!firstMatch) return []
+    const anchorSymbol = matchedPorts[1]?.symbolPort ?? symbol.center
+    const anchorReal = matchedPorts[1]?.schPort.center ?? component.center
+    const originalDistance = Math.hypot(
+      firstMatch.symbolPort.x - anchorSymbol.x,
+      firstMatch.symbolPort.y - anchorSymbol.y,
+    )
+    const transformedDistance = Math.hypot(
+      firstMatch.schPort.center.x - anchorReal.x,
+      firstMatch.schPort.center.y - anchorReal.y,
+    )
+    const scale = transformedDistance / originalDistance
+    if (!Number.isFinite(scale) || scale <= 0) return []
+
+    const sourceComponent = component.source_component_id
+      ? sourceComponentsById.get(component.source_component_id)
+      : undefined
+    const sourceComponentName =
+      sourceComponent?.display_name ?? sourceComponent?.name
+
+    return symbol.primitives.flatMap(
+      (primitive): SchematicComponentLabelGeometry[] => {
+        if (primitive.type !== "text") return []
+        const renderedText =
+          primitive.text === SYMBOL_REFERENCE_PLACEHOLDER
+            ? sourceComponentName
+            : primitive.text === SYMBOL_VALUE_PLACEHOLDER
+              ? component.symbol_display_value
+              : undefined
+        if (!renderedText) return []
+
+        return [
+          {
+            schematicComponent: component,
+            sourceComponentName,
+            textGeometry: {
+              text: renderedText,
+              schX: anchorReal.x + scale * (primitive.x - anchorSymbol.x),
+              schY: anchorReal.y + scale * (primitive.y - anchorSymbol.y),
+              anchor: primitive.anchor.replace(
+                /^middle_/,
+                "",
+              ) as SchematicText["anchor"],
+              fontSize: SYMBOL_LABEL_FONT_SIZE,
+              schRotation: 0,
+              color: "#000000",
+            },
+          },
+        ]
+      },
+    )
+  })
 }
