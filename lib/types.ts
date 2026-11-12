@@ -672,6 +672,24 @@ export interface SchematicTextCollision {
   message: string
 }
 
+/** Visible schematic text or component label crossed by a dashed section divider line. */
+export interface SchematicSectionLineTextCollision {
+  lineItemType: "SchematicSectionLineTextCollision"
+  schematicSheetId?: string
+  schematicSheetName?: string
+  schematicLineId: string
+  schematicTextId?: string
+  componentSchematicBox?: SchematicBoxPlacement
+  schematicComponentId?: string
+  sourceComponentName?: string
+  text: string
+  textBounds: SchematicIssueBounds
+  lineBounds: SchematicIssueBounds
+  /** A clear text-anchor position for standalone schematic text; omitted for component/trace-owned labels. */
+  suggestedMove?: { newSchX: number; newSchY: number }
+  message: string
+}
+
 export interface ResetNetworkNotGrouped {
   lineItemType: "ResetNetworkNotGrouped"
   /** The component whose reset pin is served by this network. */
@@ -1031,6 +1049,7 @@ export type SchematicPlacementIssue =
   | ComponentBoxNetLabelCollision
   | NetLabelCollision
   | SchematicTextCollision
+  | SchematicSectionLineTextCollision
   | ResetNetworkNotGrouped
   | ConnectorPositionCausesTraceDetours
 
