@@ -53,7 +53,11 @@ test("reproduces the published TPS55289 differential RC filter without changing 
       .getIssues()
       .map((i) => i.lineItemType)
       .sort(),
-  ).toEqual(["GenericSchematicBoxTooWide", "SchematicPinPaddingToEdgeTooLarge"])
+  ).toEqual([
+    "DifferentialRcFilterNotAligned",
+    "GenericSchematicBoxTooWide",
+    "SchematicPinPaddingToEdgeTooLarge",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: j,
