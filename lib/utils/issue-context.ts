@@ -124,6 +124,11 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.capacitorSchematicBox)
         for (const b of issue.resistorSchematicBoxes) addPlacement(b)
         break
+      case "DifferentialRcFilterNotAligned":
+        addPlacement(issue.hostSchematicBox)
+        addPlacement(issue.capacitorSchematicBox)
+        for (const box of issue.resistorSchematicBoxes) addPlacement(box)
+        break
       case "SeriesResistorsNotAligned":
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)

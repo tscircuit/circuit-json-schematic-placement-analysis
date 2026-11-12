@@ -4,6 +4,7 @@ import type {
   TwoPinComponentHasInvertedRails,
   SchematicPlacementIssue,
 } from "../../types"
+import { getDifferentialRcFilters } from "../../utils/differential-rc-filters"
 import { addAttr } from "../../utils/format"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import { getHorizontalPushbuttonComponentIds } from "../../utils/switch-pull-resistor-pairs"
@@ -19,6 +20,7 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
   private readonly positiveVoltageNets = new Set<string>()
   private readonly componentIds: string[]
   private readonly horizontalPushbuttonComponentIds: Set<string>
+  private readonly differentialFilterResistorIds: Set<string>
   private readonly issues: SchematicPlacementIssue[]
   private currentIndex = 0
 
@@ -31,6 +33,11 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
     this.index = new PlacementNetworkIndex(ctx)
     this.horizontalPushbuttonComponentIds = getHorizontalPushbuttonComponentIds(
       this.index,
+    )
+    this.differentialFilterResistorIds = new Set(
+      getDifferentialRcFilters(this.index).flatMap((filter) =>
+        filter.branches.map((branch) => branch.resistor.source_component_id),
+      ),
     )
     this.powerNets = new Set(this.index.powerNets)
     this.groundNets = new Set(this.index.groundNets)
@@ -76,6 +83,9 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
       index.isLocalFloatingChipCapacitor(id)
     )
       return
+    // These resistors feed two private chip inputs bridged by a capacitor.
+    // A supply at an outer terminal does not turn the series filter into a shunt.
+    if (this.differentialFilterResistorIds.has(id)) return
     // An inductor between two non-ground nodes is a series-path element;
     // touching an output supply does not make it a vertical shunt branch.
     if (

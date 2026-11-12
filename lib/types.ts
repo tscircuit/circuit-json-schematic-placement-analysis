@@ -121,6 +121,16 @@ export interface CapacitorSeparatedFromResistorDivider {
   message: string
 }
 
+export interface DifferentialRcFilterNotAligned {
+  lineItemType: "DifferentialRcFilterNotAligned"
+  hostSchematicBox: SchematicBoxPlacement
+  capacitorSchematicBox: SchematicBoxPlacement
+  resistorSchematicBoxes: [SchematicBoxPlacement, SchematicBoxPlacement]
+  hostSourcePortIds: [string, string]
+  resistorSourcePortIds: [string, string]
+  message: string
+}
+
 export interface SeriesResistorsNotAligned {
   lineItemType: "SeriesResistorsNotAligned"
   firstResistorSchematicBox: SchematicBoxPlacement
@@ -971,6 +981,7 @@ export type SchematicPlacementIssue =
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
+  | DifferentialRcFilterNotAligned
   | FuseMosfetNotAligned
   | LedResistorBranchSeparatedFromChipPin
   | ChipDiodeCapacitorNetworkNotGrouped
