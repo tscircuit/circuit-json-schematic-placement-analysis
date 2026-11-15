@@ -1,6 +1,7 @@
 import {
   getSchematicBoxLabelRects,
   getSchematicPinLabelWidth,
+  getSchematicPortsWithResolvedLabels,
   MINIMUM_LABEL_BANK_GAP,
   schematicLabelRectsOverlap,
   type LabelRect,
@@ -136,10 +137,6 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     return `${conflicts} Increase the ${dimension} to leave at least ${MINIMUM_LABEL_BANK_GAP} schematic units between these labels.`
   }
 
-  private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {
-    return el.type === "schematic_port"
-  }
-
   private isSchematicSide(
     side: SchematicPort["side_of_component"],
   ): side is SchematicSide {
@@ -162,7 +159,7 @@ export class SchematicBoxInnerLabelCollisionSolver extends BaseSolver {
     circuitJson: CircuitJson,
   ): Map<string, SchematicPort[]> {
     const map = new Map<string, SchematicPort[]>()
-    for (const port of circuitJson.filter((el) => this.isSchematicPort(el))) {
+    for (const port of getSchematicPortsWithResolvedLabels(circuitJson)) {
       if (!port.schematic_component_id) continue
       if (!this.isSchematicSide(port.side_of_component)) continue
       const ports = map.get(port.schematic_component_id)

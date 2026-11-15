@@ -4,6 +4,7 @@ import {
 } from "../../utils/schematic-box-resize"
 import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { getSchematicBoxGraphicBounds } from "../../utils/schematic-box-graphics"
+import { getSchematicPortsWithResolvedLabels } from "../../utils/schematic-box-labels"
 import { BaseSolver } from "@tscircuit/solver-utils"
 import type {
   CircuitJson,
@@ -241,10 +242,6 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     return `<SchematicPinPaddingToEdgeTooLarge ${attrs.join(" ")} />`
   }
 
-  private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {
-    return el.type === "schematic_port"
-  }
-
   private isSourcePort(el: CircuitJson[number]): el is SourcePort {
     return el.type === "source_port"
   }
@@ -318,7 +315,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     circuitJson: CircuitJson,
   ): Map<string, SchematicPort[]> {
     const map = new Map<string, SchematicPort[]>()
-    for (const port of circuitJson.filter((el) => this.isSchematicPort(el))) {
+    for (const port of getSchematicPortsWithResolvedLabels(circuitJson)) {
       if (!port.schematic_component_id) continue
       const ports = map.get(port.schematic_component_id)
       if (ports) ports.push(port)

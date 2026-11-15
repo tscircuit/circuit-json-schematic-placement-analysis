@@ -1,5 +1,6 @@
 import { getSchematicBoxComponentIds } from "../../utils/schematic-box-components"
 import { getSchematicBoxGraphicBounds } from "../../utils/schematic-box-graphics"
+import { getSchematicPortsWithResolvedLabels } from "../../utils/schematic-box-labels"
 import {
   getPinLabelLength,
   getSafeSchematicBoxResize,
@@ -176,10 +177,6 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     return `<${issue.lineItemType} ${attrs.join(" ")} />`
   }
 
-  private isSchematicPort(el: CircuitJson[number]): el is SchematicPort {
-    return el.type === "schematic_port"
-  }
-
   private getSourceComponentWithFtype(
     el: CircuitJson[number],
   ): SourceComponentWithFtype | null {
@@ -237,7 +234,7 @@ export class SchematicBoxTooWideSolver extends BaseSolver {
     circuitJson: CircuitJson,
   ): Map<string, SchematicPort[]> {
     const map = new Map<string, SchematicPort[]>()
-    for (const port of circuitJson.filter((el) => this.isSchematicPort(el))) {
+    for (const port of getSchematicPortsWithResolvedLabels(circuitJson)) {
       if (!port.schematic_component_id) continue
       const ports = map.get(port.schematic_component_id)
       if (ports) ports.push(port)
