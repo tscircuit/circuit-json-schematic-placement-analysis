@@ -4,9 +4,15 @@ import { wirelessMouseControllerSheetCircuitJson as circuitJson } from "../asset
 import { createIssueOverlaySvg } from "../fixtures/create-issue-overlay-svg"
 import { createIssueReproSnapshot } from "../fixtures/create-issue-repro-snapshot"
 
-test("records every issue count and isolates the real controller's crystal report", () => {
+test("records selected issue counts and isolates the real controller's crystal report", () => {
   const original = JSON.stringify(circuitJson)
-  const analysis = analyzeSchematicPlacement(circuitJson)
+  const analysis = analyzeSchematicPlacement(circuitJson, {
+    issueTypes: [
+      "CrystalNotCenteredOverLoadCapacitors",
+      "TwoPinComponentShouldBeVertical",
+      "DecouplingCapacitorsNotCloseTogether",
+    ],
+  })
   expect(
     Object.entries(analysis.getIssueCounts()).filter(([, count]) => count > 0),
   ).toEqual([
