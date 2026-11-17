@@ -257,6 +257,12 @@ export const getRelevantPlacementsForIssues = ({
         for (const placement of issue.supportNetworkComponents)
           addPlacement(placement)
         break
+      case "SchematicSectionLineTextCollision":
+        if (issue.componentSchematicBox)
+          addPlacement(issue.componentSchematicBox)
+        else if (issue.schematicComponentId)
+          addPlacement(placementByComponentId.get(issue.schematicComponentId))
+        break
       case "SchematicTextCollision":
         if (issue.collidingObject.schematicComponentId)
           addPlacement(

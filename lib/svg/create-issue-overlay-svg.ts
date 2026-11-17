@@ -1,17 +1,17 @@
 import type { CircuitJson } from "circuit-json"
 import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 import type {
-  SchematicPlacementAnalysis,
-  SchematicPlacementIssue,
   SchematicBoxPlacement,
   SchematicIssueBounds,
   SchematicPinLabelBounds,
+  SchematicPlacementAnalysis,
+  SchematicPlacementIssue,
 } from "../index"
+import { centeredRect } from "../utils/geometry"
 import {
   getIssueSchematicSheetContext,
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
-import { centeredRect } from "../utils/geometry"
 import { getPinLabelHighlightBounds } from "../utils/schematic-box-labels"
 import {
   createIssueMarkerPlacer,
@@ -205,6 +205,10 @@ export function renderIssueOverlay(input: {
       case "SchematicTextCollision":
         rect(issue.textBounds)
         rect(issue.collidingObjectBounds)
+        break
+      case "SchematicSectionLineTextCollision":
+        rect(issue.textBounds)
+        rect(issue.lineBounds)
         break
       case "SchematicBoxInnerLabelOutOfBounds":
         for (const label of issue.overflowingLabels)
