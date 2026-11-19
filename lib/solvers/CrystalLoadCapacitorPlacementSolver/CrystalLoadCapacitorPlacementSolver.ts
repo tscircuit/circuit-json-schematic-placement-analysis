@@ -291,6 +291,32 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
         sourceComponent.ftype === "simple_crystal" &&
         (sourceComponent.pinVariant === "four_pin" || crystalPorts.length > 2)
 
+      // Capacitors stacked above and below the crystal share one load-pin
+      // column, so their pin midpoint is not a center. Center the crystal
+      // vertically between the capacitor bodies and only require it to lie
+      // within their horizontal extent.
+      const isStacked =
+        Math.abs(loadPorts[0]!.center.x - loadPorts[1]!.center.x) <=
+          CrystalLoadCapacitorPlacementSolver.ALIGNMENT_TOLERANCE &&
+        Math.abs(loadPorts[0]!.center.y - loadPorts[1]!.center.y) >
+          CrystalLoadCapacitorPlacementSolver.ALIGNMENT_TOLERANCE
+      if (isStacked) {
+        const left = Math.min(...capacitors.map((c) => c.schX - c.width / 2))
+        const right = Math.max(...capacitors.map((c) => c.schX + c.width / 2))
+        const withinCapacitors =
+          crystalPlacement.schX >= left && crystalPlacement.schX <= right
+        networks.push({
+          crystal: crystalPlacement,
+          firstLoadCapacitor: capacitors[0]!,
+          secondLoadCapacitor: capacitors[1]!,
+          newSchX: withinCapacitors
+            ? crystalPlacement.schX
+            : round((left + right) / 2),
+          newSchY: round((capacitors[0]!.schY + capacitors[1]!.schY) / 2),
+        })
+        continue
+      }
+
       networks.push({
         crystal: crystalPlacement,
         firstLoadCapacitor: capacitors[0]!,
