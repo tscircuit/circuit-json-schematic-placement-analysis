@@ -4,7 +4,9 @@ import { Circuit } from "@tscircuit/core"
 // rows are spaced by schPinStyle margins rather than schPinSpacing. Box sizes,
 // pin arrangements and pin styles are copied unchanged from the transcription
 // in tscircuit/checks#578; only schematic positions are moved into a grid.
-export async function createTiTps25751EvmPinPaddingBoxes() {
+export async function createTiTps25751EvmPinPaddingBoxes(
+  schWidthByName: Partial<Record<string, number>> = {},
+) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
@@ -113,7 +115,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin13: { bottomMargin: 0.20017 },
           pin12: { bottomMargin: 0.20024, topMargin: 0 },
         }}
-        schWidth={5.59941}
+        schWidth={schWidthByName.J2 ?? 5.59941}
         schHeight={6.40334}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -251,7 +253,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin13: { bottomMargin: 0.20017 },
           pin12: { bottomMargin: 0.20024, topMargin: 0 },
         }}
-        schWidth={5.59855}
+        schWidth={schWidthByName.J3 ?? 5.59855}
         schHeight={6.40334}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -389,7 +391,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin13: { bottomMargin: 0.20017 },
           pin12: { bottomMargin: 0.20024, topMargin: 0 },
         }}
-        schWidth={5.60189}
+        schWidth={schWidthByName.J4 ?? 5.60189}
         schHeight={6.40334}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -451,7 +453,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin2: { bottomMargin: 0.60041 },
           pin1: { bottomMargin: 0.60041, topMargin: 0 },
         }}
-        schWidth={2.40007}
+        schWidth={schWidthByName.J5 ?? 2.40007}
         schHeight={6.80358}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -574,7 +576,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin4: { bottomMargin: 0.20024 },
           pin2: { bottomMargin: 0.20017, topMargin: 1e-5 },
         }}
-        schWidth={2.51}
+        schWidth={schWidthByName.J6 ?? 2.51}
         schHeight={6.4034}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -644,7 +646,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin3: { bottomMargin: 0.20017 },
           pin1: { bottomMargin: 0.20024, topMargin: 0 },
         }}
-        schWidth={2.4001}
+        schWidth={schWidthByName.J7 ?? 2.4001}
         schHeight={2.00106}
         pinAttributes={{
           pin1: { isPassive: true },
@@ -680,7 +682,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin3: { topMargin: 0.20012 },
           pin4: { topMargin: 0.20019, bottomMargin: 0 },
         }}
-        schWidth={1.215}
+        schWidth={schWidthByName.J11 ?? 1.215}
         schHeight={2.00086}
         pinAttributes={{
           pin4: { isPassive: true },
@@ -724,7 +726,7 @@ export async function createTiTps25751EvmPinPaddingBoxes() {
           pin7: { bottomMargin: 0.60031 },
           pin8: { bottomMargin: 0.60025, topMargin: 0 },
         }}
-        schWidth={3.99988}
+        schWidth={schWidthByName.U5 ?? 3.99988}
         schHeight={3.20119}
         pinAttributes={{
           pin1: { isInput: true },
