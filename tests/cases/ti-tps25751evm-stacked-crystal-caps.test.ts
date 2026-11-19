@@ -4,7 +4,7 @@ import { createTiTps25751EvmStackedCrystalCaps } from "../assets/ti-tps25751evm-
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 import { getReproSchematicComponent } from "../fixtures/placement-repro-assertions"
 
-test("reports the TI TPS25751EVM crystal between stacked load capacitors as off-center", async () => {
+test("accepts the TI TPS25751EVM crystal centered between stacked load capacitors", async () => {
   const circuitJson = await createTiTps25751EvmStackedCrystalCaps()
   expect(circuitJson.filter((e) => e.type.endsWith("_error"))).toEqual([])
   const crystal = getReproSchematicComponent(circuitJson, "Y1")
@@ -18,16 +18,7 @@ test("reports the TI TPS25751EVM crystal between stacked load capacitors as off-
   const analysis = analyzeSchematicPlacement(circuitJson, {
     issueTypes: ["CrystalNotCenteredOverLoadCapacitors"],
   })
-  // Current behavior: both load pins share x=0.4, so their midpoint is that
-  // column and Y1 is told to move onto it.
-  expect(analysis.getIssues()).toMatchObject([
-    {
-      crystalSchematicBox: { sourceComponentName: "Y1" },
-      newSchX: 0.4,
-      deltaSchX: 0.5,
-      deltaSchY: 0,
-    },
-  ])
+  expect(analysis.getIssues()).toEqual([])
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,

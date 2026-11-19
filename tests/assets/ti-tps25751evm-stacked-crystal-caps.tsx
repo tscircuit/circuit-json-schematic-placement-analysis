@@ -5,7 +5,11 @@ import { Circuit } from "@tscircuit/core"
 // their load ends in one column. Components and positions are copied
 // unchanged from the transcription in tscircuit/checks#578; U7 is included
 // as the oscillator host with its supply and ground pins on net labels.
-export async function createTiTps25751EvmStackedCrystalCaps() {
+export async function createTiTps25751EvmStackedCrystalCaps({
+  crystalSchY = 7.89645,
+}: {
+  crystalSchY?: number
+} = {}) {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
@@ -305,7 +309,7 @@ export async function createTiTps25751EvmStackedCrystalCaps() {
       <crystal
         name="Y1"
         schX={-0.09995}
-        schY={7.89645}
+        schY={crystalSchY}
         frequency="16MHz"
         loadCapacitance="8pF"
         pinVariant="four_pin"

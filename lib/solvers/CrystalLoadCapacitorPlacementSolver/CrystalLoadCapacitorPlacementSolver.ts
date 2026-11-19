@@ -32,6 +32,8 @@ interface CrystalLoadNetwork {
   secondLoadCapacitor: SchematicBoxPlacement
   newSchX: number
   newSchY: number
+  /** Load capacitors drawn above and below the crystal. */
+  isStacked?: boolean
 }
 
 export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
@@ -81,9 +83,10 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
     const secondCapacitorName =
       network.secondLoadCapacitor.sourceComponentName ??
       "the second load capacitor"
-    const placementGoal =
-      Math.abs(deltaSchY) <=
-      CrystalLoadCapacitorPlacementSolver.ALIGNMENT_TOLERANCE
+    const placementGoal = network.isStacked
+      ? `centered between ${firstCapacitorName} and ${secondCapacitorName}`
+      : Math.abs(deltaSchY) <=
+          CrystalLoadCapacitorPlacementSolver.ALIGNMENT_TOLERANCE
         ? `horizontally centered between ${firstCapacitorName} and ${secondCapacitorName} while preserving its vertical placement`
         : `centered between ${firstCapacitorName} and ${secondCapacitorName} and aligned with their load-side pins`
 
@@ -310,9 +313,10 @@ export class CrystalLoadCapacitorPlacementSolver extends BaseSolver {
           firstLoadCapacitor: capacitors[0]!,
           secondLoadCapacitor: capacitors[1]!,
           newSchX: withinCapacitors
-            ? crystalPlacement.schX
+            ? round(crystalPlacement.schX)
             : round((left + right) / 2),
           newSchY: round((capacitors[0]!.schY + capacitors[1]!.schY) / 2),
+          isStacked: true,
         })
         continue
       }
