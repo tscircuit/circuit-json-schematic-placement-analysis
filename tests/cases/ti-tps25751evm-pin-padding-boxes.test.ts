@@ -9,12 +9,28 @@ test("accepts one drawn pin pitch of padding on TI TPS25751EVM boxes spaced by p
   expect(
     circuitJson.filter((e) => e.type === "schematic_component"),
   ).toHaveLength(8)
-  const analysis = analyzeSchematicPlacement(circuitJson, {
-    issueTypes: ["SchematicPinPaddingToEdgeTooLarge"],
-  })
+  const analysis = analyzeSchematicPlacement(circuitJson)
+  const issueNames = (type: string) =>
+    analysis
+      .getIssues()
+      .flatMap((issue) =>
+        issue.lineItemType === type && "schematicBox" in issue
+          ? [issue.schematicBox.sourceComponentName]
+          : [],
+      )
+      .sort()
   // Pins are drawn 0.4 or 0.8 apart via pin margins, with about one drawn
   // pitch of padding at each end, so none of these boxes are over-padded.
-  expect(analysis.getIssues()).toEqual([])
+  expect(issueNames("SchematicPinPaddingToEdgeTooLarge")).toEqual([])
+  // Legitimate: these boxes are much wider than their labels need.
+  expect(issueNames("GenericSchematicBoxTooWide")).toEqual([
+    "J2",
+    "J3",
+    "J4",
+    "J5",
+    "U5",
+  ])
+  expect(analysis.getIssues()).toHaveLength(5)
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,
