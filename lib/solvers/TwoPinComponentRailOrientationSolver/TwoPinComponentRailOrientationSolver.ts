@@ -70,6 +70,15 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
       index.isLocalFloatingChipCapacitor(id)
     )
       return
+    // A 0 ohm resistor away from ground is a jumper that joins or renames a
+    // net, drawn in line either way. A 0 ohm strap to ground stays a branch.
+    if (
+      sourceComponent?.ftype === "simple_resistor" &&
+      "resistance" in sourceComponent &&
+      sourceComponent.resistance === 0 &&
+      !nets.some((net) => this.groundNets.has(net))
+    )
+      return
     // An inductor between two non-ground nodes is a series-path element;
     // touching an output supply does not make it a vertical shunt branch.
     if (

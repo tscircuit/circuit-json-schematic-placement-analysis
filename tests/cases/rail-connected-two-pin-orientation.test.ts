@@ -40,8 +40,17 @@ test("reports horizontal rail-connected two-pin components and accepts their ver
       expect(analysis.toString()).toBe("")
       continue
     }
-    // Exactly one orientation issue per component, including capacitors and a zero-ohm link.
-    expect(issues).toHaveLength(6)
+    // Exactly one orientation issue per component, including capacitors. The
+    // zero-ohm R0 links VCC to a signal with no ground end, so it is a jumper
+    // that may be drawn in line, as TI draws such links.
+    expect(issues).toHaveLength(5)
+    expect(
+      issues.some(
+        (issue) =>
+          "schematicBox" in issue &&
+          issue.schematicBox.sourceComponentName === "R0",
+      ),
+    ).toBe(false)
     const railIssues = issues.filter(
       (issue) => issue.lineItemType === "TwoPinComponentShouldBeVertical",
     )
@@ -55,7 +64,6 @@ test("reports horizontal rail-connected two-pin components and accepts their ver
       ["D1", "power"],
       ["L1", "ground"],
       ["C2", "power"],
-      ["R0", "power"],
       ["LED1", "ground"],
     ])
     // Check the suggested rotation against the rendered pin vector, preserving pin identity.
