@@ -44,7 +44,8 @@ type MaxLabelLengthBySide = Record<SchematicSide, number>
 export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
   private readonly MESSAGE =
     "Move schematic pins closer to the box edge or change the schematic box"
-  private readonly GAP_COMPARISON_EPSILON = 1e-9
+  // Absorbs sub-0.01 drift from dimensions copied out of reference drawings.
+  private readonly GAP_COMPARISON_EPSILON = 0.01
 
   private readonly entries: Array<[string, SchematicPort[]]>
   private readonly placementById: Map<string, SchematicBoxPlacement>
@@ -97,6 +98,9 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
       sidePorts.push(port)
       portsBySide.set(port.side_of_component, sidePorts)
     }
+    // Pin margins can draw rows farther apart than pin_spacing. Padding of one
+    // drawn pitch is the tightest uniform layout, so never ask for less.
+    const drawnPinPitch = this.getDrawnPinPitch(portsBySide) ?? 0
 
     const candidates: PinPaddingCandidate[] = []
     for (const [pinSide, sidePorts] of portsBySide) {
@@ -114,6 +118,7 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
         )
         const maxAllowedPadding = Math.max(
           pinSpacing,
+          drawnPinPitch,
           this.getMaxAllowedPinPadding(
             pinSpacing,
             edgeSide,
@@ -271,6 +276,26 @@ export class SchematicPinPaddingToEdgeSolver extends BaseSolver {
     side: SchematicPort["side_of_component"],
   ): side is SchematicSide {
     return this.isHorizontalSide(side) || this.isVerticalSide(side)
+  }
+
+  /** Smallest gap between adjacent pins on any side, or null without a pair. */
+  private getDrawnPinPitch(
+    portsBySide: Map<SchematicSide, SchematicPort[]>,
+  ): number | null {
+    let pitch: number | null = null
+    for (const [side, sidePorts] of portsBySide) {
+      const positions = sidePorts
+        .map((port) =>
+          this.isHorizontalSide(side) ? port.center.y : port.center.x,
+        )
+        .sort((a, b) => a - b)
+      for (let i = 1; i < positions.length; i++) {
+        const gap = positions[i]! - positions[i - 1]!
+        if (gap <= this.GAP_COMPARISON_EPSILON) continue
+        pitch = pitch === null ? gap : Math.min(pitch, gap)
+      }
+    }
+    return pitch
   }
 
   private exceedsMaxAllowedGap(measured: number, maxAllowed: number): boolean {
