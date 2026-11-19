@@ -3,13 +3,26 @@ import { Circuit } from "@tscircuit/core"
 // TPS25751EVM, SLVUCP9B Figure 5-4, "Zero Ohm Name Change": 0 ohm links
 // that rename the TPS25751 GPIO nets for the expansion header. Components and
 // positions are copied unchanged from the reference schematic in
-// tscircuit/checks. GPIO3 shares its net with TPD_VPWR, as on the full board,
-// where it powers the TPD4S201 VPWR option.
+// tscircuit/checks. GPIO3 shares its net with TPD_VPWR, as on the full board
+// (where U4's GPIO3 pin feeds TPD_VPWR), so R68's end is drawn as a TPD_VPWR
+// power symbol. Nets are declared as in the reference board.
 export async function createTiTps25751EvmZeroOhmNameChange() {
   const circuit = new Circuit()
   circuit.pcbDisabled = true
   circuit.add(
     <board schLayout={{ layoutMode: "none" }}>
+      <net name="A_GPIO0" />
+      <net name="A_GPIO1" />
+      <net name="A_GPIO2" />
+      <net name="A_GPIO3" />
+      <net name="A_GPIO4" />
+      <net name="A_GPIO5" />
+      <net name="GPIO0" />
+      <net name="GPIO1" />
+      <net name="GPIO2" />
+      <net name="GPIO3" />
+      <net name="GPIO_45P" />
+      <net name="GPIO_45N" />
       <net name="TPD_VPWR" />
       <resistor
         name="R60"
