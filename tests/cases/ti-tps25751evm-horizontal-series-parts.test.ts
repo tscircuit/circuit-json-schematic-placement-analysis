@@ -6,16 +6,14 @@ import {
 } from "../assets/ti-tps25751evm-horizontal-series-parts"
 import { createSchematicAnalysisFixtureSvg } from "../fixtures/create-schematic-analysis-fixture-svg"
 
-test("reports TI TPS25751EVM horizontal bootstrap capacitor and VPWR option resistor", async () => {
-  for (const { create, name, snapshot } of [
+test("accepts TI TPS25751EVM horizontal bootstrap capacitor and VPWR option resistor", async () => {
+  for (const { create, snapshot } of [
     {
       create: createTiTps25751EvmBootstrapCapacitor,
-      name: "C64",
       snapshot: "bootstrap-capacitor",
     },
     {
       create: createTiTps25751EvmVpwrOptionResistor,
-      name: "R112",
       snapshot: "vpwr-option-resistor",
     },
   ]) {
@@ -24,11 +22,9 @@ test("reports TI TPS25751EVM horizontal bootstrap capacitor and VPWR option resi
     const analysis = analyzeSchematicPlacement(circuitJson, {
       issueTypes: ["TwoPinComponentShouldBeVertical"],
     })
-    // Current behavior: C64 links U10.CBOOT to the SW node and R112 links two
-    // supply nodes in series, yet each is told to stand vertically.
-    expect(analysis.getIssues()).toMatchObject([
-      { schematicBox: { sourceComponentName: name }, railType: "power" },
-    ])
+    // C64 links U10.CBOOT to the SW node and R112 links two supply nodes in
+    // series; TI draws both horizontally, so neither is a vertical shunt.
+    expect(analysis.getIssues()).toEqual([])
     expect(
       createSchematicAnalysisFixtureSvg({
         circuitJson,

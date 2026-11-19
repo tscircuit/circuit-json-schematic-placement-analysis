@@ -16,7 +16,6 @@ test("retains capacitor orientation checks when rail or scope evidence rules out
     "other-supply",
     "grounded",
     "other-group",
-    "two-supplies",
     "requires-only",
     "required-voltage",
     "extra-return",

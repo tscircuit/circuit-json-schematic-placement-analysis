@@ -25,7 +25,7 @@ test("records the full input sheet's local trace suggestions without rearranging
     GenericSchematicBoxTooWide: 2,
     SchematicPinPaddingToEdgeTooLarge: 4,
     NetLabelCollision: 1,
-    TwoPinComponentShouldBeVertical: 6,
+    TwoPinComponentShouldBeVertical: 4,
   })
   expect(
     analysis.getIssues({ issueTypes: ["ParallelDiodeResistorNotAligned"] }),
@@ -178,7 +178,7 @@ test("records the full input sheet's local trace suggestions without rearranging
         }
       })
     expect([...new Set(markers.map((marker) => marker.number))]).toEqual(
-      Array.from({ length: 15 }, (_, index) => index + 1),
+      Array.from({ length: 13 }, (_, index) => index + 1),
     )
     expect(
       markers.every(

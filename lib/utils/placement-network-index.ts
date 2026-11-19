@@ -94,7 +94,8 @@ export class PlacementNetworkIndex {
     return this.powerNets.has(net) || this.groundNets.has(net)
   }
 
-  /** A local chip-return capacitor whose only supply evidence is one output pin.
+  /** A local chip-return capacitor whose only supply evidence is the host chip's
+   * own output pins, optionally returning to one of its supply inputs.
    * Bootstrap/flying-capacitor nodes can provide power without being DC rails.
    * This establishes ambiguity, not a specific electrical function.
    */
@@ -119,11 +120,14 @@ export class PlacementNetworkIndex {
     const supplyPorts = members.map((ports) =>
       ports.filter((port) => port.provides_power || port.requires_power),
     )
-    // Exactly one inferred power node; two supplies remain subject to the rule.
-    const powerIndex = supplyPorts.findIndex((ports) => ports.length > 0)
-    if (powerIndex < 0) return false
+    // Exactly one node may provide power. The other may carry only the same
+    // chip's own supply input, as a bootstrap pin does, never another source.
+    const providingSides = supplyPorts.flatMap((ports, i) =>
+      ports.some((port) => port.provides_power) ? [i] : [],
+    )
+    if (providingSides.length !== 1) return false
+    const powerIndex = providingSides[0]!
     const otherIndex = 1 - powerIndex
-    if (supplyPorts[otherIndex]!.length > 0) return false
     const peers = members[otherIndex]!.filter(
       (port) => port.source_component_id !== id,
     )
@@ -134,12 +138,18 @@ export class PlacementNetworkIndex {
     const capacitor = this.placement(id)
     if (!host || !capacitor || !this.sameLocalScope(host, capacitor))
       return false
-    const providers = supplyPorts[powerIndex]!
     // Other supply sources/loads could establish a real rail. Do not exempt it.
+    // Paralleled output pins of the host (e.g. several SW pins) are one node.
     return (
-      providers.length === 1 &&
-      providers[0]!.source_component_id === hostId &&
-      providers[0]!.provides_power === true
+      supplyPorts[powerIndex]!.every(
+        (port) => port.source_component_id === hostId,
+      ) &&
+      supplyPorts[otherIndex]!.every(
+        (port) =>
+          port.source_component_id === hostId &&
+          port.requires_power === true &&
+          !port.provides_power,
+      )
     )
   }
 

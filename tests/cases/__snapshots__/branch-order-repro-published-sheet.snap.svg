@@ -255,7 +255,6 @@
 
 
 
-
 <line x1="891.1779618049115" y1="432.651681595322" x2="865.1779618049115" y2="394.651681595322" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="569.0552644924736" y1="475.747845191687" x2="543.0552644924736" y2="489.747845191687" stroke="#b91c1c" stroke-width="0.5" />
 <line x1="560.9430454625696" y1="462.227480141847" x2="534.9430454625696" y2="424.227480141847" stroke="#b91c1c" stroke-width="0.5" />
@@ -272,11 +271,9 @@
 &lt;TwoPinComponentCouldBeFlipped traceName=&quot;U_MCU.RXD to R_LED_FAULT.pin2&quot; targetComponentName=&quot;R_LED_FAULT&quot; connectedComponentName=&quot;U_MCU&quot; targetPin=&quot;pin2&quot; currentFacingDirection=&quot;up&quot; suggestedFacingDirection=&quot;down&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R_LED_FAULT by 180° so pin2 faces U_MCU and reduce this trace from 3 turns to 1&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">2</text></g>
 <g data-issue-number="2" data-issue-type="TwoPinComponentCouldBeFlipped" transform="translate(1029.4236944395257 392.68142639846553) scale(1)"><title>#2 TwoPinComponentCouldBeFlipped
 &lt;TwoPinComponentCouldBeFlipped traceName=&quot;U_MCU.RXD to R_LED_FAULT.pin2&quot; targetComponentName=&quot;R_LED_FAULT&quot; connectedComponentName=&quot;U_MCU&quot; targetPin=&quot;pin2&quot; currentFacingDirection=&quot;up&quot; suggestedFacingDirection=&quot;down&quot; deltaSchRotation=&quot;180&quot; currentTurnCount=&quot;3&quot; suggestedTurnCount=&quot;1&quot; message=&quot;rotate R_LED_FAULT by 180° so pin2 faces U_MCU and reduce this trace from 3 turns to 1&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">2</text></g>
-<g data-issue-number="3" data-issue-type="TwoPinComponentShouldBeVertical" transform="translate(749.8901470340835 803.9540307582859) scale(1)"><title>#3 TwoPinComponentShouldBeVertical
-&lt;TwoPinComponentShouldBeVertical componentName=&quot;R_PD_VDD&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot; deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate R_PD_VDD by -90° so its power-connected pin faces up and the component is vertical&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g>
-<g data-issue-number="4" data-issue-type="TwoPinComponentShouldBeVertical" transform="translate(574.2944059492866 608.7537603512209) scale(1)"><title>#4 TwoPinComponentShouldBeVertical
-&lt;TwoPinComponentShouldBeVertical componentName=&quot;D_TVS&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot; deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate D_TVS by -90° so its power-connected pin faces up and the component is vertical&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(891.1779618049115 435.017069460777) scale(1)"><title>#5 NetLabelCollision
+<g data-issue-number="3" data-issue-type="TwoPinComponentShouldBeVertical" transform="translate(574.2944059492866 608.7537603512209) scale(1)"><title>#3 TwoPinComponentShouldBeVertical
+&lt;TwoPinComponentShouldBeVertical componentName=&quot;D_TVS&quot; railPin=&quot;pin1&quot; railType=&quot;power&quot; deltaSchRotation=&quot;-90&quot; suggestedRailFacingDirection=&quot;up&quot; message=&quot;rotate D_TVS by -90° so its power-connected pin faces up and the component is vertical&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">3</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(891.1779618049115 435.017069460777) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -295,8 +292,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(865.1779618049115 394.651681595322) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(865.1779618049115 394.651681595322) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -315,8 +312,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(749.2509481157135 445.15734324815696) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(749.2509481157135 445.15734324815696) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -335,8 +332,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(820.8720635457436 637.822545208377) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(820.8720635457436 637.822545208377) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -355,8 +352,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(697.8367415921995 811.559236098821) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(697.8367415921995 811.559236098821) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -375,8 +372,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(660.9937468313856 694.608078417705) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(660.9937468313856 694.608078417705) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -395,8 +392,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(556.3799222582486 456.98766266676705) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(556.3799222582486 456.98766266676705) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -415,8 +412,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(543.0552644924736 489.747845191687) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(543.0552644924736 489.747845191687) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -435,8 +432,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(534.9430454625696 424.227480141847) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(534.9430454625696 424.227480141847) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -455,8 +452,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(614.3484874094376 406.286293729867) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(614.3484874094376 406.286293729867) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -475,8 +472,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(514.6624978878095 383.66638499232704) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(514.6624978878095 383.66638499232704) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -495,8 +492,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(556.3799222582485 237.28173060686706) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(556.3799222582485 237.28173060686706) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -515,8 +512,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(534.9430454625694 204.52154808194706) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(534.9430454625694 204.52154808194706) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -535,8 +532,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(614.3484874094374 186.58036166996703) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(614.3484874094374 186.58036166996703) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -555,8 +552,8 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="5" data-issue-type="NetLabelCollision" transform="translate(514.6624978878094 163.96045293242705) scale(1)"><title>#5 NetLabelCollision
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="4" data-issue-type="NetLabelCollision" transform="translate(514.6624978878094 163.96045293242705) scale(1)"><title>#4 NetLabelCollision
 &lt;ComponentNetLabelCollision pair1=&quot;R_USB_DM/U_MCU&quot; pair2=&quot;SW_BOOT/U_MCU&quot; pair3=&quot;U_PD/J_POWER&quot; pair4=&quot;C_PD_VDD/R_PD_VDD&quot; pair5=&quot;F1/D_REVERSE&quot; pair6=&quot;RS_M2/U_DRV12&quot; pair7=&quot;U_DRV12/J_M2&quot; pair8=&quot;J_M2/U_DRV12&quot; pair9=&quot;RS_M4/U_DRV34&quot; pair10=&quot;U_DRV34/J_M4&quot; pair11=&quot;J_M4/U_DRV34&quot;&gt;
   &lt;SuggestedFix note=&quot;Apply all moves simultaneously. Set schAutoLayoutEnabled on your circuit.&quot;&gt;
     &lt;Move componentName=&quot;SW_BOOT&quot; newSchX=&quot;-2.76&quot; newSchY=&quot;-1.96&quot; /&gt;
@@ -575,37 +572,37 @@
     &lt;Move componentName=&quot;RS_M4&quot; newSchX=&quot;-7.73&quot; newSchY=&quot;4.35&quot; /&gt;
     &lt;Move componentName=&quot;U_DRV34&quot; newSchX=&quot;-4.48&quot; newSchY=&quot;4.85&quot; /&gt;
   &lt;/SuggestedFix&gt;
-&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
-<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1008.4671286122735 554.334291025615) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
-<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1010.4951833697496 620.584079769831) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
-<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1008.4671286122735 686.833868514047) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(577.3364880855006 806.489099205131) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(595.5889809027844 873.0768970755929) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(556.0419131320025 739.9013013346689) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(556.0419131320025 673.6515125904529) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(488.10207875655647 607.4017238462369) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="7" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(460.0473212781385 673.6515125904529) scale(1)"><title>#7 DecouplingCapacitorsNotCloseTogether
-&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
-<g data-issue-number="8" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(588.3484874094376 380.286293729867) scale(1)"><title>#8 ComponentBranchesOutOfOrder
-&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">8</text></g>
-<g data-issue-number="8" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(530.3799222582486 464.788575291367) scale(1)"><title>#8 ComponentBranchesOutOfOrder
-&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">8</text></g>
-<g data-issue-number="8" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(582.3799222582486 420.84738887938704) scale(1)"><title>#8 ComponentBranchesOutOfOrder
-&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">8</text></g></g>
+&lt;/ComponentNetLabelCollision&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">4</text></g>
+<g data-issue-number="5" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1008.4671286122735 554.334291025615) scale(1)"><title>#5 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="5" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1010.4951833697496 620.584079769831) scale(1)"><title>#5 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="5" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(1008.4671286122735 686.833868514047) scale(1)"><title>#5 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;V3V3&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_LDO_OUT, C_MCU_100N, C_MCU_10U&quot; maxBodyGap=&quot;1.36&quot; maxRecommendedBodyGap=&quot;1&quot; message=&quot;Group the decoupling capacitors between V3V3 and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">5</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(577.3364880855006 806.489099205131) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(595.5889809027844 873.0768970755929) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(556.0419131320025 739.9013013346689) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(556.0419131320025 673.6515125904529) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(488.10207875655647 607.4017238462369) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="6" data-issue-type="DecouplingCapacitorsNotCloseTogether" transform="translate(460.0473212781385 673.6515125904529) scale(1)"><title>#6 DecouplingCapacitorsNotCloseTogether
+&lt;DecouplingCapacitorsNotCloseTogether rail=&quot;VMOTOR&quot; ground=&quot;GND&quot; capacitorNames=&quot;C_MOTOR_BULK, C_VM_10U_A, C_VM_10U_B, C_VM_10U_C, C_DRV12_VM, C_DRV34_VM&quot; maxBodyGap=&quot;1.923&quot; maxRecommendedBodyGap=&quot;1.1&quot; message=&quot;Group the decoupling capacitors between VMOTOR and GND closer together in this schematic block. Preserve their net connections.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">6</text></g>
+<g data-issue-number="7" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(588.3484874094376 380.286293729867) scale(1)"><title>#7 ComponentBranchesOutOfOrder
+&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
+<g data-issue-number="7" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(530.3799222582486 464.788575291367) scale(1)"><title>#7 ComponentBranchesOutOfOrder
+&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g>
+<g data-issue-number="7" data-issue-type="ComponentBranchesOutOfOrder" transform="translate(582.3799222582486 420.84738887938704) scale(1)"><title>#7 ComponentBranchesOutOfOrder
+&lt;ComponentBranchesOutOfOrder hostComponentName=&quot;U_DRV12&quot; firstComponentName=&quot;RS_M1&quot; secondComponentName=&quot;RS_M2&quot; message=&quot;Reorder RS_M1 and RS_M2 to follow their connected pins on the left side of U_DRV12, avoiding the crossed wires. Preserve component symbols, pin assignments and polarity; leave room for labels and reroute both branches without moving the host pins.&quot; /&gt;</title><circle r="11" fill="#b91c1c" /><text y="4" text-anchor="middle" fill="white" font-family="sans-serif" font-size="11">7</text></g></g>
   </g>
   <g transform="translate(0, 1000) scale(1, 1) translate(0, 0)">
     <rect width="100%" height="100%" fill="#fff" />
 <text x="18" y="40" fill="#d00" font-family="Menlo, Consolas, monospace" font-size="16">
 <tspan x="18" dy="0">Original published sheet, unchanged.</tspan>
-<tspan x="18" dy="22">Existing findings on this sheet: 8. The new rule now reports the previously missed pattern.</tspan>
+<tspan x="18" dy="22">Existing findings on this sheet: 7. The new rule now reports the previously missed pattern.</tspan>
 </text>
   </g>
 </svg>

@@ -77,11 +77,12 @@ export class TwoPinComponentRailOrientationSolver extends BaseSolver {
       !nets.some((net) => this.groundNets.has(net))
     )
       return
-    // A diode, fuse, or generic chip between two power rails can be drawn
-    // along the series power path in either orientation.
+    // A diode, fuse, series resistor or generic chip between two power rails
+    // can be drawn along the series power path in either orientation.
     if (
       (sourceComponent?.ftype === "simple_diode" ||
         sourceComponent?.ftype === "simple_fuse" ||
+        sourceComponent?.ftype === "simple_resistor" ||
         sourceComponent?.ftype === "simple_chip") &&
       nets.every((net) => this.powerNets.has(net))
     )
