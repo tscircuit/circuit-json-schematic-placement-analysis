@@ -6,7 +6,11 @@ import { Circuit } from "@tscircuit/core"
 import { A_0603WAF1001T5E as Resistor } from "./peltier-filter/A_0603WAF1001T5E"
 import { CC0603KRX7R9BB224 as Capacitor } from "./peltier-filter/CC0603KRX7R9BB224"
 import { TPS55289RYQR } from "./peltier-filter/TPS55289RYQR"
-export default function PeltierDifferentialFilter() {
+export default function PeltierDifferentialFilter({
+  corrected = false,
+}: {
+  corrected?: boolean
+}) {
   return (
     <board
       routingDisabled
@@ -19,7 +23,7 @@ export default function PeltierDifferentialFilter() {
         name="U_DRIVER"
         schX={0}
         schY={0}
-        schWidth={4.6}
+        schWidth={corrected ? 3.3 : 4.6}
         connections={{
           pin12: "net.DRIVER_ISP",
           pin13: "net.DRIVER_ISN",
@@ -36,7 +40,7 @@ export default function PeltierDifferentialFilter() {
         manufacturerPartNumber="0603WAF100JT5E"
         supplierPartNumbers={{ jlcpcb: ["C22859"] }}
         schX={6.75}
-        schY={-0.9}
+        schY={corrected ? -0.4 : -0.9}
         schRotation={180}
         connections={{ pin1: "net.DRIVER_OUT", pin2: "net.DRIVER_ISP" }}
       />
@@ -45,16 +49,16 @@ export default function PeltierDifferentialFilter() {
         resistance="10"
         manufacturerPartNumber="0603WAF100JT5E"
         supplierPartNumbers={{ jlcpcb: ["C22859"] }}
-        schX={7.25}
-        schY={-2.1}
-        schRotation={270}
+        schX={corrected ? 6.75 : 7.25}
+        schY={corrected ? -1.2 : -2.1}
+        schRotation={corrected ? 180 : 270}
         connections={{ pin1: "net.TEC_POS", pin2: "net.DRIVER_ISN" }}
       />
       <Capacitor
         name="C_CURRENT_FILTER"
         maxVoltageRating="50V"
         schX={4.5}
-        schY={-1.5}
+        schY={corrected ? -0.8 : -1.5}
         schRotation={270}
         connections={{
           pin1: "net.DRIVER_ISP",
@@ -64,10 +68,10 @@ export default function PeltierDifferentialFilter() {
     </board>
   )
 }
-export async function createPeltierDifferentialFilter() {
+export async function createPeltierDifferentialFilter(corrected = false) {
   const c = new Circuit()
   c.pcbDisabled = true
-  c.add(<PeltierDifferentialFilter />)
+  c.add(<PeltierDifferentialFilter corrected={corrected} />)
   await c.renderUntilSettled()
   return c.getCircuitJson()
 }
