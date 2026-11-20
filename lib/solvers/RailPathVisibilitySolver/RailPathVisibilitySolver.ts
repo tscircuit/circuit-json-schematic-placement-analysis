@@ -166,6 +166,9 @@ export class RailPathVisibilitySolver extends BaseSolver {
         continue
       const ports = index.portsByComponent.get(id)
       if (ports?.length !== 2 || !index.twoTerminalNets(id)) continue
+      // A bootstrap/flying capacitor links two pins of one chip; crossing it
+      // leads into that chip's power stage, not the pin's support network.
+      if (index.isLocalFloatingChipCapacitor(id)) continue
       const a = portNodes.get(ports[0]!.source_port_id),
         b = portNodes.get(ports[1]!.source_port_id)
       if (a && b) link(a, b, { componentId: id })
