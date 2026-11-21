@@ -124,6 +124,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.capacitorSchematicBox)
         for (const b of issue.resistorSchematicBoxes) addPlacement(b)
         break
+      case "SeriesDiodesNotAligned":
+        addPlacement(issue.firstDiodeSchematicBox)
+        addPlacement(issue.secondDiodeSchematicBox)
+        break
       case "SeriesResistorsNotAligned":
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)

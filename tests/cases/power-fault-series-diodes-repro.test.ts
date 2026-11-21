@@ -27,7 +27,9 @@ test("reproduces the published power-fault input clamp with unchanged symbols, p
     ["D302.pin2", "D303.pin2", "net.TVSMID1"],
   ])
   const analysis = analyzeSchematicPlacement(j)
-  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([])
+  expect(analysis.getIssues().map((i) => i.lineItemType)).toEqual([
+    "SeriesDiodesNotAligned",
+  ])
   expect(
     createIssueReproSnapshot({
       circuitJson: j,
