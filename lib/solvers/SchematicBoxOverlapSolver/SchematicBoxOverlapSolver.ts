@@ -56,28 +56,32 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
     return {
       left: box.schX - box.width / 2,
       right: box.schX + box.width / 2,
-      top: box.schY - box.height / 2,
-      bottom: box.schY + box.height / 2,
+      top: box.schY + box.height / 2,
+      bottom: box.schY - box.height / 2,
     }
   }
 
   private getOverlapCorrectionSuggestions({
     firstComponent,
     secondComponent,
-    overlapWidth,
-    overlapHeight,
   }: {
     firstComponent: SchematicBoxPlacement
     secondComponent: SchematicBoxPlacement
-    overlapWidth: number
-    overlapHeight: number
   }): OverlapCorrectionSuggestion[] {
     const firstArea = firstComponent.width * firstComponent.height
     const secondArea = secondComponent.width * secondComponent.height
     const target = firstArea <= secondArea ? firstComponent : secondComponent
     const other = target === firstComponent ? secondComponent : firstComponent
-    const deltaSchX = target.schX <= other.schX ? -overlapWidth : overlapWidth
-    const deltaSchY = target.schY <= other.schY ? -overlapHeight : overlapHeight
+    const targetBounds = this.getCenteredRectBounds(target)
+    const otherBounds = this.getCenteredRectBounds(other)
+    const deltaSchX =
+      target.schX <= other.schX
+        ? -(targetBounds.right - otherBounds.left)
+        : otherBounds.right - targetBounds.left
+    const deltaSchY =
+      target.schY <= other.schY
+        ? -(targetBounds.top - otherBounds.bottom)
+        : otherBounds.top - targetBounds.bottom
     return [
       {
         targetComponentName: target.sourceComponentName,
@@ -141,7 +145,7 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
     const a = this.getCenteredRectBounds(firstComponent)
     const b = this.getCenteredRectBounds(secondComponent)
     const overlapWidth = Math.min(a.right, b.right) - Math.max(a.left, b.left)
-    const overlapHeight = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)
+    const overlapHeight = Math.min(a.top, b.top) - Math.max(a.bottom, b.bottom)
 
     if (overlapWidth <= 0 || overlapHeight <= 0) return null
 
@@ -154,8 +158,6 @@ export class SchematicBoxOverlapSolver extends BaseSolver {
       correctionSuggestions: this.getOverlapCorrectionSuggestions({
         firstComponent,
         secondComponent,
-        overlapWidth,
-        overlapHeight,
       }),
     }
   }
