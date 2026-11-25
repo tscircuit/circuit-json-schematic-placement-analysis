@@ -47,8 +47,29 @@ test("reproduces a gate resistor offset from its connected chip pin", async () =
   })
   // Both bodies are centered at Y=0, but the connected gate pin is at Y=-0.2.
   // The resistor should move down 0.2 so its output and the gate share a Y coordinate.
-  // Current behavior: the alignment checker requires two connected pin pairs.
-  expect(analysis.getIssues()).toEqual([])
+  expect(analysis.getIssues()).toMatchObject([
+    {
+      lineItemType: "ComponentPinsWouldAlignWithVerticalShift",
+      targetComponent: { sourceComponentName: "R_GLW" },
+      alignedPinCount: 1,
+    },
+    {
+      lineItemType: "ComponentPinsWouldAlignWithVerticalShift",
+      targetComponent: { sourceComponentName: "L1" },
+      alignedPinCount: 1,
+    },
+  ])
+  const issue = analysis.getIssues()[0]
+  if (issue?.lineItemType !== "ComponentPinsWouldAlignWithVerticalShift")
+    throw new Error("Missing alignment recommendation")
+  expect(issue.deltaSchY).toBeCloseTo(-0.2)
+  expect(issue.newSchY).toBeCloseTo(gate.center.y)
+  const inductorIssue = analysis.getIssues()[1]
+  if (
+    inductorIssue?.lineItemType !== "ComponentPinsWouldAlignWithVerticalShift"
+  )
+    throw new Error("Missing inductor alignment recommendation")
+  expect(inductorIssue.deltaSchY).toBeCloseTo(-0.2)
   expect(
     createSchematicAnalysisFixtureSvg({
       circuitJson,

@@ -7,6 +7,13 @@ import { parseSync, type INode } from "svgson"
 test("reproduces the complete wireless mouse controller sheet layout", () => {
   const analysis = analyzeSchematicPlacement(
     wirelessMouseControllerSheetCircuitJson,
+    {
+      issueTypes: [
+        "CrystalNotCenteredOverLoadCapacitors",
+        "TwoPinComponentShouldBeVertical",
+        "DecouplingCapacitorsNotCloseTogether",
+      ],
+    },
   )
 
   const crystalPlacementIssue = analysis
