@@ -3,7 +3,6 @@ import { convertCircuitJsonToSchematicSvg } from "circuit-to-svg"
 import type {
   SchematicPlacementAnalysis,
   SchematicPlacementIssue,
-  SchematicBoxPlacement,
   SchematicIssueBounds,
   SchematicPinLabelBounds,
 } from "../index"
@@ -11,60 +10,20 @@ import {
   getIssueSchematicSheetContext,
   getRelevantPlacementsForIssues,
 } from "../utils/issue-context"
+import { escapeAttr } from "../utils/format"
 import { centeredRect } from "../utils/geometry"
 import { getPinLabelHighlightBounds } from "../utils/schematic-box-labels"
+import { createIssueOverlaySvg } from "./get-issue-overlay-svg"
+import { getReproSheets } from "./get-repro-sheets"
 import {
   createIssueMarkerPlacer,
   ISSUE_MARKER_RADIUS,
   type SvgViewport,
 } from "./place-issue-markers"
+import { shouldCropIssueOverlay } from "./should-crop-issue-overlay"
 
+export { createIssueOverlaySvg, getReproSheets }
 export type IssueType = SchematicPlacementIssue["lineItemType"]
-
-export function getReproSheets(circuitJson: CircuitJson) {
-  const ids = new Set(
-    circuitJson.flatMap((element) =>
-      element.type.startsWith("schematic_") &&
-      !element.type.endsWith("_warning") &&
-      !element.type.endsWith("_error") &&
-      // Shared definitions and invisible subcircuit groups don't create a sheet.
-      element.type !== "schematic_symbol" &&
-      !(
-        element.type === "schematic_group" &&
-        element.is_subcircuit &&
-        !element.show_as_schematic_box
-      )
-        ? [
-            ("schematic_sheet_id" in element
-              ? element.schematic_sheet_id
-              : undefined) ?? "",
-          ]
-        : [],
-    ),
-  )
-  return [...ids].map((id) => {
-    const sheet = circuitJson.find(
-      (element) =>
-        element.type === "schematic_sheet" && element.schematic_sheet_id === id,
-    )
-    return {
-      id,
-      name:
-        sheet?.type === "schematic_sheet"
-          ? sheet.name || id
-          : id || "Unassigned sheet",
-    }
-  })
-}
-
-const escapeXml = (text: string) =>
-  text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll(">", "&gt;")
-const boxBounds = (box: SchematicBoxPlacement) =>
-  centeredRect(box.schX, box.schY, box.width, box.height)
 
 /** Use the renderer's own transform, never infer scale from component extents.
  * Render one sheet at a time so overlapping coordinates on other sheets cannot leak in. */
@@ -172,7 +131,7 @@ export function renderIssueOverlay(input: {
       if (drawnRectangles.has(key)) return
       drawnRectangles.add(key)
       const labelAttrs = label
-        ? ` class="pin-label-collision-highlight" data-highlight-schematic-port-id="${escapeXml(label.schematicPortId)}" data-highlight-label="${escapeXml(label.text)}"`
+        ? ` class="pin-label-collision-highlight" data-highlight-schematic-port-id="${escapeAttr(label.schematicPortId)}" data-highlight-label="${escapeAttr(label.text)}"`
         : ""
       const drawnBounds = label ? getPinLabelHighlightBounds(label) : bounds
       const fill = isWarning ? "#f59e0b33" : "#ef444433"
@@ -180,7 +139,16 @@ export function renderIssueOverlay(input: {
       const markup = `<rect${labelAttrs} x="${drawnBounds.left}" y="${drawnBounds.bottom}" width="${drawnBounds.right - drawnBounds.left}" height="${drawnBounds.top - drawnBounds.bottom}" fill="${isContext ? "none" : fill}" stroke="${isContext ? "#2563eb" : stroke}" stroke-width="${isContext ? 0.35 : 0.5}" ${isContext ? 'stroke-dasharray="5 3"' : ""} vector-effect="non-scaling-stroke" />`
       geometry.push(markup)
     }
-    for (const placement of context) rect(boxBounds(placement), true)
+    for (const placement of context)
+      rect(
+        centeredRect(
+          placement.schX,
+          placement.schY,
+          placement.width,
+          placement.height,
+        ),
+        true,
+      )
     // Prefer diagnostic geometry for the numbered marker over contextual boxes.
     anchor = undefined
     switch (issue.lineItemType) {
@@ -193,8 +161,18 @@ export function renderIssueOverlay(input: {
         break
       }
       case "ComponentOverlap": {
-        const first = boxBounds(issue.firstComponent)
-        const second = boxBounds(issue.secondComponent)
+        const first = centeredRect(
+          issue.firstComponent.schX,
+          issue.firstComponent.schY,
+          issue.firstComponent.width,
+          issue.firstComponent.height,
+        )
+        const second = centeredRect(
+          issue.secondComponent.schX,
+          issue.secondComponent.schY,
+          issue.secondComponent.width,
+          issue.secondComponent.height,
+        )
         rect({
           left: Math.max(first.left, second.left),
           right: Math.min(first.right, second.right),
@@ -221,7 +199,15 @@ export function renderIssueOverlay(input: {
             rect(pair.secondLabel.bounds, false, pair.secondLabel)
           }
         } else {
-          for (const placement of context) rect(boxBounds(placement))
+          for (const placement of context)
+            rect(
+              centeredRect(
+                placement.schX,
+                placement.schY,
+                placement.width,
+                placement.height,
+              ),
+            )
         }
         break
       case "ComponentNetLabelCollision":
@@ -291,7 +277,15 @@ export function renderIssueOverlay(input: {
         break
       }
       default:
-        for (const placement of context) rect(boxBounds(placement))
+        for (const placement of context)
+          rect(
+            centeredRect(
+              placement.schX,
+              placement.schY,
+              placement.width,
+              placement.height,
+            ),
+          )
     }
     anchor ??= context[0]
       ? { x: context[0].schX, y: context[0].schY }
@@ -299,7 +293,7 @@ export function renderIssueOverlay(input: {
     const points = (
       markerAnchors.size ? [...markerAnchors.values()] : anchor ? [anchor] : []
     ).map((point) => screen(point.x, point.y))
-    const title = escapeXml(
+    const title = escapeAttr(
       `#${index + 1} ${issue.lineItemType}\n${analysis.schematicIssuesToString(issue)}`,
     )
     return [
@@ -328,7 +322,7 @@ export function renderIssueOverlay(input: {
         focusPoints.push(screen(x, y))
     }
   }
-  if (!input.showFullSchematic && focusPoints.length > 0) {
+  if (shouldCropIssueOverlay(input) && focusPoints.length > 0) {
     const minX = Math.min(...focusPoints.map((point) => point.x))
     const maxX = Math.max(...focusPoints.map((point) => point.x))
     const minY = Math.min(...focusPoints.map((point) => point.y))
@@ -406,10 +400,4 @@ export function renderIssueOverlay(input: {
       `<g class="placement-issue-overlays">${markup.join("\n")}${leaders.join("\n")}${markers.join("\n")}</g></svg>`,
     ),
   }
-}
-
-export function createIssueOverlaySvg(
-  input: Parameters<typeof renderIssueOverlay>[0],
-): string {
-  return renderIssueOverlay(input).svg
 }

@@ -5,18 +5,11 @@ import {
   getReproSheets,
   type IssueType,
 } from "../fixtures/create-issue-overlay-svg"
+import { downloadReproFile } from "./download-repro-file"
 import { parseReproCircuitJson } from "./import-circuit-json"
+import { ReproIssueList } from "./ReproIssueList"
 import { realSchematics } from "./real-schematics"
 import "./repros.css"
-
-function download(name: string, contents: string, type: string) {
-  const url = URL.createObjectURL(new Blob([contents], { type }))
-  const link = document.createElement("a")
-  link.href = url
-  link.download = name
-  link.click()
-  setTimeout(() => URL.revokeObjectURL(url), 1000)
-}
 
 export default function RealSchematicRepros() {
   const [repro, setRepro] = useState(realSchematics[0]!)
@@ -26,6 +19,9 @@ export default function RealSchematicRepros() {
   const [issueType, setIssueType] = useState<IssueType | "all">("all")
   const [issueIndex, setIssueIndex] = useState<number>()
   const [showOverlay, setShowOverlay] = useState(true)
+  const [showFullSheet, setShowFullSheet] = useState(
+    repro.showFullSchematic ?? true,
+  )
   const [zoom, setZoom] = useState(100)
   const [error, setError] = useState("")
   const analysis = useMemo(
@@ -50,7 +46,11 @@ export default function RealSchematicRepros() {
           ...filter,
           issueIndex,
           showOverlay,
-          showFullSchematic: repro.showFullSchematic,
+          showFullSchematic:
+            showFullSheet ||
+            (issueType === "all" && issueIndex === undefined
+              ? repro.showFullSchematic
+              : false),
         }),
         error: "",
       }
@@ -60,13 +60,22 @@ export default function RealSchematicRepros() {
         error: error instanceof Error ? error.message : String(error),
       }
     }
-  }, [repro, analysis, sheetId, issueType, issueIndex, showOverlay])
+  }, [
+    repro,
+    analysis,
+    sheetId,
+    issueType,
+    issueIndex,
+    showOverlay,
+    showFullSheet,
+  ])
 
   const selectRepro = (next: (typeof realSchematics)[number]) => {
     setRepro(next)
     setSheetId(getReproSheets(next.circuitJson)[0]?.id ?? "")
     setIssueType("all")
     setIssueIndex(undefined)
+    setShowFullSheet(next.showFullSchematic ?? true)
     setError("")
   }
 
@@ -208,6 +217,14 @@ export default function RealSchematicRepros() {
               Show overlay
             </label>
             <label>
+              <input
+                type="checkbox"
+                checked={showFullSheet}
+                onChange={(event) => setShowFullSheet(event.target.checked)}
+              />{" "}
+              Full sheet
+            </label>
+            <label>
               Zoom{" "}
               <input
                 aria-label="Zoom"
@@ -224,7 +241,11 @@ export default function RealSchematicRepros() {
               type="button"
               disabled={!render.svg}
               onClick={() =>
-                download("schematic-issues.svg", render.svg, "image/svg+xml")
+                downloadReproFile({
+                  name: "schematic-issues.svg",
+                  contents: render.svg,
+                  mimeType: "image/svg+xml",
+                })
               }
             >
               Download overlay SVG
@@ -232,9 +253,9 @@ export default function RealSchematicRepros() {
             <button
               type="button"
               onClick={() =>
-                download(
-                  "placement-issues.json",
-                  JSON.stringify(
+                downloadReproFile({
+                  name: "placement-issues.json",
+                  contents: JSON.stringify(
                     {
                       repro: repro.name,
                       counts,
@@ -255,8 +276,8 @@ export default function RealSchematicRepros() {
                     null,
                     2,
                   ),
-                  "application/json",
-                )
+                  mimeType: "application/json",
+                })
               }
             >
               Download report
@@ -271,49 +292,13 @@ export default function RealSchematicRepros() {
               />
             )}
           </div>
-          <p aria-live="polite">
-            {visibleIssues.length} matching issues on this sheet
-            {issueIndex === undefined
-              ? ""
-              : `; showing overlay for #${issueIndex + 1}`}
-            .
-          </p>
-          {issueIndex !== undefined && (
-            <button type="button" onClick={() => setIssueIndex(undefined)}>
-              Show all matching overlays
-            </button>
-          )}
-          {visibleIssues.length === 0 && (
-            <p>No issues of this type reported on this sheet.</p>
-          )}
-          {visibleIssues.map((issue) => {
-            const index = allIssues.indexOf(issue)
-            return (
-              <article key={index}>
-                <button
-                  type="button"
-                  aria-pressed={issueIndex === index}
-                  onClick={() => setIssueIndex(index)}
-                >
-                  Isolate #{index + 1} — {issue.lineItemType}
-                </button>
-                {issue.lineItemType === "NetLabelCollision" && (
-                  <p>
-                    {issue.collisionBounds?.length ?? "Unknown number of"}{" "}
-                    collision regions; {issue.pairs.length} component pairs.
-                  </p>
-                )}
-                <pre>
-                  {analysis.schematicIssuesToString(issue) ||
-                    JSON.stringify(issue, null, 2)}
-                </pre>
-                <details>
-                  <summary>Raw issue data</summary>
-                  <pre>{JSON.stringify(issue, null, 2)}</pre>
-                </details>
-              </article>
-            )
-          })}
+          <ReproIssueList
+            analysis={analysis}
+            allIssues={allIssues}
+            visibleIssues={visibleIssues}
+            issueIndex={issueIndex}
+            onSelectIssueIndex={setIssueIndex}
+          />
         </section>
       </div>
     </main>
