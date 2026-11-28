@@ -42,6 +42,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a bent R-L-R chain without a diode or multi-pin component", () => {
+test("reports a bent R-L-R chain without a diode or multi-pin component", () => {
   expect(issueTypes).toContain("SeriesChainNotAligned")
 })
