@@ -130,6 +130,15 @@ export interface SeriesResistorsNotAligned {
   message: string
 }
 
+/** One channel among 3+ equivalent local subcircuits has an outlier relative layout. */
+export interface RepeatedCircuitLayoutInconsistent {
+  lineItemType: "RepeatedCircuitLayoutInconsistent"
+  outlierSchematicBoxes: SchematicBoxPlacement[]
+  referenceChannelSchematicBoxes: SchematicBoxPlacement[][]
+  offsetDeviation: number
+  message: string
+}
+
 export interface FuseMosfetNotAligned {
   lineItemType: "FuseMosfetNotAligned"
   fuseSchematicBox: SchematicBoxPlacement
@@ -978,6 +987,7 @@ export type SchematicPlacementIssue =
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
+  | RepeatedCircuitLayoutInconsistent
   | FuseMosfetNotAligned
   | LedResistorBranchSeparatedFromChipPin
   | ChipDiodeCapacitorNetworkNotGrouped

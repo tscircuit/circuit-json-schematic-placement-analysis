@@ -51,6 +51,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a placement outlier among three equivalent RC channels", () => {
+test("reports a placement outlier among three equivalent RC channels", () => {
   expect(issueTypes).toContain("RepeatedCircuitLayoutInconsistent")
 })
