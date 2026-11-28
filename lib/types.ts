@@ -130,6 +130,18 @@ export interface SeriesResistorsNotAligned {
   message: string
 }
 
+/** An unbranched 3+ passive series chain is bent or staggered instead of aligned. */
+export interface SeriesChainNotAligned {
+  lineItemType: "SeriesChainNotAligned"
+  chainSchematicBoxes: SchematicBoxPlacement[]
+  misalignedConnections: Array<{
+    firstSourcePortId: string
+    secondSourcePortId: string
+    pinDistance: number
+  }>
+  message: string
+}
+
 export interface FuseMosfetNotAligned {
   lineItemType: "FuseMosfetNotAligned"
   fuseSchematicBox: SchematicBoxPlacement
@@ -978,6 +990,7 @@ export type SchematicPlacementIssue =
   | PotentiometerHasIncorrectRailOrientation
   | CapacitorSeparatedFromResistorDivider
   | SeriesResistorsNotAligned
+  | SeriesChainNotAligned
   | FuseMosfetNotAligned
   | LedResistorBranchSeparatedFromChipPin
   | ChipDiodeCapacitorNetworkNotGrouped
