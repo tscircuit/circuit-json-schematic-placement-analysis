@@ -6,6 +6,7 @@ import type {
   VoltageDividerNotCompact,
 } from "../../types"
 import { addAttr } from "../../utils/format"
+import { hasVisibleSchematicConnection } from "../../utils/has-visible-schematic-connection"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import type { SolverContext } from "../SolverContext"
 
@@ -108,6 +109,17 @@ export class VoltageDividerCompactnessSolver extends BaseSolver {
           : undefined
     if (!supply) return
     const ground = supply === first ? second : first
+
+    if (
+      !hasVisibleSchematicConnection(
+        this.solverInput.ctx.circuitJson,
+        index,
+        supply.port,
+        ground.port,
+      )
+    ) {
+      return
+    }
 
     if (
       Math.abs(supply.box.schX - ground.box.schX) <
