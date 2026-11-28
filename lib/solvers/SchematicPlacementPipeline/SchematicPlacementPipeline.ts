@@ -48,6 +48,7 @@ import { MosfetGateNetworkPlacementSolver } from "../MosfetGateNetworkPlacementS
 import { RelayFlybackDiodePlacementSolver } from "../RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "../CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 import { VoltageDividerPlacementSolver } from "../VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
+import { VoltageDividerCompactnessSolver } from "../VoltageDividerCompactnessSolver/VoltageDividerCompactnessSolver"
 import { RegulatorInputOutputCapacitorPlacementSolver } from "../RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "../ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "../LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
@@ -188,6 +189,7 @@ const solversByIssueType = {
   VoltageDividerSupplyResistorBelowGroundResistor: [
     VoltageDividerPlacementSolver,
   ],
+  VoltageDividerNotCompact: [VoltageDividerCompactnessSolver],
   RegulatorCapacitorsOnWrongSides: [
     RegulatorInputOutputCapacitorPlacementSolver,
   ],
@@ -724,6 +726,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
         { ctx: p.ctx, issues: p.issues },
       ],
     ),
+    definePipelineStep(
+      "VoltageDividerCompactnessSolver",
+      VoltageDividerCompactnessSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
   ]
 
   private readonly selectedIssueTypes?: Set<
@@ -766,6 +775,20 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
           : [],
       ),
     )
+    const coveredDividerPairs = new Set(
+      this.issues.flatMap((issue) =>
+        (issue.lineItemType ===
+          "VoltageDividerSupplyResistorBelowGroundResistor" ||
+          issue.lineItemType === "VoltageDividerNetworkNotGrouped" ||
+          issue.lineItemType === "ResistorDividerSeparatedFromChip") &&
+        issue.supplyResistorSchematicBox.schematicComponentId &&
+        issue.groundResistorSchematicBox.schematicComponentId
+          ? [
+              `${issue.supplyResistorSchematicBox.schematicComponentId}:${issue.groundResistorSchematicBox.schematicComponentId}`,
+            ]
+          : [],
+      ),
+    )
     return {
       issues: this.issues
         .filter(
@@ -773,6 +796,14 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
             issue.lineItemType !== "CapacitorSymbolHorizontal" ||
             !railOrientationComponentIds.has(
               issue.schematicBox.schematicComponentId ?? "",
+            ),
+        )
+        .filter(
+          (issue) =>
+            issue.lineItemType !== "VoltageDividerNotCompact" ||
+            this.selectedIssueTypes !== undefined ||
+            !coveredDividerPairs.has(
+              `${issue.supplyResistorSchematicBox.schematicComponentId ?? ""}:${issue.groundResistorSchematicBox.schematicComponentId ?? ""}`,
             ),
         )
         .filter(

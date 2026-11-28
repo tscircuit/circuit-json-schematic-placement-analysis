@@ -48,6 +48,7 @@ import { MosfetGateNetworkPlacementSolver } from "./solvers/MosfetGateNetworkPla
 import { RelayFlybackDiodePlacementSolver } from "./solvers/RelayFlybackDiodePlacementSolver/RelayFlybackDiodePlacementSolver"
 import { CurrentSenseShuntPlacementSolver } from "./solvers/CurrentSenseShuntPlacementSolver/CurrentSenseShuntPlacementSolver"
 import { VoltageDividerPlacementSolver } from "./solvers/VoltageDividerPlacementSolver/VoltageDividerPlacementSolver"
+import { VoltageDividerCompactnessSolver } from "./solvers/VoltageDividerCompactnessSolver/VoltageDividerCompactnessSolver"
 import { RegulatorInputOutputCapacitorPlacementSolver } from "./solvers/RegulatorInputOutputCapacitorPlacementSolver/RegulatorInputOutputCapacitorPlacementSolver"
 import { ConnectorPlacementSolver } from "./solvers/ConnectorPlacementSolver/ConnectorPlacementSolver"
 import { LowSideTransistorPlacementSolver } from "./solvers/LowSideTransistorPlacementSolver/LowSideTransistorPlacementSolver"
@@ -187,6 +188,7 @@ export class SchematicPlacementAnalysis {
       RegulatorCapacitorsOnWrongSides: 0,
       VoltageDividerSupplyResistorBelowGroundResistor: 0,
       VoltageDividerNetworkNotGrouped: 0,
+      VoltageDividerNotCompact: 0,
       CurrentSenseShuntSeparatedFromInputs: 0,
       DiodeCapacitorJunctionTooSpreadOut: 0,
       SharedNodeDiodesInline: 0,
@@ -375,6 +377,8 @@ export class SchematicPlacementAnalysis {
       case "VoltageDividerNetworkNotGrouped":
       case "VoltageDividerSupplyResistorBelowGroundResistor":
         return VoltageDividerPlacementSolver.issueToString(issue)
+      case "VoltageDividerNotCompact":
+        return VoltageDividerCompactnessSolver.issueToString(issue)
       case "RegulatorCapacitorsOnWrongSides":
         return RegulatorInputOutputCapacitorPlacementSolver.issueToString(issue)
       case "UsbSeriesResistorsNotAligned":

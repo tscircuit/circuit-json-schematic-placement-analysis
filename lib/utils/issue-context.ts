@@ -228,6 +228,12 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.supplyResistorSchematicBox)
         addPlacement(issue.groundResistorSchematicBox)
         break
+      case "VoltageDividerNotCompact":
+        addPlacement(issue.supplyResistorSchematicBox)
+        addPlacement(issue.groundResistorSchematicBox)
+        for (const placement of issue.tapLoadSchematicBoxes)
+          addPlacement(placement)
+        break
       case "RegulatorCapacitorsOnWrongSides":
         addPlacement(issue.regulatorSchematicBox)
         addPlacement(issue.inputCapacitorSchematicBox)
