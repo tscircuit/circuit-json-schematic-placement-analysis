@@ -16,6 +16,7 @@ import { FuseConnectorAlignmentSolver } from "../FuseConnectorAlignmentSolver/Fu
 import { TransistorLedAlignmentSolver } from "../TransistorLedAlignmentSolver/TransistorLedAlignmentSolver"
 import { TransistorResistorAlignmentSolver } from "../TransistorResistorAlignmentSolver/TransistorResistorAlignmentSolver"
 import { PotentiometerRailOrientationSolver } from "../PotentiometerRailOrientationSolver/PotentiometerRailOrientationSolver"
+import { RepeatedCircuitConsistencySolver } from "../RepeatedCircuitConsistencySolver/RepeatedCircuitConsistencySolver"
 import { ResistorDividerCapacitorPlacementSolver } from "../ResistorDividerCapacitorPlacementSolver/ResistorDividerCapacitorPlacementSolver"
 import { SeriesResistorAlignmentSolver } from "../SeriesResistorAlignmentSolver/SeriesResistorAlignmentSolver"
 import { ParallelDiodeAlignmentSolver } from "../ParallelDiodeAlignmentSolver/ParallelDiodeAlignmentSolver"
@@ -113,6 +114,7 @@ const solversByIssueType = {
     ResistorDividerCapacitorPlacementSolver,
   ],
   SeriesResistorsNotAligned: [SeriesResistorAlignmentSolver],
+  RepeatedCircuitLayoutInconsistent: [RepeatedCircuitConsistencySolver],
   FuseMosfetNotAligned: [FuseMosfetAlignmentSolver],
   ChipDiodeCapacitorNetworkNotGrouped: [
     ChipDiodeCapacitorNetworkGroupingSolver,
@@ -720,6 +722,13 @@ export class SchematicPlacementPipeline extends BasePipelineSolver<CircuitJson> 
     definePipelineStep(
       "InductorDiodeGroupingSolver",
       InductorDiodeGroupingSolver,
+      (p: SchematicPlacementPipeline): [SolverParams] => [
+        { ctx: p.ctx, issues: p.issues },
+      ],
+    ),
+    definePipelineStep(
+      "RepeatedCircuitConsistencySolver",
+      RepeatedCircuitConsistencySolver,
       (p: SchematicPlacementPipeline): [SolverParams] => [
         { ctx: p.ctx, issues: p.issues },
       ],

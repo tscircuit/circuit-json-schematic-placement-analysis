@@ -93,3 +93,4 @@ export { CrystalResistorPlacementSolver } from "./solvers/CrystalResistorPlaceme
 export { ChipPinResistorDividerPlacementSolver } from "./solvers/ChipPinResistorDividerPlacementSolver/ChipPinResistorDividerPlacementSolver"
 
 export { InductorDiodeGroupingSolver } from "./solvers/InductorDiodeGroupingSolver/InductorDiodeGroupingSolver"
+export { RepeatedCircuitConsistencySolver } from "./solvers/RepeatedCircuitConsistencySolver/RepeatedCircuitConsistencySolver"

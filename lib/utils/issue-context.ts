@@ -128,6 +128,10 @@ export const getRelevantPlacementsForIssues = ({
         addPlacement(issue.firstResistorSchematicBox)
         addPlacement(issue.secondResistorSchematicBox)
         break
+      case "RepeatedCircuitLayoutInconsistent":
+        for (const placement of issue.outlierSchematicBoxes)
+          addPlacement(placement)
+        break
       case "FuseMosfetNotAligned":
         addPlacement(issue.fuseSchematicBox)
         addPlacement(issue.mosfetSchematicBox)
