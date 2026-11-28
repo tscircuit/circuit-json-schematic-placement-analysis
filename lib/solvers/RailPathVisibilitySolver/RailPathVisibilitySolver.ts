@@ -1,9 +1,11 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import type { CircuitJson } from "circuit-json"
 import type { RailPathTooSpreadOut, SchematicPlacementIssue } from "../../types"
 import { PlacementNetworkIndex } from "../../utils/placement-network-index"
 import { addAttr } from "../../utils/format"
 import type { SolverContext } from "../SolverContext"
+import { formatRailPathMessage } from "./formatRailPathMessage"
+import { pointOnSegment } from "./pointOnSegment"
+import { traceNet } from "./traceNet"
 
 type Point = { x: number; y: number }
 type Link = {
@@ -124,7 +126,11 @@ export class RailPathVisibilitySolver extends BaseSolver {
     const segments: Array<{ from: string; to: string; traceId: string }> = []
     for (const element of ctx.circuitJson) {
       if (element.type !== "schematic_trace") continue
-      const net = traceNet(element, ctx.circuitJson, index)
+      const net = traceNet({
+        trace: element,
+        circuitJson: ctx.circuitJson,
+        index,
+      })
       if (!net) continue
       for (const edge of element.edges) {
         segments.push({
@@ -146,7 +152,12 @@ export class RailPathVisibilitySolver extends BaseSolver {
           ([, n]) =>
             n.net === a.net &&
             n.sheet === a.sheet &&
-            pointOnSegment(n.point, a.point, b.point),
+            pointOnSegment({
+              point: n.point,
+              start: a.point,
+              end: b.point,
+              eps: EPS,
+            }),
         )
         .sort(
           ([, p], [, q]) =>
@@ -226,16 +237,17 @@ export class RailPathVisibilitySolver extends BaseSolver {
             state.links.flatMap((l) => (l.componentId ? [l.componentId] : [])),
           ),
         ]
+        const supportSchematicBoxes = componentIds.flatMap((id) => {
+          const placement = this.index.placement(id)
+          return placement ? [placement] : []
+        })
         this.issues.push({
           lineItemType: "RailPathTooSpreadOut",
           hostSchematicBox: host,
           sourcePortId: start.portId,
           sourcePortName,
           railType: current.terminal,
-          supportSchematicBoxes: componentIds.flatMap((id) => {
-            const placement = this.index.placement(id)
-            return placement ? [placement] : []
-          }),
+          supportSchematicBoxes,
           schematicTraceIds: [
             ...new Set(
               state.links.flatMap((l) => (l.traceId ? [l.traceId] : [])),
@@ -247,7 +259,13 @@ export class RailPathVisibilitySolver extends BaseSolver {
           pathSpan: span,
           maxRecommendedSpan: this.maxSpan,
           maxRecommendedPathLength: this.maxLength,
-          message: `Visible path from ${host.sourceComponentName || "component"}.${sourcePortName} to ${current.terminal} spans ${span.toFixed(2)} schematic units; move the connected support elements closer together near the pin and recompute their schematic traces.`,
+          message: formatRailPathMessage({
+            hostComponentName: host.sourceComponentName || "component",
+            sourcePortName,
+            railType: current.terminal,
+            pathSpan: span,
+            hasSupportElements: supportSchematicBoxes.length > 0,
+          }),
         })
         return
       }
@@ -288,35 +306,4 @@ export class RailPathVisibilitySolver extends BaseSolver {
     addAttr(attrs, "message", issue.message)
     return `<RailPathTooSpreadOut ${attrs.join(" ")} />`
   }
-}
-
-function traceNet(
-  trace: Extract<CircuitJson[number], { type: "schematic_trace" }>,
-  circuitJson: CircuitJson,
-  index: PlacementNetworkIndex,
-): string | undefined {
-  if (trace.subcircuit_connectivity_map_key)
-    return index.connected(
-      `connectivity:${trace.subcircuit_connectivity_map_key}`,
-    )
-  const source = circuitJson.find(
-    (e) =>
-      e.type === "source_trace" && e.source_trace_id === trace.source_trace_id,
-  )
-  if (source?.type !== "source_trace") return
-  const ids = [
-    ...source.connected_source_port_ids,
-    ...source.connected_source_net_ids,
-  ]
-  return ids[0] ? index.connected(ids[0]) : undefined
-}
-
-function pointOnSegment(p: Point, a: Point, b: Point): boolean {
-  const dx = b.x - a.x,
-    dy = b.y - a.y,
-    length = distance(a, b)
-  if (length < EPS) return distance(a, p) < EPS
-  const projection = ((p.x - a.x) * dx + (p.y - a.y) * dy) / length
-  const perpendicular = Math.abs((p.x - a.x) * dy - (p.y - a.y) * dx) / length
-  return perpendicular < EPS && projection >= -EPS && projection <= length + EPS
 }
