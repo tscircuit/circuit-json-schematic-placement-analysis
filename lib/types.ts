@@ -773,6 +773,19 @@ export interface VoltageDividerSupplyResistorBelowGroundResistor {
   message: string
 }
 
+/** A local supply-to-ground voltage divider whose resistors are scattered apart. */
+export interface VoltageDividerNotCompact {
+  lineItemType: "VoltageDividerNotCompact"
+  supplyResistorSchematicBox: SchematicBoxPlacement
+  groundResistorSchematicBox: SchematicBoxPlacement
+  tapLoadSchematicBoxes: SchematicBoxPlacement[]
+  supplyTapSourcePortId: string
+  groundTapSourcePortId: string
+  resistorTapDistance: number
+  maxRecommendedTapDistance: number
+  message: string
+}
+
 /** Series gate and gate-source resistors scattered away from their MOSFET. */
 export interface MosfetGateNetworkNotGrouped {
   lineItemType: "MosfetGateNetworkNotGrouped"
@@ -1002,6 +1015,7 @@ export type SchematicPlacementIssue =
   | CurrentSenseShuntSeparatedFromInputs
   | VoltageDividerNetworkNotGrouped
   | VoltageDividerSupplyResistorBelowGroundResistor
+  | VoltageDividerNotCompact
   | RegulatorCapacitorsOnWrongSides
   | UsbSeriesResistorsNotAligned
   | LowSideTransistorNotAlignedWithLoad

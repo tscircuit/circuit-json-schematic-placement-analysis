@@ -38,6 +38,6 @@ beforeAll(async () => {
     )
 })
 
-test.failing("reports a scattered voltage divider and its ADC tap", () => {
+test("reports a scattered voltage divider and its ADC tap", () => {
   expect(issueTypes).toContain("VoltageDividerNotCompact")
 })
