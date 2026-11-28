@@ -1,5 +1,4 @@
 import { BaseSolver } from "@tscircuit/solver-utils"
-import { cju } from "@tscircuit/circuit-json-util"
 import type { SourcePort } from "circuit-json"
 import type {
   SchematicBoxPlacement,
@@ -27,27 +26,30 @@ export class VoltageDividerCompactnessSolver extends BaseSolver {
   ) {
     super()
     this.index = new PlacementNetworkIndex(solverInput.ctx)
-    const db = cju(solverInput.ctx.circuitJson)
-    for (const pcbComponent of db.pcb_component.list()) {
-      if (pcbComponent.do_not_place) {
-        this.unpopulated.add(pcbComponent.source_component_id)
+    for (const element of solverInput.ctx.circuitJson) {
+      if (element.type === "pcb_component" && element.do_not_place) {
+        this.unpopulated.add(element.source_component_id)
       }
-    }
-    for (const port of db.source_port.list()) {
-      const net = this.index.connected(port.source_port_id)
-      if (port.requires_ground || port.provides_ground) {
+      if (element.type !== "source_port") continue
+      const net = this.index.connected(element.source_port_id)
+      if (element.requires_ground || element.provides_ground) {
         this.index.groundNets.add(net)
       }
       if (
-        port.requires_power ||
-        port.provides_power ||
-        port.requires_voltage !== undefined ||
-        port.provides_voltage !== undefined
+        element.requires_power ||
+        element.provides_power ||
+        element.requires_voltage !== undefined ||
+        element.provides_voltage !== undefined
       ) {
         this.index.powerNets.add(net)
       }
     }
-    this.taps = [...this.index.portsByNet.keys()]
+    this.taps = []
+    for (const [net, ports] of this.index.portsByNet) {
+      if (ports.length >= 3 && !this.index.isRail(net)) {
+        this.taps.push(net)
+      }
+    }
     this.solved = this.taps.length === 0
   }
 
@@ -75,6 +77,17 @@ export class VoltageDividerCompactnessSolver extends BaseSolver {
     )
     if (tapLoadPorts.length === 0) return
 
+    // Filtered dividers (shunt capacitor) and transistor base/gate networks have dedicated solvers;
+    // require IC/amplifier tap loads (`simple_chip` / `simple_op_amp`), matching VoltageDividerPlacementSolver.
+    if (
+      tapLoadPorts.some((port) => {
+        const ftype = index.components.get(port.source_component_id)?.ftype
+        return ftype !== "simple_chip" && ftype !== "simple_op_amp"
+      })
+    ) {
+      return
+    }
+
     const first = this.resolveResistorBranch(resistorPorts[0]!, tap)
     const second = this.resolveResistorBranch(resistorPorts[1]!, tap)
     if (
@@ -95,22 +108,6 @@ export class VoltageDividerCompactnessSolver extends BaseSolver {
           : undefined
     if (!supply) return
     const ground = supply === first ? second : first
-
-    // Filtered dividers with a shunt capacitor to ground are covered by VoltageDividerNetworkNotGrouped.
-    if (
-      tapLoadPorts.some((port) => {
-        const component = index.components.get(port.source_component_id)
-        if (component?.ftype !== "simple_capacitor") return false
-        const capNets = index.twoTerminalNets(port.source_component_id)
-        return Boolean(
-          Number.isFinite(component.capacitance) &&
-            component.capacitance > 0 &&
-            capNets?.includes(ground.outerNet),
-        )
-      })
-    ) {
-      return
-    }
 
     if (
       Math.abs(supply.box.schX - ground.box.schX) <
